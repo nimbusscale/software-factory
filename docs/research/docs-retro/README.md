@@ -5,10 +5,10 @@ built a multi-agent road trip planner. The project was a way to learn how to bui
 and most of its docs were written and read by agents. The retrospective asked which docs helped,
 which hurt, and what the next project should do instead.
 
-Both parts are research: references for the development loop and the skills built for it, not
+All of it is research: references for the development loop and the skills built for it, not
 things to use as they are. Whatever is taken from them gets fitted to the loop's workflow, and will
-change on the way. The skill is a draft of how docs could be written and reviewed. The findings are
-the evidence and reasons behind it.
+change on the way. The two skills are drafts of how docs and code comments could be written and
+reviewed. The findings are the evidence and reasons behind them.
 
 ## project-docs/
 
@@ -36,6 +36,25 @@ yet.
 The skill assumes the project's CLAUDE.md holds a map of where each doc is and a table of where
 each kind of fact goes.
 
+## code-comments/
+
+A draft Claude Code skill for writing, changing and reviewing code comments. It's written to be
+loaded whenever an agent adds, changes or deletes a comment, moves code that has comments, or
+reviews a change that touches comments. `project-docs` decides whether a fact goes in a comment or
+a doc. This skill decides whether a comment is needed, and how to write it. It's a separate skill
+because it's needed on almost every code change, and `project-docs` is too long to load for one
+comment. It hasn't been tried on a real project yet.
+
+- `SKILL.md` holds the method, as steps in order: decide whether to write a comment, decide what it
+  holds, check each claim, place it, write it, keep it true when the code changes, and check the
+  change. The default is no comment. The test is what the next reader would get wrong if the
+  comment were gone. What passes is nearly always a reason, a quirk of an outside service, or the
+  ID of the item the code carries out.
+- `references/worked-examples.md` sorts real comments from road-trip-agent with the skill's steps.
+
+It draws on two outside skills, listed in the findings' sources, and on the same rules about
+history, copies and IDs as `project-docs`.
+
 ## findings.md
 
 A dated record of the retrospective. It isn't kept up to date. It holds:
@@ -43,9 +62,10 @@ A dated record of the retrospective. It isn't kept up to date. It holds:
 - the evidence: what docs road-trip-agent had, how they grew, how agents read them, and where they
   helped or hurt, measured from git history and Claude Code transcripts
 - what went wrong, and what the next project should do instead
-- the reasons behind the skill's choices, such as why GEARS, why IDs, and why history is kept out of
-  docs
+- what road-trip-agent's code comments held, from a sorted sample
+- the reasons behind the skills' choices, such as why GEARS, why IDs, why history is kept out of
+  docs, and why comments get their own skill
 - open items, several of them for the design of the development loop, such as what the workflow
   does with what the doc checks flag
 
-Read it to understand or question a choice in the skill.
+Read it to understand or question a choice in either skill.

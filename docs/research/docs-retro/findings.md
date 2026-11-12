@@ -5,7 +5,8 @@ to date.
 
 This file says what docs road-trip-agent had, how they grew and were used, what worked and what
 didn't, and what the next project should do instead. The `project-docs` skill carries its
-recommendations as a method for writing and reviewing docs.
+recommendations as a method for writing and reviewing docs. The `code-comments` skill does the same
+for code comments.
 
 ## Takeaways
 
@@ -29,6 +30,10 @@ recommendations as a method for writing and reviewing docs.
    Decisions are one line and a reason.
 7. **Corrections in chat became memories, which most agents never see.** In the next project, a
    correction that's a project rule becomes an offered doc change, and the owner decides.
+8. **Code comments are where most reasons will live, and they had one line of guidance.** In a
+   sample, under six in ten comments would be missed if they were gone. The rest repeated a name,
+   gave only a section number, or said what a type could say. Comments had the docs' problems too:
+   history, copies, and pointers that break. The next project gives comments their own skill.
 
 ## 1. Spec-driven development, as a frame
 
@@ -255,6 +260,49 @@ are missing. CLAUDE.md and memory load without a tool call, so the transcripts u
 - Only 16 are about how the owner likes to work, which is what memory is for. 5 are history or
   workflow state.
 
+### Code comments
+
+These counts cover `src/`, leaving out tests and fakes.
+
+- There were 1,735 comment blocks, about 3,700 lines. 1,123 of the 2,239 top-level declarations,
+  about half, had a comment right above them.
+- The only rule was one line in DEVELOPMENT.md, there from the first day of code: "Comments say
+  why, not what. The code says what it does. A comment explains a choice the code can't show, often
+  by pointing to a design doc section." The review rubric said nothing about comments.
+- A random sample of 60 blocks, each sorted by the most useful thing it carries:
+
+  | Carries | Blocks |
+  |---|---|
+  | A reason, or a quirk of an outside service | 23 |
+  | A contract a caller needs, such as an order or what null means | 22 |
+  | Only what the name already says | 7 |
+  | Only a pointer to a doc section | 4 |
+  | Only an example of the text the code builds | 3 |
+  | Only history | 1 |
+
+  The 22 contract comments were then sorted again with a stricter test: imagine the comment gone,
+  and ask what the next reader would get wrong. 12 pass, and nearly all of those pass because they
+  hold a reason or an outside quirk, such as "A comment on a whole file has no line" in GitHub's
+  data. The other 10 say what a type, a better name or a clear error could say, or copy a comment
+  where the value is defined. The 23 reasons and quirks weren't sorted again. So at most 35 of the
+  60, under six in ten, earn their place. One person sorted all of them, with no second labeler.
+- The weak ones are mostly one short line above a type or function. 227 blocks are one sentence of
+  12 words or fewer, right above a declaration, such as "One worker's recorded calls." above
+  `interface WorkerRecord`.
+- **Pointers:** 622 blocks cite a doc, mostly by section number. 154 cite the domain model, the kind
+  of doc this retro calls a blueprint, which is archived once its code is built. Some comments are
+  only a pointer, such as "Domain model section 2." above a list of weather labels.
+- **History:** 134 blocks have an issue number, a date, or a word such as "settled" or "so far". For
+  example: "Technical spec 6.1, settled on 2026-10-27 for #60."
+- **Copies:** 351 blocks share a run of eight or more words with a design doc. 52 start with "Such
+  as" and give an example of the text the code builds. At least one of those is word for word in a
+  test.
+- **Doc terms:** some comments only make sense with a doc open. "It needs no business rule, but
+  stays are via service" uses a marker from the domain model's class diagram.
+- **The good ones** give a reason or a quirk the code can't show, such as why Node needs its own
+  SIGTERM handler in a container, or why a read limit of 40,000 characters stays under Claude
+  Code's 25,000-token cutoff, with the date it was measured.
+
 ### The three main docs, compared
 
 | Doc | Lines | Lines with history markers |
@@ -446,6 +494,52 @@ owner corrects something that is a project rule, the agent offers a change to th
 skill, and the owner decides. The change has to pass the first-time reader test. Memory keeps only
 how the owner likes to work, plus working notes for the main session.
 
+### Comments had one line of guidance
+
+The next project moves many reasons out of docs and into comments, next to the code they explain
+(section 4). So comments need as much guidance as docs. Road-trip-agent had one line.
+
+The line was right, but agents kept its second half and lost the first. "Often by pointing to a
+design doc section" read as a shortcut: a short "what" with a section number on the end passed as
+a "why". "The leg scout's own model and effort settings (technical spec section 10)" is one. It
+names the two fields, and gives no reason.
+
+Comments also had the docs' problems:
+
+- Section numbers move when a doc is reorganized, and blueprints are archived. A pointer to either
+  breaks, and nothing flags it.
+- History got into comments the same way it got into docs, as tails on good sentences.
+- An example of output in a comment is a copy of the test that checks it. When the format changes,
+  the test is fixed and the comment goes stale.
+
+One problem is new. A comment can repeat the code, which no doc did.
+
+The `code-comments` skill sets the guidance:
+
+- **The default is no comment.** One test decides it: imagine the comment gone, and ask what the
+  next reader would get wrong. A better name, a smaller function, a type, an error with a clear
+  name, or a test comes first.
+- **What passes is nearly always a reason, a quirk of an outside service, or the ID of the item the
+  code carries out.** Anything else has to pass the test on its own.
+- **No "contract" kind.** A draft had one, for what a caller needs to know. Three examples of it
+  failed the test when looked at closely. One was a rule about no repeats, which a set could hold.
+  One was a copy of a field's comment, on a function that passes the value along. One described an
+  error the API already handled. As a kind, it let an agent label a comment a contract and keep
+  it.
+- **No "guide" kind.** A draft had labels for the phases of a long function. A smaller function
+  with a clear name does that better, since its name can't drift from what it does the way a label
+  can. A label that matters usually matters for a reason, such as an order, and reasons are already
+  allowed. None of the 60 sampled comments was one.
+- **The same rules as docs.** No history, no copies, and IDs, not section numbers. Never a pointer
+  to a blueprint or a research doc. A citation doesn't replace a reason that fits in a sentence.
+- **Only what can be shown.** Each kind has its own source. A reason comes from where the choice
+  was made, such as a spec item's Why, the task, or the owner. A quirk comes from the service's docs
+  or a saved response. An ID comes from the spec. The code backs up only the parts of a claim that
+  describe the code. The risk is highest when an agent comments code it didn't write, since it has
+  no source and can easily write a reason that sounds right and isn't.
+- **A measured number keeps its date.** That date is evidence, not history. A reader needs it to
+  judge whether the number still holds.
+
 ## 4. The docs for the next project
 
 The `project-docs` skill holds the list of docs, the contract for each one, and the method for
@@ -467,6 +561,9 @@ mistake:
 | Memory | How the owner likes to work, and working notes for the main session |
 
 A roadmap isn't one of the docs. Where it's kept is up to the project.
+
+The `project-docs` skill decides whether a fact's home is a comment. The `code-comments` skill says
+how to write it.
 
 Rejected ideas go nowhere. If one is forgotten, it probably didn't matter. A code comment names one
 only when an agent would likely change the code back to it.
@@ -651,6 +748,13 @@ shape:
 - **It points to CLAUDE.md rather than repeating it:** the table of homes, which wins when a doc and
   the code disagree, and where history goes.
 - **It decides where a fact lives, but not how to write a check or a test.** That's code work.
+- **Comments get their own skill.** Comment guidance is needed on almost every code change.
+  `project-docs` is meant for changes to requirements and decisions, and is too long to load for
+  one comment. So `project-docs` decides whether a fact goes in a comment, and `code-comments` says
+  how to write it. It took its shape from two outside skills (Sources). PostHog's gave the default
+  of no comment, the one question that decides it, and the rule on measured numbers. abhinav's gave
+  the two readers, a caller and a maintainer, a field's meaning going on the field, and the rule
+  that a comment claims only what the code shows.
 
 ## 7. Checks a script can do
 
@@ -712,6 +816,9 @@ An earlier notes file made recommendations before this retro. Here's where each 
   of 272 edits to a `src/` file, the agent had read that file earlier in the session. About 60% of
   source reads saw the top of the file. So a comment right above a function is almost always in
   view. The data can't show whether an agent acted on what it saw.
+- **Whether the comment skill cuts the weak comments.** Not tried yet. Sorting a sample of 60
+  comments from the next project's code with the same test would show it, ideally with two
+  labelers.
 - **Python string-replace edits.** Agents made 578 of 878 doc edits with Python scripts rather than
   the Edit tool. Not discussed yet.
 - **Whether the history outlet works.** Directing agents to log in a scratchpad file, rather than
@@ -750,3 +857,7 @@ An earlier notes file made recommendations before this retro. Here's where each 
   Microsoft Learn
 - [GEARS: The Spec Syntax That Makes AI Coding Actually Work](https://dev.to/sublang/gears-the-spec-syntax-that-makes-ai-coding-actually-work-4f3f)
 - [OpenSpec docs](https://openspec.dev/llms-full.txt)
+- [writing-code-comments skill](https://github.com/PostHog/posthog/blob/823e2cc7ef325db05c685682be0d8b61b361bcd7/.agents/skills/writing-code-comments/SKILL.md),
+  PostHog
+- [code-comments skill](https://github.com/abhinav/home/tree/master/.agents/skills/code-comments),
+  abhinav, with its references on implementation comments and interface documentation

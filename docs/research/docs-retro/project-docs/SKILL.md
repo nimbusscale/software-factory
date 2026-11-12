@@ -129,6 +129,8 @@ For every sentence, in any doc:
 - **Make each section stand on its own.** The reader may not have read the section before it.
 - **Point, don't restate.** Cite another item's ID instead of repeating what it says.
 
+When step 3 made the fact's home a code comment, the `code-comments` skill says how to write it.
+
 ### Kinds of item
 
 | Kind | Prefix | Doc | Form | Why line |
