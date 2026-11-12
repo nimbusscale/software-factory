@@ -5,21 +5,24 @@ agents, written in TypeScript. Each one is sorted with the skill's steps. They s
 so use them for the pattern, not the details. The IDs in the rewrites, such as `FR-31`, stand in
 for whatever ID the project gives the item.
 
+Some examples show other code from the project as setup, so the verdict can be checked. That code
+has comments of its own, which aren't sorted unless the example says so. Don't copy them as models.
+
 ## Contents
 
-- A type comment that repeats the name, and field comments a type could replace
+- A type comment that repeats the name, and a field comment a type could replace
 - A field's meaning, copied onto a function
-- A behavior the caller already gets right
+- A comment with one sentence worth keeping
 - A settings type with a section number
 - An example of output that a test already holds
 - A pointer and history, and nothing else
-- A good reason with an issue number on the end
-- A reason written in a doc's private terms
+- An issue number on a comment with nothing else worth keeping
+- A comment written in a doc's private terms
 - Comments worth keeping
 
-## A type comment that repeats the name, and field comments a type could replace
+## A type comment that repeats the name, and a field comment a type could replace
 
-**Before:**
+**Before:** the type a caller reads, and the class's own copy that it fills in:
 
 ```ts
 // One worker's recorded calls.
@@ -29,8 +32,14 @@ export interface WorkerRecord {
   ...
 }
 
+interface MutableRecord {
+  readIds: string[];
+  ...
+}
+
 export class WorkerCalls {
   record(agentId, toolName, toolInput, toolResponse): void {
+    const record: MutableRecord = this.#recordOf(agentId);
     ...
       // Each ID once, even when one call names it twice.
       for (const id of readIdsSchema.parse(toolInput)) {
@@ -40,13 +49,46 @@ export class WorkerCalls {
       }
 ```
 
-**Sorted:** the type comment says what the name says, so it goes. "Each once" on `readIds` means
-no repeats, but it reads just as easily as "each item is read once", so it's unclear as well as
-avoidable. Make the field a `ReadonlySet<string>` and the type holds the rule. The comment inside
-`record()` says what the `includes` check under it does, so it goes too.
+`readIdsSchema` reads the tool input's `stopOrStayIds` field. The one place that reads
+`WorkerRecord.readIds` lists the IDs the worker read but never filled, in a block of text for the
+coordinator.
+
+**Sorted:** the type comment says what the name says, so it goes. The field comment makes three
+claims, and each is tested on its own:
+
+- "The stop and stay IDs" says which kind of ID. A caller reads only `WorkerRecord`, not the
+  schema inside `record()`, so the field's type is where that belongs. Without a type for it, the
+  words stay.
+- "Each once" means no repeats, but it reads just as easily as "each item is read once", so it's
+  unclear as well as avoidable. A set holds the rule.
+- "In the order read" matters to nothing that reads the field, since the order only decides the
+  order of a list in a block of text. A JavaScript `Set` also keeps the order items were added.
+
+So the field comment comes down to which kind of ID, and goes too if a type such as
+`StopId | StayId` exists. The comment inside `record()` says what the `includes` check under it
+does, so it goes.
+
+**After,** with no ID types in the project:
+
+```ts
+export interface WorkerRecord {
+  // Each is a stop's or a stay's ID.
+  readonly readIds: ReadonlySet<string>;
+  ...
+}
+
+interface MutableRecord {
+  readIds: Set<string>;
+  ...
+}
+
+      for (const id of readIdsSchema.parse(toolInput)) {
+        record.readIds.add(id);
+      }
+```
 
 **What it shows:** a comment on what a value is, such as no repeats, usually means a type is
-missing. A short comment above a declaration is the most common kind that says nothing.
+missing. Test each claim in a comment on its own.
 
 ## A field's meaning, copied onto a function
 
@@ -63,7 +105,8 @@ class Stop {
 }
 ```
 
-A service function that only passes the value along to the stop says it again:
+A service function says it again. Apart from a check for rest days, it only passes the value along
+to the stop:
 
 ```ts
 // Null means it follows the stop before it.
@@ -77,14 +120,20 @@ setStopTime(itinerary: Itinerary, stop: Stop, setTime: ScheduleTime | null): voi
 missed. Delete the one on the function. Better still, a type such as
 `{ kind: "notBefore"; time: ScheduleTime } | { kind: "afterPrevious" }` says what null meant, and
 the field's comment can go too. Without that type, keep only the field's comment, since that's
-where the meaning is defined.
+where the meaning is defined. Its opening is a fragment, so make it a full sentence:
+
+```ts
+// The stop starts no earlier than this time, such as dinner at 7. Null means it follows the
+// stop before it.
+get setTime(): ScheduleTime | null {
+```
 
 **What it shows:** a type comes first. Short of a type, say a thing once, where it's defined.
 
-## A behavior the caller already gets right
+## A comment with one sentence worth keeping
 
-**Before:** a trip is a user's saved plan, and other code writes to it while the user plans. Most
-changes are refused once the trip has started. The function that deletes it:
+**Before:** a trip is a user's saved plan. Most changes to a trip are refused once it has started.
+The function that deletes one:
 
 ```ts
 // Removes the trip and everything that belongs to it (persistence design, section 6).
@@ -113,28 +162,31 @@ async #selectLocked(tripId: string, lock: "FOR NO KEY UPDATE" | "FOR UPDATE"): P
 }
 ```
 
-And the web API's shared error handler, which every route's errors go through, already maps that
-error to a refusal:
+The project's functional spec has a requirement that says what deleting a trip removes, and that a
+trip can be deleted at any time, even once it has started.
+
+**Sorted:** each sentence is tested on its own, for a caller and for a maintainer.
+
+- The first sentence has a section number on the end. "And everything that belongs to it" says
+  more than the name, but what goes with a trip is the same requirement's rule, and `remove()`
+  shows it. It goes.
+- The third sentence describes the waiting and the error. Both are already written once, on
+  `#selectLocked`, where they happen. `TripBusyError` is a name that explains itself, and a
+  function doesn't list the errors that come up from code it calls. It goes.
+- The second sentence holds a reason a maintainer needs. Most changes are refused once a trip has
+  started, so a maintainer could add the same check here to match. The functional spec's
+  requirement holds the reason, so the comment cites its ID. "It isn't a write" goes too, since in
+  plain terms deleting is a write.
+
+**After:**
 
 ```ts
-if (
-  error instanceof ChatClosedError ||
-  error instanceof TurnRunningError ||
-  error instanceof TripBusyError
-) {
-  return 409;
-}
+// A started trip can be deleted too (FR-12).
+async deleteTrip(tripId: string): Promise<void> {
 ```
 
-**Sorted:** imagine the comment on `deleteTrip` gone, and ask what a caller would get wrong. The
-first sentence says what the name says, with a section number on the end. Nothing in
-`deleteTrip` checks whether the trip has started, so a reader assumes it runs on any trip. The
-waiting is already written once, on `#selectLocked`, where it happens. When the trip is busy, the
-caller gets `TripBusyError`, a name that explains itself, and a web route needs no code of its own
-for it. Delete the comment.
-
-**What it shows:** a comment can look like it tells the caller something, and still fail the test.
-A clearly named error and a comment where the behavior lives can cover it.
+**What it shows:** ask what a maintainer would get wrong, not only a caller. When the point is a
+check the code doesn't make, name it, and let the ID carry the reason.
 
 ## A settings type with a section number
 
@@ -149,13 +201,12 @@ export interface LegScoutDefinitionGiven {
 ```
 
 **Sorted:** the fields are named `model` and `effort`, and the type's name says whose they are. The
-section number gives no reason, and it breaks when the spec is reorganized. Delete the comment. If
-there's a reason the definition takes these rather than reading the settings itself, write that
-reason. First find where it came from, such as a spec item's Why or the task that made the choice.
-The code shows that the definition takes them, but not why.
+section number gives no reason, and it breaks when the spec is reorganized. Delete the comment.
+Write a reason only if a maintainer would otherwise change the code, such as folding these into
+settings the other agents share. Then cite the spec item that says why, or find the reason and
+write it as a sentence.
 
-**What it shows:** a pointer tacked onto a "what" doesn't turn it into a "why". Agents often read a
-rule like "comments say why, often by pointing to a doc" this way.
+**What it shows:** a pointer tacked onto a "what" doesn't turn it into a "why".
 
 ## An example of output that a test already holds
 
@@ -168,9 +219,10 @@ export function stayHeader(context: ReadContext, stay: Stay): string {
 ```
 
 **Sorted:** a test holds the same text word for word. When the format changes, the test fails and
-gets fixed, but nothing fails for the comment, so it goes stale. Delete it. If part of the format
-is a choice a maintainer might undo, such as putting each ID in parentheses after its name, write
-why that part is there, once you've found the reason.
+gets fixed, but nothing fails for the comment, so it goes stale. Delete it. It needs no pointer to
+the test, since a reader finds the test by searching for `stayHeader`. If part of the format is a
+choice a maintainer might undo, such as putting each ID in parentheses after its name, write why
+that part is there, once you've found the reason.
 
 **What it shows:** an example in a comment is a copy. The test is its home.
 
@@ -184,8 +236,9 @@ export const SEARCH_AGAIN = `When the results don't fit, search again ...`;
 ```
 
 **Sorted:** the date and the issue are history, so they go in the commit message. The section
-number becomes the ID of the requirement the prompt text meets. Check that the requirement says
-what this prompt text does before citing it.
+number becomes the ID of the item the prompt text meets. Cite the ID the item has, and check that
+the item says what this prompt text does before citing it. If the item looks like it's in the wrong
+doc, that's for the `project-docs` skill, not the comment.
 
 **After:**
 
@@ -194,31 +247,41 @@ what this prompt text does before citing it.
 export const SEARCH_AGAIN = `When the results don't fit, search again ...`;
 ```
 
-**What it shows:** a prompt is code, and its home is the prompt file. The spec says what the agent
-should do, and the prompt cites the ID. Neither copies the other.
+**What it shows:** when a spec item holds the reason, the ID alone is enough. Restating the item
+would be a copy, and it would drift when the item changes.
 
-## A good reason with an issue number on the end
+## An issue number on a comment with nothing else worth keeping
 
-**Before:**
+**Before:** a schema for one part of the input an evaluation's judge reads:
 
 ```ts
 // The worker's type, from an Agent call's input. It names the worker in the judge
 // input. The rest of the input is the coordinator's own writing, so it's left out
 // (#282).
+export const agentInputSchema = z
+  .object({ subagent_type: z.string() })
 ```
 
-**Sorted:** the reason is good. A maintainer might add the rest of the input to the judge's view,
-and the comment says why not. The issue is likely where the reason came from, but citing it is
-history. Drop the number, and keep the rest as it is.
+**Sorted:** the issue number is history, even when the issue is where the reason came from. Drop
+it, then test what's left like any other comment:
 
-**What it shows:** history often rides on the end of a good comment. The check in step 7 finds the
-pattern, and the fix is to cut the tail, not the comment.
+- "The worker's type, from an Agent call's input" says what the schema's one field already says.
+- "It names the worker in the judge input" describes how other code uses the schema.
+- "The rest of the input is the coordinator's own writing, so it's left out" looks like a reason,
+  but a reader can't make sense of it. Nothing says why the coordinator's writing must be kept from
+  the judge, so it doesn't tell a maintainer what not to change.
 
-## A reason written in a doc's private terms
+Nothing is left, so the whole comment goes. If the issue holds the real reason, write that as a
+sentence instead.
 
-**Before:** an itinerary is a trip's ordered list of stays, and each stay covers some nights. The
-itinerary keeps its change methods under a symbol that only domain code may import, so services
-call them and other code can't:
+**What it shows:** history often rides on the end of a comment, and the check in step 7 finds it.
+Cutting the tail isn't the end of the job. What's left has to pass the test too, and here none of
+it does.
+
+## A comment written in a doc's private terms
+
+**Before:** an itinerary is a trip's ordered list of stays. The itinerary keeps its change methods
+under a symbol that only domain code may import, so code outside the domain can't call them:
 
 ```ts
 // The key to each object's change methods for its {viaService} properties (domain model
@@ -227,6 +290,9 @@ call them and other code can't:
 // objects define the methods and the services call them.
 export const VIA_SERVICE = Symbol("viaService");
 ```
+
+This setup comment has the same problem as the one this example sorts: a private marker,
+`{viaService}`, and a section number. It's shown only for what it says about the code.
 
 A service method that moves a stay. Its `orderOf` call refuses a stay that isn't in the itinerary:
 
@@ -238,22 +304,31 @@ moveStay(itinerary: Itinerary, stay: Stay, after: Stay | null): void {
 }
 ```
 
-**Sorted:** "via service" is a marker from a design doc's class diagram. Without that doc, a reader
-can't tell why a method with no business rule is in a service.
+**Sorted:** "via service" is a marker from a design doc's class diagram, and "business rule" is a
+term from the same doc. A reader without that doc can't tell what either means. Said in plain
+words, the comment's point is that this is a service method because code outside the domain can't
+reach the itinerary's change methods. But that holds for every service method that calls one, and
+`VIA_SERVICE` already says it. Repeating it on each method would make copies. "Its days move with
+it" describes what `placeStay` does to the itinerary. If it needs saying, it goes on `placeStay`,
+once.
+
+So the comment goes. One thing in this method does need a fix. `orderOf` returns a number that the
+method throws away, so a maintainer could delete the call as dead code and lose the check. A name
+that says what it does fixes that better than a comment, such as a `refuseIfNotIn(itinerary, stay)`
+on the calendar.
 
 **After:**
 
 ```ts
-// The stay's days move with it. No business rule applies, but only a service may call
-// the itinerary's change methods.
+moveStay(itinerary: Itinerary, stay: Stay, after: Stay | null): void {
+  this.#calendar.refuseIfNotIn(itinerary, stay);
+  itinerary[VIA_SERVICE].placeStay(stay, after);
+}
 ```
 
-Both claims describe this code, so the code is their source. `VIA_SERVICE` is what keeps the change
-methods for services. `moveStay` checks only that the stay is in the itinerary, which isn't a
-business rule.
-
 **What it shows:** a comment is read on its own, next to the code. Its terms are the code's names
-and the functional spec's terms.
+and the functional spec's terms. Once a private term is put in plain words, test the comment again.
+Here, the plain version turned out to be a copy.
 
 ## Comments worth keeping
 
@@ -266,7 +341,13 @@ export const NO_SUCH_MEMORY_ITEM = "No such memory item.";
 ```
 
 Without it, a maintainer would likely split this into two clearer errors and leak which items
-exist. The section number goes. If a decision in the spec covers it, cite that ID.
+exist. Two fixes: the section number goes, and the opening becomes a full sentence.
+
+```ts
+// This is the same error for an ID that doesn't exist and for another user's or another
+// trip's item, so it doesn't say whether someone else's item exists.
+export const NO_SUCH_MEMORY_ITEM = "No such memory item.";
+```
 
 **A measured number, with its date:**
 
@@ -279,9 +360,24 @@ exist. The section number goes. If a decision in the spec covers it, cite that I
 export const MAXIMUM_REPLY_CHARACTERS = 40_000;
 ```
 
-The date isn't history. It says when the measurement was taken, so a reader can judge whether it
-still holds after a model change. The cutoff is a quirk of an outside tool, and the measurement is
-the reason for the number. The section number goes.
+The cutoff is a quirk of an outside tool, and the measurement is the reason for the number. The
+date isn't history. It says when the measurement was taken, so a reader can judge whether it still
+holds. Three fixes:
+
+- "The coordinator has no tool to read the rest" is a fact about other code today. It goes stale
+  the day someone adds such a tool, and nothing would flag it. The cutoff alone is the reason.
+- The section number goes. Cite the decision's ID if one covers the limit.
+- "The coordinator's model" doesn't say which model. Name it, since the date alone doesn't say
+  what the number was measured on.
+
+```ts
+// Claude Code cuts off a tool result over 25,000 tokens, so a reply has to stay under that.
+// The tool can't count tokens without calling the API, so it counts characters. Measured on
+// 2026-10-26, reads of a 14-day trip ran from 1.80 to 2.13 characters a token, as the API
+// counts them for <the model>. At 1.80, 40,000 characters is about 22,200 tokens, still
+// under 25,000.
+export const MAXIMUM_REPLY_CHARACTERS = 40_000;
+```
 
 **A quirk of the platform, with one unclear sentence:**
 
@@ -289,8 +385,33 @@ the reason for the number. The section number goes.
 // Docker stops a container with SIGTERM. Node ignores it by default when it's the
 // container's first process, so Docker would wait 10 seconds and then kill it. The
 // spans not sent yet go first.
+const stop = (): void => {
+  server.close();
+  void pool.end();
+  void tracing.shutdown();
+};
+process.once("SIGTERM", stop);
+process.once("SIGINT", stop);
 ```
 
-The first two sentences are the model to follow. The last one can't be read on its own: a reader
-can't tell what goes first, or before what. Rewrite it once you've checked what the code does, or
-delete it.
+The first two sentences are the model to follow. They give the reason the SIGTERM handler exists,
+which no name could. But they sit on `stop`, six lines above the line they explain. Step 4 puts a
+reason for one line right above that line.
+
+The last sentence can't be read on its own, and the code doesn't match it: `tracing.shutdown()` is
+called last, not first. It may mean that `tracing.shutdown()` sends the spans that haven't been
+sent yet. Check what it does, then rewrite the sentence to say that, above that call, or delete it.
+
+**After,** with the last sentence deleted until it's checked:
+
+```ts
+const stop = (): void => {
+  server.close();
+  void pool.end();
+  void tracing.shutdown();
+};
+// Docker stops a container with SIGTERM. Node ignores it by default when it's the
+// container's first process, so Docker would wait 10 seconds and then kill it.
+process.once("SIGTERM", stop);
+process.once("SIGINT", stop);
+```

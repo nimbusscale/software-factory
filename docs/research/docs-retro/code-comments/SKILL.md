@@ -28,8 +28,11 @@ Most of what a comment could say has a better home, one that can't go stale:
 - **A smaller function,** whose name says what a block does.
 - **A type,** for what kind of value it is, which values are allowed, or whether items repeat. In
   TypeScript, a union or a `ReadonlySet`. In Python, a `Literal`, an `Enum` or a `NewType`, when
-  the project runs a type checker such as mypy or pyright. In Go, a named type with constants.
-- **An error with a clear name,** which explains itself to the caller who gets it.
+  the project runs a type checker such as mypy or pyright. In Go, a named type with constants
+  says which values are meant. Go still accepts any other value of the base type, so check values
+  where they come into the program.
+- **An error with a clear name,** which explains itself to the caller who gets it. The code that
+  throws it is its home. A function doesn't list the errors that come up from code it calls.
 - **A test,** for behavior an example would show.
 - **The comment where the thing is defined.** If a field's comment says what null means, a function
   that passes the value along doesn't say it again.
@@ -68,7 +71,8 @@ These stay out:
   when other code changes, and nothing points back to the comment. If the code depends on the fact,
   make a type or a check enforce it.
 - **A copy of text that has another home,** such as an example of output that a test already
-  checks, a rule from a spec, or a line of a prompt. Cite the spec item's ID, or name the test.
+  checks, a rule from a spec, or a line of a prompt. Cite the spec item's ID. A test needs no
+  pointer when a reader finds it by the code's name.
 - **Commented-out code, and TODOs.** Version control keeps the old code. Work left to do is an
   issue.
 - **Terms a reader can't decode without a doc,** such as a doc's private marker. Say what the term
@@ -92,6 +96,9 @@ usually don't. Find it, or ask, and leave the comment out until you know. Don't 
 only sounds right. If you can't explain clearly why the code is this way, the code may need to
 change more than the comment does.
 
+A comment a reader can't make sense of goes, even when part of it is true. Keep part of a reason
+only when that part, on its own, tells a reader what not to change.
+
 ## 4. Place it
 
 - Put it next to the smallest piece of code it explains.
@@ -103,14 +110,18 @@ change more than the comment does.
 
 ## 5. Write it
 
-- Use plain words and full sentences, one idea per sentence, in the present tense.
+- Use plain words and full sentences, one idea per sentence, in the present tense. A citation such
+  as `// Meets FR-31.` can be that short.
 - Use the code's names, and the terms the functional spec defines.
 - Join a reason to what it explains with "so", "because" or "otherwise".
 - Cite IDs, never section numbers or headings, since those change when a doc is reorganized.
 - Never cite a blueprint or a research doc. A blueprint is archived once its code is built, and a
   research doc is frozen. State the fact the comment needs instead.
-- A citation doesn't replace a reason. If the reason fits in a sentence, write the sentence. When
-  it's a spec item, cite the ID too.
+- When a spec item holds the reason, cite its ID alone, such as `// Meets FR-31.` Don't restate
+  the item, since a copy drifts when the item changes. The reader can look the item up.
+- When the point is something the code doesn't do, name that part, then cite the ID, such as
+  `// A started trip can be deleted too (FR-12).` A bare ID wouldn't say which check not to add.
+- When no spec item holds the reason, write the reason as a sentence.
 
 ## 6. Keep comments true when the code changes
 
@@ -131,11 +142,12 @@ file. Then list history in the comment lines the change added:
 ```bash
 git diff <base branch> -U0 -- . ':(exclude)*.md' \
   | awk '/^\+\+\+ /{f=substr($0,7)} /^\+[[:space:]]*(\/\/|#|\*|\/\*)/{print f": "substr($0,2)}' \
-  | grep -iE '#[0-9]+|\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b|\b(settled|decided|for now|so far|no longer|used to|previously|the new)\b'
+  | grep -iE '#[0-9]+|\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b|\b(settled|decided|now|yet|so far|no longer|used to|previously|the new)\b'
 ```
 
 Each line it prints is only a signal. "The count no longer matches" can be a real use. Look at each
-one, and fix it if it's history.
+one, and fix it if it's history. It only sees lines that start with a comment marker, so it misses
+a comment at the end of a line of code, and Python docstrings. Read those yourself.
 
 **Then read each comment the change added or changed:**
 
@@ -144,4 +156,5 @@ one, and fix it if it's history.
 - Do the comments on the code the change touched still hold?
 
 A wrong comment is a fix in the change, not a review note. So is a comment that only says what the
-code does: delete it. How a reviewer reports what it found is up to the project's workflow.
+code does: delete it, unless step 1 allows it, as with a comment a linter requires. How a reviewer
+reports what it found is up to the project's workflow.
