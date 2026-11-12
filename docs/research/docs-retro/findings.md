@@ -514,31 +514,41 @@ Comments also had the docs' problems:
 
 One problem is new. A comment can repeat the code, which no doc did.
 
-The `code-comments` skill sets the guidance:
+The `code-comments` skill holds the guidance. This section keeps only what the skill doesn't: the
+reasons behind the choices a reader might question, and how they were reached.
 
-- **The default is no comment.** One test decides it: imagine the comment gone, and ask what the
-  next reader would get wrong. A better name, a smaller function, a type, an error with a clear
-  name, or a test comes first.
-- **What passes is nearly always a reason, a quirk of an outside service, or the ID of the item the
-  code carries out.** Anything else has to pass the test on its own.
 - **No "contract" kind.** A draft had one, for what a caller needs to know. Three examples of it
-  failed the test when looked at closely. One was a rule about no repeats, which a set could hold.
-  One was a copy of a field's comment, on a function that passes the value along. One described an
-  error the API already handled. As a kind, it let an agent label a comment a contract and keep
-  it.
+  failed the delete test when looked at closely. One was a rule about no repeats, which a set could
+  hold. One was a copy of a field's comment, on a function that passes the value along. One
+  described an error the API already handled. As a kind, it let an agent label a comment a
+  contract and keep it.
 - **No "guide" kind.** A draft had labels for the phases of a long function. A smaller function
   with a clear name does that better, since its name can't drift from what it does the way a label
-  can. A label that matters usually matters for a reason, such as an order, and reasons are already
-  allowed. None of the 60 sampled comments was one.
-- **The same rules as docs.** No history, no copies, and IDs, not section numbers. Never a pointer
-  to a blueprint or a research doc. A citation doesn't replace a reason that fits in a sentence.
-- **Only what can be shown.** Each kind has its own source. A reason comes from where the choice
-  was made, such as a spec item's Why, the task, or the owner. A quirk comes from the service's docs
-  or a saved response. An ID comes from the spec. The code backs up only the parts of a claim that
-  describe the code. The risk is highest when an agent comments code it didn't write, since it has
-  no source and can easily write a reason that sounds right and isn't.
-- **A measured number keeps its date.** That date is evidence, not history. A reader needs it to
-  judge whether the number still holds.
+  can. A label that matters usually matters for a reason, such as an order. None of the 60 sampled
+  comments was one.
+- **No list of errors from deeper code.** A docstring's "Raises:" section is a layout for people
+  reading generated docs. An agent reads the code, where the error is thrown and named. A second
+  mention one level up is a copy that drifts when a function in between changes.
+- **A spec item's ID alone.** The point of citing it is that a change to the item finds the code.
+  Restating the item's reason in the comment makes a copy that goes stale when the item changes.
+- **A comment a reader can't make sense of goes, even when part of it is true.** A draft kept part
+  of a reason it couldn't finish. The example, "the rest of the input is the coordinator's own
+  writing, so it's left out", told an outside reader nothing they could act on.
+- **A source for each kind of claim.** A reason rarely comes from the code. It comes from where the
+  choice was made. The risk is highest when an agent comments code it didn't write, since it has no
+  source and can easily write a reason that sounds right and isn't.
+- **The linter wins.** When a lint rule requires a comment, the skill allows it rather than fight
+  the rule. Deterministic checks beat agent instructions, and an exception left out of either one
+  would set them against each other.
+
+The worked examples were checked by reviewers who read only the skill and the examples, to see
+whether each example follows the skill and makes sense without knowing road-trip-agent. Sonnet and
+Opus each reviewed the first version, and Opus reviewed the second. Each round found real problems,
+mostly examples whose rewrites broke the skill's own rules, such as fragments where the skill asks
+for full sentences, or a fact about other code that the skill rules out. Three examples leaned on
+knowing the app, so each now shows the code its verdict needs. Sonnet was the stricter reviewer.
+The rounds stopped while they still found finer points, since use on a real project will show which
+gaps matter.
 
 ## 4. The docs for the next project
 

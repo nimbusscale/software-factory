@@ -47,9 +47,7 @@ comment. It hasn't been tried on a real project yet.
 
 - `SKILL.md` holds the method, as steps in order: decide whether to write a comment, decide what it
   holds, check each claim, place it, write it, keep it true when the code changes, and check the
-  change. The default is no comment. The test is what the next reader would get wrong if the
-  comment were gone. What passes is nearly always a reason, a quirk of an outside service, or the
-  ID of the item the code carries out.
+  change.
 - `references/worked-examples.md` sorts real comments from road-trip-agent with the skill's steps.
 
 It draws on two outside skills, listed in the findings' sources, and on the same rules about
