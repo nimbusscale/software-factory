@@ -1,0 +1,2 @@
+Previous agentic project in which the retros are from and the genesis of this project to build something to enhance my work with agentic development: /home/jjk3/PycharmProjects/personal/road-trip-agent
+Example project we will use to build and refine the software factory: /home/jjk3/PycharmProjects/personal/dust-law
