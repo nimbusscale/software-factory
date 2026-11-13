@@ -1,0 +1,132 @@
+{
+  "issue": 87,
+  "labels": {
+    "I87-0": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-2": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-4": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "'None yet.'"
+    },
+    "I87-5": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-6": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-7": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I87-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second kind: history (changed from 3 PRs)"
+    },
+    "I87-10": {
+      "kind": "task",
+      "needed": "unsure",
+      "note": "specific Ends in: a decision, or a PR if the skill changes"
+    },
+    "I87-11": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I87-12": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I87-13": {
+      "kind": "history",
+      "needed": "no",
+      "note": "where it was raised"
+    },
+    "IC87-0": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-2": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-3": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-5": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-6": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-7": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-8": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-9": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-12": {
+      "kind": "result",
+      "note": "one PR's review run"
+    },
+    "IC87-1": {
+      "kind": "result",
+      "note": "second kind: a proposed skill change"
+    },
+    "IC87-4": {
+      "kind": "decision",
+      "note": "skill change put on hold, settled in chat"
+    },
+    "IC87-10": {
+      "kind": "result",
+      "note": "second kind: a proposed skill change"
+    },
+    "IC87-11": {
+      "kind": "result",
+      "note": "second kind: decision (skill changed in 92cbf09 with Joe's agreement)"
+    },
+    "IC87-13": {
+      "kind": "status",
+      "note": "closed, with the reason"
+    }
+  },
+  "notes": "Issue #87 was a spike to check which files the CI reviewer reads on each PR, since it seemed to skip DEVELOPMENT.md and design/README.md. The body was written once, at 337 words, and never grew (2 versions on 2026-10-21). All the work went into 14 issue comments, about 2,600 words, as the Done when asked (I87-9): one comment per PR review run with what it read and what it found (IC87-0 to IC87-12). So results take most of the words, all in comments. There was no PR. The skill change was made in another issue's PR (#109, commit 92cbf09), which IC87-11 reports. Surprising: a hold decision (IC87-4) was reversed a day later in chat, and the only record of the reversal is one sentence inside a result comment (IC87-11). The closing comment gives the reason in two sentences (IC87-13). No struck-out questions, PR description, or decisions comment exist, so those questions don't apply."
+}

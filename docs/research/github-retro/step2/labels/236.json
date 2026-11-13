@@ -1,0 +1,105 @@
+{
+  "issue": 236,
+  "labels": {
+    "I236-0": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "example from Joe's Bar Harbor session"
+    },
+    "I236-2": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-3": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-4": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-5": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "pointer to the code to change"
+    },
+    "I236-6": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "turned out wrong: IC236-0 says the agent does need a change"
+    },
+    "I236-7": {
+      "kind": "reason",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I236-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-10": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the UI spec for a reopened card"
+    },
+    "I236-11": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the UI spec for moving between sets"
+    },
+    "I236-12": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-13": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": "about ordering against #204"
+    },
+    "I236-14": {
+      "kind": "status",
+      "needed": "no",
+      "note": "Do not written yet"
+    },
+    "I236-15": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I236-16": {
+      "kind": "status",
+      "needed": "no",
+      "note": "Done when not written yet"
+    },
+    "I236-17": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I236-18": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "IC236-0": {
+      "kind": "decision",
+      "note": "closed as not planned; second kind: status, and a finding that the change is bigger than the body says"
+    }
+  },
+  "notes": "Issue #236 asked to let the user look back at earlier option sets and reopen a card after a pick. It lived about 25 minutes on 2026-10-30: the body went from 547 to 814 words in 4 versions, then it was closed as not planned. Reasons take about 250 words, and the two settled questions take the most (about 340). The Do and Done when were never written (I236-14, I236-16). The answers under the struck-out questions (I236-10, I236-11) were the task, not history: they are the spec for the card, and the closing comment says they stay in the body in case the issue comes back (IC236-0). Surprising: the closing comment says the body's claim that the agent needs no change (I236-6) was wrong, because the coordinator's instructions describe option cards. There was no PR. The decision and the last status went into the one issue comment (IC236-0)."
+}

@@ -1,0 +1,1045 @@
+{
+  "issue": 209,
+  "labels": {
+    "I209-0": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-2": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-3": {
+      "kind": "result",
+      "needed": "no",
+      "note": "Natick case, from a live session; dropped as a case later (I209-22); second: reason"
+    },
+    "I209-4": {
+      "kind": "result",
+      "needed": "no",
+      "note": "Natick case, from a live session; dropped as a case later (I209-22); second: reason"
+    },
+    "I209-5": {
+      "kind": "result",
+      "needed": "no",
+      "note": "Natick case, from a live session; dropped as a case later (I209-22); second: reason"
+    },
+    "I209-6": {
+      "kind": "result",
+      "needed": "no",
+      "note": "Natick case, from a live session; dropped as a case later (I209-22); second: reason"
+    },
+    "I209-7": {
+      "kind": "result",
+      "needed": "no",
+      "note": "Natick case, from a live session; dropped as a case later (I209-22); second: reason"
+    },
+    "I209-8": {
+      "kind": "result",
+      "needed": "unsure",
+      "note": "Bar Harbor case, from a live session; second: reason"
+    },
+    "I209-9": {
+      "kind": "result",
+      "needed": "unsure",
+      "note": "Bar Harbor case, from a live session; second: reason"
+    },
+    "I209-10": {
+      "kind": "result",
+      "needed": "unsure",
+      "note": "Bar Harbor case, from a live session; second: reason"
+    },
+    "I209-11": {
+      "kind": "result",
+      "needed": "unsure",
+      "note": "Bar Harbor gray case; ends with a later decision (decision 10) added in"
+    },
+    "I209-12": {
+      "kind": "result",
+      "needed": "no",
+      "note": "Austin case, dropped (I209-21); second: history"
+    },
+    "I209-13": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I209-14": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I209-15": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I209-16": {
+      "kind": "task",
+      "needed": "unsure",
+      "note": "pointer to a related open question in #53"
+    },
+    "I209-17": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is in Do (I209-45)"
+    },
+    "I209-18": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is in Do (I209-39)"
+    },
+    "I209-19": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer and rule text are in Do (I209-58)"
+    },
+    "I209-20": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is in Do (I209-40)"
+    },
+    "I209-21": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is in Do (I209-40)"
+    },
+    "I209-22": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is in Do (I209-40)"
+    },
+    "I209-23": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is in Do (I209-25)"
+    },
+    "I209-24": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is in Do (I209-38)"
+    },
+    "I209-25": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision (dated); also status (corpus count on 2026-11-09)"
+    },
+    "I209-26": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "cites criteria drift"
+    },
+    "I209-27": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "steps 1 to 4; second: status ('Done on 2026-11-10' for steps 1 and 3)"
+    },
+    "I209-28": {
+      "kind": "status",
+      "needed": "no",
+      "note": "'Done on 2026-11-10 in #290'"
+    },
+    "I209-29": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-30": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "calibration plan and step 5; second: status and result of #291 (about 140 words)"
+    },
+    "I209-31": {
+      "kind": "status",
+      "needed": "unsure",
+      "note": "'Done in #292' with agreement numbers (second: result); ends with step 6 task; says Opus is the only labeler from here"
+    },
+    "I209-32": {
+      "kind": "status",
+      "needed": "unsure",
+      "note": "golden set saved in #293 and how the judge was scored; second: result"
+    },
+    "I209-33": {
+      "kind": "result",
+      "needed": "no",
+      "note": "judge tuning table"
+    },
+    "I209-34": {
+      "kind": "result",
+      "needed": "no",
+      "note": "heading for the per-check table"
+    },
+    "I209-35": {
+      "kind": "result",
+      "needed": "no",
+      "note": "per-check table"
+    },
+    "I209-36": {
+      "kind": "result",
+      "needed": "no",
+      "note": "second: decision ('good enough') and status ('Next: the replays')"
+    },
+    "I209-37": {
+      "kind": "set-aside",
+      "needed": "no",
+      "note": "two #287 review notes left for later; second: status (checked in #290)"
+    },
+    "I209-38": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "limits for tuning the judge; second: decision"
+    },
+    "I209-39": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "pass rule for a replay; second: decision"
+    },
+    "I209-40": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "the cases and run count; second: decision"
+    },
+    "I209-41": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "dev/holdout splits; second: decision (2026-11-11) and cost result"
+    },
+    "I209-42": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision"
+    },
+    "I209-43": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision"
+    },
+    "I209-44": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision and reason"
+    },
+    "I209-45": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: reason (the Phoenix disconnect in #294)"
+    },
+    "I209-46": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-47": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "ends with a status line (as of 2026-11-08)"
+    },
+    "I209-48": {
+      "kind": "status",
+      "needed": "no",
+      "note": "the baseline in #295; second: history (prompt snapshot problem)"
+    },
+    "I209-49": {
+      "kind": "result",
+      "needed": "no",
+      "note": "baseline table"
+    },
+    "I209-50": {
+      "kind": "result",
+      "needed": "no",
+      "note": "heading for the per-check table"
+    },
+    "I209-51": {
+      "kind": "result",
+      "needed": "no",
+      "note": "baseline per-check table"
+    },
+    "I209-52": {
+      "kind": "result",
+      "needed": "no",
+      "note": "second: status ('Next: ...')"
+    },
+    "I209-53": {
+      "kind": "result",
+      "needed": "no",
+      "note": "describes the change and its experiment; second: log"
+    },
+    "I209-54": {
+      "kind": "result",
+      "needed": "no",
+      "note": "before/after table"
+    },
+    "I209-55": {
+      "kind": "result",
+      "needed": "no",
+      "note": "before/after per-check table"
+    },
+    "I209-56": {
+      "kind": "result",
+      "needed": "no",
+      "note": "what failures are left"
+    },
+    "I209-57": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": "where the evaluation stops; second: set-aside (7.7 dislike, #296)"
+    },
+    "I209-58": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "the two tests to add; second: decision"
+    },
+    "I209-59": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "conflicts with I209-57, which says no smaller changes follow"
+    },
+    "I209-60": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "single turns first; second: reason and an idea (LangWatch Scenario)"
+    },
+    "I209-61": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-62": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-63": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-64": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I209-65": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "specific 'Ends in': more than one PR; second: history"
+    },
+    "I209-66": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "'Settled in: chat.'"
+    },
+    "IC209-0": {
+      "kind": "set-aside",
+      "note": "two review notes on #295 left for later"
+    },
+    "P287-d0": {
+      "kind": "boilerplate",
+      "note": "'Part of #209.'"
+    },
+    "P287-d1": {
+      "kind": "task",
+      "note": "Joe's chat messages quoted as the task; not in the issue"
+    },
+    "P287-d2": {
+      "kind": "copy",
+      "note": "heading for the copied step"
+    },
+    "P287-d3": {
+      "kind": "copy",
+      "note": "step 1 from the issue's Do"
+    },
+    "P287-d4": {
+      "kind": "result",
+      "note": ""
+    },
+    "P287-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P287-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P287-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P287-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5"
+    },
+    "P287-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P287-c2": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P287-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "written into #209's Ends in, which is the issue, not a doc"
+    },
+    "P287-c4": {
+      "kind": "boilerplate",
+      "note": "'Set aside: Nothing.'"
+    },
+    "P287-c5": {
+      "kind": "boilerplate",
+      "note": "'Config changes: None.'"
+    },
+    "P289-d0": {
+      "kind": "boilerplate",
+      "note": "'Part of #209.'"
+    },
+    "P289-d1": {
+      "kind": "task",
+      "note": "Joe's chat messages quoted as the task; not in the issue"
+    },
+    "P289-d2": {
+      "kind": "copy",
+      "note": "heading for the copied steps"
+    },
+    "P289-d3": {
+      "kind": "copy",
+      "note": "steps 2 and 3 from the issue's Do"
+    },
+    "P289-d4": {
+      "kind": "result",
+      "note": ""
+    },
+    "P289-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P289-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P289-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P289-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "points to evals/saving/decisions.md for every decision, and #209's Do for plan changes"
+    },
+    "P289-c1": {
+      "kind": "set-aside",
+      "note": "#288, in Triage"
+    },
+    "P289-c2": {
+      "kind": "set-aside",
+      "note": "added to #209's Do"
+    },
+    "P289-c3": {
+      "kind": "boilerplate",
+      "note": "'Config changes: None.'"
+    },
+    "P290-d0": {
+      "kind": "copy",
+      "note": "heading for the copied pilot step"
+    },
+    "P290-d1": {
+      "kind": "copy",
+      "note": "pilot step from the issue's Do"
+    },
+    "P290-d2": {
+      "kind": "result",
+      "note": ""
+    },
+    "P290-d3": {
+      "kind": "result",
+      "note": ""
+    },
+    "P290-d4": {
+      "kind": "result",
+      "note": ""
+    },
+    "P290-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P290-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P290-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P290-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5"
+    },
+    "P290-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md sections 2 and 5"
+    },
+    "P290-c2": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P290-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P290-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P290-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P290-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P290-c7": {
+      "kind": "set-aside",
+      "note": "kept in #209's Do"
+    },
+    "P290-c8": {
+      "kind": "boilerplate",
+      "note": "'Config changes: None.'"
+    },
+    "P291-d0": {
+      "kind": "boilerplate",
+      "note": "'Part of #209, step 4 (pilot).'"
+    },
+    "P291-d1": {
+      "kind": "copy",
+      "note": "heading for the copied step"
+    },
+    "P291-d2": {
+      "kind": "copy",
+      "note": "pilot step from the issue's Do"
+    },
+    "P291-d3": {
+      "kind": "task",
+      "note": "extra asks from Joe in chat, not in the issue"
+    },
+    "P291-d4": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-d10": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P291-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "evals/saving/decisions.md decision 9, and calibration.md"
+    },
+    "P291-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decision 10 in evals/saving/decisions.md, and a line on #209's case"
+    },
+    "P291-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decisions 11 to 14 in evals/saving/decisions.md"
+    },
+    "P291-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "label changes; doesn't say where they were written"
+    },
+    "P291-c4": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5"
+    },
+    "P291-c5": {
+      "kind": "set-aside",
+      "note": "a step to do before merging, not really set aside"
+    },
+    "P292-d0": {
+      "kind": "copy",
+      "note": "heading for the copied step"
+    },
+    "P292-d1": {
+      "kind": "copy",
+      "note": "step 5 from the issue's Do"
+    },
+    "P292-d2": {
+      "kind": "boilerplate",
+      "note": "'Part of #209.'"
+    },
+    "P292-d3": {
+      "kind": "result",
+      "note": ""
+    },
+    "P292-d4": {
+      "kind": "result",
+      "note": ""
+    },
+    "P292-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P292-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P292-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "heading: all written into evals/saving/decisions.md and the rubric"
+    },
+    "P292-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decisions.md decision number named"
+    },
+    "P292-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decisions.md decision number named"
+    },
+    "P292-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decisions.md decision number named"
+    },
+    "P292-c4": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decisions.md decision number named"
+    },
+    "P292-c5": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decisions.md decision number named"
+    },
+    "P292-c6": {
+      "kind": "set-aside",
+      "note": "settled to add only if a case turns up; no issue"
+    },
+    "P292-c7": {
+      "kind": "set-aside",
+      "note": "no issue"
+    },
+    "P293-d0": {
+      "kind": "copy",
+      "note": "heading for the copied step"
+    },
+    "P293-d1": {
+      "kind": "copy",
+      "note": "step 6 from the issue's Do"
+    },
+    "P293-d2": {
+      "kind": "task",
+      "note": "scopes the PR to the first sentence; Joe's ask; not in the issue"
+    },
+    "P293-d3": {
+      "kind": "copy",
+      "note": "quotes the issue's Done when item; second: status (judge comes later)"
+    },
+    "P293-d4": {
+      "kind": "result",
+      "note": ""
+    },
+    "P293-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P293-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P293-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P293-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P293-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "heading: written into DEVELOPMENT.md section 5 and decisions.md (decision 19)"
+    },
+    "P293-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "by the c0 heading"
+    },
+    "P293-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "by the c0 heading"
+    },
+    "P293-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "by the c0 heading"
+    },
+    "P293-c4": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "by the c0 heading, though a name choice likely isn't in a doc"
+    },
+    "P293-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "'Other changes': shared dataset code"
+    },
+    "P293-c6": {
+      "kind": "set-aside",
+      "note": "no issue; may come with the judge"
+    },
+    "P294-d0": {
+      "kind": "status",
+      "note": "says which part of #209 this is, and that replays come later"
+    },
+    "P294-d1": {
+      "kind": "copy",
+      "note": "heading for the copied Do"
+    },
+    "P294-d2": {
+      "kind": "copy",
+      "note": "Do bullet from the issue"
+    },
+    "P294-d3": {
+      "kind": "copy",
+      "note": "older wording of I209-46, with a sentence the issue later dropped"
+    },
+    "P294-d4": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P294-d5": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P294-d6": {
+      "kind": "status",
+      "note": "the other Done when items come later"
+    },
+    "P294-d7": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P294-d8": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P294-d9": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P294-d10": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P294-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5"
+    },
+    "P294-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "written into the rubric itself"
+    },
+    "P294-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5"
+    },
+    "P294-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5"
+    },
+    "P294-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P294-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "second: log (run 4 reverted, run 5 rerun)"
+    },
+    "P294-c6": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "decisions 20 and 21 in evals/saving/decisions.md"
+    },
+    "P294-c7": {
+      "kind": "set-aside",
+      "note": "not filed; Joe can decide; later copied into I209-45"
+    },
+    "P294-c8": {
+      "kind": "boilerplate",
+      "note": "'Config changes: None.'"
+    },
+    "P295-d0": {
+      "kind": "boilerplate",
+      "note": "'Part of #209' with its title"
+    },
+    "P295-d1": {
+      "kind": "copy",
+      "note": "heading for the copied Do"
+    },
+    "P295-d2": {
+      "kind": "copy",
+      "note": "Do bullet from the issue"
+    },
+    "P295-d3": {
+      "kind": "copy",
+      "note": "Do bullet from the issue"
+    },
+    "P295-d4": {
+      "kind": "copy",
+      "note": "Do bullet from the issue"
+    },
+    "P295-d5": {
+      "kind": "copy",
+      "note": "Do bullet from the issue"
+    },
+    "P295-d6": {
+      "kind": "copy",
+      "note": "Do bullet from the issue"
+    },
+    "P295-d7": {
+      "kind": "copy",
+      "note": "Do bullet from the issue"
+    },
+    "P295-d8": {
+      "kind": "copy",
+      "note": "restates Joe's 2026-11-11 change, which I209-41 holds in more detail"
+    },
+    "P295-d9": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P295-d10": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P295-d11": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P295-c0": {
+      "kind": "other",
+      "note": "heading: calls the implementer made"
+    },
+    "P295-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c2": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c7": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c8": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c9": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c10": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c11": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c12": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c13": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c14": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P295-c15": {
+      "kind": "log",
+      "note": "which commits the baseline ran on"
+    },
+    "P295-c16": {
+      "kind": "other",
+      "note": "pointer: Joe's own decisions are in #209's Do"
+    },
+    "P297-d0": {
+      "kind": "boilerplate",
+      "note": "'Closes #209.'"
+    },
+    "P297-d1": {
+      "kind": "task",
+      "note": "written fresh; adds the prompt snapshot fix the issue didn't plan"
+    },
+    "P297-d2": {
+      "kind": "task",
+      "note": "written fresh: what the PR changed, not copied from the issue"
+    },
+    "P297-d3": {
+      "kind": "task",
+      "note": "written fresh: what the PR changed, not copied from the issue"
+    },
+    "P297-d4": {
+      "kind": "task",
+      "note": "written fresh: what the PR changed, not copied from the issue"
+    },
+    "P297-d5": {
+      "kind": "task",
+      "note": "written fresh: what the PR changed, not copied from the issue"
+    },
+    "P297-d6": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P297-d7": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P297-d8": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P297-d9": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P297-d10": {
+      "kind": "result",
+      "note": "Done when with its result"
+    },
+    "P297-c0": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P297-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P297-c2": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P297-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P297-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P297-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P297-c6": {
+      "kind": "set-aside",
+      "note": "not filed; also in I209-57"
+    },
+    "P297-c7": {
+      "kind": "set-aside",
+      "note": "#296, in Triage"
+    },
+    "P297-c8": {
+      "kind": "boilerplate",
+      "note": "'Config changes: None.'"
+    }
+  },
+  "notes": "The issue set up an evaluation of whether the coordinator saves to the right place (trip brief, itinerary, or memory), then changed the instructions and measured the change. It grew from 840 words to 7,042 over 41 versions, and most of the growth came after the first PR (2026-11-10), as each of nine PRs finished a step and its status and results were written back into Do. Task is 42% of the body, but results are 30%, mostly tables and run numbers placed inside Do (I209-33 to I209-36, I209-49 to I209-56), plus status lines such as I209-28 and I209-48. The answers under the eight struck questions are all repeated in Do, so the struck text is history (I209-17 to I209-24). Most PR descriptions copied the Do step they covered; the new text in them is Joe's chat asks quoted as the task (P287-d1, P289-d1, P291-d3), and the last PR's list of what it changed (P297-d1 to d5). One copy differs from the final issue, so the issue was edited after (P294-d3 vs I209-46). The decisions comments hold 56 decisions; 23 say where they were written, mostly evals/saving/decisions.md and DEVELOPMENT.md section 5, and the #295 and #297 comments name no doc for any of their 20. Surprising: Do still says to make smaller changes if runs fail (I209-59), while the ending block says none follow (I209-57)."
+}

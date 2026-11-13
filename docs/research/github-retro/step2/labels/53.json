@@ -1,0 +1,181 @@
+{
+  "issue": 53,
+  "labels": {
+    "I53-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I53-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-2": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-5": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": "stale: names promptfoo, but Phoenix was chosen (see I53-17, I53-22)"
+    },
+    "I53-6": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-7": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I53-8": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": "largely answered by the struck I53-9"
+    },
+    "I53-9": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer is about #66 to #69, not this issue's work"
+    },
+    "I53-10": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": "list of eval candidates"
+    },
+    "I53-11": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": "partly stale: #184 later made tier a label, and #185 is the tier eval"
+    },
+    "I53-12": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "moved to #209"
+    },
+    "I53-13": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": "second kind: result from the #132 spike"
+    },
+    "I53-14": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I53-15": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "moved to #135"
+    },
+    "I53-16": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "moved to #282"
+    },
+    "I53-17": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-18": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-19": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I53-20": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I53-21": {
+      "kind": "open-question",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I53-22": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": "provisional plan under an open question; includes Joe's 2026-11-05 decision, status (corpus of 21 sessions, evaluator moved to #282) and results (Bar Harbor judge numbers)"
+    },
+    "I53-23": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-24": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "still says 'set up the framework', from the first version"
+    },
+    "I53-25": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-26": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-27": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-28": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-29": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-30": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I53-31": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I53-32": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I53-33": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I53-34": {
+      "kind": "history",
+      "needed": "no",
+      "note": ""
+    }
+  },
+  "notes": "Issue #53 was the umbrella for agent evaluations. It never got a PR or a comment. The body grew from 383 words on 2026-10-19 to 2,769 words over 31 versions, through 2026-11-06, as each new evaluation idea was parked in it. Open questions take the most words (about 1,160). Next is one 785-word block (I53-22) that holds a provisional plan for how the evaluations are built up, then struck-out questions (about 460). The Do and Done when items are about 275 words and barely changed. Surprising: the first open question still names promptfoo as the likely framework (I53-5), and the Do still says 'set up the framework' (I53-24), though the later blocks show Phoenix was chosen (I53-17, I53-22). Several open questions read as stale or half answered (I53-8, I53-11). The struck-out answers are history for this issue: four were moved to other issues (I53-12, I53-15, I53-16), and I53-9's answer is about other issues' scope. With no PR or comments, results and status went into the body: the #132 spike results (I53-13), the corpus counts and the Bar Harbor judge numbers inside I53-22, and the move of the first evaluator to #282 (I53-22)."
+}

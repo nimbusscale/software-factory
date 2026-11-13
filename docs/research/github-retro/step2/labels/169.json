@@ -1,0 +1,280 @@
+{
+  "issue": 169,
+  "labels": {
+    "I169-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I169-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-2": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "decision second"
+    },
+    "I169-3": {
+      "kind": "result",
+      "needed": "yes",
+      "note": "what happened in a live session; Done when refers to \"Day 1 above\""
+    },
+    "I169-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "the day the user wants; reason second"
+    },
+    "I169-5": {
+      "kind": "copy",
+      "needed": "unsure",
+      "note": "quotes domain model 4.7; reason second"
+    },
+    "I169-6": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-7": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-10": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-11": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-12": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the design to build"
+    },
+    "I169-13": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the design to build"
+    },
+    "I169-14": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the design to build"
+    },
+    "I169-15": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the design to build"
+    },
+    "I169-16": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the design to build"
+    },
+    "I169-17": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-18": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-19": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-20": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-21": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-22": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-23": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-24": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I169-25": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I169-26": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "P183-d0": {
+      "kind": "boilerplate",
+      "note": "closing keyword"
+    },
+    "P183-d1": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d2": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d3": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d4": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d5": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d6": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d7": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d8": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P183-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P183-d10": {
+      "kind": "result",
+      "note": ""
+    },
+    "P183-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P183-d12": {
+      "kind": "result",
+      "note": ""
+    },
+    "P183-d13": {
+      "kind": "result",
+      "note": ""
+    },
+    "P183-d14": {
+      "kind": "result",
+      "note": ""
+    },
+    "P183-d15": {
+      "kind": "result",
+      "note": ""
+    },
+    "P183-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P183-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P183-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P183-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P183-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P183-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P183-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P183-c7": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P183-c8": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P183-c9": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P183-c10": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording"
+    },
+    "P183-c11": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "under wording to review; reason second"
+    },
+    "P183-c12": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording"
+    },
+    "P183-c13": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording"
+    },
+    "P183-c14": {
+      "kind": "set-aside",
+      "note": "went to #177 as an open question"
+    },
+    "P183-c15": {
+      "kind": "other",
+      "note": "config changes: none, and why the settings.json change is not a locked config"
+    }
+  },
+  "notes": "The issue added a check-in stop, so a day can show the party checking in at the hotel before a later event. It started at 740 words and reached 1,625 by the time PR #183 opened, over 7 versions in about four hours on 2026-10-27. Nothing was added after. Half the words are settled questions (I169-12 to I169-16), each a struck proposal followed by Joe's answer. Those answers are clearly the task, not history. Do I169-17 says to write them into the design docs, and they hold the design, such as the new checkIn kind and how the stop-order check splits a day. A separate Decided section (I169-6, I169-7) holds two choices made outside questions. A \"What happened\" section records the live session that showed the bug (I169-3), and Done when points back to it (I169-20). The PR description copies Do and Done when (P183-d1 to d8) and adds detailed results (P183-d9 to d15). The decisions comment holds 11 decisions, and 4 name the doc they went into (P183-c0, c1, c2, c11). The rest are code-level choices. It also has wording pointers for Joe and one item set aside into #177 (P183-c14). Results went into the PR description only."
+}

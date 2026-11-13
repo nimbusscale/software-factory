@@ -1,0 +1,319 @@
+{
+  "issue": 77,
+  "labels": {
+    "I77-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I77-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I77-2": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I77-3": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer: nothing built"
+    },
+    "I77-4": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "reviewer status and backstop check; Do I77-19 points to it"
+    },
+    "I77-5": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "done by hand, already in code review design 4.2"
+    },
+    "I77-6": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "dropped"
+    },
+    "I77-7": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "no change"
+    },
+    "I77-8": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "settled earlier in #76"
+    },
+    "I77-9": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "fixer answer shape; Do I77-19 points to it"
+    },
+    "I77-10": {
+      "kind": "settled-question",
+      "needed": "unsure",
+      "note": ".gitignore change seems made before the PR; Do I77-19 asks to check it in CI"
+    },
+    "I77-11": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "deny rules for config files; Do I77-19 points to it"
+    },
+    "I77-12": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "when the fix job runs; Do I77-19 points to it"
+    },
+    "I77-13": {
+      "kind": "settled-question",
+      "needed": "unsure",
+      "note": "says to write into code review design 3.6; P113-c5 builds on it"
+    },
+    "I77-14": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "done in PR #111"
+    },
+    "I77-15": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "done in its own PR before this one"
+    },
+    "I77-16": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "Do I77-21 repeats it"
+    },
+    "I77-17": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "accepted, nothing built"
+    },
+    "I77-18": {
+      "kind": "status",
+      "needed": "yes",
+      "note": "second kind: task (write up the hand runs in the PR, leave the 'fix it' reply test for Joe)"
+    },
+    "I77-19": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I77-20": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I77-21": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second kind: reason (found in #76's replay)"
+    },
+    "I77-22": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second kind: reason"
+    },
+    "I77-23": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I77-24": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I77-25": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I77-26": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "Ends in with specific instructions: don't merge, loop runs on this PR"
+    },
+    "I77-27": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I77-28": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I77-29": {
+      "kind": "history",
+      "needed": "no",
+      "note": ""
+    },
+    "P113-d0": {
+      "kind": "boilerplate",
+      "note": "closing keyword"
+    },
+    "P113-d1": {
+      "kind": "copy",
+      "note": "lead-in line"
+    },
+    "P113-d2": {
+      "kind": "copy",
+      "note": "shortened from I77-18; drops the runner path and dates"
+    },
+    "P113-d3": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P113-d4": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P113-d5": {
+      "kind": "copy",
+      "note": "shortened from I77-21; drops the reason"
+    },
+    "P113-d6": {
+      "kind": "copy",
+      "note": "shortened from I77-22; drops the reason"
+    },
+    "P113-d7": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P113-d8": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P113-d9": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P113-d10": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d12": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d13": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d14": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d15": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d16": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d17": {
+      "kind": "result",
+      "note": "second kind: decision (Joe accepted the backstop, #115)"
+    },
+    "P113-d18": {
+      "kind": "result",
+      "note": ""
+    },
+    "P113-d19": {
+      "kind": "status",
+      "note": "second kind: set-aside (untested, #114)"
+    },
+    "P113-d20": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P113-d21": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P113-d22": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P113-d23": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P113-c0": {
+      "kind": "history",
+      "note": "says the open questions were settled and written in by #108, #111, #112"
+    },
+    "P113-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c4": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c5": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c7": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c8": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c10": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P113-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "names a code file only"
+    },
+    "P113-c9": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "config file change approved by Joe"
+    },
+    "P113-c11": {
+      "kind": "result",
+      "note": "CI check of the sandbox's empty files; cites code review design 4.6"
+    },
+    "P113-c12": {
+      "kind": "set-aside",
+      "note": "left for Joe, with how to test it"
+    },
+    "P113-c13": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "an accepted gap, approved by Joe in chat"
+    }
+  },
+  "notes": "Issue #77 ran the code review fix loop in CI, so an agent fixes review findings before Joe reads a PR. The body grew from 156 words on 2026-10-19 to 2,568 words over 32 versions, nearly all on 2026-10-22, the day the PR opened; nothing was added after. Settled questions take most of the words (about 1,980 of 2,568); the Do items are about 360. Most struck-out answers are history: they were already written into code review design 4.5 to 4.7 by PR #108 or done in other PRs (I77-5, I77-6, I77-14, I77-15, I77-16). Four are part of the task, since Do item I77-19 says to make the changes the settled questions say (I77-4, I77-9, I77-11, I77-12). The PR description copied the Do and Done when, but shortened three items and dropped their reasons (P113-d2, d5, d6). What it added was results (P113-d10 to d23). The decisions comment held 10 build decisions, and 8 name the code review design section they went into; c6 names only code and c9 is a config change. It also held a CI check result (c11), one set-aside (c12), and an accepted gap (c13). Results went in the PR description; a separate PR comment held the write-up of the hand runs on #109. Surprising: a Do item (I77-18) is mostly a status report of earlier runs, not an instruction."
+}

@@ -1,0 +1,466 @@
+{
+  "issue": 282,
+  "labels": {
+    "I282-0": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "second: task (defines the three verdicts); ends with 'Added by Joe' attribution"
+    },
+    "I282-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "second: task (scope: score recorded turns only)"
+    },
+    "I282-2": {
+      "kind": "history",
+      "needed": "no",
+      "note": "where the issue was moved from"
+    },
+    "I282-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I282-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I282-5": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I282-6": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I282-7": {
+      "kind": "other",
+      "needed": "no",
+      "note": "heading 'Terms used here:'"
+    },
+    "I282-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "term definition; second: status (corpus size on 2026-11-05)"
+    },
+    "I282-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "term definition"
+    },
+    "I282-10": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "term definition; second: history (Opus labeled the calibration sets)"
+    },
+    "I282-11": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "term definition"
+    },
+    "I282-12": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "term definition"
+    },
+    "I282-13": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer was added to Do (I282-27)"
+    },
+    "I282-14": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer: hand copy stays, already in I282-19/20"
+    },
+    "I282-15": {
+      "kind": "settled-question",
+      "needed": "unsure",
+      "note": "answer (fair readings are grounded, no rubric change) is in no other block"
+    },
+    "I282-16": {
+      "kind": "decision",
+      "needed": "no",
+      "note": "heading 'Decided by Joe on 2026-11-05, in chat:' over the Do items"
+    },
+    "I282-17": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "rubric rule; second: decision (under I282-16)"
+    },
+    "I282-18": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "rubric rule"
+    },
+    "I282-19": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "rubric rule"
+    },
+    "I282-20": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "trade-off of the hand copy"
+    },
+    "I282-21": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision (dated, changed after first set)"
+    },
+    "I282-22": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: reason"
+    },
+    "I282-23": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "trade-off; second: result (check of about 1,700 writes)"
+    },
+    "I282-24": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-25": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": "changed from phoenix-evals; second: task, and A/B result numbers"
+    },
+    "I282-26": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision"
+    },
+    "I282-27": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: reason (why overrides, not --legacy-peer-deps)"
+    },
+    "I282-28": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision"
+    },
+    "I282-29": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision"
+    },
+    "I282-30": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: reason"
+    },
+    "I282-31": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision"
+    },
+    "I282-32": {
+      "kind": "other",
+      "needed": "no",
+      "note": "heading 'The steps, in order:'"
+    },
+    "I282-33": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-34": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-35": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-36": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision (dated)"
+    },
+    "I282-37": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: history (changed on 2026-11-06)"
+    },
+    "I282-38": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-39": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: decision and result (Sonnet matched Joe)"
+    },
+    "I282-40": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-41": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-42": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-43": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-44": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-45": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-46": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I282-47": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "specific 'Ends in'"
+    },
+    "I282-48": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "template 'Settled in: chat' text"
+    },
+    "IC282-0": {
+      "kind": "result",
+      "note": "labeler comparison table"
+    },
+    "IC282-1": {
+      "kind": "result",
+      "note": "corpus run results, rubric versions, cost"
+    },
+    "P283-d0": {
+      "kind": "copy",
+      "note": "Do heading copied"
+    },
+    "P283-d1": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d2": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d3": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d4": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d5": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d6": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d7": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d8": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d9": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d10": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d11": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d12": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d13": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d14": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d15": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d16": {
+      "kind": "copy",
+      "note": "Do heading copied"
+    },
+    "P283-d17": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d18": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d19": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d20": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d21": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d22": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d23": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d24": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d25": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d26": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d27": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d28": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d29": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d30": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P283-d31": {
+      "kind": "boilerplate",
+      "note": "'Closes #282'"
+    },
+    "P283-d32": {
+      "kind": "result",
+      "note": "Done when item with its result"
+    },
+    "P283-d33": {
+      "kind": "result",
+      "note": "Done when item with its result"
+    },
+    "P283-d34": {
+      "kind": "result",
+      "note": "Done when item with its result"
+    },
+    "P283-d35": {
+      "kind": "result",
+      "note": "Done when item with its result"
+    },
+    "P283-d36": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P283-c0": {
+      "kind": "boilerplate",
+      "note": "heading 'Decisions'"
+    },
+    "P283-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "written into #282's Do, which is the issue, not a doc"
+    },
+    "P283-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5, and #282's Do"
+    },
+    "P283-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5, and #282's Do"
+    },
+    "P283-c4": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "DEVELOPMENT.md section 5, and #282's Do"
+    },
+    "P283-c5": {
+      "kind": "log",
+      "note": "rubric versions v4 to v7; points to the rubric file and its commits"
+    },
+    "P283-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "golden label changes, saved as annotations"
+    },
+    "P283-c7": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P283-c8": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P283-c9": {
+      "kind": "boilerplate",
+      "note": "heading 'Set aside'"
+    },
+    "P283-c10": {
+      "kind": "set-aside",
+      "note": "not put in any issue"
+    },
+    "P283-c11": {
+      "kind": "set-aside",
+      "note": "no issue named; the caveat is in the results comment"
+    },
+    "P283-c12": {
+      "kind": "boilerplate",
+      "note": "'Config changes: none.'"
+    }
+  },
+  "notes": "The issue built the first general evaluator, 'grounded in the record', and was meant to teach the Phoenix judge process: rubric, golden set from two labelers, tuning a Haiku judge, and a corpus run. It grew from 1,772 to 2,774 words over 16 versions, all before the PR opened, as Joe's chat decisions were written into Do (for example I282-21, I282-25, I282-28 to I282-31). Task makes up 70% of the body, but many Do items are dated decisions with reasons and data folded in. The three struck questions' answers were already moved into Do or other blocks, so they are history (I282-13, I282-14), except I282-15, whose answer appears nowhere else. The PR description is 92% copy of the issue's Do and Done when (P283-d0 to d30), and its only new text is the results lines (P283-d32 to d36). Results went in two issue comments (IC282-0, IC282-1), not the body. The decisions comment is short: three of seven decisions say they were written into DEVELOPMENT.md section 5 (P283-c2 to c4), one went only into the issue (P283-c1), and two items were set aside with no issue (P283-c10, P283-c11)."
+}

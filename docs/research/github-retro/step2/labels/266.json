@@ -1,0 +1,586 @@
+{
+  "issue": 266,
+  "labels": {
+    "I266-0": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "result second: counts from the live run"
+    },
+    "I266-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-2": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "result second"
+    },
+    "I266-3": {
+      "kind": "other",
+      "needed": "unsure",
+      "note": "where the traces are"
+    },
+    "I266-4": {
+      "kind": "reason",
+      "needed": "unsure",
+      "note": "result second"
+    },
+    "I266-5": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I266-6": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-7": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-10": {
+      "kind": "open-question",
+      "needed": "no",
+      "note": "never struck, though the fix went ahead"
+    },
+    "I266-11": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer says see Do"
+    },
+    "I266-12": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer gives the branch setup"
+    },
+    "I266-13": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "Do already says to write the evaluation"
+    },
+    "I266-14": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-15": {
+      "kind": "open-question",
+      "needed": "yes",
+      "note": "has a proposal; never struck, though PR #284 built the replay it proposes"
+    },
+    "I266-16": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-17": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-18": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer says see Do"
+    },
+    "I266-19": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-20": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-21": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-22": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-23": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "fixes from a CI review on #284"
+    },
+    "I266-24": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "result second"
+    },
+    "I266-25": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "result second: what the traces show; also history of how Joe changed the plan"
+    },
+    "I266-26": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": "in Do; task second"
+    },
+    "I266-27": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "reason and result second"
+    },
+    "I266-28": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-29": {
+      "kind": "result",
+      "needed": "no",
+      "note": "results of the two visit-time fixes, in Do"
+    },
+    "I266-30": {
+      "kind": "result",
+      "needed": "no",
+      "note": "results of the no-route fix, in Do"
+    },
+    "I266-31": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": "struck Do item; mostly the reason and the data behind leaving rating alone"
+    },
+    "I266-32": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "decision second"
+    },
+    "I266-33": {
+      "kind": "result",
+      "needed": "no",
+      "note": "final whole-dataset results, in Do"
+    },
+    "I266-34": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-35": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-36": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-37": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-38": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-39": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I266-40": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I266-41": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "IC266-0": {
+      "kind": "result",
+      "note": ""
+    },
+    "IC266-1": {
+      "kind": "result",
+      "note": ""
+    },
+    "IC266-2": {
+      "kind": "result",
+      "note": ""
+    },
+    "IC266-3": {
+      "kind": "result",
+      "note": ""
+    },
+    "IC266-4": {
+      "kind": "result",
+      "note": "the count across the corpus that Do asked for"
+    },
+    "IC266-5": {
+      "kind": "status",
+      "note": "points to PR #284 for what is left"
+    },
+    "IC266-6": {
+      "kind": "result",
+      "note": "baseline results"
+    },
+    "IC266-7": {
+      "kind": "status",
+      "note": "closing summary; result second"
+    },
+    "P284-d0": {
+      "kind": "status",
+      "note": ""
+    },
+    "P284-d1": {
+      "kind": "task",
+      "note": "Joe's request quoted; not in the issue"
+    },
+    "P284-d2": {
+      "kind": "boilerplate",
+      "note": "lead-in"
+    },
+    "P284-d3": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P284-d4": {
+      "kind": "copy",
+      "note": "drops the baseline sentence"
+    },
+    "P284-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P284-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P284-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P284-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P284-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P284-d10": {
+      "kind": "boilerplate",
+      "note": "heading line"
+    },
+    "P284-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P284-d12": {
+      "kind": "result",
+      "note": ""
+    },
+    "P284-d13": {
+      "kind": "log",
+      "note": "struck step with outcome"
+    },
+    "P284-d14": {
+      "kind": "log",
+      "note": "struck step with outcome; decision second"
+    },
+    "P284-d15": {
+      "kind": "log",
+      "note": "struck step; restates the settled answer in I266-16"
+    },
+    "P284-d16": {
+      "kind": "log",
+      "note": "struck step; result second"
+    },
+    "P284-d17": {
+      "kind": "log",
+      "note": "struck step with outcome"
+    },
+    "P284-d18": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d19": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d20": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d21": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d22": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d23": {
+      "kind": "reason",
+      "note": "why the variables are not in .env.example"
+    },
+    "P284-d24": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d25": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d26": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d27": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d28": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-d29": {
+      "kind": "task",
+      "note": "setup needed to run the evaluation"
+    },
+    "P284-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P284-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "later found wrong; fixed per I266-23"
+    },
+    "P284-c2": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "says outright that persistence design 8.9 was left unchanged"
+    },
+    "P284-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P284-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P284-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P284-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P284-c7": {
+      "kind": "set-aside",
+      "note": "went to the description's \"What's left to test\""
+    },
+    "P284-c8": {
+      "kind": "set-aside",
+      "note": "left as an open question in #266"
+    },
+    "P284-c9": {
+      "kind": "boilerplate",
+      "note": "config changes: none"
+    },
+    "P285-d0": {
+      "kind": "status",
+      "note": ""
+    },
+    "P285-d1": {
+      "kind": "boilerplate",
+      "note": "lead-in"
+    },
+    "P285-d2": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P285-d3": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P285-d4": {
+      "kind": "copy",
+      "note": "shortened: drops the trace findings and plan history"
+    },
+    "P285-d5": {
+      "kind": "copy",
+      "note": "restates settled question I266-17"
+    },
+    "P285-d6": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P285-d7": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P285-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P285-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P285-d10": {
+      "kind": "result",
+      "note": ""
+    },
+    "P285-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P285-d12": {
+      "kind": "result",
+      "note": ""
+    },
+    "P285-d13": {
+      "kind": "result",
+      "note": ""
+    },
+    "P285-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P285-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P285-c2": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "written into the issue Do, not a design doc"
+    },
+    "P285-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P285-c4": {
+      "kind": "set-aside",
+      "note": "recorded in the issue Do"
+    },
+    "P285-c5": {
+      "kind": "set-aside",
+      "note": "in the issue Do"
+    },
+    "P285-c6": {
+      "kind": "boilerplate",
+      "note": ""
+    },
+    "P286-d0": {
+      "kind": "status",
+      "note": ""
+    },
+    "P286-d1": {
+      "kind": "boilerplate",
+      "note": "lead-in"
+    },
+    "P286-d2": {
+      "kind": "copy",
+      "note": "drops the \"What goes wrong\" sub-item"
+    },
+    "P286-d3": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P286-d4": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P286-d5": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P286-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P286-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P286-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P286-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P286-d10": {
+      "kind": "result",
+      "note": "example of the new tool reply"
+    },
+    "P286-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P286-d12": {
+      "kind": "result",
+      "note": ""
+    },
+    "P286-d13": {
+      "kind": "result",
+      "note": ""
+    },
+    "P286-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P286-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P286-c2": {
+      "kind": "other",
+      "note": "draft wording for Joe to review; reason second"
+    },
+    "P286-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P286-c4": {
+      "kind": "set-aside",
+      "note": "recorded in the issue Do"
+    },
+    "P286-c5": {
+      "kind": "boilerplate",
+      "note": ""
+    }
+  },
+  "notes": "The issue fixed workers sending keys their candidate tools refuse, and measured the fix with a code-scored evaluation. It grew the most of these five: 327 words at first, 1,035 when the first PR (#284) opened on 2026-11-09, and 2,740 at the end, over 18 versions. Most growth came on 2026-11-09 after #284 opened, as Joe settled questions in chat and the Do list took on new steps, decisions and results. By the end the Do section mixes all three. Three Do items are pure results (I266-29, I266-30, I266-33), and a struck Do item holds the decision to leave the rating key alone (I266-31). Two open questions were never struck, even though the work answered them (I266-10, I266-15). Results show up in all three places: the body's Do, issue comments (the corpus count IC266-4, the baseline IC266-6, and run counts in IC266-0 to IC266-3), and the PR descriptions (P285-d8 to d13, P286-d6 to d13). Most struck question answers are task (I266-12, I266-14, I266-16, I266-17), but some just say see Do (I266-11, I266-18). The PR descriptions copy Do items (P285-d2 to d7), but #284's also adds new material: Joe's request from chat (P284-d1), a log of test steps (P284-d13 to d17), and setup steps for running the evaluation (P284-d18 to d29). Across the three decisions comments, 5 of 14 decisions name a doc (P284-c0, P284-c1, P285-c0, P285-c1, P286-c0). One says outright that it was kept out of a doc (P284-c2). One decision that was written into a doc was later found wrong (P284-c1, fixed per I266-23)."
+}

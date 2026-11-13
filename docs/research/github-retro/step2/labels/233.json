@@ -1,0 +1,184 @@
+{
+  "issue": 233,
+  "labels": {
+    "I233-0": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "says why adding the town to the query isn't the fix; P239-c4 relies on it"
+    },
+    "I233-2": {
+      "kind": "result",
+      "needed": "yes",
+      "note": "session numbers; P239-c5 copies them into the Google doc"
+    },
+    "I233-3": {
+      "kind": "result",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-4": {
+      "kind": "result",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-5": {
+      "kind": "result",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I233-6": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-7": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-9": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer gives the 100-mile cutoff the Do uses"
+    },
+    "I233-10": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-11": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-12": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-13": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-14": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-15": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I233-16": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I233-17": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "P239-d0": {
+      "kind": "boilerplate",
+      "note": "closing keyword"
+    },
+    "P239-d1": {
+      "kind": "copy",
+      "note": "word for word from the issue"
+    },
+    "P239-d2": {
+      "kind": "copy",
+      "note": "word for word from the issue"
+    },
+    "P239-d3": {
+      "kind": "copy",
+      "note": "word for word from the issue"
+    },
+    "P239-d4": {
+      "kind": "copy",
+      "note": "word for word from the issue"
+    },
+    "P239-d5": {
+      "kind": "copy",
+      "note": "word for word from the issue"
+    },
+    "P239-d6": {
+      "kind": "copy",
+      "note": "word for word from the issue"
+    },
+    "P239-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P239-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P239-d9": {
+      "kind": "result",
+      "note": "nothing checked by hand, with the reason"
+    },
+    "P239-c0": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P239-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P239-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P239-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P239-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "drafted tool description wording for Joe's review"
+    },
+    "P239-c5": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "Google data source doc"
+    },
+    "P239-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "test file layout"
+    },
+    "P239-c7": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "test change"
+    },
+    "P239-c8": {
+      "kind": "boilerplate",
+      "note": "set aside: nothing"
+    },
+    "P239-c9": {
+      "kind": "boilerplate",
+      "note": "config changes: none"
+    }
+  },
+  "notes": "Issue #233 fixed search_near returning places hundreds of miles away, by dropping results beyond 100 miles. The body went from 534 to 608 words in 2 versions on 2026-10-30, and the PR opened and merged the same evening. The block data puts every block's first appearance at 19:51, before the PR, so it doesn't show which block grew. Task items and design pointers take the most words (about 180), then reasons (about 160), the session evidence (about 115) and the one settled question (126). The struck-out answer (I233-9) was part of the task: it set the 100-mile cutoff, as its own setting, that Do item I233-10 uses. The PR description copied the Do and Done when word for word (P239-d1 to d6) and added only results (P239-d7 to d9). The decisions comment held 8 numbered decisions: 5 say which doc they went into (P239-c0 to c3, c5), and the rest are the drafted description wording and test layout (c4, c6, c7). Its set-aside and config sections say nothing. Results went in the PR description. The evidence from the live session went in the issue body (I233-2 to I233-5), and the PR reused those numbers in the Google doc (P239-c5)."
+}

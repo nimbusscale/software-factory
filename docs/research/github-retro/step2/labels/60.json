@@ -1,0 +1,375 @@
+{
+  "issue": 60,
+  "labels": {
+    "I60-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": "dependencies; all merged by the time work started"
+    },
+    "I60-1": {
+      "kind": "other",
+      "needed": "unsure",
+      "note": "context on what the prerequisite issues build"
+    },
+    "I60-2": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-5": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-6": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "moved to #191"
+    },
+    "I60-7": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer needs no change here; history"
+    },
+    "I60-8": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer written into the design by #191"
+    },
+    "I60-9": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "meal default; says to write it into two spec sections, which the PR then did (P207-c8)"
+    },
+    "I60-10": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "884 words with sub-items; the 'how a worker searches' part is task for the instructions; parts moved to #184/#185 are history"
+    },
+    "I60-11": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "moved to #136"
+    },
+    "I60-12": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "moved to #191"
+    },
+    "I60-13": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer is the content of the candidate-field instructions; Do I60-17 points to it"
+    },
+    "I60-14": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "unstruck tail of I60-13's answer; carries a task (reuse for #61, drop 'fits mid-range')"
+    },
+    "I60-15": {
+      "kind": "settled-question",
+      "needed": "unsure",
+      "note": "settled in the PR itself and written into technical spec 6.4; answer added to the body minutes before the PR opened"
+    },
+    "I60-16": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-17": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-18": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-19": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-20": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-21": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-22": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-23": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-24": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-25": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-26": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I60-27": {
+      "kind": "status",
+      "needed": "no",
+      "note": "struck Done when item, done in #191"
+    },
+    "I60-28": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I60-29": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "the PR's decisions say this was not followed (P207-c0)"
+    },
+    "I60-30": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I60-31": {
+      "kind": "history",
+      "needed": "no",
+      "note": ""
+    },
+    "P207-d0": {
+      "kind": "boilerplate",
+      "note": "closing keyword"
+    },
+    "P207-d1": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d2": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d3": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d4": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d5": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d6": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d7": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d8": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d9": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d10": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d11": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d12": {
+      "kind": "copy",
+      "note": "word for word from the issue's Do/Done when"
+    },
+    "P207-d13": {
+      "kind": "result",
+      "note": "setup of the chat check"
+    },
+    "P207-d14": {
+      "kind": "result",
+      "note": ""
+    },
+    "P207-d15": {
+      "kind": "result",
+      "note": ""
+    },
+    "P207-d16": {
+      "kind": "result",
+      "note": ""
+    },
+    "P207-d17": {
+      "kind": "result",
+      "note": ""
+    },
+    "P207-d18": {
+      "kind": "result",
+      "note": "checked by hand"
+    },
+    "P207-d19": {
+      "kind": "result",
+      "note": "second kind: log of fixes made after the check"
+    },
+    "P207-d20": {
+      "kind": "result",
+      "note": ""
+    },
+    "P207-c0": {
+      "kind": "other",
+      "note": "process note: decisions made without Joe, against the issue's 'Settled in: chat'"
+    },
+    "P207-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c4": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c5": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c6": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c7": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c9": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c10": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c11": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P207-c8": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "mostly status: the settled meal answer had not been written into the specs, so this PR did it"
+    },
+    "P207-c12": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "names code files only"
+    },
+    "P207-c13": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "follows the settled question I60-13/14"
+    },
+    "P207-c14": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "draft worker brief outline for Joe's review; section heading names technical spec 5.3"
+    },
+    "P207-c15": {
+      "kind": "other",
+      "note": "part of the drafted worker brief outline (code block split across blocks)"
+    },
+    "P207-c16": {
+      "kind": "other",
+      "note": "part of the drafted worker brief outline (code block split across blocks)"
+    },
+    "P207-c17": {
+      "kind": "other",
+      "note": "part of the drafted worker brief outline (code block split across blocks)"
+    },
+    "P207-c18": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P207-c19": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P207-c20": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "restates what the coordinator's instructions say"
+    },
+    "P207-c21": {
+      "kind": "result",
+      "note": ""
+    },
+    "P207-c22": {
+      "kind": "result",
+      "note": "example worker brief from the chat check"
+    },
+    "P207-c23": {
+      "kind": "set-aside",
+      "note": ""
+    },
+    "P207-c24": {
+      "kind": "set-aside",
+      "note": ""
+    },
+    "P207-c25": {
+      "kind": "set-aside",
+      "note": "says there is nothing to track"
+    },
+    "P207-c26": {
+      "kind": "boilerplate",
+      "note": "config changes: none"
+    }
+  },
+  "notes": "Issue #60 built the stay researcher, the first worker agent. Its body grew from 254 words at creation on 2026-10-19 to 2,794 words, over 31 versions, all before the PR opened on 2026-10-28; nothing was added after. Settled questions take most of the words (about 2,250), led by the 884-word budget tier answer (I60-10); the Do and Done when items are about 350 words. The struck-out answers split two ways. Some are the task itself: the meal default (I60-9), how a worker searches (inside I60-10), and the candidate fields (I60-13, I60-14), which Do item I60-17 points to. Others are history, moved to other issues or already done (I60-6, I60-7, I60-8, I60-11, I60-12). The PR description copied every Do and Done when item word for word (P207-d1 to d12), including a struck item (d12), and added only results (P207-d13 to d20). The decisions comment held 13 decisions, and 11 of them say which spec section they went into (P207-c1 to c11, c13); the ones that don't are about code or the drafted brief outline (c12, c14 to c20). It also held the worker brief outline for review, an example brief, and set-asides that were moved into #61's and #64's Do. Results all went in the PR description, none in issue comments. Surprising: the decisions comment opens by saying the decisions were made without Joe, though the issue said 'Settled in: chat' (P207-c0). I60-15's answer was written into the body from the PR three minutes before the PR opened. P207-c8 shows a settled answer that told someone to write it into two specs had not been written in until this PR."
+}

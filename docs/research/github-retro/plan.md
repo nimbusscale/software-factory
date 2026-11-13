@@ -78,4 +78,11 @@ Done when `findings.md` covers steps 1 to 3, and Joe has read it.
 - Plan rewritten (2026-11-11) after Joe's feedback: universal learnings from the corpus, not a
   check of today's text against the loop's roles.
 - Step 1: done (2026-11-11). `step1/summary.md` has the facts, the questions for step 2, and a
-  proposed sample. Waiting for Joe to review before step 2.
+  proposed sample.
+- Step 2: done (2026-11-12). 16 issues and their PRs, labeled by three agents from one brief
+  (`step2/labeling-brief.md`). `step2/summary.md` has the patterns and the questions for step 3.
+  Also added: body growth for all 121 issues (`step2/growth.md`) and agent reads from the local
+  transcripts (`step2/reads-report.md`).
+- Step 3: done (2026-11-12). Four themes talked through with Joe. Agreed points are in
+  `discussion.md`, including a detour on the issue's sections.
+- Step 4: done (2026-11-12). `findings.md` written, and Joe agreed with it as it stands, including takeaway 8 and the loop note on who writes the PR description.

@@ -1,0 +1,213 @@
+{
+  "issue": 199,
+  "labels": {
+    "I199-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I199-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I199-2": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I199-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I199-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I199-5": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "'None.' under open questions"
+    },
+    "I199-6": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I199-7": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I199-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "second: history (#63 built them into the weather tool)"
+    },
+    "I199-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I199-10": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I199-11": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I199-12": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I199-13": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I199-14": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "template 'Settled in: chat' text"
+    },
+    "P201-d0": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P201-d1": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P201-d2": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P201-d3": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P201-d4": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P201-d5": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P201-d6": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P201-d7": {
+      "kind": "boilerplate",
+      "note": "'Closes #199'"
+    },
+    "P201-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P201-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P201-d10": {
+      "kind": "result",
+      "note": ""
+    },
+    "P201-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P201-d12": {
+      "kind": "result",
+      "note": ""
+    },
+    "P201-d13": {
+      "kind": "result",
+      "note": "nothing checked by hand beyond tests; second: reason"
+    },
+    "P201-c0": {
+      "kind": "other",
+      "note": "process note: Joe asked for decisions without him, despite 'Settled in: chat'"
+    },
+    "P201-c1": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "tool design 2.1"
+    },
+    "P201-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "tool design 2.1"
+    },
+    "P201-c3": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "tool design 2.1"
+    },
+    "P201-c4": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "tool design 2.1"
+    },
+    "P201-c5": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "tool design 2.1"
+    },
+    "P201-c6": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "tool design 2.1"
+    },
+    "P201-c7": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "says it is not in a design doc"
+    },
+    "P201-c8": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "says it is not in a design doc"
+    },
+    "P201-c9": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "says it is not in a design doc"
+    },
+    "P201-c10": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": "tool design 2.1"
+    },
+    "P201-c11": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "says it is not in a design doc"
+    },
+    "P201-c12": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "says it is not in a design doc"
+    },
+    "P201-c13": {
+      "kind": "set-aside",
+      "note": "added to #60's open questions"
+    },
+    "P201-c14": {
+      "kind": "other",
+      "note": "'Noticed': a quirk in a test fixture"
+    },
+    "P201-c15": {
+      "kind": "boilerplate",
+      "note": "'Config changes: None needed.'"
+    }
+  },
+  "notes": "The issue asked for three tool changes on the trip server for the workers: a facts read, two candidate tools, and moving activities out of the weather tool. The body was written once, at 296 words, and never changed. It is mostly task (63%) and a reason paragraph (I199-1), with no open questions (I199-5). The PR description copied the Do and Done when word for word (P201-d0 to d6) and added test results (P201-d8 to d12). The decisions comment is long, 996 words, almost three times the issue: twelve decisions about input shapes, reply layout, and error text, which is agent-facing work the issue left open. Seven of the twelve were written into tool design 2.1 (P201-c1 to c6, c10), and the other five say why not (P201-c7 to c9, c11, c12). A surprise: the issue said 'Settled in: chat', but Joe asked for the decisions to be made without him (P201-c0). One item was set aside to #60's open questions (P201-c13)."
+}

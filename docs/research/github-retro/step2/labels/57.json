@@ -1,0 +1,183 @@
+{
+  "issue": 57,
+  "labels": {
+    "I57-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I57-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I57-2": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I57-3": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "'None.' under open questions"
+    },
+    "I57-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I57-5": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I57-6": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I57-7": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I57-8": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "template 'Settled in: chat' text"
+    },
+    "I57-9": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "horizontal rule"
+    },
+    "I57-10": {
+      "kind": "history",
+      "needed": "no",
+      "note": "where the issue was moved from"
+    },
+    "P164-d0": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P164-d1": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P164-d2": {
+      "kind": "copy",
+      "note": "Do / Done when copied word for word"
+    },
+    "P164-d3": {
+      "kind": "boilerplate",
+      "note": "'Closes #57'"
+    },
+    "P164-d4": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d5": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d6": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d10": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d11": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d12": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d13": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-d14": {
+      "kind": "result",
+      "note": ""
+    },
+    "P164-c0": {
+      "kind": "other",
+      "note": "says none of the decisions is in a design doc and asks Joe whether one should be"
+    },
+    "P164-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c2": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c7": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c8": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c9": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c10": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P164-c11": {
+      "kind": "set-aside",
+      "note": "left to #64, #58, #62"
+    },
+    "P164-c12": {
+      "kind": "boilerplate",
+      "note": "'Config changes: None.'"
+    }
+  },
+  "notes": "The issue asked for the itinerary view: an endpoint plus a panel beside the chat. Its body barely grew, from 122 to 168 words, and nothing was added after the PR opened. Task items are over half its words, and there were no open questions (I57-3). The PR description copied the Do and Done when word for word (P164-d0 to d2), then added a long results section from the deployed site, the tests, and a local hand check (P164-d4 to d14), so results went in the PR, not the issue. The decisions comment holds ten implementation choices, such as the endpoint path and times sent as text (P164-c1 to c10), and says none was written into a design doc (P164-c0). It set aside weather, the map, and option cards to their own issues (P164-c11). Nothing surprising, except that the PR merged seven minutes after it opened."
+}

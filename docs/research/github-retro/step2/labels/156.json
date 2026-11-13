@@ -1,0 +1,455 @@
+{
+  "issue": 156,
+  "labels": {
+    "I156-0": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "sets the bar for what belongs in the issue"
+    },
+    "I156-2": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-5": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "problem with example; task second"
+    },
+    "I156-6": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-7": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-8": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-10": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "reason second"
+    },
+    "I156-11": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "problem then fix; task second"
+    },
+    "I156-12": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "proposed wording"
+    },
+    "I156-13": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-14": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-15": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "proposed wording"
+    },
+    "I156-16": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-17": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "proposed wording"
+    },
+    "I156-18": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-19": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "reason second"
+    },
+    "I156-20": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-21": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "proposed wording"
+    },
+    "I156-22": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-23": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-24": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-25": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-26": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-27": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-28": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-29": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "list of repeats to remove; reason second"
+    },
+    "I156-30": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-31": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-32": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-33": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-34": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "proposed wording"
+    },
+    "I156-35": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "reason second"
+    },
+    "I156-36": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-37": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "proposed wording"
+    },
+    "I156-38": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "task second"
+    },
+    "I156-39": {
+      "kind": "status",
+      "needed": "no",
+      "note": "says the list is still growing"
+    },
+    "I156-40": {
+      "kind": "decision",
+      "needed": "no",
+      "note": "open questions section says none, plus how wording is settled; Do I156-41 repeats it"
+    },
+    "I156-41": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-42": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-43": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-44": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-45": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-46": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I156-47": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I156-48": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "P158-d0": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P158-d1": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P158-d2": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P158-d3": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P158-d4": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P158-d5": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P158-d6": {
+      "kind": "boilerplate",
+      "note": "closing keyword"
+    },
+    "P158-d7": {
+      "kind": "result",
+      "note": ""
+    },
+    "P158-d8": {
+      "kind": "result",
+      "note": ""
+    },
+    "P158-d9": {
+      "kind": "result",
+      "note": ""
+    },
+    "P158-c0": {
+      "kind": "other",
+      "note": "preamble saying the items are proposals"
+    },
+    "P158-c1": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c2": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c3": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c4": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c5": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c6": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c7": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c8": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c9": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c10": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c11": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c12": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c13": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c14": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c15": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c16": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c17": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c18": {
+      "kind": "log",
+      "note": "per-item record of the fix made; most name the doc section changed"
+    },
+    "P158-c19": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P158-c20": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P158-c21": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P158-c22": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P158-c23": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P158-c24": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P158-c25": {
+      "kind": "decision",
+      "doc": "no",
+      "note": "reason second"
+    },
+    "P158-c26": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P158-c27": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording"
+    },
+    "P158-c28": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording"
+    },
+    "P158-c29": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording; reason second"
+    },
+    "P158-c30": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording; reason second"
+    },
+    "P158-c31": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording; reason second"
+    },
+    "P158-c32": {
+      "kind": "other",
+      "note": "pointer for Joe to review wording"
+    },
+    "P158-c33": {
+      "kind": "set-aside",
+      "note": "added to #56"
+    },
+    "P158-c34": {
+      "kind": "set-aside",
+      "note": "added to #56"
+    },
+    "P158-c35": {
+      "kind": "set-aside",
+      "note": "added to #56"
+    },
+    "P158-c36": {
+      "kind": "set-aside",
+      "note": "added to #56"
+    },
+    "P158-c37": {
+      "kind": "boilerplate",
+      "note": "nothing set aside"
+    },
+    "P158-c38": {
+      "kind": "boilerplate",
+      "note": ""
+    }
+  },
+  "notes": "The issue gathered 18 gaps in the coordinator's instructions and tool descriptions, from Joe's review of the view file, so they could be fixed in one PR. It grew from 844 to 3,378 words over 9 versions in about two hours on 2026-10-26, all before PR #158 opened. Nothing was added after the PR, which merged four minutes after it opened. About two thirds of the body's words are reason: each item spends most of its words on the problem and an example, then gives a short fix (for example I156-5, I156-11, I156-23). There were no struck questions. The open questions block (I156-40) just says none, since the wording was to be settled in the PR. The PR description added only results (P158-d7 to d9) and otherwise copies the Do and Done when word for word (P158-d0 to d5). The decisions comment is long (1,162 words). Half of it is a per-item log of what each fix became (P158-c1 to c18), which mostly names the doc sections changed. It also has 8 decisions beyond the issue, and only one says it went into a design doc (P158-c19, tool design 2.4). The rest is pointers for Joe's wording review (c27 to c32) and four items set aside into #56's Do (c33 to c36). Results went only into the PR description."
+}

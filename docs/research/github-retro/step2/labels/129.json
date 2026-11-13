@@ -1,0 +1,194 @@
+{
+  "issue": 129,
+  "labels": {
+    "I129-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I129-2": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I129-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I129-4": {
+      "kind": "result",
+      "needed": "no",
+      "note": "measurements from #54"
+    },
+    "I129-5": {
+      "kind": "result",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-6": {
+      "kind": "result",
+      "needed": "no",
+      "note": "lead-in to the list"
+    },
+    "I129-7": {
+      "kind": "result",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-8": {
+      "kind": "result",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-9": {
+      "kind": "result",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-10": {
+      "kind": "result",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-11": {
+      "kind": "result",
+      "needed": "no",
+      "note": "what the tool does now; status second"
+    },
+    "I129-12": {
+      "kind": "result",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-13": {
+      "kind": "result",
+      "needed": "no",
+      "note": "reason second"
+    },
+    "I129-14": {
+      "kind": "result",
+      "needed": "yes",
+      "note": "also points to the research doc that holds the agreed format; task second"
+    },
+    "I129-15": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I129-16": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": ""
+    },
+    "I129-17": {
+      "kind": "settled-question",
+      "needed": "unsure",
+      "note": "answer rules out an option"
+    },
+    "I129-18": {
+      "kind": "settled-question",
+      "needed": "no",
+      "note": "answer rules out an option"
+    },
+    "I129-19": {
+      "kind": "settled-question",
+      "needed": "unsure",
+      "note": "answer rules out an option"
+    },
+    "I129-20": {
+      "kind": "settled-question",
+      "needed": "unsure",
+      "note": ""
+    },
+    "I129-21": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "question is mostly reason; answer lists what the read keeps"
+    },
+    "I129-22": {
+      "kind": "settled-question",
+      "needed": "yes",
+      "note": "answer adds find_in_trip and notes a question still open"
+    },
+    "I129-23": {
+      "kind": "status",
+      "needed": "no",
+      "note": "struck Do item marked done"
+    },
+    "I129-24": {
+      "kind": "status",
+      "needed": "no",
+      "note": "struck Do item marked done"
+    },
+    "I129-25": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "history second: Joe asked for the split decision to be made later"
+    },
+    "I129-26": {
+      "kind": "status",
+      "needed": "no",
+      "note": "Done when item marked done"
+    },
+    "I129-27": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I129-28": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I129-29": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I129-30": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "adds how questions were to be settled; all settled now"
+    },
+    "P140-d0": {
+      "kind": "task",
+      "note": "written for the PR, not copied: the issue had no Do yet"
+    },
+    "P140-d1": {
+      "kind": "result",
+      "note": ""
+    },
+    "P140-d2": {
+      "kind": "result",
+      "note": ""
+    },
+    "P140-d3": {
+      "kind": "result",
+      "note": ""
+    },
+    "P140-c0": {
+      "kind": "boilerplate",
+      "note": "heading line"
+    },
+    "P140-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P140-c2": {
+      "kind": "history",
+      "note": "records a fix to the issue body; decision second"
+    },
+    "P140-c3": {
+      "kind": "status",
+      "note": "forecasts the chat proposal (version F, 17,546 tokens); the settled read in I129-14 is 15,291 tokens"
+    }
+  },
+  "notes": "This was a spike on how to read the whole itinerary of a long trip, since a 14-day read was too big for Claude Code's tool result limit. The body started at 890 words, was 1,194 when PR #140 opened, and ended at 1,763 after 10 versions. Most of the growth came on 2026-10-26, after the PR opened. Six open questions were added and struck the same day with their answers (I129-15 to I129-22), and Do and Done when were written at 17:06, two minutes before the PR merged. Settled questions are half the words, and a section of #54's measurements (I129-4 to I129-13) is another 29%, as result. The answers under the struck questions are part of the remaining task, not history: they are the agreed design that the next session writes into the docs (I129-25), though several only rule out options (I129-17, I129-18, I129-19). The PR was a research doc, not code, so its description (P140-d0) is task text written fresh, not copied, since the issue had no Do yet. The decisions comment holds one real decision (P140-c1, not written into a design doc), a note that the issue body was fixed (P140-c2), and a forecast of the proposal (P140-c3). That forecast named version F at 17,546 tokens, but the settled read in I129-14 is 15,291, so the comment went out of date. Results went into the body (the #54 section and I129-14) and the research doc. Status went into struck Do items and done marks in Done when (I129-23, I129-24, I129-26)."
+}

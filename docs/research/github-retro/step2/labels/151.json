@@ -1,0 +1,257 @@
+{
+  "issue": 151,
+  "labels": {
+    "I151-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I151-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-2": {
+      "kind": "decision",
+      "needed": "yes",
+      "note": "summary of what #129 settled; reason second"
+    },
+    "I151-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-5": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-6": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "open questions: none"
+    },
+    "I151-7": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-10": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-11": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-12": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-13": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-14": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-15": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "how to merge alongside #152"
+    },
+    "I151-16": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-17": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-18": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-19": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-20": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I151-21": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "I151-22": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": ""
+    },
+    "P153-d0": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d1": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d2": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d3": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d4": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d5": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d6": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d7": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d8": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d9": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d10": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d11": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d12": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d13": {
+      "kind": "copy",
+      "note": ""
+    },
+    "P153-d14": {
+      "kind": "result",
+      "note": ""
+    },
+    "P153-d15": {
+      "kind": "result",
+      "note": ""
+    },
+    "P153-d16": {
+      "kind": "result",
+      "note": ""
+    },
+    "P153-d17": {
+      "kind": "result",
+      "note": ""
+    },
+    "P153-d18": {
+      "kind": "result",
+      "note": ""
+    },
+    "P153-d19": {
+      "kind": "result",
+      "note": "checked by hand: nothing, with why"
+    },
+    "P153-d20": {
+      "kind": "boilerplate",
+      "note": "closing keyword"
+    },
+    "P153-c0": {
+      "kind": "boilerplate",
+      "note": "preamble"
+    },
+    "P153-c1": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P153-c2": {
+      "kind": "decision",
+      "doc": "yes",
+      "note": ""
+    },
+    "P153-c3": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P153-c4": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P153-c5": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P153-c6": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P153-c7": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P153-c8": {
+      "kind": "decision",
+      "doc": "no",
+      "note": ""
+    },
+    "P153-c9": {
+      "kind": "boilerplate",
+      "note": "set aside: nothing"
+    },
+    "P153-c10": {
+      "kind": "boilerplate",
+      "note": ""
+    }
+  },
+  "notes": "The issue built the slimmer whole itinerary read that #129 settled on. It went from 775 to 1,027 words in 3 versions within about 30 minutes, all before PR #153 opened, and nothing was added after. It is almost all task (83% of its words). The Do items are long and exact: they name functions and files, and spell out the format details the design doc left open (I151-7, I151-8, I151-13). It has no open questions (I151-6) and no struck text. The PR description copies the Do and Done when word for word (P153-d0 to d13) and adds only results (P153-d14 to d19), so it adds nothing to the task. The decisions comment holds 8 implementation choices the issue didn't spell out, such as naming the new detail level \"slim\" (P153-c1) and where a test file goes (P153-c7). Only one of the 8 says it was written into a design doc (P153-c2, domain model 3.10). Results went only into the PR description."
+}

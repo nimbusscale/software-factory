@@ -1,0 +1,80 @@
+{
+  "issue": 273,
+  "labels": {
+    "I273-0": {
+      "kind": "status",
+      "needed": "no",
+      "note": ""
+    },
+    "I273-1": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "ends with 'Agreed in chat' (decision)"
+    },
+    "I273-2": {
+      "kind": "reason",
+      "needed": "yes",
+      "note": "tells the runner not to compare against an expected itinerary"
+    },
+    "I273-3": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I273-4": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "design pointer"
+    },
+    "I273-5": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "'None.' under open questions"
+    },
+    "I273-6": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I273-7": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I273-8": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I273-9": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I273-10": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I273-11": {
+      "kind": "task",
+      "needed": "yes",
+      "note": ""
+    },
+    "I273-12": {
+      "kind": "task",
+      "needed": "yes",
+      "note": "specific 'Ends in': a results comment, PR only if setup changes"
+    },
+    "I273-13": {
+      "kind": "boilerplate",
+      "needed": "no",
+      "note": "template 'Settled in: chat' text"
+    },
+    "IC273-0": {
+      "kind": "result",
+      "note": "the run's results comment, as the issue asked"
+    }
+  },
+  "notes": "The issue asked for one simulated-user run of the Montana trip with the skeptic persona, recorded in Phoenix. Its body was written once and trimmed slightly, with no PR. Task items (55%) and reasons (37%) fill it; the reasons explain what the run adds to the corpus and why the final itinerary isn't compared to an expected one (I273-1, I273-2). All results went in one long issue comment (IC273-0), 816 words, more than twice the body, as the issue's Ends in asked (I273-12). That comment covers whether the run stuck to the trip file, refused tool calls, a memory mismatch from earlier runs, and the app bug it filed (#281). There were no struck questions and no decisions comment."
+}
