@@ -3,6 +3,22 @@
 When you change a doc, or change code a doc describes, do these checks before you count the work
 as done. When you review someone else's change, do them on that change.
 
+Copy this checklist into your task list and tick off each check:
+
+```
+- [ ] Run the doc check script and decide each SIGNAL line
+- [ ] Nothing was dropped
+- [ ] The rewrite stayed in scope
+- [ ] No history got in
+- [ ] One name for each thing
+- [ ] One item for each fact
+- [ ] Each requirement can be tested from its own text
+- [ ] Each scenario earns its place
+- [ ] Each requirement's Why passes both tests
+- [ ] Every new item is in the right home
+- [ ] Every other step in changing-a-doc.md holds
+```
+
 ## Run the script
 
 From the repo root, run this skill's `scripts/check-docs.sh` with the docs folder and the branch
@@ -53,6 +69,7 @@ workflow. It checks:
 - **Each requirement's Why passes both tests** in "Lines under an item" in SKILL.md. Cut any that
   fails.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in
-  SKILL.md, and every other step in `references/changing-a-doc.md` holds.
+  SKILL.md.
+- **Every other step in `references/changing-a-doc.md` holds.**
 
 A doc that's wrong or out of step with the code is a fix in the PR, not a review note.

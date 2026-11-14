@@ -88,4 +88,4 @@ Follow "How to write an item" in SKILL.md.
 
 ## 8. Check the change
 
-Do every check in `references/reviewing.md`.
+Do every check in `references/reviewing.md`. Add its checklist to your task list under this step.

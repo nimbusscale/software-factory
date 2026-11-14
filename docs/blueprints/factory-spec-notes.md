@@ -183,9 +183,11 @@ removed.**
 - Decided in: #18.
 - Likely home: `TD`, in code standards.
 
-**A skill with steps in order gives a checklist the agent copies into its task list.**
+**A skill with steps in order, or a list of checks, gives a checklist the agent copies into its
+task list. A file an agent may read on its own, such as the review file, has its own checklist.**
 - Why: a skipped step becomes visible, and an evaluation can see from the transcript which steps
   were done. The steps most likely to be skipped are searching first, following the change, and
-  checking it.
-- Decided in: #18.
+  checking it. Within checking, the reading checks are skipped most easily, since a script can't
+  do them. A reviewer reads only the review file, so it can't use another file's checklist.
+- Decided in: #18 and #22.
 - Likely home: `TD`, in code standards.
