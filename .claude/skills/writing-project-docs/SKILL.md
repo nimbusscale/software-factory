@@ -3,17 +3,35 @@ name: writing-project-docs
 description: How to write, change and review a project's docs (functional spec, technical spec, skills, research docs, blueprints) and decide what goes in a doc, a code comment, a check, or an issue instead. Use this whenever you're about to add a requirement, a decision or a reason to any doc or code comment, change one, create a new doc, or review a PR that touches docs, even if the task only says "update the spec", "write down why", "document this", or is a code change that makes a doc out of step.
 ---
 
-# Project docs
+# Writing project docs
 
 Most readers of these docs are agents. They list a doc's headings, read one section, and act on
 it. So every item has to be findable by its heading, make sense on its own, and say exactly what
 it means. Every fact has one home, and other places point to it by ID. A second copy drifts, and
 an agent can't tell which copy is right.
 
-Work through the steps in order. Each one depends on the one before. The last section, "What each
-doc holds", says what goes in each kind of doc and what stays out.
+## What to read for your task
 
-## 1. Find the docs
+This file holds what every task needs: where the docs are, which doc a fact goes in, and how to
+write an item. The files below hold the rest. Before you start, read every file that applies to
+your task. Most tasks need more than one.
+
+- **Adding, changing, replacing or deleting an item or a section,** in a doc or a code comment,
+  or changing code that a doc describes: read
+  [references/changing-a-doc.md](references/changing-a-doc.md). It gives the steps in order.
+- **Writing in a doc, or creating one:** read the file for that kind of doc. It says what the doc
+  holds and keeps out, and how it changes. Every doc opens with one line saying what kind of doc
+  it is, so a reader knows which of these apply.
+  - Functional spec: [references/functional-spec.md](references/functional-spec.md)
+  - Technical spec: [references/technical-spec.md](references/technical-spec.md)
+  - Research doc: [references/research-doc.md](references/research-doc.md)
+  - Blueprint: [references/blueprint.md](references/blueprint.md)
+  - Skill: [references/skill.md](references/skill.md)
+  - CLAUDE.md: [references/claude-md.md](references/claude-md.md)
+- **Checking a change,** your own before you count the work as done, or someone else's: read
+  [references/reviewing.md](references/reviewing.md) and do every check in it.
+
+## Find the docs
 
 CLAUDE.md's doc map says where each kind of doc is. Use it when it names a path. When it doesn't,
 look in the defaults:
@@ -38,16 +56,7 @@ If a research or blueprints folder doesn't exist, create it in the same folder a
 doc doesn't exist yet, create it at its default path from the template in `assets/`, and say in
 the PR that you created it.
 
-## 2. Check whether it's already written down
-
-Before adding anything, search for it. Grep the docs for its key terms, list the headings of the
-doc it would go in, and read the sections that look close. Also grep the code for comments on it.
-
-If it's already there, you're changing, replacing or deleting an item, not adding one. Go to
-step 4. If something close is there, decide whether yours is the same item said better, or a
-different one.
-
-## 3. Decide what kind of fact it is
+## Which doc a fact goes in
 
 CLAUDE.md's table gives the short version. These questions are the long version. Ask them in this
 order, and stop at the first yes.
@@ -88,37 +97,10 @@ order, and stop at the first yes.
      redesigning a change, not a quick fix.
 
 When you're sorting a long passage that mixes several kinds of text, read
-`references/worked-examples.md`. It sorts real passages with these questions.
+[references/worked-examples.md](references/worked-examples.md). It sorts real passages with these
+questions.
 
-## 4. Decide whether to change, replace or delete the item
-
-This step is for an item step 2 found already written down. For a new fact, go on to step 5.
-
-**If the meaning stays the same, change it in place and keep its ID.** Sharpening the wording,
-adding an example, or adding a condition that was always meant are all changes. Everything that
-cites the item still agrees with it. Rewrite the whole paragraph so it reads as if written in one
-go. Don't append an exception to the end. A rule that collects exceptions turns into a paragraph
-nobody can cite.
-
-**If the meaning changes, replace it.** It's now a different requirement or decision, such as
-showing times in each stop's time zone instead of the browser's. Delete the old item and add the
-new one with a new ID. Every place that still cites the old ID is now flagged by the doc checks,
-so you visit each one and update it to fit the new meaning. If you kept the old ID, those places
-would look fine but describe or test the old behavior.
-
-**If the item isn't needed at all, delete it.** The doc checks flag each place that still cites
-it. Remove or update each one.
-
-## 5. Decide where it goes in the doc
-
-- **Put it in the section whose readers need it.** Each section serves one kind of task.
-- **Add a section** when no section's readers would look there.
-- **Split a section** when it serves two tasks, and readers of one part never need the other. Don't
-  split because it's long. Agents read one section at a time, so length costs them little.
-- **Splitting retires the old section ID.** Both new sections get new IDs, and every reference to
-  the old one changes in the same PR. Renaming or moving a section keeps its ID.
-
-## 6. Write it
+## How to write an item
 
 For every sentence, in any doc:
 
@@ -129,7 +111,8 @@ For every sentence, in any doc:
 - **Make each section stand on its own.** The reader may not have read the section before it.
 - **Point, don't restate.** Cite another item's ID instead of repeating what it says.
 
-When step 3 made the fact's home a code comment, the `code-comments` skill says how to write it.
+When the questions in "Which doc a fact goes in" made the fact's home a code comment, the
+`code-comments` skill says how to write it.
 
 ### Kinds of item
 
@@ -230,147 +213,3 @@ A decision is a one-line statement of the choice, in prose, and always has a Why
   holds now. To point to specific items, list each ID. Never cite a range, such as "FR-12 to
   FR-18". A new item placed among them gets the next free number, so a range can't say whether
   it's included.
-
-## 7. Follow the change
-
-- **If your edit makes something true that wasn't, or untrue that was,** search every doc for
-  items whose Where or While depends on it. This holds for adding a new item too, not only for
-  changing, replacing or deleting one. Search by its terms, not by ID. Items that depend on the
-  same fact often don't cite each other, so no check links them. For example, a new item says
-  signup sets the user's time zone from their address. An older item says "While the user hasn't
-  set a time zone, the app shall show times in the browser's time zone." Neither cites the other,
-  but the older one no longer applies to new users. For each item that no longer holds, decide
-  whether to change, replace or delete it, as in step 4.
-- **If you replaced or deleted an item,** search open issues for its old ID and update each one.
-  The doc checks find it in the docs and the code, but not in issues.
-- **Change the code and the doc in the same PR.** When they disagree, CLAUDE.md says which one wins.
-
-## 8. Check the change
-
-When you change a doc, or change code a doc describes, do these checks before you count the work
-as done. When you review someone else's change, do them on that change.
-
-**Run the script.** From the repo root, run this skill's `scripts/check-docs.sh` with the docs
-folder and the branch the change will merge into, such as
-`bash <this skill's folder>/scripts/check-docs.sh docs main`. It prints one line per thing it
-flags. A `RULE` line is a broken rule. A `SIGNAL` line is only something to look at. For each
-`SIGNAL` line, look at the line and decide. Fix it if it's a real problem, and leave it if it
-isn't. How a reviewer reports what it found is up to the project's workflow. It checks:
-
-- **History,** as a signal: dates, issue and PR numbers, marker words (`settled`, `decided`,
-  `drafted`, `assumption`, `for now`, `to come`, `in progress`), and words about the doc's past
-  (`was` with `now`, `no longer`, `the new`, `used to`). Each can also be a real use, such as "no
-  longer" in a requirement's While. It looks only at lines the change added, so a line kept on
-  purpose isn't flagged again. Code, scenarios, research docs and blueprints are left out.
-- **References:** every doc link, section ID and item ID cited in the docs or the code resolves.
-  IDs are unique within a doc, and each prefix is in its own doc. No ID range is cited. The
-  functional spec has no links out. No research doc links to another doc, and no other doc links
-  to a research doc or a blueprint. As a signal only, it lists requirement IDs that nothing cites, since they may
-  be unbuilt or untested. It doesn't look in open issues. Step 7 covers those.
-- **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each decision
-  has a Why line right after it.
-- **Copies,** as a signal: runs of eight or more words that a doc shares with a source file, such
-  as a prompt, or with another doc.
-- **Size,** as a signal: a doc near the Read tool's 25,000-token limit, since past that an agent
-  can't read it whole in one call.
-
-**Then check by reading:**
-
-- **Nothing was dropped.** Compare each rewritten paragraph, old against new. `git diff
-  --word-diff` on the doc shows them side by side. Every rule, condition, reason and example is
-  still there, or the PR says it was cut on purpose.
-- **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
-  spreads further goes in a separate change.
-- **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the
-  check now runs first", and rewrite it as the present.
-- **Every new item is in the right home,** by step 3, and every other step in this skill holds.
-
-A doc that's wrong or out of step with the code is a fix in the PR, not a review note.
-
-## What each doc holds
-
-Step 3 decides which doc a fact goes in. This section says what else each doc holds and keeps out,
-and how it changes. Every doc opens with one line saying what kind of doc it is, so a reader knows
-which of these apply.
-
-### Functional spec
-
-Read by anyone changing what the app should do, and anyone writing evaluations. Kept current, and
-changed in the same PR as the code or prompt change.
-
-- **Also holds** the limits that always hold, each with its reason, such as "US only, because the
-  payment provider only works there". It defines the terms a user would recognize, once each.
-- **Keeps out** the prompt's or the code's level of detail. A requirement says what the user gets,
-  not how a prompt words it. It also keeps out what's in the current release, which is a roadmap.
-- **Never links out.** Prompts, code and other docs point to its IDs.
-
-### Technical spec
-
-Read by every implementer and reviewer, each reading the sections their task needs. Kept current,
-and changed in the same PR as the code that changes one of its items. Split it only when different
-tasks read different parts of it.
-
-- **Technical requirements are rare.** Most rules turn out to be functional requirements or
-  decisions.
-- **Decisions about a whole kind of part** go here, such as "every endpoint returns errors in one
-  shape".
-- **A code standards section** holds the decisions about how all code is written. For example, a
-  fix for a bug comes with a test that fails without the fix. Each outside service quirk the code
-  depends on has a test with a saved response that shows it. Patterns for how code is shaped go
-  here too, each with the reason that stops a wrong change.
-- **An outside services section** holds choices about a service that span files or have no code
-  to attach to, such as a monthly spending limit.
-- **Pointers,** such as "settings are in `settings.json`", and where commands are defined, plus
-  the one command that says work is done. It also defines the terms a user wouldn't recognize.
-- **Keeps out** process, statuses and merge rules. Those are in the workflow's code and its role
-  prompts.
-
-### Skills
-
-Read by only the agent doing that task. Kept current, and changed when the task's steps change.
-Skills for one project live in that project.
-
-- **One task per skill,** such as running an evaluation, writing an issue, or restoring a backup.
-- **Numbered steps,** each with its reason in the step.
-- **Facts about the outside tools the task drives,** such as an observability tool's API or a
-  CLI's flags, each with the version it was checked on.
-- **Default paths,** for when CLAUDE.md's doc map doesn't name one.
-- **Keeps out** facts about how the system works. Cite their one home. If a sentence came out and
-  the steps would be done the same way, cut it. Rules other tasks also need go in CLAUDE.md or the
-  technical spec.
-- **Keeps out** how to run a script whose top comment already says it. Give just the command.
-- **Keeps out** paths relative to the skill's own folder, for anything outside the skill.
-
-### Research docs
-
-Read by only agents told to read them. Frozen once written. A new finding goes in a new research
-doc.
-
-- **Holds** a record of what was tried and measured, and what was found. Unlike every other doc,
-  history is its point. It opens with its date and a line saying it's a record from that date and
-  isn't kept up to date.
-- **Keeps out** status lines and open items. Those go in issues.
-- **No links either way.** It doesn't link to the rules its findings fed, since keeping those
-  current would mean editing it. Other docs don't link to it. They state the reason themselves,
-  such as a measured size.
-
-### Blueprints
-
-Read by the agents building the code it describes. It holds whatever is useful to build from
-before the code exists, and nothing is ruled out. It can link to other docs, but other docs don't
-link to it, since it's archived once the code is built. It's edited freely until then. When it's
-retired, the issue that builds the code lists these steps in its "Done when":
-
-1. Move items that new code elsewhere could break into the technical spec, sorted by step 3.
-2. Check that each rule about one object is a code comment or a test.
-3. Turn rules a check can enforce into checks, such as a lint rule for imports.
-4. Archive the doc, frozen, with its date and a line saying it isn't kept up to date.
-
-### CLAUDE.md
-
-Read by every agent, every session. It changes only with the owner's approval, so propose changes
-rather than making them.
-
-It holds the rules every agent needs every time, the doc map, the table of where each kind of fact
-goes, which wins when a doc and the code disagree, and where history goes. Every line must pass the
-first-time reader test, since every agent reads every word.

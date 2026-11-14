@@ -1,8 +1,8 @@
 # Worked examples
 
 Real passages from an earlier project, a road trip planner with a coordinator agent and worker
-agents. Each one is sorted with the questions in step 3 of the skill. They show the reasoning, so
-use them for the pattern, not the details.
+agents. Each one is sorted with the questions in "Which doc a fact goes in" in SKILL.md. They show
+the reasoning, so use them for the pattern, not the details.
 
 ## Contents
 
