@@ -43,6 +43,8 @@ workflow. It checks:
   for likely variants, such as "checkout step" and "checkout". Make every variant the one name. For
   each word two names share, grep for it on its own and change each bare use to the full name.
   Every word that names a thing is in Terms or carries a citation.
+- **One item for each fact.** For each pair of items that limit the same action or share a trigger,
+  apply the test in "One item for each fact" in SKILL.md. Merge any pair that's one fact.
 - **Each requirement can be tested from its own text and the Terms.** If you couldn't write a test
   from it alone, rewrite it.
 - **Each scenario earns its place:** its result comes from several requirements together, it can

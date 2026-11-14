@@ -200,6 +200,22 @@ Every requirement uses this pattern. Every part but the last is optional:
 - **Accepted gap:** a gap the item knowingly leaves, and the reason it's accepted. Without the
   reason, a reviewer can't judge whether the gap still fits.
 
+### One item for each fact
+
+Two items are the same fact if changing one would force a change to the other. Merge them into one
+item. If each would change for a different reason, they're two facts, and both stay, even when
+they limit the same action.
+
+> **FR-70.** The app shall accept changes to an account's shipping address only from the account's
+> owner.
+>
+> **FR-71.** When a shipping address is saved, the app shall accept it only if it's in a country the
+> shop ships to.
+
+Both limit changing a shipping address, but they're two facts. If an account could have several
+users, FR-70 would change and FR-71 wouldn't. If the shop shipped to more countries, FR-71 would
+change and FR-70 wouldn't.
+
 ### Terms and names
 
 A term defines a word, once, in the spec's Terms section. It never states a rule a requirement

@@ -27,8 +27,8 @@ Before adding anything, search for it. Grep the docs for its key terms, list the
 doc it would go in, and read the sections that look close. Also grep the code for comments on it.
 
 If it's already there, you're changing, replacing or deleting an item, not adding one. Go to
-step 4. If something close is there, decide whether yours is the same item said better, or a
-different one.
+step 4. If something close is there, decide whether it's the same fact, by the test in "One item for each
+fact" in SKILL.md. If it is, you're changing that item: go to step 4. If not, yours is a new item.
 
 ## 3. Decide what kind of fact it is
 

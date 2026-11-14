@@ -113,6 +113,15 @@ the tests. A test an issue needs may not exist yet, and then it's written as par
 - Likely home: `FR` that every requirement has a test; the rest with the workflow's acceptance
   checks.
 
+**Two items are the same fact if changing one would force a change to the other, and are merged.
+If each would change for a different reason, both stay, even when they limit the same action.**
+- Why: with no test, writers kept two copies of one fact or merged two facts into one item. In
+  Dust Law, "only the current player may lay a tile" and "a laid tile comes from the player's own
+  hand" both limit laying a tile, but simultaneous turns would change only the first, and a shared
+  pool of tiles only the second.
+- Decided in: #17.
+- Likely home: `TD`.
+
 **The skill doesn't say technical requirements are rare.**
 - Why: the claim rested on one rewritten passage from one project. It could push an agent to sort
   a real technical requirement, such as a backup recovery target, as something else.
