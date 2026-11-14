@@ -4,6 +4,19 @@ Use these steps to add, change, replace or delete an item or a section, in a doc
 comment, and when a code change makes a doc out of step. Work through them in order. Each one depends on the one before. Steps 1, 3 and 6 are sections of
 SKILL.md, and step 8 is `references/reviewing.md`. They're listed here so the order is clear.
 
+Copy this checklist into your task list and tick off each step:
+
+```
+- [ ] 1. Find the docs
+- [ ] 2. Check whether it's already written down
+- [ ] 3. Decide what kind of fact it is
+- [ ] 4. Change, replace or delete it (only if step 2 found it)
+- [ ] 5. Decide where it goes in the doc
+- [ ] 6. Write it
+- [ ] 7. Follow the change
+- [ ] 8. Check the change
+```
+
 ## 1. Find the docs
 
 Follow "Find the docs" in SKILL.md.
@@ -32,7 +45,7 @@ go. Don't append an exception to the end. A rule that collects exceptions turns 
 nobody can cite.
 
 **If the meaning changes, replace it.** It's now a different requirement or decision, such as
-showing times in each stop's time zone instead of the browser's. Delete the old item and add the
+showing times in a time zone the user picks, instead of the browser's. Delete the old item and add the
 new one with a new ID. Every place that still cites the old ID is now flagged by the doc checks,
 so you visit each one and update it to fit the new meaning. If you kept the old ID, those places
 would look fine but describe or test the old behavior.
@@ -65,7 +78,11 @@ Follow "How to write an item" in SKILL.md.
   whether to change, replace or delete it, as in step 4.
 - **If you replaced or deleted an item,** search open issues for its old ID and update each one.
   The doc checks find it in the docs and the code, but not in issues.
-- **Change the code and the doc in the same PR.** When they disagree, CLAUDE.md says which one wins.
+- **Change the code and the doc in the same PR.** When they disagree, the doc wins, unless
+  CLAUDE.md says otherwise: the doc says what the system should do. Change the code to match. If
+  you can't, because the fix is outside your task or the code suggests the doc is wrong, leave
+  both as they are, and say so in the PR description or your final report. Name the item ID and
+  the code.
 
 ## 8. Check the change
 
