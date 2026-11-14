@@ -21,7 +21,7 @@ your task. Most tasks need more than one.
   or changing code that a doc describes: read
   [references/changing-a-doc.md](references/changing-a-doc.md). It gives the steps in order.
 - **Writing in a doc, or creating one:** read the file for that kind of doc. It says what the doc
-  holds and keeps out, and how it changes. Every doc opens with one line saying what kind of doc
+  holds and keeps out, how it changes, and how to write any kind of item only that doc has. Every doc opens with one line saying what kind of doc
   it is, so a reader knows which of these apply.
   - Functional spec: [references/functional-spec.md](references/functional-spec.md)
   - Technical spec: [references/technical-spec.md](references/technical-spec.md)
@@ -90,9 +90,6 @@ order, and stop at the first yes.
      place, it goes in the technical spec. "Every database write runs in a transaction" is a
      comment on the one function every write goes through. "Services never call each other" goes
      in the spec, since a new service could call another without touching any shared place.
-   - **Does it shape the whole system, so a change would touch most of it?** It's an architecture
-     decision (`AD`), such as "TypeScript for the whole app". Otherwise it's a design decision
-     (`TD`), such as which library checks outside data.
    - **If a check also enforces it,** the check's comment cites the decision's ID. "Services never
      call each other" stays in the spec even when lint enforces it, since breaking it can mean
      redesigning a change, not a quick fix.
@@ -132,8 +129,8 @@ requirements, and why this way:
 | When data enters the program, the data shall be checked against a defined schema, with no extra keys. | Outside data is parsed with a schema library where it enters the program. |
 | The services shall each be usable on their own. | Services never call each other. Code two services need goes in a shared module each is given. |
 
-A decision can cite the requirement it meets, but it doesn't have to. There's no full map from
-every decision to a requirement.
+How to write a decision, and whether it's an `AD` or a `TD`, is in
+[references/technical-spec.md](references/technical-spec.md).
 
 ### Requirements: GEARS
 
@@ -163,19 +160,6 @@ Every requirement uses this pattern. Every part but the last is optional:
 >
 > *Why:* tax law requires order records for seven years.
 
-### Decisions
-
-A decision is a one-line statement of the choice, in prose, and always has a Why.
-
-> **AD-1.** TypeScript for the whole app.
->
-> *Why:* the back end and the UI share one definition of the data model. In two languages, every
-> field change would be made twice.
-
-- Use `AD` when the decision shapes the whole system, so a change would touch most of it, such as
-  the language, the agent framework or the database. Use `TD` otherwise.
-- A line that makes two choices is two decisions. "TypeScript, with React for the UI" is two.
-
 ### Lines under an item
 
 - **Why:**
@@ -183,15 +167,12 @@ A decision is a one-line statement of the choice, in prose, and always has a Why
     the reason isn't clear from the rule itself, and knowing it would change how someone applies or
     changes the rule. FR-41 needs one, since without it an agent might shorten the period to save
     storage. FR-12 doesn't, since its reason is clear from the rule.
-  - On a decision, it says why this option was chosen. Every decision has one.
   - A Why never states a fact about the rest of the system today, such as "no check uses this yet".
     That kind of fact goes stale when other items change. A condition goes in the Where or While.
 - **Scenario:** Given, when, then. Add one under each behavior requirement in the functional spec,
   since they become evaluation cases. Elsewhere, add one only for a case a reader would get wrong.
 - **Accepted gap:** a gap the item knowingly leaves, and the reason it's accepted. Without the
   reason, a reviewer can't judge whether the gap still fits.
-- **Examples:** a list of cases, for decisions about how code is written, where a list helps more
-  than a scenario.
 
 ### IDs
 
