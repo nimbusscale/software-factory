@@ -109,8 +109,8 @@ For every sentence, in any doc:
 - **Make each section stand on its own.** The reader may not have read the section before it.
 - **Point, don't restate.** Cite another item's ID instead of repeating what it says.
 
-When the questions in "Which doc a fact goes in" made the fact's home a code comment, the
-`code-comments` skill says how to write it.
+When the questions in "Which doc a fact goes in" make the fact's home a code comment, follow the
+project's guidance for writing code comments.
 
 ### Kinds of item
 
