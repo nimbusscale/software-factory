@@ -197,8 +197,7 @@ the other.
   ```
 
   An ID that was retired and deleted can come back this way. That's accepted, since a retired ID
-  shouldn't be cited anywhere. Don't search the doc's git history for higher IDs. A shallow clone,
-  as CI and review tools often make, doesn't have it.
+  shouldn't be cited anywhere. Use only the doc's current text, not its git history.
 - **Citing:** to point to a group of items, cite the section ID. It means whatever the section
   holds now. To point to specific items, list each ID. Never cite a range, such as "FR-12 to
   FR-18". A new item placed among them gets the next free number, so a range can't say whether

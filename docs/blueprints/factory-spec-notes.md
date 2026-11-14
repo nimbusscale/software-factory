@@ -95,7 +95,7 @@ SKILL.md, with no file linking on to another.**
 reasons go in the specs.**
 - Why: a skill's body is read every time it's used, so a sentence that doesn't change what the
   agent does is clutter.
-- Decided in: #18, about the ID section. Waiting on the owner's OK.
+- Decided in: #18, about the ID section.
 - Likely home: `TD`, in code standards.
 
 **Skill names use the gerund form, such as `writing-project-docs`, and don't name the factory.**
