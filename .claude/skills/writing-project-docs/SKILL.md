@@ -184,8 +184,19 @@ Every requirement uses this pattern. Every part but the last is optional:
     > otherwise block the order.
   - A Why never states a fact about the rest of the system today, such as "no check uses this yet".
     That kind of fact goes stale when other items change. A condition goes in the Where or While.
-- **Scenario:** Given, when, then. Add one under each behavior requirement in the functional spec,
-  since they become evaluation cases. Elsewhere, add one only for a case a reader would get wrong.
+- **Scenario:** Given, when, then. Add one only when both of these hold:
+  - the result comes from several requirements working together, and
+  - a reader of one of those requirements and the Terms would likely get it wrong.
+
+  The reader knows only what the docs say, not how similar products work. A scenario must be able
+  to happen under the other requirements. It never holds a rule of its own: a rule found only in a
+  scenario is a missing requirement. A vague or untestable requirement is fixed by rewriting it,
+  never by adding a scenario. A requirement can still need both.
+
+  > **FR-60.** When an order's total is over $50, the app shall ship it for free.
+  >
+  > *Scenario:* Given a $55 order and a $10 discount code, when the customer checks out, then
+  > shipping is charged, since the total is now $45.
 - **Accepted gap:** a gap the item knowingly leaves, and the reason it's accepted. Without the
   reason, a reviewer can't judge whether the gap still fits.
 

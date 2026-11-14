@@ -43,6 +43,10 @@ workflow. It checks:
   for likely variants, such as "checkout step" and "checkout". Make every variant the one name. For
   each word two names share, grep for it on its own and change each bare use to the full name.
   Every word that names a thing is in Terms or carries a citation.
+- **Each requirement can be tested from its own text and the Terms.** If you couldn't write a test
+  from it alone, rewrite it.
+- **Each scenario earns its place:** its result comes from several requirements together, it can
+  happen under the other requirements, and it holds no rule that isn't in a requirement.
 - **Each requirement's Why passes both tests** in "Lines under an item" in SKILL.md. Cut any that
   fails.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in

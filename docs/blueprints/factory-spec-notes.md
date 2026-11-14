@@ -90,6 +90,16 @@ from being deleted. It says what goes wrong without the rule, not a fact about t
 - Decided in: #13.
 - Likely home: `TD`.
 
+**A scenario goes under a requirement only when the result comes from several requirements
+working together, and a reader of one of them and the Terms would likely get it wrong. A scenario
+never holds a rule of its own, and a vague requirement is rewritten, not given a scenario.**
+- Why: a scenario under every requirement gave Dust Law 101 scenarios for 84 requirements. Most
+  restated the requirement, implied things nobody meant, hid a vague requirement, or held rules no
+  requirement stated. Asking whether a test could be written from the requirement alone found most
+  of the real gaps.
+- Decided in: #12.
+- Likely home: `TD`.
+
 **The skill doesn't say technical requirements are rare.**
 - Why: the claim rested on one rewritten passage from one project. It could push an agent to sort
   a real technical requirement, such as a backup recovery target, as something else.

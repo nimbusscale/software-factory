@@ -14,9 +14,6 @@ not <what it rules out>."
 
 ## F-SEC-3. <An area of behavior>
 
-One section per area a user would recognize, such as planning a day. Each requirement has its
-scenarios under it.
+One section per area a user would recognize, such as checking out.
 
 **FR-1.** <Where ...> <While ...> <When ...> The <subject> shall <behavior>.
-
-*Scenario:* Given ..., when ..., then ....
