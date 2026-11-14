@@ -9,7 +9,8 @@ The terms a user would recognize, each defined once in plain language.
 
 ## F-SEC-2. Limits
 
-Limits that always hold, each with its reason.
+Limits that always hold, each a requirement in the form "The <subject> shall <do X> only <scope>,
+not <what it rules out>."
 
 ## F-SEC-3. <An area of behavior>
 
