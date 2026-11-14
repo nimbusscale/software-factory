@@ -76,6 +76,8 @@ Follow "How to write an item" in SKILL.md.
   set a time zone, the app shall show times in the browser's time zone." Neither cites the other,
   but the older one no longer applies to new users. For each item that no longer holds, decide
   whether to change, replace or delete it, as in step 4.
+- **If you added a name that shares a word with an existing one,** grep the docs and code comments
+  for the shared word on its own, and change each use to the full name in the same change.
 - **If you replaced or deleted an item,** search open issues for its old ID and update each one.
   The doc checks find it in the docs and the code, but not in issues.
 - **Change the code and the doc in the same PR.** When they disagree, the doc wins, unless

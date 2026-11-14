@@ -148,6 +148,9 @@ Every requirement uses this pattern. Every part but the last is optional:
 - State the condition a requirement depends on in its Where or While, even when it's always true
   today. A requirement written when a value was always empty breaks the day that value gets a
   default, unless "while it's empty" is in the requirement.
+- When a requirement limits who may do something, say what's allowed, not what's refused, and cite
+  the set it applies to. A list of what's refused misses whatever no one thought of. Check that
+  every member of the set belongs, and that no other requirement makes an exception to it.
 
 > **FR-12.** While the user hasn't set a time zone, the app shall show times in the time zone of
 > the user's browser.
@@ -174,12 +177,25 @@ Every requirement uses this pattern. Every part but the last is optional:
 - **Accepted gap:** a gap the item knowingly leaves, and the reason it's accepted. Without the
   reason, a reviewer can't judge whether the gap still fits.
 
-### Terms
+### Terms and names
 
 A term defines a word, once, in the spec's Terms section. It never states a rule a requirement
 holds, such as a count, a limit, or when something finishes. If a reader of the term needs the
 rule, the term cites the requirement's ID. A rule stated in two places can change in one and not
 the other.
+
+- **One name for each thing.** Before naming a part of the app, a step or a state, search the docs
+  for what they already call it, and use that exact name. A new name gets one home: a term in the
+  Terms section, or the item that introduces it. When names come as a set, such as the steps of a
+  process, list every name in that home. Never give a rule for making names, such as "each step is
+  named for what happens in it".
+- **A name says what kind of thing it is,** even when it's the only thing of its kind: "order
+  status", not "status". A short name breaks when a second thing of that kind is added.
+- **Never use a shared word alone.** When two names share a word, such as "user account" and
+  "admin account", always write the full name. "Account" alone could mean either.
+- **Cite where a word's meaning lives.** A word defined in a Terms section needs no citation. Any
+  other word whose meaning lives in another item gets that item's ID or section ID the first time
+  an item uses it. The test: could a reader of this item alone find what the word means?
 
 ### IDs
 

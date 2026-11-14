@@ -71,7 +71,7 @@ one, every bare use of the word is changed to the full name in the same change.*
   brief was added, every bare "brief" became unclear, even in sections about both. In Dust Law,
   "shape" and "catalog" read much better as "tile shape" and "tile catalog", and would break the
   same way if a second catalog were added.
-- Decided in: #16 (being applied).
+- Decided in: #16.
 - Likely home: `TD`.
 
 **The skill doesn't say technical requirements are rare.**

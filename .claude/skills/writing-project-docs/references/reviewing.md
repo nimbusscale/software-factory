@@ -39,6 +39,10 @@ workflow. It checks:
   spreads further goes in a separate change.
 - **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the
   check now runs first", and rewrite it as the present.
+- **One name for each thing.** For each term, and each name an item introduces, grep for it and
+  for likely variants, such as "checkout step" and "checkout". Make every variant the one name. For
+  each word two names share, grep for it on its own and change each bare use to the full name.
+  Every word that names a thing is in Terms or carries a citation.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in
   SKILL.md, and every other step in `references/changing-a-doc.md` holds.
 
