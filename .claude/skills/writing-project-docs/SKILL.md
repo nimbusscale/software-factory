@@ -21,8 +21,8 @@ your task. Most tasks need more than one.
   or changing code that a doc describes: read
   [references/changing-a-doc.md](references/changing-a-doc.md). It gives the steps in order.
 - **Writing in a doc, or creating one:** read the file for that kind of doc. It says what the doc
-  holds and keeps out, how it changes, and how to write any kind of item only that doc has. Every doc opens with one line saying what kind of doc
-  it is, so a reader knows which of these apply.
+  holds and keeps out, how it changes, and how to write any kind of item only that doc has. Every
+  doc opens with one line saying what kind of doc it is, so a reader knows which of these apply.
   - Functional spec: [references/functional-spec.md](references/functional-spec.md)
   - Technical spec: [references/technical-spec.md](references/technical-spec.md)
   - Research doc: [references/research-doc.md](references/research-doc.md)
