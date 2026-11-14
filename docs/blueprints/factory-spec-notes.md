@@ -149,6 +149,12 @@ was dropped, whatever the source is.**
 - Decided in: #20.
 - Likely home: `TD`, in code standards.
 
+**The docs skill doesn't say what happens to source docs after they're turned into specs. The
+task's prompt says it, such as "delete the foundation docs".**
+- Why: it won't always be the same. Some projects may keep their source docs.
+- Decided in: #18, after the second Dust Law run.
+- Likely home: `TD`, in code standards.
+
 **A skill keeps a reason only when, without it, an agent would likely act differently. Other
 reasons go in the specs.**
 - Why: a skill's body is read every time it's used, so a sentence that doesn't change what the
