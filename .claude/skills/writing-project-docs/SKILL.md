@@ -1,6 +1,6 @@
 ---
 name: writing-project-docs
-description: How to write, change and review a project's docs (functional spec, technical spec, skills, research docs, blueprints) and decide what goes in a doc, a code comment, a check, or an issue instead. Use this whenever you're about to add a requirement, a decision or a reason to any doc or code comment, change one, create a new doc, or review a PR that touches docs, even if the task only says "update the spec", "write down why", "document this", or is a code change that makes a doc out of step.
+description: Writes, changes and reviews a project's docs (functional spec, technical spec, skills, research docs, blueprints), and decides whether a fact goes in a doc, a code comment, a check or an issue. Use when adding, changing or removing a requirement, a decision or a reason in any doc or code comment, creating a doc, or reviewing a change that touches docs, even if the task only says "update the spec", "write down why" or "document this", or is a code change that makes a doc out of step.
 ---
 
 # Writing project docs
