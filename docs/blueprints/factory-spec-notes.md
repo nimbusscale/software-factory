@@ -100,6 +100,19 @@ never holds a rule of its own, and a vague requirement is rewritten, not given a
 - Decided in: #12.
 - Likely home: `TD`.
 
+**Tests trace to functional requirements, not to scenarios. Every functional requirement has at
+least one test, and counts as met when its tests pass. An issue's acceptance criteria name the
+requirements the issue must meet, which tells the workflow which tests must pass. They don't define
+the tests. A test an issue needs may not exist yet, and then it's written as part of the work.**
+- Why: each requirement should be testable, or easy to see how to test, from its own text. If it
+  isn't, the requirement needs refining. Tracing tests to scenarios made scenarios carry rules and
+  hide vague requirements. An earlier idea, in the docs retro findings, was that scenarios become
+  evaluation cases. This replaces it.
+- Decided in: #12, in discussion with the owner.
+- Open: how a missing test gets written, and by whom, when an issue needs it.
+- Likely home: `FR` that every requirement has a test; the rest with the workflow's acceptance
+  checks.
+
 **The skill doesn't say technical requirements are rare.**
 - Why: the claim rested on one rewritten passage from one project. It could push an agent to sort
   a real technical requirement, such as a backup recovery target, as something else.
