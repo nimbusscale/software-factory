@@ -174,6 +174,13 @@ Every requirement uses this pattern. Every part but the last is optional:
 - **Accepted gap:** a gap the item knowingly leaves, and the reason it's accepted. Without the
   reason, a reviewer can't judge whether the gap still fits.
 
+### Terms
+
+A term defines a word, once, in the spec's Terms section. It never states a rule a requirement
+holds, such as a count, a limit, or when something finishes. If a reader of the term needs the
+rule, the term cites the requirement's ID. A rule stated in two places can change in one and not
+the other.
+
 ### IDs
 
 - **Item IDs** are a prefix and a plain number, such as `FR-42`, `TR-7`, `AD-2` or `TD-3`. The
@@ -190,7 +197,8 @@ Every requirement uses this pattern. Every part but the last is optional:
   ```
 
   An ID that was retired and deleted can come back this way. That's accepted, since a retired ID
-  shouldn't be cited anywhere.
+  shouldn't be cited anywhere. Don't search the doc's git history for higher IDs. A shallow clone,
+  as CI and review tools often make, doesn't have it.
 - **Citing:** to point to a group of items, cite the section ID. It means whatever the section
   holds now. To point to specific items, list each ID. Never cite a range, such as "FR-12 to
   FR-18". A new item placed among them gets the next free number, so a range can't say whether
