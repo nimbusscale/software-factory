@@ -1,16 +1,16 @@
 # Technical spec
 
-What a technical spec holds and keeps out, and how it changes. The questions in "Which doc a fact
-goes in", in SKILL.md, decide which facts go in it.
+A technical spec says what the system must achieve that a user wouldn't see (`TR`), and how it
+meets its requirements: the decisions (`AD`, `TD`) that new code anywhere could follow or break.
+This file says what else it holds and keeps out, and how it changes. The questions in "Which doc a
+fact goes in", in SKILL.md, decide which facts go in it.
 
 Read by every implementer and reviewer, each reading the sections their task needs. Kept current,
 and changed in the same PR as the code that changes one of its items. Split it only when different
 tasks read different parts of it.
 
-- **Technical requirements are rare.** Most rules turn out to be functional requirements or
-  decisions.
-- **Decisions about a whole kind of part** go here, such as "every endpoint returns errors in one
-  shape".
+- **Decisions that every part of one kind must follow** go here, such as "every endpoint returns
+  errors in one shape".
 - **A code standards section** holds the decisions about how all code is written. For example, a
   fix for a bug comes with a test that fails without the fix. Each outside service quirk the code
   depends on has a test with a saved response that shows it. Patterns for how code is shaped go

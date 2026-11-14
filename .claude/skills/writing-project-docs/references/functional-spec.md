@@ -1,7 +1,8 @@
 # Functional spec
 
-What a functional spec holds and keeps out, and how it changes. The questions in "Which doc a fact
-goes in", in SKILL.md, decide which facts go in it.
+A functional spec says what the app should do, in the user's terms: every behavior and limit a
+user would notice. This file says what else it holds and keeps out, and how it changes. The
+questions in "Which doc a fact goes in", in SKILL.md, decide which facts go in it.
 
 Read by anyone changing what the app should do, and anyone writing evaluations. Kept current, and
 changed in the same PR as the code or prompt change.
