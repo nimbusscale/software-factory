@@ -114,12 +114,12 @@ project's guidance for writing code comments.
 
 ### Kinds of item
 
-| Kind | Prefix | Doc | Form | Why line |
-|---|---|---|---|---|
-| Functional requirement | `FR` | Functional spec | GEARS | When the reason isn't clear from the rule itself |
-| Technical requirement | `TR` | Technical spec | GEARS | When the reason isn't clear from the rule itself |
-| Architecture decision | `AD` | Technical spec | One line of prose | Always |
-| Design decision | `TD` | Technical spec | One line of prose | Always |
+| Kind | Prefix | Doc |
+|---|---|---|
+| Functional requirement | `FR` | Functional spec |
+| Technical requirement | `TR` | Technical spec |
+| Architecture decision | `AD` | Technical spec |
+| Design decision | `TD` | Technical spec |
 
 A requirement says what the system must achieve. A decision says how the system meets its
 requirements, and why this way:
@@ -167,9 +167,21 @@ Every requirement uses this pattern. Every part but the last is optional:
 
 - **Why:**
   - On a requirement, it works like a code comment: the reason behind the rule. Add one only when
-    the reason isn't clear from the rule itself, and knowing it would change how someone applies or
-    changes the rule. FR-41 needs one, since without it an agent might shorten the period to save
-    storage. FR-12 doesn't, since its reason is clear from the rule.
+    both of these hold:
+    - the reason isn't clear from the rule itself, and
+    - knowing it would change how someone applies or changes the rule.
+
+    FR-41 needs one, since without it an agent might shorten the period to save storage. FR-12
+    doesn't, since its reason is clear from the rule. "When an order ships, the app shall email the
+    customer a tracking link", with the Why "customers want to know where their order is", fails
+    the second test. Knowing it changes nothing.
+  - A Why can keep a rule that looks unneeded from being deleted, such as a rule that never fires
+    under the other rules:
+
+    > **FR-52.** While an order's total is zero, the app shall skip the payment step.
+    >
+    > *Why:* the payment provider rejects a charge of zero, so a free item or a full discount would
+    > otherwise block the order.
   - A Why never states a fact about the rest of the system today, such as "no check uses this yet".
     That kind of fact goes stale when other items change. A condition goes in the Where or While.
 - **Scenario:** Given, when, then. Add one under each behavior requirement in the functional spec,

@@ -74,6 +74,22 @@ one, every bare use of the word is changed to the full name in the same change.*
 - Decided in: #16.
 - Likely home: `TD`.
 
+**A requirement gets a Why only when both hold: the reason isn't clear from the rule, and knowing
+it would change how someone applies or changes the rule. The review checks every requirement's Why
+against both.**
+- Why: the Dust Law writer and the owner both missed the second test when it was one sentence, and
+  the spec got Whys that changed nothing, such as "an outpost pays for being remote".
+- Decided in: #13.
+- Likely home: `TD`.
+
+**A Why can keep a rule that looks unneeded, such as one that never fires under the other rules,
+from being deleted. It says what goes wrong without the rule, not a fact about the system today.**
+- Why: an agent cleaning up may delete a rule that seems to do nothing. A Why that says "no other
+  rule triggers this yet" goes stale. A rule whose point is obvious, such as never charging twice,
+  needs no Why at all.
+- Decided in: #13.
+- Likely home: `TD`.
+
 **The skill doesn't say technical requirements are rare.**
 - Why: the claim rested on one rewritten passage from one project. It could push an agent to sort
   a real technical requirement, such as a backup recovery target, as something else.
