@@ -33,8 +33,9 @@ workflow. It checks:
 ## Then check by reading
 
 - **Nothing was dropped.** Compare each rewritten paragraph, old against new. `git diff
-  --word-diff` on the doc shows them side by side. Every rule, condition, reason and example is
-  still there, or the PR says it was cut on purpose.
+  --word-diff` on the doc shows them side by side. When the source is something else, such as
+  another doc, an issue or notes from a conversation, go through it the same way. Every rule,
+  condition, reason and example is still there, or the PR says it was cut on purpose.
 - **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
   spreads further goes in a separate change.
 - **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the

@@ -139,6 +139,16 @@ SKILL.md, with no file linking on to another.**
 - Decided in: #18.
 - Likely home: `TD`, in code standards.
 
+**A skill gives the standard a doc must meet and trusts the model on method. The docs skill has no
+step-by-step method for turning existing docs into specs. It only checks that nothing in the source
+was dropped, whatever the source is.**
+- Why: Anthropic's guidance says to assume Claude is capable. The Dust Law conversion went fine
+  without a method. Facts come from many sources, such as source docs, issues or a long spoken
+  explanation, and the same standard and check fit them all. Guidance gets added only if the Dust
+  Law and Facet runs show it's needed.
+- Decided in: #20.
+- Likely home: `TD`, in code standards.
+
 **A skill keeps a reason only when, without it, an agent would likely act differently. Other
 reasons go in the specs.**
 - Why: a skill's body is read every time it's used, so a sentence that doesn't change what the
