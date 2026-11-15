@@ -47,14 +47,14 @@ with a problem, not whether it can spot one.
 From this skill's folder:
 
 ```bash
-claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonnet -j 4
+claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonnet -j 4 --ablation none
 ```
 
 - `--scaffold` lets each case's `place-files.sh` run. Without it, the agent gets an empty folder.
 - `--judge-model sonnet` sets the judge. It's Haiku by default. Anthropic's guide for writing these
   evals recommends a Sonnet-class judge.
-- Each case runs 3 times with the skill and 3 times without it, by default. `--runs <n>` changes
-  that, and `--ablation none` skips the runs without the skill.
+- `--ablation none` skips the runs without the skill. See below for when to leave it off.
+- Each case runs 3 times by default. `--runs <n>` changes that.
 - `--tag <tag>` runs the cases with that tag, such as `--tag review-roles`. Given more than one
   tag, it runs the cases that have any of them, not all of them.
 - `--case <name>` runs one case, and takes a glob, such as `--case 'review-*'`. With `--tag`, a
@@ -66,3 +66,26 @@ claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonn
 - `--keep-temp` keeps each run's folder, so you can see what the agent did.
 
 These are real, billed model runs.
+
+### With or without the skill
+
+Run with the skill only, using `--ablation none`. Without that flag, each case also runs 3 times
+without the skill, which doubles the cost.
+
+Leave the flag off only when a case is new or has changed a lot. The runs without the skill show
+whether the case depends on the skill at all. An agent can't guess this project's standards, such
+as its IDs, its prose and the two lists a reviewer reports, without the skill. So for most cases,
+runs without it only confirm that, and running them every time adds nothing.
+
+A case that passes without the skill still stays. It checks that the skill doesn't make the agent
+worse, such as fixing things that aren't broken, and it catches a later change to the skill that
+breaks it. `self-review-clean` and `review-missed-doc` are like this.
+
+### Which cases to run
+
+Run only the failing cases. A case passes at 3 runs out of 3. Leave out a case that has passed
+both with and without the skill, even after the skill changes, since it doesn't depend on the
+skill.
+
+Before a 3-run pass, do one run of each case. It costs a third as much, and it catches a broken
+setup before the bigger run.

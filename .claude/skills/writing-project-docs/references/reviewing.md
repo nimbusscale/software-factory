@@ -6,7 +6,10 @@ change.
 
 ## Your change or someone else's
 
-- **Your own change:** fix each problem you find, then check again.
+- **Your own change:** fix each problem the change caused, then check again. You're done when
+  nothing the change caused is left. Leave older problems alone, and don't mention them, even when
+  the check script still flags them. They aren't part of your change, so a report on your change
+  has nothing to say about them.
 - **Someone else's change:** edit nothing, and report each problem you find. Put each problem in
   one of two lists. **Problems in this change** go back to whoever made it. **Older problems** were
   there before the change. Each problem in either list says four things:
@@ -25,12 +28,14 @@ the whole doc. Some checks also look past the change, such as grepping every doc
 uses. When the change touches code, grep the docs for the names of what it touched, such as a
 function, a setting or a behavior. Read each item that comes up, and check it still holds.
 
+These checks cover the docs, and whether the code does what the docs say. A bug in the code that
+doesn't make a doc wrong isn't part of them. Leave it out, and don't mention it.
+
 A problem belongs to the change only if the change caused it. To tell, look at the same place on the
-branch the change will merge into. If the problem is there too, it's older than the change. In your
-own change, leave it alone and don't mention it, even when the check script flags it. For example,
-if a change to the code leaves a doc saying something the code no longer does, the change caused
-that, even though it never touched the doc. If a requirement was already untestable before the
-change, it's older, even when the change rewrote the paragraph around it.
+branch the change will merge into. If the problem is there too, it's older than the change. For
+example, if a change to the code leaves a doc saying something the code no longer does, the change
+caused that, even though it never touched the doc. If a requirement was already untestable before
+the change, it's older, even when the change rewrote the paragraph around it.
 
 Copy this checklist into your task list and tick off each check:
 
