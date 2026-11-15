@@ -237,6 +237,9 @@ adds nothing. Leave it out.
   Terms section, or the item that introduces it. When names come as a set, such as the steps of a
   process, list every name in that home. Never give a rule for making names, such as "each step is
   named for what happens in it".
+- **One meaning for each term.** A word defined in Terms means only that, everywhere in the docs.
+  When another meaning is needed, use a different word. For example, if "order" is defined as a
+  customer's purchase, write "sort", not "order", for how a list is arranged.
 - **A name says what kind of thing it is,** even when it's the only thing of its kind: "order
   status", not "status". A short name breaks when a second thing of that kind is added.
 - **Never use a shared word alone.** When two names share a word, such as "user account" and

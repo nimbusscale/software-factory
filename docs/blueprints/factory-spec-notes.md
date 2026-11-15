@@ -75,6 +75,15 @@ that nothing cites a requirement.**
 - Decided in: #23.
 - Likely home: `TD`.
 
+**A word defined in Terms means only that, everywhere in the docs. Another meaning gets a
+different word. The review greps for each term and its other forms to check every use.**
+- Why: in the second Dust Law run, Terms defined "Turn" as one player's go, and a requirement
+  then used "turn" to mean rotating a tile. A reader who checks Terms gets the wrong meaning. The
+  skill said each thing gets one name but not that each name keeps one meaning, so nothing
+  stopped the writer. The reviewer caught it only by chance.
+- Decided in: #25.
+- Likely home: `TD`.
+
 **A name says what kind of thing it is, even when it's the only thing of its kind. When two names
 share a word, the shared word is never used alone. When a new name shares a word with an existing
 one, every bare use of the word is changed to the full name in the same change.**

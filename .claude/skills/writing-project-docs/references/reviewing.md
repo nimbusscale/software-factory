@@ -61,7 +61,9 @@ workflow. It checks:
 - **One name for each thing.** For each term, and each name an item introduces, grep for it and
   for likely variants, such as "checkout step" and "checkout". Make every variant the one name. For
   each word two names share, grep for it on its own and change each bare use to the full name.
-  Every word that names a thing is in Terms or carries a citation.
+  Every word that names a thing is in Terms or carries a citation. Then grep for each term's word
+  and its other forms, such as "turned" and "turning" for "turn". Check that every use has the
+  term's meaning, and change any use with another meaning to a different word.
 - **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
   depends on that requirement's rule. It cites a section only when that section holds the rules for
   the thing it names. Remove any other citation from a term.
