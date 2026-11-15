@@ -22,10 +22,10 @@ other booking holds that room for any of the same time slots.
 
 ## F-SEC-4. Checking in
 
-**FR-3.** While a booking is under way, the app shall let the member who holds it check in.
+**FR-3.** While a booking is under way, the app shall let the member the booking is for check in.
 
 **FR-4.** While nobody has checked in to a booking, when 15 minutes have passed since it started,
 the app shall cancel the booking.
 
-**FR-5.** When the app cancels a booking under FR-4, the app shall email the member who held it to
-say that the booking was cancelled because nobody checked in.
+**FR-5.** When the app cancels a booking under FR-4, the app shall email the member the booking was
+for to say that the booking was cancelled because nobody checked in.
