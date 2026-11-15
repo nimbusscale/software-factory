@@ -7,21 +7,30 @@ change.
 ## Your change or someone else's
 
 - **Your own change:** fix each problem you find, then check again.
-- **Someone else's change:** edit nothing, and report each problem you find. Each problem you report
-  says four things:
+- **Someone else's change:** edit nothing, and report each problem you find. Put each problem in
+  one of two lists. **Problems in this change** go back to whoever made it. **Older problems** were
+  there before the change. Each problem in either list says four things:
   - Where it is: the file and line, or the item ID.
   - What's wrong, and which check it fails.
   - A suggested rewrite.
   - Why the rewrite fixes it.
 
-  The task says how to deliver what you found, such as in chat, as JSON or through a tool. When it
-  doesn't say, list the problems in your reply.
+  The task says how to deliver the two lists, such as in chat, as JSON or through a tool, and what
+  happens to the older problems. When it doesn't say, give both lists in your reply.
 
 ## What to check
 
 Check what the change added or changed since the branch it will merge into. For a new doc, that's
 the whole doc. Some checks also look past the change, such as grepping every doc for a term's other
-uses.
+uses. When the change touches code, grep the docs for the names of what it touched, such as a
+function, a setting or a behavior. Read each item that comes up, and check it still holds.
+
+A problem belongs to the change only if the change caused it. To tell, look at the same place on
+the branch the change will merge into. If the problem is there too, it's older than the change.
+Don't fix it in your own change. For example, if a change to the code leaves a doc saying
+something the code no longer does, the change caused that, even though it never touched the doc.
+If a requirement was already untestable before the change, it's older, even when the change
+rewrote the paragraph around it.
 
 Copy this checklist into your task list and tick off each check:
 
