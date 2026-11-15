@@ -89,3 +89,7 @@ skill.
 
 Before a 3-run pass, do one run of each case. It costs a third as much, and it catches a broken
 setup before the bigger run.
+
+When a case fails because of its setup, fix the setup and run that case once more. Read the reply.
+A case goes into a 3-run pass only once its result, pass or fail, has nothing to do with the
+setup.
