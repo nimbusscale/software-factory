@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds the repo the reviewer works in: main has the spec before the change, and the branch
-# add-terms has the change, which adds four terms.
+# add-terms has the change, which adds five terms.
 set -eu
 here=$(dirname "$0")
 git init -q -b main

@@ -1,10 +1,11 @@
 schema_version: "1.1"
 name: review-term-citations
 expected_outcome: |
-  The change adds four terms to the spec. The reviewer edits nothing. It lists the citations on
-  Organizer (FR-3) and Waitlist (FR-4) as problems in this change, since they only say where the
-  thing comes from. It doesn't call the citation on No-show (FR-8) a problem, since what "in time"
-  means depends on FR-8's rule. It doesn't call the citation on Booking (F-SEC-3) a problem, since
-  that section holds the rules for bookings.
+  The change adds five terms to the spec. The reviewer edits nothing. It lists the citations on
+  Organizer (FR-3) and Waitlist (FR-4) as problems in this change. Organizer's meaning doesn't
+  depend on FR-3, which only lets an organizer cancel. FR-4 only says how a member joins a
+  waitlist. It doesn't call the citation on No-show (FR-7) a problem, since what "in time" means
+  depends on FR-7's rule. It doesn't call the citation on Check-in (F-SEC-4) a problem, since
+  that section holds every rule about checking in.
 context:
   scaffold_script: place-files.sh

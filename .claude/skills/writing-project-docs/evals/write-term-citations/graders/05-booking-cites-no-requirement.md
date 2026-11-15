@@ -4,4 +4,4 @@ focus: {source: file, path: docs/functional-spec.md}
 weight: 1
 ---
 
-If the Terms section defines booking, that term cites no requirement. It may cite a section. A spec whose Terms section doesn't define booking passes.
+If the Terms section defines booking, that term's text holds no requirement ID, such as FR-2. A section ID, such as F-SEC-3, is fine. A spec whose Terms section doesn't define booking passes.

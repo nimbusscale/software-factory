@@ -19,23 +19,20 @@ day the member asks for it, not later.
 **FR-2.** When a member asks for a booking of a room for a time slot, the app shall make the
 booking only if no other booking holds that room for that time slot.
 
-**FR-3.** When the app makes a booking, the app shall make the member it's for the booking's
-organizer.
+**FR-3.** While a booking hasn't started, the app shall let its organizer cancel it.
 
 **FR-4.** When a member asks for a booking of a room for a time slot that another booking holds,
 the app shall offer to add the member to the waitlist for that room and time slot.
 
-**FR-5.** While a booking hasn't started, the app shall let its organizer cancel it.
-
-**FR-6.** When an organizer cancels a booking, the app shall make a booking of the same room and
-time slot for the member who joined its waitlist first, and take that member off the waitlist.
+**FR-5.** When an organizer cancels a booking, the app shall move the member who joined that
+room and time slot's waitlist first from the waitlist to a new booking of that room and time slot.
 
 ## F-SEC-4. Checking in
 
-**FR-7.** While a booking is under way, the app shall let its organizer check in.
+**FR-6.** While a booking is under way, the app shall let its organizer check in.
 
-**FR-8.** While nobody has checked in to a booking, when 15 minutes have passed since it started,
+**FR-7.** While nobody has checked in to a booking, when 15 minutes have passed since it started,
 the app shall cancel the booking.
 
-**FR-9.** When the app cancels a booking under FR-8, the app shall email its organizer the number
+**FR-8.** When the app cancels a booking under FR-7, the app shall email its organizer the number
 of no-shows they've had in the last 30 days, counting this one.
