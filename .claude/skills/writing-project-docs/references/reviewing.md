@@ -27,7 +27,7 @@ function, a setting or a behavior. Read each item that comes up, and check it st
 
 A problem belongs to the change only if the change caused it. To tell, look at the same place on
 the branch the change will merge into. If the problem is there too, it's older than the change.
-Don't fix it in your own change. For example, if a change to the code leaves a doc saying
+In your own change, leave it alone and don't mention it. For example, if a change to the code leaves a doc saying
 something the code no longer does, the change caused that, even though it never touched the doc.
 If a requirement was already untestable before the change, it's older, even when the change
 rewrote the paragraph around it.
