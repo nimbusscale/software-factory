@@ -73,7 +73,7 @@ claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonn
   tag, it runs the cases that have any of them, not all of them.
 - `--case <name>` runs one case, and takes a glob, such as `--case 'review-*'`. With `--tag`, a
   case has to match both, so `--tag review-roles --case 'review-*'` runs that group's reviewer
-  cases.
+  cases. Give `--case` only once. Given twice, it runs only the last one.
 - `--model <model>` overrides every case's `model`.
 - `-j <n>` runs up to n agent runs at once, from 1 to 8. It's 1 by default, which is slow, so use at
   least 4. It can only be set on the command line.
