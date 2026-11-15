@@ -9,7 +9,8 @@ change.
 - **Your own change:** fix each problem the change caused, then check again. You're done when
   nothing the change caused is left. Leave older problems alone, and don't mention them, even when
   the check script still flags them. They aren't part of your change, so a report on your change
-  has nothing to say about them.
+  has nothing to say about them. When you report what the script found, say it found nothing from
+  your change, and stop there.
 - **Someone else's change:** edit nothing, and report each problem you find. Put each problem in
   one of two lists. **Problems in this change** go back to whoever made it. **Older problems** were
   there before the change. Each problem in either list says four things:
