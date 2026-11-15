@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: review-missed-doc
+expected_outcome: |
+  The change raises the code's limit from 14 to 30 days, but FR-1 still says 14, and the spec isn't
+  in the diff. The reviewer edits nothing and lists FR-1 being out of step with the code as a
+  problem in this change, since the change caused it.
+context:
+  scaffold_script: place-files.sh
