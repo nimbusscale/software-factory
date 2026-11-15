@@ -1,7 +1,27 @@
 # Checking a change
 
-When you change a doc, or change code a doc describes, do these checks before you count the work
-as done. When you review someone else's change, do them on that change.
+Do these checks in two cases. When you change a doc, or change code a doc describes, check your own
+change before you count the work as done. When you review someone else's change, check that
+change.
+
+## Your change or someone else's
+
+- **Your own change:** fix each problem you find, then check again.
+- **Someone else's change:** edit nothing, and report each problem you find. Each problem you report
+  says four things:
+  - Where it is: the file and line, or the item ID.
+  - What's wrong, and which check it fails.
+  - A suggested rewrite.
+  - Why the rewrite fixes it.
+
+  The task says how to deliver what you found, such as in chat, as JSON or through a tool. When it
+  doesn't say, list the problems in your reply.
+
+## What to check
+
+Check what the change added or changed since the branch it will merge into. For a new doc, that's
+the whole doc. Some checks also look past the change, such as grepping every doc for a term's other
+uses.
 
 Copy this checklist into your task list and tick off each check:
 
@@ -24,10 +44,9 @@ Copy this checklist into your task list and tick off each check:
 
 From the repo root, run this skill's `scripts/check-docs.sh` with the docs folder and the branch
 the change will merge into, such as `bash <this skill's folder>/scripts/check-docs.sh docs main`.
-It prints one line per thing it flags. A `RULE` line is a broken rule. A `SIGNAL` line is only
-something to look at. For each `SIGNAL` line, look at the line and decide. Fix it if it's a real
-problem, and leave it if it isn't. How a reviewer reports what it found is up to the project's
-workflow. It checks:
+It prints one line per thing it flags. A `RULE` line is a broken rule, so it's always a problem. A
+`SIGNAL` line is only something to look at. For each `SIGNAL` line, look at the line and decide
+whether it's a real problem. It checks:
 
 - **History,** as a signal: dates, issue and PR numbers, marker words (`settled`, `decided`,
   `drafted`, `assumption`, `for now`, `to come`, `in progress`), and words about the doc's past
@@ -55,28 +74,26 @@ workflow. It checks:
   another doc, an issue or notes from a conversation, go through it the same way. Every rule,
   condition, reason and example is still there, or the PR says it was cut on purpose.
 - **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
-  spreads further goes in a separate change.
+  spreads further belongs in a separate change.
 - **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the
-  check now runs first", and rewrite it as the present.
+  check now runs first". Every line describes the present.
 - **One name for each thing.** For each term, and each name an item introduces, grep for it and
-  for likely variants, such as "checkout step" and "checkout". Make every variant the one name. For
-  each word two names share, grep for it on its own and change each bare use to the full name.
-  Every word that names a thing is in Terms or carries a citation. Then grep for each term's word
-  and its other forms, such as "turned" and "turning" for "turn". Check that every use has the
-  term's meaning, and change any use with another meaning to a different word.
+  for likely variants, such as "checkout step" and "checkout". Every use is the one name, with no
+  variants. For each word two names share, grep for it on its own. Every use is the full name, not
+  the bare word. Every word that names a thing is in Terms or carries a citation. Then grep for
+  each term's word and its other forms, such as "turned" and "turning" for "turn". Every use has
+  the term's meaning. A use with another meaning needs a different word.
 - **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
   depends on that requirement's rule. It cites a section only when that section holds the rules for
-  the thing it names. Remove any other citation from a term.
+  the thing it names. Any other citation on a term is a problem.
 - **One item for each fact.** For each pair of items that limit the same action or share a trigger,
-  apply the test in "One item for each fact" in SKILL.md. Merge any pair that's one fact.
-- **Each requirement can be tested from its own text and the Terms.** If you couldn't write a test
-  from it alone, rewrite it.
+  apply the test in "One item for each fact" in SKILL.md. A pair that's one fact is a problem.
+- **Each requirement can be tested from its own text and the Terms.** You could write a test from
+  it alone.
 - **Each scenario earns its place:** its result comes from several requirements together, it can
   happen under the other requirements, and it holds no rule that isn't in a requirement.
-- **Each requirement's Why passes both tests** in "Lines under an item" in SKILL.md. Cut any that
-  fails.
+- **Each requirement's Why passes both tests** in "Lines under an item" in SKILL.md. A Why that
+  fails either test is a problem.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in
   SKILL.md.
 - **Every other step in `references/changing-a-doc.md` holds.**
-
-A doc that's wrong or out of step with the code is a fix in the PR, not a review note.
