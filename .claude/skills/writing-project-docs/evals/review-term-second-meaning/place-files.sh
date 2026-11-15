@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Builds the repo the reviewer works in: main has the spec before the change, and the branch
-# show-cost has the change, which adds FR-10.
+# show-cost has the change, which adds FR-9.
 set -eu
 here=$(dirname "$0")
 git init -q -b main

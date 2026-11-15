@@ -1,8 +1,8 @@
 schema_version: "1.1"
 name: review-term-second-meaning
 expected_outcome: |
-  The spec defines Free as a room no booking holds for a time slot. The change adds FR-10, which
-  says bookings are "free of charge". The reviewer edits nothing. It lists FR-10's use of "free" as
+  The spec defines Free as a room no booking holds for a time slot. The change adds FR-9, which
+  says bookings are "free of charge". The reviewer edits nothing. It lists FR-9's use of "free" as
   a problem in this change, since a word defined in Terms means only that, everywhere. Its
   suggested rewrite says bookings cost nothing in other words.
 context:

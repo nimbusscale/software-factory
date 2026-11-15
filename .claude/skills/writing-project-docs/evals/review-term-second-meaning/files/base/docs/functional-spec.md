@@ -8,12 +8,12 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Member.** A person with an account in the app.
 - **Room.** A meeting room in the office.
 - **Time slot.** A half hour that starts on the hour or on the half hour.
-- **Booking.** A room held for one member for one time slot (F-SEC-3).
+- **Booking.** A room held for one member for one time slot.
 - **Free.** A room is free for a time slot when no booking holds that room for that slot.
 - **Organizer.** The member a booking is for.
-- **Waitlist.** The members waiting for a room and time slot that a booking holds, in the order
-  they joined.
-- **No-show.** A booking the app cancelled because nobody checked in in time (FR-8).
+- **Waitlist.** The members waiting for a room and time slot that a booking holds.
+- **Check-in.** Telling the app that a booking is in use (F-SEC-4).
+- **No-show.** A booking the app cancelled under FR-7.
 
 ## F-SEC-2. Limits
 
@@ -25,23 +25,21 @@ day the member asks for it, not later.
 **FR-2.** When a member asks for a booking of a room for a time slot, the app shall make the
 booking only if the room is free for that time slot.
 
-**FR-3.** When the app makes a booking, the app shall make the member it's for the booking's
-organizer.
+**FR-3.** While a booking hasn't started, the app shall let its organizer cancel it.
 
 **FR-4.** When a member asks for a booking of a room for a time slot the room isn't free for,
 the app shall offer to add the member to the waitlist for that room and time slot.
 
-**FR-5.** While a booking hasn't started, the app shall let its organizer cancel it.
-
-**FR-6.** When an organizer cancels a booking, the app shall make a booking of the same room and
-time slot for the member who joined its waitlist first, and take that member off the waitlist.
+**FR-5.** While a room and time slot's waitlist has a member, when an organizer cancels the
+booking that holds that room and time slot, the app shall move the member who joined the waitlist
+first from it to a new booking of that room and time slot.
 
 ## F-SEC-4. Checking in
 
-**FR-7.** While a booking is under way, the app shall let its organizer check in.
+**FR-6.** While a booking is under way, the app shall let its organizer check in.
 
-**FR-8.** While nobody has checked in to a booking, when 15 minutes have passed since it started,
+**FR-7.** While nobody has checked in to a booking, when 15 minutes have passed since it started,
 the app shall cancel the booking.
 
-**FR-9.** When the app cancels a booking under FR-8, the app shall email its organizer the number
+**FR-8.** When the app cancels a booking under FR-7, the app shall email its organizer the number
 of no-shows they've had in the last 30 days, counting this one.
