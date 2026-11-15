@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: terms-write-citations
+expected_outcome: |
+  The writer creates docs/functional-spec.md from the notes. A term cites a requirement only when
+  its meaning depends on that requirement's rule, such as no-show citing the requirement that
+  cancels a booking nobody checked in to. No term cites a requirement only to say where the thing
+  comes from, such as organizer citing the requirement that makes the booking member its
+  organizer. Organizer, waitlist and booking cite no requirement, if the spec defines them.
+context:
+  scaffold_script: place-files.sh

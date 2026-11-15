@@ -75,6 +75,22 @@ that nothing cites a requirement.**
 - Decided in: #23.
 - Likely home: `TD`.
 
+**To test a term's citation, cover it and read the term. If the word's meaning is still clear, the
+citation goes. A requirement that decides who fills a role, such as who a loan's borrower is,
+isn't a reason to cite it.**
+- Why: in an evaluation, writers cited the requirements that decide who a booking's organizer is
+  in 2 of 6 runs, though the skill already said to leave out a citation that only says where a
+  thing comes from. With the test and the borrower example, 3 of 3 runs cited nothing on organizer.
+- Decided in: #27.
+- Likely home: `TD`.
+
+**A skill's examples come from a different domain than its evaluations.**
+- Why: with an organizer example in the skill, every writer copied its wording into the spec, so a
+  pass showed only that it could copy. With a borrower example, the writers' wording varied and
+  they still passed.
+- Decided in: #27.
+- Likely home: `TD`.
+
 **A word defined in Terms means only that, everywhere in the docs. Another meaning gets a
 different word. The review greps for each term and its other forms to check every use.**
 - Why: in the second Dust Law run, Terms defined "Turn" as one player's go, and a requirement
@@ -257,6 +273,14 @@ supported. It writes no files.**
 
 ## Evaluations
 
+**A skill's evaluations live in an `evals/` folder inside the skill, one folder per case, and run
+with `claude plugin eval`.**
+- Why: the skill-creator skill on its own leaves the orchestration to us, including setting the
+  judge model and much else we'd have to build. `claude plugin eval` has that orchestration built
+  in.
+- Decided in: #24.
+- Likely home: `TD`.
+
 **A grader checks that a reply has the information needed, in any words. It never checks the
 reply's headings or layout.**
 - Why: a model can't be failed for not following an output shape. If the shape matters, the task
@@ -283,6 +307,18 @@ a lot. A case that passes without the skill stays as a check against regressions
 - Decided in: #33.
 - Likely home: `TD`.
 
+**A case's name starts with its group tag, then its role tag, such as `terms-review-citations`.**
+- Why: when a group runs, it's easy to tell which cases belong to it.
+- Decided in: #27.
+- Likely home: `TD`.
+
+**The evals README records how each case did in its last run without the skill, and the commit it
+ran on. It records no other results.**
+- Why: that's the baseline. It says which cases depend on the skill, so later runs can leave out
+  the ones that don't. Other results change with every run, and they go in the PR and the issue.
+- Decided in: #27.
+- Likely home: `TD`.
+
 **A case's planted problems are ones the doc check script flags.**
 - Why: the cases test what the agent does with a problem, not whether it can find one.
 - Decided in: #33.
@@ -293,7 +329,7 @@ passes, the whole group runs 3 times each, to catch anything a skill change brok
 passed both with and without the skill is left out, even after the skill changes. Before a 3-run
 pass, each case runs once. A case whose setup was fixed runs once more, and goes into a 3-run pass
 only when its result has nothing to do with the setup.**
-- Why: a single run can pass by luck. `review-clean` passed one run, then failed 3 out of 3. A
+- Why: a single run can pass by luck. `review-roles-review-clean` passed one run, then failed 3 out of 3. A
   case that has passed both ways gives no reason to run it again, and each run costs tokens. The
   single run catches a broken setup before the bigger run spends three times as much. If a setup
   fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first.

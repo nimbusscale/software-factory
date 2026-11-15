@@ -99,8 +99,11 @@ whether it's a real problem. It checks:
   each term's word and its other forms, such as "turned" and "turning" for "turn". Every use has
   the term's meaning. A use with another meaning needs a different word.
 - **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
-  depends on that requirement's rule. It cites a section only when that section holds the rules for
-  the thing it names. Any other citation on a term is a problem.
+  depends on that requirement's rule. Cover each requirement citation and read the term. If the
+  word's meaning is still clear, the citation is a problem. A requirement that creates the thing,
+  or decides who fills a role, such as who a loan's borrower is, isn't a reason to cite it. A
+  term cites a section only when that section holds the rules for the thing it names. Any other
+  citation on a term is a problem.
 - **One item for each fact.** For each pair of items that limit the same action or share a trigger,
   apply the test in "One item for each fact" in SKILL.md. A pair that's one fact is a problem.
 - **Each requirement can be tested from its own text and the Terms.** You could write a test from

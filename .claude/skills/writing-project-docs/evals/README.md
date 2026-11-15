@@ -25,8 +25,12 @@ check what the agent produced.
 
 ## Cases
 
-Each case has two tags. One says whose work the agent checks: `write` for its own, `review` for
-someone else's. The other names the group of cases it belongs to.
+Each case has two tags. One names the group of cases it belongs to. The other says whose work the
+agent checks: `write` for its own, `review` for someone else's. A case's name starts with both, in
+that order, such as `terms-review-citations`.
+
+The "Without the skill" column says how the case did in its last run without the skill. A case
+that passes without the skill doesn't depend on it. See "With or without the skill" below.
 
 ### `review-roles`
 
@@ -34,15 +38,32 @@ Whether the agent fixes its own change, and only reports on someone else's. The 
 are ones the doc check script flags, so they're easy to find. These cases test what the agent does
 with a problem, not whether it can spot one.
 
-| Case | Tags | Task | Passes when |
+| Case | Task | Passes when | Without the skill |
 |---|---|---|---|
-| `self-review-fixes-its-problem` | `write` | A new requirement has no ID. FR-3 cites F-SEC-5, which doesn't exist, on main too. | It gives the requirement an ID, leaves FR-3 alone, and doesn't mention F-SEC-5. |
-| `self-review-clean` | `write` | A change with no problems. | It edits nothing. |
-| `review-clean` | `review` | A change with no problems. | It edits nothing and reports no problems. |
-| `review-new-doc` | `review` | A change that adds the whole spec, with a requirement that has no ID. | It edits nothing, lists the missing ID as a problem in this change, and lists no older problems. |
-| `review-new-and-older` | `review` | A new requirement with no ID, and the older F-SEC-5 citation. | It edits nothing and puts each problem in the right list, each with all four parts. |
-| `review-older-only` | `review` | A change with no problems, and the older F-SEC-5 citation. | It edits nothing, reports no problems in this change, and lists the citation as older. |
-| `review-missed-doc` | `review` | A code change raises the booking limit to 30 days. FR-1 still says 14, and the spec isn't in the diff. | It edits nothing and lists FR-1 as a problem in this change. |
+| `review-roles-write-fixes-its-problem` | A new requirement has no ID. FR-3 cites F-SEC-5, which doesn't exist, on main too. | It gives the requirement an ID, leaves FR-3 alone, and doesn't mention F-SEC-5. | 0 of 3 |
+| `review-roles-write-clean` | A change with no problems. | It edits nothing. | 3 of 3 |
+| `review-roles-review-clean` | A change with no problems. | It edits nothing and reports no problems. | 0 of 3 |
+| `review-roles-review-new-doc` | A change that adds the whole spec, with a requirement that has no ID. | It edits nothing, lists the missing ID as a problem in this change, and lists no older problems. | 1 of 3 |
+| `review-roles-review-new-and-older` | A new requirement with no ID, and the older F-SEC-5 citation. | It edits nothing and puts each problem in the right list, each with all four parts. | 0 of 3 |
+| `review-roles-review-older-only` | A change with no problems, and the older F-SEC-5 citation. | It edits nothing, reports no problems in this change, and lists the citation as older. | 0 of 3 |
+| `review-roles-review-missed-doc` | A code change raises the booking limit to 30 days. FR-1 still says 14, and the spec isn't in the diff. | It edits nothing and lists FR-1 as a problem in this change. | 3 of 3 |
+
+The runs without the skill were on commit `6eee2a4`. Some of these cases changed after it.
+
+### `terms`
+
+The rules for the Terms section: when a term cites something, and that a word defined in Terms
+means only that, everywhere. The check script can't flag these, so these cases also test whether
+the agent finds the problem.
+
+| Case | Task | Passes when | Without the skill |
+|---|---|---|---|
+| `terms-review-citations` | A change adds five terms. Organizer cites a requirement its meaning doesn't depend on. Waitlist cites the requirement that adds members to it. No-show cites the rule that says when it happens. Check-in cites the section with every check-in rule. | It edits nothing, lists the Organizer and Waitlist citations as problems in this change, and doesn't call the other two problems. | 0 of 3 |
+| `terms-write-citations` | Write a functional spec from planning notes. | No-show cites its rule. Organizer, waitlist and booking cite no requirement. A section citation names a section that holds the term's rules. | 0 of 3 |
+| `terms-review-second-meaning` | The spec defines Free as a room no booking holds. A change adds FR-9, which says bookings are "free of charge". | It edits nothing, lists FR-9's "free" as a problem in this change, and suggests a rewrite without the word. | 3 of 3 |
+| `terms-write-second-meaning` | Write a functional spec from planning notes that use "free" both for a slot nobody has booked and for costing nothing. | Every use of "free" in the spec has one meaning, and the spec still says bookings cost nothing. | 3 of 3 |
+
+The runs without the skill were on commit `eda6175`.
 
 ## Running them
 
@@ -59,9 +80,9 @@ claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonn
 - Each case runs 3 times by default. `--runs <n>` changes that.
 - `--tag <tag>` runs the cases with that tag, such as `--tag review-roles`. Given more than one
   tag, it runs the cases that have any of them, not all of them.
-- `--case <name>` runs one case, and takes a glob, such as `--case 'review-*'`. With `--tag`, a
-  case has to match both, so `--tag review-roles --case 'review-*'` runs that group's reviewer
-  cases.
+- `--case <name>` runs one case, and takes a glob, such as `--case 'terms-review-*'` for the
+  `terms` group's reviewer cases. With `--tag`, a case has to match both. Give `--case` only once.
+  Given twice, it runs only the last one.
 - `--model <model>` overrides every case's `model`.
 - `-j <n>` runs up to n agent runs at once, from 1 to 8. It's 1 by default, which is slow, so use at
   least 4. It can only be set on the command line.
@@ -81,7 +102,7 @@ runs without it only confirm that, and running them every time adds nothing.
 
 A case that passes without the skill still stays. It checks that the skill doesn't make the agent
 worse, such as fixing things that aren't broken, and it catches a later change to the skill that
-breaks it. `self-review-clean` and `review-missed-doc` are like this.
+breaks it. The cases whose "Without the skill" column says 3 of 3 are like this.
 
 ### Which cases to run
 

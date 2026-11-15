@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: review-older-only
+name: review-roles-review-older-only
 expected_outcome: |
   The change itself has no problems. The reviewer edits nothing, reports no problems in this change,
   and lists FR-3's citation of F-SEC-5, which doesn't exist, as an older problem.

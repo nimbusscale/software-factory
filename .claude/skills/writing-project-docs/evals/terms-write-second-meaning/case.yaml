@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: terms-write-second-meaning
+expected_outcome: |
+  The notes use "free" in two senses: a slot nobody has booked, and costing nothing. The writer
+  creates docs/functional-spec.md from them. Every use of "free" in the spec has one meaning, and
+  another word carries the other one. The spec still says members are never charged for a booking.
+context:
+  scaffold_script: place-files.sh
