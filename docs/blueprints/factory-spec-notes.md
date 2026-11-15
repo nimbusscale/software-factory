@@ -288,7 +288,8 @@ a lot. A case that passes without the skill stays as a check against regressions
 - Decided in: #33.
 - Likely home: `TD`.
 
-**A failing case is run on its own until it passes 3 runs out of 3. When every case in a group
+**A failing case is run on its own until it passes 3 runs out of 3, or 2 out of 3 when the failed
+run's reply has all the information the grader asks for. When every case in a group
 passes, the whole group runs 3 times each, to catch anything a skill change broke. A case that has
 passed both with and without the skill is left out, even after the skill changes. Before a 3-run
 pass, each case runs once. A case whose setup was fixed runs once more, and goes into a 3-run pass
@@ -296,7 +297,9 @@ only when its result has nothing to do with the setup.**
 - Why: a single run can pass by luck. `review-clean` passed one run, then failed 3 out of 3. A
   case that has passed both ways gives no reason to run it again, and each run costs tokens. The
   single run catches a broken setup before the bigger run spends three times as much. If a setup
-  fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first.
+  fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first. A
+  reply with the right information is what counts, not its shape, so a judge failing a reply over
+  its shape doesn't fail the case.
 - Decided in: #33.
 - Likely home: `TD`.
 
