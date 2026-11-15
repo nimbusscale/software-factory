@@ -217,3 +217,11 @@ task list. A file an agent may read on its own, such as the review file, has its
   do them. A reviewer reads only the review file, so it can't use another file's checklist.
 - Decided in: #18 and #22.
 - Likely home: `TD`, in code standards.
+
+**A skill's evaluations live in an `evals/` folder inside the skill, one folder per case, and run
+with `claude plugin eval`.**
+- Why: the skill-creator skill on its own leaves the orchestration to us, including setting the
+  judge model and much else we'd have to build. `claude plugin eval` has that orchestration built
+  in.
+- Decided in: #24.
+- Likely home: `TD`.
