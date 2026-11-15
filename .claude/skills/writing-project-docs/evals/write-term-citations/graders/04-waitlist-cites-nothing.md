@@ -1,7 +1,8 @@
 ---
-type: llm
-focus: {source: file, path: docs/functional-spec.md}
-weight: 1
+type: regex
+target: {source: file, path: docs/functional-spec.md}
+match: not_contains
+flags: mi
 ---
 
-If the Terms section defines waitlist, that term's text holds no requirement ID, such as FR-2. A section ID, such as F-SEC-3, is fine. A spec whose Terms section doesn't define waitlist passes.
+^- \*\*Waitlist\.\*\*(?:.|\n(?!- |\n))*?\bFR-\d+

@@ -1,7 +1,8 @@
 ---
-type: llm
-focus: {source: file, path: docs/functional-spec.md}
-weight: 1
+type: regex
+target: {source: file, path: docs/functional-spec.md}
+match: not_contains
+flags: mi
 ---
 
-If the Terms section defines organizer, that term's text holds no requirement ID, such as FR-2. A spec whose Terms section doesn't define organizer passes.
+^- \*\*Organizer\.\*\*(?:.|\n(?!- |\n))*?\bFR-\d+
