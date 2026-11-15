@@ -218,6 +218,45 @@ task list. A file an agent may read on its own, such as the review file, has its
 - Decided in: #18 and #22.
 - Likely home: `TD`, in code standards.
 
+**An agent checking its own change fixes what it finds. A reviewer checking someone else's change
+edits nothing and reports what it finds.**
+- Why: in the factory, the implementer reviews its own work so it can fix problems before the work
+  goes to a reviewer. The reviewer's findings go back to the implementer, who makes the fixes. So a
+  reviewer never changes code or docs.
+- Decided in: #33.
+- Likely home: `FR`.
+
+**A review covers only problems the change caused. A problem is older than the change if the same
+problem is on the branch the change merges into. A reviewer lists older problems apart from the
+rest. An agent checking its own change leaves older problems alone and doesn't mention them.**
+- Why: a reviewer that flags something unrelated to the change sends it to the implementer, which
+  then has to fix it or drop it, and a dropped problem gets lost. A change can still cause a
+  problem in a line it never touched, such as a doc left out of step with changed code, so the
+  scope is what the change caused, not the diff. Older problems belong to the doc curator, which
+  looks at the docs as a whole and opens issues for what has drifted. For the implementer, older
+  problems aren't its concern, and mentioning them spends tokens.
+- Decided in: #33.
+- Likely home: `FR`.
+
+**A skill says what a finding contains: where it is, what's wrong, a suggested rewrite and why it
+fixes it. The task's prompt says how findings are delivered. With no instructions, they go in the
+reply.**
+- Why: the same skill runs in an interactive session, in the factory loop and in evaluations, and
+  each needs a different format. The loop will likely need JSON or a tool call. No one skill
+  defines how an agent works, since an agent loads several skills.
+- Decided in: #33.
+- Likely home: `TD`.
+
+**The doc check script needs a git repo and a base branch. Checking docs outside a git repo isn't
+supported. It writes no files.**
+- Why: nearly every run happens in a repo, so supporting docs outside one isn't needed. It only
+  reads files and prints what it finds, so it has no reason to write, and an evaluation's sandbox
+  doesn't let it write.
+- Decided in: #33.
+- Likely home: `TD`.
+
+## Evaluations
+
 **A skill's evaluations live in an `evals/` folder inside the skill, one folder per case, and run
 with `claude plugin eval`.**
 - Why: the skill-creator skill on its own leaves the orchestration to us, including setting the
@@ -225,3 +264,52 @@ with `claude plugin eval`.**
   in.
 - Decided in: #24.
 - Likely home: `TD`.
+
+**A grader checks that a reply has the information needed, in any words. It never checks the
+reply's headings or layout.**
+- Why: a model can't be failed for not following an output shape. If the shape matters, the task
+  should use structured output.
+- Decided in: #33.
+- Likely home: `TD`.
+
+**Evaluations run with the skill only. A case also runs without the skill when it's new or changes
+a lot. A case that passes without the skill stays as a check against regressions.**
+- Why: an agent can't guess the project's standards, such as its IDs and prose, without the skill,
+  so running without it mostly shows that. What it does show is whether a case depends on the
+  skill. A case that passes without the skill still catches a later skill change that breaks it.
+- Decided in: #33.
+- Likely home: `TD`.
+
+**The judge model is Sonnet. The agent under test runs on Opus for now.**
+- Why: Anthropic's guide for `claude plugin eval init` recommends a Sonnet-class judge. The factory
+  is made to work on Opus first. Cheaper models for some agents come after.
+- Decided in: #27 and #33.
+- Likely home: `TD`.
+
+**Each case has a role tag, `write` or `review`, and a group tag, so a group runs together.**
+- Why: related cases run together without naming each one, the way a test class does.
+- Decided in: #33.
+- Likely home: `TD`.
+
+**A case's planted problems are ones the doc check script flags.**
+- Why: the cases test what the agent does with a problem, not whether it can find one.
+- Decided in: #33.
+- Likely home: `TD`.
+
+**A failing case is run on its own until it passes 3 runs out of 3. When every case in a group
+passes, the whole group runs 3 times each, to catch anything a skill change broke. A case that has
+passed both with and without the skill is left out, even after the skill changes. Before a 3-run
+pass, each case runs once. A case whose setup was fixed runs once more, and goes into a 3-run pass
+only when its result has nothing to do with the setup.**
+- Why: a single run can pass by luck. `review-clean` passed one run, then failed 3 out of 3. A
+  case that has passed both ways gives no reason to run it again, and each run costs tokens. The
+  single run catches a broken setup before the bigger run spends three times as much. If a setup
+  fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first.
+- Decided in: #33.
+- Likely home: `TD`.
+
+**A doc reviewer checks the docs and whether the code does what they say. It doesn't mention a
+code bug that leaves the docs right.**
+- Why: code bugs aren't a doc reviewer's concern.
+- Decided in: #33.
+- Likely home: `FR`.

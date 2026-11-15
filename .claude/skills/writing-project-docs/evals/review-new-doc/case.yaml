@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: review-new-doc
+expected_outcome: |
+  The change adds the whole spec, so everything in it is new. The reviewer edits nothing. It lists
+  the requirement with no ID (the one about emailing the member) as a problem in this change, and
+  lists no older problems.
+context:
+  scaffold_script: place-files.sh

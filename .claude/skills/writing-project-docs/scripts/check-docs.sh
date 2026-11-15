@@ -11,6 +11,9 @@
 # The history checks look only at lines added since the base branch, uncommitted ones included.
 # A line someone kept on purpose is then never flagged again. The other checks look at every doc.
 #
+# It writes no files, so it runs where nothing is writable, such as an eval sandbox. Each list it
+# builds is kept in a variable, and passed to a command that needs a file through <(...).
+#
 # Prints one line per thing it flags:  RULE|SIGNAL <file>:<line> <what>
 # RULE means a rule was broken. SIGNAL means only that something is worth a look.
 # It exits 0 whenever it ran. What happens to the findings is up to the project's workflow.
@@ -25,25 +28,26 @@ docs_dir=${1%/}
 research_dir=$(realpath -m "$docs_dir/research")
 blueprints_dir=$(realpath -m "$docs_dir/blueprints")
 self_dir=$(realpath "$(dirname "$0")/..")
-# Some sandboxes have no writable temp folder, so fall back to one inside the repo's .git folder.
-tmp=$(mktemp -d 2>/dev/null) || tmp=$(mktemp -d "$(git rev-parse --absolute-git-dir)/check-docs.XXXXXX")
-trap 'rm -rf "$tmp"' EXIT
-
 ids='(FR|TR|AD|TD)-[0-9]+'
 sec_ids='[FT]-SEC-[0-9]+'
 
+# Prints a list kept in a variable, one item per line. An empty list prints nothing.
+lines() { [[ -z $1 ]] || printf '%s\n' "$1"; }
+# Whether a list kept in a variable has a line that is exactly the second argument.
+has_line() { [[ $'\n'$1$'\n' == *$'\n'"$2"$'\n'* ]]; }
+
 # --- Which files are which ---------------------------------------------------------------------
 
-{
+docs=$({
   find "$docs_dir" -name '*.md' -type f
   [[ -f CLAUDE.md ]] && echo CLAUDE.md
   [[ -d .claude/skills ]] && find .claude/skills -name '*.md' -type f
 } | while read -r f; do
   [[ $(realpath "$f") == "$self_dir"/* ]] || echo "${f#./}"
-done | sort -u >"$tmp/docs"
+done | sort -u)
 
-git ls-files --cached --others --exclude-standard | grep -E '\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$' | grep -vxFf "$tmp/docs" |
-  grep -v '^\.claude/' | while read -r f; do [[ -f $f ]] && echo "$f"; done | sort >"$tmp/src"
+src=$(git ls-files --cached --others --exclude-standard | grep -E '\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$' |
+  grep -vxFf <(lines "$docs") | grep -v '^\.claude/' | while read -r f; do [[ -f $f ]] && echo "$f"; done | sort)
 
 is_research() { [[ $(realpath -m "$1") == "$research_dir"/* ]]; }
 is_blueprint() { [[ $(realpath -m "$1") == "$blueprints_dir"/* ]]; }
@@ -59,9 +63,9 @@ added_lines() {
   fi
 }
 
-xargs -d '\n' -r grep -lE '^#+ F-SEC-[0-9]+' <"$tmp/docs" >"$tmp/fspec" || true
-xargs -d '\n' -r grep -lE '^#+ T-SEC-[0-9]+' <"$tmp/docs" >"$tmp/tspec" || true
-cat "$tmp/fspec" "$tmp/tspec" >"$tmp/specs"
+fspec=$(lines "$docs" | xargs -d '\n' -r grep -lE '^#+ F-SEC-[0-9]+')
+tspec=$(lines "$docs" | xargs -d '\n' -r grep -lE '^#+ T-SEC-[0-9]+')
+specs=$(lines "$fspec"; lines "$tspec")
 
 # Prints a file with its fenced code blocks and inline code blanked out, keeping line numbers.
 # With "scenarios" as the second argument, it blanks Scenario paragraphs too.
@@ -82,68 +86,68 @@ prose() {
 months='(January|February|March|April|May|June|July|August|September|October|November|December)'
 while read -r f; do
   is_research "$f" || is_blueprint "$f" && continue
-  prose "$f" scenarios | sed -E 's/\]\([^)]*\)/]/g' >"$tmp/prose"
-  {
-    grep -noE "\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b|\b$months [0-9]{1,2}\b" "$tmp/prose" |
+  prose=$(prose "$f" scenarios | sed -E 's/\]\([^)]*\)/]/g')
+  hist=$({
+    grep -noE "\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b|\b$months [0-9]{1,2}\b" <(lines "$prose") |
       while IFS=: read -r n m; do echo "$n date: $m"; done
-    grep -noE '(^|[^A-Za-z0-9&/])#[0-9]+\b' "$tmp/prose" |
+    grep -noE '(^|[^A-Za-z0-9&/])#[0-9]+\b' <(lines "$prose") |
       while IFS=: read -r n m; do echo "$n issue or PR number: ${m#"${m%%#*}"}"; done
     grep -noiwE 'settled|decided|drafted|assumption|for now|to come|in progress|no longer|used to|the new' \
-      "$tmp/prose" | while IFS=: read -r n m; do echo "$n marker word: $m"; done
-    grep -niwE 'was\b.*\bnow' "$tmp/prose" | cut -d: -f1 | while read -r n; do echo "$n \"was ... now\""; done
-  } >"$tmp/hist"
+      <(lines "$prose") | while IFS=: read -r n m; do echo "$n marker word: $m"; done
+    grep -niwE 'was\b.*\bnow' <(lines "$prose") | cut -d: -f1 | while read -r n; do echo "$n \"was ... now\""; done
+  })
   added_lines "$f" | awk -v f="$f" 'NR == FNR { added[$1]; next }
-    ($1 in added) { n = $1; $1 = ""; print "SIGNAL " f ":" n " may be history:" $0 }' - "$tmp/hist"
-done <"$tmp/docs"
+    ($1 in added) { n = $1; $1 = ""; print "SIGNAL " f ":" n " may be history:" $0 }' - <(lines "$hist")
+done < <(lines "$docs")
 
 # --- References --------------------------------------------------------------------------------
 
 # Definitions: file, line, ID.
-while read -r f; do
+defs=$(while read -r f; do
   grep -noE "^\*\*$ids\.\*\*" "$f" | sed -E 's/\*//g; s/\.$//' | sed "s|^|$f:|"
   grep -noE "^#+ $sec_ids" "$f" | sed -E 's/#+ //' | sed "s|^|$f:|"
-done <"$tmp/specs" >"$tmp/defs"
-cut -d: -f3 "$tmp/defs" | sort -u >"$tmp/defined"
+done < <(lines "$specs"))
+defined=$(lines "$defs" | cut -d: -f3 | sort -u)
 
 # Each ID defined twice in one doc, and each item in the wrong spec.
-awk -F: '{ k = $1 FS $3 } seen[k]++ { print "RULE " $1 ":" $2 " " $3 " is defined twice in this doc" }' \
-  "$tmp/defs"
+lines "$defs" |
+  awk -F: '{ k = $1 FS $3 } seen[k]++ { print "RULE " $1 ":" $2 " " $3 " is defined twice in this doc" }'
 while IFS=: read -r f n id; do
-  if grep -qxF "$f" "$tmp/fspec" && [[ $id =~ ^(TR|AD|TD|T-SEC) ]]; then
+  if has_line "$fspec" "$f" && [[ $id =~ ^(TR|AD|TD|T-SEC) ]]; then
     echo "RULE $f:$n $id belongs in the technical spec"
-  elif grep -qxF "$f" "$tmp/tspec" && [[ $id =~ ^(FR|F-SEC) ]]; then
+  elif has_line "$tspec" "$f" && [[ $id =~ ^(FR|F-SEC) ]]; then
     echo "RULE $f:$n $id belongs in the functional spec"
   fi
-done <"$tmp/defs"
+done < <(lines "$defs")
 
 # Citations in docs and source files: file, line, ID. Definitions count too.
-cat "$tmp/docs" "$tmp/src" >"$tmp/all"
-xargs -d '\n' -r grep -HnoE "\b($ids|$sec_ids)\b" <"$tmp/all" >"$tmp/cites" || true
+all=$(lines "$docs"; lines "$src")
+cites=$(lines "$all" | xargs -d '\n' -r grep -HnoE "\b($ids|$sec_ids)\b")
 awk -F: 'NR == FNR { d[$1]; next } !($3 in d) { print "RULE " $1 ":" $2 " cites " $3 ", which isn'\''t defined" }' \
-  "$tmp/defined" "$tmp/cites"
+  <(lines "$defined") <(lines "$cites")
 
 # Lines inside a spec's Terms section: file, line. A section ends at the next heading of its level
 # or higher.
-while read -r f; do
+terms=$(while read -r f; do
   awk -v f="$f" '
     /^#+ / { lvl = match($0, /[^#]/) - 1
       if (terms && lvl <= terms) terms = 0
       if ($0 ~ /^#+ [FT]-SEC-[0-9]+\. Terms[ \t]*$/) { terms = lvl; next } }
     terms { print f ":" FNR }
   ' "$f"
-done <"$tmp/specs" >"$tmp/terms"
+done < <(lines "$specs"))
 
 # Requirements that nothing cites: their only appearance is the definition. A citation from Terms
 # doesn't count, since a term only explains a word, so the requirement may still be unbuilt.
-awk -F: 'FILENAME == ARGV[1] { t[$1 FS $2]; next } !(($1 FS $2) in t) { print $3 }' \
-  "$tmp/terms" "$tmp/cites" | sort | uniq -c | awk '$1 == 1 { print $2 }' >"$tmp/once"
-grep -E ":(FR|TR)-" "$tmp/defs" | while IFS=: read -r f n id; do
-  grep -qxF "$id" "$tmp/once" && echo "SIGNAL $f:$n $id isn't cited anywhere, so it may be unbuilt or untested"
+once=$(awk -F: 'FILENAME == ARGV[1] { t[$1 FS $2]; next } !(($1 FS $2) in t) { print $3 }' \
+  <(lines "$terms") <(lines "$cites") | sort | uniq -c | awk '$1 == 1 { print $2 }')
+lines "$defs" | grep -E ":(FR|TR)-" | while IFS=: read -r f n id; do
+  has_line "$once" "$id" && echo "SIGNAL $f:$n $id isn't cited anywhere, so it may be unbuilt or untested"
 done
 
 # ID ranges.
-xargs -d '\n' -r grep -HnoE "\b$ids( (to|through) | ?[-–—] ?)(($ids)|[0-9]+)\b" <"$tmp/all" |
-  while IFS=: read -r f n m; do echo "RULE $f:$n cites a range: $m"; done || true
+lines "$all" | xargs -d '\n' -r grep -HnoE "\b$ids( (to|through) | ?[-–—] ?)(($ids)|[0-9]+)\b" |
+  while IFS=: read -r f n m; do echo "RULE $f:$n cites a range: $m"; done
 
 # Links in docs.
 while read -r f; do
@@ -152,7 +156,7 @@ while read -r f; do
     [[ -z $target || $target =~ ^[a-z]+: ]] && continue
     path=$(realpath -m "$(dirname "$f")/$target")
     [[ -e $path ]] || echo "RULE $f:$n links to $target, which doesn't exist"
-    if grep -qxF "$f" "$tmp/fspec"; then
+    if has_line "$fspec" "$f"; then
       echo "RULE $f:$n the functional spec links out, to $target"
     elif is_research "$f"; then
       echo "RULE $f:$n a research doc links to another doc, $target"
@@ -162,7 +166,7 @@ while read -r f; do
       echo "RULE $f:$n links to a blueprint, $target"
     fi
   done
-done <"$tmp/docs"
+done < <(lines "$docs")
 
 # --- Item shape --------------------------------------------------------------------------------
 
@@ -202,21 +206,23 @@ while read -r f; do
       if (para == "") { start = NR; para = line } else para = para " " line }
     END { flush(); if (why_id != "") print "RULE " f ":" why_line " " why_id " has no Why line right after it" }
   ' "$f"
-done <"$tmp/specs"
+done < <(lines "$specs")
 
 # --- Copies ------------------------------------------------------------------------------------
 
 # Every run of eight words, with the file and line it starts on. Research docs are left out.
-while read -r f; do
+copy_docs=$(while read -r f; do
   is_research "$f" || echo "$f"
-done <"$tmp/docs" >"$tmp/copy-docs"
-cat "$tmp/copy-docs" "$tmp/src" | while read -r f; do
-  awk -v f="$f" '{
-    s = tolower($0); gsub(/[^a-z0-9'\'']+/, " ", s); k = split(s, w, " ")
-    for (i = 1; i <= k; i++) { buf[++nw] = w[i]; at[nw] = FNR
-      if (nw >= 8) { r = buf[nw-7]; for (j = nw-6; j <= nw; j++) r = r " " buf[j]; print r "\t" f "\t" at[nw-7] } }
-  }' "$f"
-done | sort -t$'\t' -k1,1 >"$tmp/runs"
+done < <(lines "$docs"))
+runs() {
+  { lines "$copy_docs"; lines "$src"; } | while read -r f; do
+    awk -v f="$f" '{
+      s = tolower($0); gsub(/[^a-z0-9'\'']+/, " ", s); k = split(s, w, " ")
+      for (i = 1; i <= k; i++) { buf[++nw] = w[i]; at[nw] = FNR
+        if (nw >= 8) { r = buf[nw-7]; for (j = nw-6; j <= nw; j++) r = r " " buf[j]; print r "\t" f "\t" at[nw-7] } }
+    }' "$f"
+  done | sort -t$'\t' -k1,1
+}
 
 # For each pair of files sharing runs, where at least one is a doc: how many, and the first.
 awk -F'\t' '
@@ -233,13 +239,13 @@ awk -F'\t' '
     }
   }
   END { flush(); for (k in count) print "SIGNAL " first[k] " (" count[k] " shared 8-word runs)" }
-' "$tmp/copy-docs" "$tmp/runs" | sort
+' <(lines "$copy_docs") <(runs) | sort
 
 # --- Size --------------------------------------------------------------------------------------
 
 while read -r f; do
   tokens=$(($(wc -c <"$f") / 4))
   ((tokens > 20000)) && echo "SIGNAL $f:1 about $tokens tokens, and the Read tool reads at most 25,000 in one call"
-done <"$tmp/docs"
+done < <(lines "$docs")
 
 exit 0
