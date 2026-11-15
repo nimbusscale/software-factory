@@ -20,6 +20,8 @@ check what the agent produced.
     a separate judge call, asked 3 times, and the majority wins.
   - `type: regex` matches a pattern against a file or the agent's last message. It's free.
   - `type: tool_used` with `max: 0` passes only if the agent never called that tool. It's free.
+- `STATUS.md`: only in a case that still fails some runs. It says how the last run went and
+  describes the known failure. When a case fails, read it first to see whether the failure is new.
 
 ## Cases
 
