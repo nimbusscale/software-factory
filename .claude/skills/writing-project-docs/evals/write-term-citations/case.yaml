@@ -5,6 +5,6 @@ expected_outcome: |
   its meaning depends on that requirement's rule, such as no-show citing the requirement that
   cancels a booking nobody checked in to. No term cites a requirement only to say where the thing
   comes from, such as organizer citing the requirement that makes the booking member its
-  organizer.
+  organizer. Organizer, waitlist and booking cite no requirement, if the spec defines them.
 context:
   scaffold_script: place-files.sh

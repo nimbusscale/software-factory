@@ -1,9 +1,10 @@
 schema_version: "1.1"
 name: review-term-citations
 expected_outcome: |
-  The reviewer removes the citations on Organizer (FR-2) and Waitlist (FR-4). They only say where
-  the thing comes from. It keeps the citations on Free (FR-3) and No-show (FR-7), since their
-  meaning depends on those rules. The citation on Booking (F-SEC-3) may stay or go, since a term
-  may cite the section that holds the rules for the thing it names.
+  The change adds four terms to the spec. The reviewer edits nothing. It lists the citations on
+  Organizer (FR-3) and Waitlist (FR-4) as problems in this change, since they only say where the
+  thing comes from. It doesn't call the citation on No-show (FR-8) a problem, since what "in time"
+  means depends on FR-8's rule. It doesn't call the citation on Booking (F-SEC-3) a problem, since
+  that section holds the rules for bookings.
 context:
   scaffold_script: place-files.sh

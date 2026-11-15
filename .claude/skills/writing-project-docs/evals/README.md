@@ -44,6 +44,18 @@ with a problem, not whether it can spot one.
 | `review-older-only` | `review` | A change with no problems, and the older F-SEC-5 citation. | It edits nothing, reports no problems in this change, and lists the citation as older. |
 | `review-missed-doc` | `review` | A code change raises the booking limit to 30 days. FR-1 still says 14, and the spec isn't in the diff. | It edits nothing and lists FR-1 as a problem in this change. |
 
+### `terms`
+
+The rules for the Terms section: when a term cites something, and that a word defined in Terms
+means only that, everywhere. The check script can't flag these, so these cases also test whether
+the agent finds the problem.
+
+| Case | Tags | Task | Passes when |
+|---|---|---|---|
+| `review-term-citations` | `review` | A change adds four terms. Organizer and Waitlist cite the requirement that creates them. No-show cites the rule that says when it happens. Booking cites its section. | It edits nothing, lists the Organizer and Waitlist citations as problems in this change, and doesn't call the other two problems. |
+| `write-term-citations` | `write` | Write a functional spec from planning notes. | No-show cites its rule. Organizer, waitlist and booking cite no requirement. A section citation names a section that holds the term's rules. |
+| `review-term-second-meaning` | `review` | The spec defines Free as a room no booking holds. A change adds FR-10, which says bookings are "free of charge". | It edits nothing, lists FR-10's "free" as a problem in this change, and suggests a rewrite without the word. |
+
 ## Running them
 
 From this skill's folder:
