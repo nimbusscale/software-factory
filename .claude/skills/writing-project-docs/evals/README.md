@@ -55,6 +55,7 @@ the agent finds the problem.
 | `review-term-citations` | `review` | A change adds five terms. Organizer cites a requirement its meaning doesn't depend on. Waitlist cites the requirement that adds members to it. No-show cites the rule that says when it happens. Check-in cites the section with every check-in rule. | It edits nothing, lists the Organizer and Waitlist citations as problems in this change, and doesn't call the other two problems. |
 | `write-term-citations` | `write` | Write a functional spec from planning notes. | No-show cites its rule. Organizer, waitlist and booking cite no requirement. A section citation names a section that holds the term's rules. |
 | `review-term-second-meaning` | `review` | The spec defines Free as a room no booking holds. A change adds FR-9, which says bookings are "free of charge". | It edits nothing, lists FR-9's "free" as a problem in this change, and suggests a rewrite without the word. |
+| `write-term-second-meaning` | `write` | Write a functional spec from planning notes that use "free" both for a slot nobody has booked and for costing nothing. | Every use of "free" in the spec has one meaning, and the spec still says bookings cost nothing. |
 
 ## Running them
 
