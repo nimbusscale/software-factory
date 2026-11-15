@@ -25,12 +25,12 @@ the whole doc. Some checks also look past the change, such as grepping every doc
 uses. When the change touches code, grep the docs for the names of what it touched, such as a
 function, a setting or a behavior. Read each item that comes up, and check it still holds.
 
-A problem belongs to the change only if the change caused it. To tell, look at the same place on
-the branch the change will merge into. If the problem is there too, it's older than the change.
-In your own change, leave it alone and don't mention it. For example, if a change to the code leaves a doc saying
-something the code no longer does, the change caused that, even though it never touched the doc.
-If a requirement was already untestable before the change, it's older, even when the change
-rewrote the paragraph around it.
+A problem belongs to the change only if the change caused it. To tell, look at the same place on the
+branch the change will merge into. If the problem is there too, it's older than the change. In your
+own change, leave it alone and don't mention it, even when the check script flags it. For example,
+if a change to the code leaves a doc saying something the code no longer does, the change caused
+that, even though it never touched the doc. If a requirement was already untestable before the
+change, it's older, even when the change rewrote the paragraph around it.
 
 Copy this checklist into your task list and tick off each check:
 
