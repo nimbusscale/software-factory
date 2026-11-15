@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: items-write-limits
+expected_outcome: |
+  The notes list four things the app won't do: book equipment, serve other offices, take bookings
+  more than two weeks ahead, or let a booking run past 6 pm. They also say a phone app is planned
+  for later. The writer creates docs/functional-spec.md from them. Each of the four is a
+  requirement with its own FR ID in the Limits section, written with "only" and then what it rules
+  out. Only the 6 pm limit has a Why, since the building's hours aren't clear from the rule and
+  knowing them stops someone from moving the limit. The spec says nothing about a phone app, since
+  something the app might do later isn't a limit.
+context:
+  scaffold_script: place-files.sh

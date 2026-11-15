@@ -52,9 +52,9 @@ The runs without the skill were on commit `6eee2a4`. Some of these cases changed
 
 ### `terms`
 
-The rules for the Terms section: when a term cites something, and that a word defined in Terms
-means only that, everywhere. The check script can't flag these, so these cases also test whether
-the agent finds the problem.
+The rules for the Terms section and names: when a term cites something, that a word defined in
+Terms means only that, everywhere, and that each thing has one name. The check script can't flag
+these, so these cases also test whether the agent finds the problem.
 
 | Case | Task | Passes when | Without the skill |
 |---|---|---|---|
@@ -62,8 +62,28 @@ the agent finds the problem.
 | `terms-write-citations` | Write a functional spec from planning notes. | No-show cites its rule. Organizer, waitlist and booking cite no requirement. A section citation names a section that holds the term's rules. | 0 of 3 |
 | `terms-review-second-meaning` | The spec defines Free as a room no booking holds. A change adds FR-9, which says bookings are "free of charge". | It edits nothing, lists FR-9's "free" as a problem in this change, and suggests a rewrite without the word. | 3 of 3 |
 | `terms-write-second-meaning` | Write a functional spec from planning notes that use "free" both for a slot nobody has booked and for costing nothing. | Every use of "free" in the spec has one meaning, and the spec still says bookings cost nothing. | 3 of 3 |
+| `terms-review-one-name` | The spec defines Meeting room, Phone room and Organizer. A change adds FR-4, which limits the hours of a booking of a "room", and FR-5, which emails the booking's "host". | It edits nothing, and lists both as problems in this change: "room" should be the full name or names, or go, and "host" should be "organizer". | 0 of 3 |
 
-The runs without the skill were on commit `eda6175`.
+The runs without the skill were on commit `eda6175`, except for `terms-review-one-name`'s, which
+were on the case before it was committed, on top of commit `8815473`.
+
+### `items`
+
+The rules for writing an item: one item for each fact, when a requirement gets a scenario or a
+Why, and how a limit is written. The check script can't flag these either.
+
+Most of these are reviewer cases. The reviewer is the last check before a problem gets through,
+and a writer checking its own work runs the same review checks, so one reviewer case covers both.
+`items-write-limits` is a writer case, since no review check covers limits.
+
+| Case | Task | Passes when | Without the skill |
+|---|---|---|---|
+| `items-review-one-fact` | A change adds FR-5, which repeats FR-1's 14-day limit as "two weeks", and FR-4, a cap of 3 upcoming bookings. All three limit making a booking. | It edits nothing, lists FR-5 as a problem in this change, and doesn't call FR-4 a copy of another requirement. | 3 of 3 |
+| `items-review-scenarios` | A change adds check-ins, with a scenario under each requirement. FR-4's shows that an organizer can't check in 20 minutes into a booking, since FR-5 cancelled it at 15. FR-5's only restates FR-5. | It edits nothing, lists FR-5's scenario as a problem in this change, and doesn't call FR-4's a problem. | 0 of 3 |
+| `items-review-whys` | A change adds three requirements with Whys. FR-4's Why, the office's hours, passes both tests. FR-5's changes nothing, and FR-6's is clear from the rule. | It edits nothing, lists the Whys on FR-5 and FR-6 as problems in this change, and doesn't call FR-4's a problem. | 0 of 3 |
+| `items-write-limits` | Write a functional spec from planning notes with four limits, one with a reason that passes both tests, and a phone app planned for later. | Each limit is a requirement in the Limits section, written with "only ... not". Only the 6 pm limit has a Why. The spec doesn't mention a phone app. | 0 of 3 |
+
+The runs without the skill were on the cases before they were committed, on top of commit `8815473`.
 
 ## Running them
 

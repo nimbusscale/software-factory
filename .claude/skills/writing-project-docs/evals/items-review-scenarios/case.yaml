@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: items-review-scenarios
+expected_outcome: |
+  The change adds check-ins: FR-4 and FR-5, each with a scenario. FR-4's scenario earns its place.
+  Its result comes from FR-4 and FR-5 together: a reader of FR-4 alone would think an organizer
+  can check in any time during the time slot, but FR-5 has already cancelled the booking 15
+  minutes in. FR-5's scenario only shows what FR-5 says on its own. The reviewer edits nothing. It
+  lists FR-5's scenario as a problem in this change and suggests removing or replacing it. It
+  doesn't call FR-4's scenario a problem.
+context:
+  scaffold_script: place-files.sh

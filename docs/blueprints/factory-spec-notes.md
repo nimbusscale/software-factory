@@ -302,6 +302,19 @@ a lot. A case that passes without the skill stays as a check against regressions
 - Decided in: #27 and #33.
 - Likely home: `TD`.
 
+**Each rule a skill's review checks gets a reviewer case. A rule gets a writer case only when real
+runs show writers keep breaking it, or when no review check covers it. A writer case starts from
+the real input that led to the mistake, cut down, when there is one.**
+- Why: the reviewer is the last check before a problem gets through, and a writer checking its own
+  work runs the same review checks, so one reviewer case covers both. A reviewer case can plant
+  exactly the problem to find. A writer case can only hope the writer makes the mistake. Each case
+  costs runs, so cases are added only where they're needed. A writer case is still worth it when
+  the reviewer keeps catching the same mistake, since each catch costs another round. Limits are
+  one rule no review check covers, so they have a writer case. A real mistake makes a better test
+  than an invented one.
+- Decided in: #24.
+- Likely home: `TD`.
+
 **Each case has a role tag, `write` or `review`, and a group tag, so a group runs together.**
 - Why: related cases run together without naming each one, the way a test class does.
 - Decided in: #33.

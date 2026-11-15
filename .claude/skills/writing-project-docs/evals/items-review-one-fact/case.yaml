@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: items-review-one-fact
+expected_outcome: |
+  The change adds FR-4 and FR-5. Both limit making a booking, and so does FR-1 on main. FR-5
+  states FR-1's limit again in other words: changing the 14 days in FR-1 would force the same
+  change to FR-5. The reviewer edits nothing. It lists FR-5 as a problem in this change and
+  suggests removing it. It doesn't call FR-4 a second copy of FR-1, since a cap on bookings would
+  change for a different reason than how far ahead a member can book.
+context:
+  scaffold_script: place-files.sh

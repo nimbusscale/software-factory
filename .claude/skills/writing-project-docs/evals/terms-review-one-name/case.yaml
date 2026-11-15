@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: terms-review-one-name
+expected_outcome: |
+  The spec defines Meeting room, Phone room and Organizer. The change adds FR-4, which limits the
+  hours of a booking of a "room", and FR-5, which emails the booking's "host". The reviewer edits
+  nothing. It lists both as problems in this change. "Room" on its own could mean a meeting room
+  or a phone room, so FR-4 should use the full name or names, or drop the word. "Host" is a second
+  name for the organizer, so FR-5 should say "organizer".
+context:
+  scaffold_script: place-files.sh
