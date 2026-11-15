@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: review-term-citations
+expected_outcome: |
+  The reviewer removes the citations on Organizer (FR-2) and Waitlist (FR-4). They only say where
+  the thing comes from. It keeps the citations on Free (FR-3) and No-show (FR-7), since their
+  meaning depends on those rules. The citation on Booking (F-SEC-3) may stay or go, since a term
+  may cite the section that holds the rules for the thing it names.
+context:
+  scaffold_script: place-files.sh

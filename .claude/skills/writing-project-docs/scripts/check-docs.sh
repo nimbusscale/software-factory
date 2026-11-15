@@ -25,7 +25,8 @@ docs_dir=${1%/}
 research_dir=$(realpath -m "$docs_dir/research")
 blueprints_dir=$(realpath -m "$docs_dir/blueprints")
 self_dir=$(realpath "$(dirname "$0")/..")
-tmp=$(mktemp -d)
+# Some sandboxes have no writable temp folder, so fall back to one inside the repo's .git folder.
+tmp=$(mktemp -d 2>/dev/null) || tmp=$(mktemp -d "$(git rev-parse --absolute-git-dir)/check-docs.XXXXXX")
 trap 'rm -rf "$tmp"' EXIT
 
 ids='(FR|TR|AD|TD)-[0-9]+'
