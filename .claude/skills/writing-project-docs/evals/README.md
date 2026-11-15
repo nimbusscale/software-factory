@@ -83,9 +83,7 @@ breaks it. `self-review-clean` and `review-missed-doc` are like this.
 
 ### Which cases to run
 
-Run only the failing cases. A case passes at 3 runs out of 3. It also passes at 2 out of 3 when
-the failed run's reply has all the information the grader asks for, read by a person or an agent,
-and only the judge's reading of its shape failed it. Leave out a case that has passed
+Run only the failing cases. A case passes at 3 runs out of 3. Leave out a case that has passed
 both with and without the skill, even after the skill changes, since it doesn't depend on the
 skill.
 
