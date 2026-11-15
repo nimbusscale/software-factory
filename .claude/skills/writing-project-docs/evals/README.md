@@ -65,7 +65,7 @@ these, so these cases also test whether the agent finds the problem.
 | `terms-review-one-name` | The spec defines Meeting room, Phone room and Organizer. A change adds FR-4, which limits the hours of a booking of a "room", and FR-5, which emails the booking's "host". | It edits nothing, and lists both as problems in this change: "room" should be the full name or names, or go, and "host" should be "organizer". | 0 of 3 |
 
 The runs without the skill were on commit `eda6175`, except for `terms-review-one-name`'s, which
-were on the case before it was committed, on top of commit `8815473`.
+were on commit `f8306f9`.
 
 ### `items`
 
@@ -83,7 +83,8 @@ and a writer checking its own work runs the same review checks, so one reviewer 
 | `items-review-whys` | A change adds three requirements with Whys. FR-4's Why, the office's hours, passes both tests. FR-5's changes nothing, and FR-6's is clear from the rule. | It edits nothing, lists the Whys on FR-5 and FR-6 as problems in this change, and doesn't call FR-4's a problem. | 0 of 3 |
 | `items-write-limits` | Write a functional spec from planning notes with four limits, one with a reason that passes both tests, and a phone app planned for later. | Each limit is a requirement in the Limits section, written with "only ... not". Only the 6 pm limit has a Why. The spec doesn't mention a phone app. | 0 of 3 |
 
-The runs without the skill were on the cases before they were committed, on top of commit `8815473`.
+The runs without the skill were on commit `f8306f9`, except for `items-review-scenarios`'s. Those
+were on an earlier version of the case, before both of its scenarios changed.
 
 ## Running them
 

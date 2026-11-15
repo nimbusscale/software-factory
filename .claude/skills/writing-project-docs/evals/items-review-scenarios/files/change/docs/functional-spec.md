@@ -10,7 +10,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Time slot.** A half hour that starts on the hour or on the half hour.
 - **Booking.** A room held for one member for one time slot.
 - **Organizer.** The member a booking is for.
-- **Check-in.** An organizer telling the app that a booking is in use.
+- **Check-in.** Telling the app that a booking is in use.
 
 ## F-SEC-2. Limits
 
