@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: review-new-and-older
+name: review-roles-review-new-and-older
 expected_outcome: |
   The reviewer edits nothing. It lists the new requirement with no ID as a problem in this change.
   It lists FR-3's citation of F-SEC-5, which doesn't exist, as an older problem, since it's on main

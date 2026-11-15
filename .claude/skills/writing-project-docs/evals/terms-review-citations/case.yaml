@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: review-term-citations
+name: terms-review-citations
 expected_outcome: |
   The change adds five terms to the spec. The reviewer edits nothing. It lists the citations on
   Organizer (FR-3) and Waitlist (FR-4) as problems in this change. Organizer's meaning doesn't

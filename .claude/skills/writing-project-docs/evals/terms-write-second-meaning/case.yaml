@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: write-term-second-meaning
+name: terms-write-second-meaning
 expected_outcome: |
   The notes use "free" in two senses: a slot nobody has booked, and costing nothing. The writer
   creates docs/functional-spec.md from them. Every use of "free" in the spec has one meaning, and

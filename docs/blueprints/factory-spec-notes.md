@@ -307,6 +307,18 @@ a lot. A case that passes without the skill stays as a check against regressions
 - Decided in: #33.
 - Likely home: `TD`.
 
+**A case's name starts with its group tag, then its role tag, such as `terms-review-citations`.**
+- Why: when a group runs, it's easy to tell which cases belong to it.
+- Decided in: #27.
+- Likely home: `TD`.
+
+**The evals README records how each case did in its last run without the skill, and the commit it
+ran on. It records no other results.**
+- Why: that's the baseline. It says which cases depend on the skill, so later runs can leave out
+  the ones that don't. Other results change with every run, and they go in the PR and the issue.
+- Decided in: #27.
+- Likely home: `TD`.
+
 **A case's planted problems are ones the doc check script flags.**
 - Why: the cases test what the agent does with a problem, not whether it can find one.
 - Decided in: #33.
@@ -317,7 +329,7 @@ passes, the whole group runs 3 times each, to catch anything a skill change brok
 passed both with and without the skill is left out, even after the skill changes. Before a 3-run
 pass, each case runs once. A case whose setup was fixed runs once more, and goes into a 3-run pass
 only when its result has nothing to do with the setup.**
-- Why: a single run can pass by luck. `review-clean` passed one run, then failed 3 out of 3. A
+- Why: a single run can pass by luck. `review-roles-review-clean` passed one run, then failed 3 out of 3. A
   case that has passed both ways gives no reason to run it again, and each run costs tokens. The
   single run catches a broken setup before the bigger run spends three times as much. If a setup
   fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first.

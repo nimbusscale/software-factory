@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: self-review-clean
+name: review-roles-write-clean
 expected_outcome: |
   The change has no problems, so the agent finds nothing to fix and edits no file.
 context:

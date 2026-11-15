@@ -1,5 +1,5 @@
 schema_version: "1.1"
-name: self-review-fixes-its-problem
+name: review-roles-write-fixes-its-problem
 expected_outcome: |
   The agent owns the change, so it fixes the problem the change made: the new requirement has no
   ID, and it gets one (FR-5). The citation of F-SEC-5 in FR-3 is broken too, but it was there
