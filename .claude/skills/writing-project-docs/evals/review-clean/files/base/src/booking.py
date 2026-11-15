@@ -21,6 +21,6 @@ def check_in(booking, member, now):
 
 def cancel_no_shows(bookings, now):
     """Cancel each booking that nobody checked in to in time (FR-4)."""
-    for b in bookings:
-        if not b.cancelled and not b.checked_in and now - b.start >= CHECK_IN_WINDOW:
-            b.cancel()
+    for b in list(bookings):
+        if not b.checked_in and now - b.start >= CHECK_IN_WINDOW:
+            bookings.remove(b)
