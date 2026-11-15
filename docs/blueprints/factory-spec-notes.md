@@ -75,6 +75,22 @@ that nothing cites a requirement.**
 - Decided in: #23.
 - Likely home: `TD`.
 
+**To test a term's citation, cover it and read the term. If the word's meaning is still clear, the
+citation goes. A requirement that decides who fills a role, such as who a loan's borrower is,
+isn't a reason to cite it.**
+- Why: in an evaluation, writers cited the requirements that decide who a booking's organizer is
+  in 2 of 6 runs, though the skill already said to leave out a citation that only says where a
+  thing comes from. With the test and the borrower example, 3 of 3 runs cited nothing on organizer.
+- Decided in: #27.
+- Likely home: `TD`.
+
+**A skill's examples come from a different domain than its evaluations.**
+- Why: with an organizer example in the skill, every writer copied its wording into the spec, so a
+  pass showed only that it could copy. With a borrower example, the writers' wording varied and
+  they still passed.
+- Decided in: #27.
+- Likely home: `TD`.
+
 **A word defined in Terms means only that, everywhere in the docs. Another meaning gets a
 different word. The review greps for each term and its other forms to check every use.**
 - Why: in the second Dust Law run, Terms defined "Turn" as one player's go, and a requirement

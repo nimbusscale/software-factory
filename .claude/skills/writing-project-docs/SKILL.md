@@ -229,8 +229,11 @@ A term cites something in only two cases. Otherwise it's a plain definition, wit
 - **A section holds the rules for the thing it names.** It may cite that section, such as
   "Refund. Money returned to a customer for an order (F-SEC-6)."
 
-A citation that only says where the thing comes from, such as the requirement that creates it,
-adds nothing. Leave it out.
+A citation that only says where the thing comes from adds nothing. Leave it out. That includes a
+requirement that creates the thing, or one that decides who fills a role. For example,
+"Borrower. The member a loan is for" cites nothing, even when requirements decide whose loan it
+is. To test a citation, cover it and read the term. If the word's meaning is still clear, the
+citation goes. Overdue keeps FR-12, since without it nothing says when a loan is due.
 
 - **One name for each thing.** Before naming a part of the app, a step or a state, search the docs
   for what they already call it, and use that exact name. A new name gets one home: a term in the
