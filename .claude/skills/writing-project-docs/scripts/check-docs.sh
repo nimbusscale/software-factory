@@ -121,8 +121,21 @@ xargs -d '\n' -r grep -HnoE "\b($ids|$sec_ids)\b" <"$tmp/all" >"$tmp/cites" || t
 awk -F: 'NR == FNR { d[$1]; next } !($3 in d) { print "RULE " $1 ":" $2 " cites " $3 ", which isn'\''t defined" }' \
   "$tmp/defined" "$tmp/cites"
 
-# Requirements that nothing cites: their only appearance is the definition.
-cut -d: -f3 "$tmp/cites" | sort | uniq -c | awk '$1 == 1 { print $2 }' >"$tmp/once"
+# Lines inside a spec's Terms section: file, line. A section ends at the next heading of its level
+# or higher.
+while read -r f; do
+  awk -v f="$f" '
+    /^#+ / { lvl = match($0, /[^#]/) - 1
+      if (terms && lvl <= terms) terms = 0
+      if ($0 ~ /^#+ [FT]-SEC-[0-9]+\. Terms[ \t]*$/) { terms = lvl; next } }
+    terms { print f ":" FNR }
+  ' "$f"
+done <"$tmp/specs" >"$tmp/terms"
+
+# Requirements that nothing cites: their only appearance is the definition. A citation from Terms
+# doesn't count, since a term only explains a word, so the requirement may still be unbuilt.
+awk -F: 'FILENAME == ARGV[1] { t[$1 FS $2]; next } !(($1 FS $2) in t) { print $3 }' \
+  "$tmp/terms" "$tmp/cites" | sort | uniq -c | awk '$1 == 1 { print $2 }' >"$tmp/once"
 grep -E ":(FR|TR)-" "$tmp/defs" | while IFS=: read -r f n id; do
   grep -qxF "$id" "$tmp/once" && echo "SIGNAL $f:$n $id isn't cited anywhere, so it may be unbuilt or untested"
 done

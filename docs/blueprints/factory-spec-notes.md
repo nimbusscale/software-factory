@@ -64,6 +64,17 @@ instead.**
 - Decided in: #14.
 - Likely home: `TD`.
 
+**A term cites a requirement only when its meaning depends on that requirement's rule. It may
+cite a section when that section holds the rules for the thing it names. Otherwise it's a plain
+definition, with no citation. The check script doesn't count a citation from Terms when it warns
+that nothing cites a requirement.**
+- Why: two Dust Law runs cited terms in different ways, because the skill didn't say when a
+  reader needs the rule. A citation that only says where a thing comes from adds nothing, and
+  Terms starts to read like an index of rules. A requirement cited only from Terms also escaped
+  the warning that nothing builds or tests it. Joe preferred the first run's way of citing.
+- Decided in: #23.
+- Likely home: `TD`.
+
 **A name says what kind of thing it is, even when it's the only thing of its kind. When two names
 share a word, the shared word is never used alone. When a new name shares a word with an existing
 one, every bare use of the word is changed to the full name in the same change.**

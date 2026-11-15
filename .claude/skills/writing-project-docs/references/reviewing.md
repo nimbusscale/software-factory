@@ -11,6 +11,7 @@ Copy this checklist into your task list and tick off each check:
 - [ ] The rewrite stayed in scope
 - [ ] No history got in
 - [ ] One name for each thing
+- [ ] Each citation in Terms earns its place
 - [ ] One item for each fact
 - [ ] Each requirement can be tested from its own text
 - [ ] Each scenario earns its place
@@ -37,7 +38,8 @@ workflow. It checks:
   IDs are unique within a doc, and each prefix is in its own doc. No ID range is cited. The
   functional spec has no links out. No research doc links to another doc, and no other doc links
   to a research doc or a blueprint. As a signal only, it lists requirement IDs that nothing cites, since they may
-  be unbuilt or untested. It doesn't look in open issues. Step 7 of `references/changing-a-doc.md`
+  be unbuilt or untested. A citation from a Terms section doesn't count for this, since a term
+  only explains a word. It doesn't look in open issues. Step 7 of `references/changing-a-doc.md`
   covers those.
 - **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each decision
   has a Why line right after it.
@@ -60,6 +62,9 @@ workflow. It checks:
   for likely variants, such as "checkout step" and "checkout". Make every variant the one name. For
   each word two names share, grep for it on its own and change each bare use to the full name.
   Every word that names a thing is in Terms or carries a citation.
+- **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
+  depends on that requirement's rule. It cites a section only when that section holds the rules for
+  the thing it names. Remove any other citation from a term.
 - **One item for each fact.** For each pair of items that limit the same action or share a trigger,
   apply the test in "One item for each fact" in SKILL.md. Merge any pair that's one fact.
 - **Each requirement can be tested from its own text and the Terms.** If you couldn't write a test

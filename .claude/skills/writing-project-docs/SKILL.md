@@ -219,9 +219,18 @@ change and FR-70 wouldn't.
 ### Terms and names
 
 A term defines a word, once, in the spec's Terms section. It never states a rule a requirement
-holds, such as a count, a limit, or when something finishes. If a reader of the term needs the
-rule, the term cites the requirement's ID. A rule stated in two places can change in one and not
-the other.
+holds, such as a count, a limit, or when something finishes. A rule stated in two places can
+change in one and not the other.
+
+A term cites something in only two cases. Otherwise it's a plain definition, with no citation.
+
+- **Its meaning depends on a requirement's rule.** It cites that requirement. For example,
+  "Overdue. A loan past its due date (FR-12)," where FR-12 says when a loan is due.
+- **A section holds the rules for the thing it names.** It may cite that section, such as
+  "Refund. Money returned to a customer for an order (F-SEC-6)."
+
+A citation that only says where the thing comes from, such as the requirement that creates it,
+adds nothing. Leave it out.
 
 - **One name for each thing.** Before naming a part of the app, a step or a state, search the docs
   for what they already call it, and use that exact name. A new name gets one home: a term in the
