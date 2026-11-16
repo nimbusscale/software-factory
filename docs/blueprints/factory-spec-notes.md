@@ -78,14 +78,14 @@ as a limit decides only whether it goes in the spec, not how it's written.**
   being hard to test doesn't make it wrong. In the Dust Law and Facet runs, all five agents were
   unsure what counted as a limit, and how to write a ban. Without the last sentence, a reviewer
   flagged an ordinary requirement written with "only ... not" as "written as a limit".
-- Decided in: #39, as a trial on the `limits-design-test` branch, since it may not work out.
+- Decided in: #39, after a trial on a branch.
 - Likely home: `FR`.
 
 **A limit goes in the section for the feature whose design it shapes. There's no Limits section.**
 - Why: under the two checks, a limit is about the design of one thing the app builds, so it sits
   where that thing's builder reads. With a separate section, writers and reviewers couldn't agree
   which "only" rules belonged in it. This reverses #5's Limits section.
-- Decided in: #39, as a trial on the `limits-design-test` branch.
+- Decided in: #39, after a trial on a branch.
 - Likely home: `FR`.
 
 **A skill doesn't tell the agent to take outside actions, such as opening or commenting on an issue
