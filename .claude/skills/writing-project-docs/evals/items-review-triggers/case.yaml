@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: items-review-triggers
+expected_outcome: |
+  The change adds two requirements, each with two triggers. The reviewer edits nothing. FR-13's
+  triggers are one fact: whatever keeps a room from a member, they're offered another room. But
+  they list the rooms FR-11 and FR-12 keep from a member, so the reviewer lists FR-13 as a problem
+  in this change and says to cite FR-11 and FR-12 in place of the list. It doesn't ask to split
+  FR-13. FR-14's triggers are two facts, since the email for a cancelled booking and the one for
+  joining a waitlist could each change for its own reason. The reviewer lists FR-14 as a problem
+  in this change and says to split it.
+context:
+  scaffold_script: place-files.sh

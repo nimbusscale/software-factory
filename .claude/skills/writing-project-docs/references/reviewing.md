@@ -127,6 +127,9 @@ whether it's a real problem. It checks:
   citation on a term is a problem.
 - **One item for each fact.** For each pair of items that limit the same action or share a trigger,
   apply the test in "One item for each fact" in SKILL.md. A pair that's one fact is a problem.
+  Apply it as well to the triggers of each requirement with more than one. Triggers that are two
+  facts in one requirement are a problem. So is a list of triggers that repeats the members of a
+  set another requirement defines.
 - **Each requirement can be tested from its own text and the Terms.** You could write a test from
   it alone.
 - **Each scenario earns its place:** its result comes from several requirements together, it can

@@ -144,7 +144,8 @@ Every requirement uses this pattern. Every part but the last is optional:
 - Where, While and When each appear at most once, in that order.
 - The requirement starts with Where, While, When, or The.
 - One behavior per requirement, so exactly one "shall". Two behaviors are two requirements.
-- One trigger per requirement. A paragraph with several triggers becomes several requirements.
+- One trigger per requirement. A paragraph with several triggers becomes several requirements,
+  unless the triggers are one fact. See "One item for each fact".
 - The subject is a part of the system, or the code or data the rule is about. A plural subject
   keeps the "The" form: "The services shall each be usable on their own."
 - State the condition a requirement depends on in its Where or While, even when it's always true
@@ -214,7 +215,9 @@ The one other thing that can go under a requirement is a table its own text poin
 
 Two items are the same fact if changing one would force a change to the other. Merge them into one
 item. If each would change for a different reason, they're two facts, and both stay, even when
-they limit the same action.
+they limit the same action. Test with a change that has a reason of its own, one someone could
+really ask for. Nearly any two items could change apart for no reason, and that doesn't make them
+two facts.
 
 > **FR-70.** The app shall accept changes to an account's shipping address only from the account's
 > owner.
@@ -225,6 +228,24 @@ they limit the same action.
 Both limit changing a shipping address, but they're two facts. If an account could have several
 users, FR-70 would change and FR-71 wouldn't. If the shop shipped to more countries, FR-71 would
 change and FR-70 wouldn't.
+
+The same test applies to the triggers of one requirement, such as "When A or B". Triggers that are
+two facts become two requirements. "When a customer places an order or changes their email
+address, the app shall email them a confirmation" is two facts: the order email could gain a
+delivery date without the other one changing.
+
+Triggers that are one fact stay one requirement. When they list the members of a set another
+requirement defines, cite that requirement in place of the list. Otherwise the list has to be
+updated by hand each time the set changes.
+
+> **FR-72.** Where a product is discontinued or not yet launched, the shop shall show it only to
+> staff.
+>
+> **FR-73.** When a customer asks for a product that FR-72 keeps from them, the shop shall answer
+> "not found".
+
+Written as "When a customer asks for a discontinued product or a product not yet launched", FR-73
+would repeat FR-72's list. A third kind of hidden product would then have to be added in both.
 
 ### Terms and names
 
