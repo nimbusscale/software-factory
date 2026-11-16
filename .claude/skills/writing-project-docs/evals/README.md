@@ -76,9 +76,10 @@ these, so these cases also test whether the agent finds the problem.
 | `terms-review-second-meaning` | The spec defines Free as a room no booking holds. A change adds FR-9, which says bookings are "free of charge". | It edits nothing, lists FR-9's "free" as a problem in this change, and suggests a rewrite without the word. | 3 of 3 |
 | `terms-write-second-meaning` | Write a functional spec from planning notes that use "free" both for a slot nobody has booked and for costing nothing. | Every use of "free" in the spec has one meaning, and the spec still says bookings cost nothing. | 3 of 3 |
 | `terms-review-one-name` | The spec defines Meeting room, Phone room and Organizer. A change adds FR-4, which limits the hours of a booking of a "room", and FR-5, which emails the booking's "host". | It edits nothing, and lists both as problems in this change: "room" should be the full name or names, or go, and "host" should be "organizer". | 0 of 3 |
+| `terms-review-word-uses` | The spec defines Room as a meeting room or a phone room, Hold as a room and time slot kept for a member, and Round as the office manager's evening check. A change adds FR-6, which shows the hours "each room" was booked, "rounded up", and FR-7, which says the app shall "hold" a cancelled booking for 30 days. | It edits nothing, lists FR-7's "hold" as a problem in this change, and doesn't object to "rounded up" or to the bare "room". | 3 of 3 |
 
 The runs without the skill were on commit `eda6175`, except for `terms-review-one-name`'s, which
-were on commit `f8306f9`.
+were on commit `f8306f9`, and `terms-review-word-uses`'s, which were on commit `85aba06`.
 
 ### `items`
 
