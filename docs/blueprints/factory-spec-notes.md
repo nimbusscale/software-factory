@@ -318,9 +318,8 @@ the real input that led to the mistake, cut down, when there is one.**
   work runs the same review checks, so one reviewer case covers both. A reviewer case can plant
   exactly the problem to find. A writer case can only hope the writer makes the mistake. Each case
   costs runs, so cases are added only where they're needed. A writer case is still worth it when
-  the reviewer keeps catching the same mistake, since each catch costs another round. Limits are
-  one rule no review check covers, so they have a writer case. A real mistake makes a better test
-  than an invented one.
+  the reviewer keeps catching the same mistake, since each catch costs another round. A real
+  mistake makes a better test than an invented one.
 - Decided in: #24.
 - Likely home: `TD`.
 

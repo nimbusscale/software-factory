@@ -74,7 +74,7 @@ Why, and how a limit is written. The check script can't flag these either.
 
 Most of these are reviewer cases. The reviewer is the last check before a problem gets through,
 and a writer checking its own work runs the same review checks, so one reviewer case covers both.
-`items-write-limits` is a writer case, since no review check covers limits.
+`items-write-limits` is a writer case.
 
 | Case | Task | Passes when | Without the skill |
 |---|---|---|---|
