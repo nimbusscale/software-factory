@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: items-review-cuts
+expected_outcome: |
+  The task, given in the prompt, is to take projectors out of the spec. The change deletes the
+  Projector term, FR-5 and FR-6, which the task calls for. It also rewrites FR-4 so it refuses
+  every booking past 3, where it used to refuse only bookings for a later day. That drops the rule
+  that a member at the limit can still book for the same day. The commit message gives a
+  plausible reason for this second cut, but the task doesn't call for it. The reviewer edits
+  nothing. It lists the lost same-day exception as a problem in this change, whatever the commit
+  message says. It doesn't call the deleted projector term or requirements a problem.
+context:
+  scaffold_script: place-files.sh
