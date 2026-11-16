@@ -1,8 +1,18 @@
 # Evaluations for writing-project-docs
 
-Each folder here is one test case, in the layout `claude plugin eval` reads. A case gives a fresh
-agent one small task, in a throwaway repo that the case's scaffold script builds. Then graders
-check what the agent produced.
+Each folder here, and in `../evals-no-skill/`, is one test case, in the layout `claude plugin eval`
+reads. A case gives a fresh agent one small task, in a throwaway repo that the case's scaffold
+script builds. Then graders check what the agent produced.
+
+The two folders split the cases by whether they need the skill:
+
+- **`evals/`** holds the cases that fail without the skill. A run with no `--eval-dir` runs only
+  these, so they're the ones run while the skill changes.
+- **`evals-no-skill/`** holds the cases that pass without the skill, on the model and effort the
+  cases use today. They're a record of behavior worth checking. See "With or without the skill"
+  for when they run.
+
+This README covers both folders.
 
 ## A case folder
 
@@ -28,6 +38,9 @@ check what the agent produced.
 Each case has two tags. One names the group of cases it belongs to. The other says whose work the
 agent checks: `write` for its own, `review` for someone else's. A case's name starts with both, in
 that order, such as `terms-review-citations`.
+
+A case whose "Without the skill" column says 3 of 3 is in `evals-no-skill/`. Every other case is
+in `evals/`.
 
 The "Without the skill" column says how the case did in its last run without the skill. A case
 that passes without the skill doesn't depend on it. See "With or without the skill" below.
@@ -111,6 +124,8 @@ claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonn
 - `-j <n>` runs up to n agent runs at once, from 1 to 8. It's 1 by default, which is slow, so use at
   least 4. It can only be set on the command line.
 - `--keep-temp` keeps each run's folder, so you can see what the agent did.
+- `--eval-dir evals-no-skill` runs the cases in `evals-no-skill/` in place of `evals/`. Their
+  results go in `evals-no-skill/results/`.
 
 These are real, billed model runs.
 
@@ -124,15 +139,19 @@ whether the case depends on the skill at all. An agent can't guess this project'
 as its IDs, its prose and the two lists a reviewer reports, without the skill. So for most cases,
 runs without it only confirm that, and running them every time adds nothing.
 
-A case that passes without the skill still stays. It checks that the skill doesn't make the agent
-worse, such as fixing things that aren't broken, and it catches a later change to the skill that
-breaks it. The cases whose "Without the skill" column says 3 of 3 are like this.
+A case that passes 3 of 3 without the skill moves to `evals-no-skill/`. It doesn't show that the
+skill helps, so it isn't run while the skill changes. It stays because it records a behavior worth
+checking, and some of these cases also check that the skill doesn't make the agent worse, such as
+fixing things that aren't broken. Run them:
+
+- **When the agent's model or effort changes,** such as moving the writer from Opus to Sonnet. First
+  run every case in both folders without `--ablation none`, and move each case to the folder its
+  result says. Then decide whether a reviewer case also needs a writer case on the new model.
+- **In a full run after a batch of skill changes,** with the skill only.
 
 ### Which cases to run
 
-Run only the failing cases. A case passes at 3 runs out of 3. Leave out a case that has passed
-both with and without the skill, even after the skill changes, since it doesn't depend on the
-skill.
+While the skill changes, run only the failing cases in `evals/`. A case passes at 3 runs out of 3.
 
 Before a 3-run pass, do one run of each case. It costs a third as much, and it catches a broken
 setup before the bigger run.

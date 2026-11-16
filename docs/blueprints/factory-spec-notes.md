@@ -322,11 +322,24 @@ reply's headings or layout.**
 - Likely home: `TD`.
 
 **Evaluations run with the skill only. A case also runs without the skill when it's new or changes
-a lot. A case that passes without the skill stays as a check against regressions.**
+a lot.**
 - Why: an agent can't guess the project's standards, such as its IDs and prose, without the skill,
   so running without it mostly shows that. What it does show is whether a case depends on the
-  skill. A case that passes without the skill still catches a later skill change that breaks it.
+  skill.
 - Decided in: #33.
+- Likely home: `TD`.
+
+**A case that passes without the skill moves to a second folder, `evals-no-skill/`, next to
+`evals/`. A plain run runs only `evals/`. The second folder runs when an agent's model or effort
+changes, after which every case is sorted again, and in a full run after a batch of skill
+changes.**
+- Why: a case that passes without the skill shows no value from the skill, and runs add up. Joe:
+  the work and runs for one issue took about 6% of his allocation. But the case still records a
+  behavior we cared about. If the writer moves from Opus to Sonnet, or from high effort to medium,
+  it may start to fail, and the folder is a checklist for that change. A folder, not a tag,
+  because the runner has no way to leave a tagged case out by default.
+- Open: Joe may change how full runs are done, because of their cost.
+- Decided in: #38.
 - Likely home: `TD`.
 
 **The judge model is Sonnet. The agent under test runs on Opus for now.**
