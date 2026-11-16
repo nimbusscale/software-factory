@@ -7,13 +7,10 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 
 The terms a user would recognize, each defined once in plain language.
 
-## F-SEC-2. Limits
+## F-SEC-2. <An area of behavior>
 
-Limits that always hold, each a requirement in the form "The <subject> shall <do X> only <scope>,
-not <what it rules out>."
-
-## F-SEC-3. <An area of behavior>
-
-One section per area a user would recognize, such as checking out.
+One section per area a user would recognize, such as checking out. A limit goes in the section
+for the feature it shapes, in the form "The <subject> shall <do X> only <scope>, not <what it
+rules out>."
 
 **FR-1.** <Where ...> <While ...> <When ...> The <subject> shall <behavior>.

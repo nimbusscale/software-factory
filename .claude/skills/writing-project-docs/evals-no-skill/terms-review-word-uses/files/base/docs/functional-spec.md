@@ -17,12 +17,10 @@ The functional spec: what the app should do, in the user's terms. Requirements a
   (FR-4).
 - **Round.** The office manager's evening check that every room is ready for the next day.
 
-## F-SEC-2. Limits
+## F-SEC-2. Making a booking
 
 **FR-1.** The app shall make a booking only for a time slot that starts up to 14 days after the
 day the member asks for it, not later.
-
-## F-SEC-3. Making a booking
 
 **FR-2.** When a member asks for a booking of a room for a time slot, the app shall make the
 booking only if no other booking, and no other member's hold, has that room for that time slot.
@@ -32,7 +30,7 @@ booking only if no other booking, and no other member's hold, has that room for 
 **FR-4.** When a member picks a room and a time slot, the app shall give that member a hold on
 them for 10 minutes.
 
-## F-SEC-4. Rounds
+## F-SEC-3. Rounds
 
 **FR-5.** When the office manager starts a round, the app shall list the rooms booked for the next
 day.

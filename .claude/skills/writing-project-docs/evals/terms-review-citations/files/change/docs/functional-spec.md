@@ -11,15 +11,13 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Booking.** A room held for one member for one time slot.
 - **Organizer.** The member a booking is for (FR-3).
 - **Waitlist.** The members waiting for a room and time slot that a booking holds (FR-4).
-- **Check-in.** An organizer telling the app that they're using their booking (F-SEC-4).
+- **Check-in.** An organizer telling the app that they're using their booking (F-SEC-3).
 - **No-show.** A booking the app cancelled because nobody checked in in time (FR-7).
 
-## F-SEC-2. Limits
+## F-SEC-2. Making a booking
 
 **FR-1.** The app shall make a booking only for a time slot that starts up to 14 days after the
 day the member asks for it, not later.
-
-## F-SEC-3. Making a booking
 
 **FR-2.** When a member asks for a booking of a room for a time slot, the app shall make the
 booking only if no other booking holds that room for that time slot.
@@ -32,7 +30,7 @@ the app shall offer to add the member to the waitlist for that room and time slo
 **FR-5.** When an organizer cancels a booking, the app shall move the member who joined that
 room and time slot's waitlist first from the waitlist to a new booking of that room and time slot.
 
-## F-SEC-4. Checking in
+## F-SEC-3. Checking in
 
 **FR-6.** While a booking is under way, the app shall let its organizer check in.
 

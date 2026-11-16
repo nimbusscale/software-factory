@@ -45,12 +45,54 @@ the rules a writer needs, such as GEARS and no links out.**
 - Likely home: `TD`.
 
 **A limit is a requirement with its own ID, stated as an absolute: "The game shall run only in a
-desktop browser, not on phones or tablets." Something not built yet isn't a limit. It's an issue.**
+desktop browser, not on phones or tablets."**
 - Why: "shall run in a desktop browser" doesn't rule out running elsewhere. Saying what it does
-  only, then what that rules out, is clearer. An ID lets a doc or test cite one limit. The spec says
-  what the app should do now, not a roadmap.
+  only, then what that rules out, is clearer. An ID lets a doc or test cite one limit.
 - Decided in: #5.
 - Likely home: `FR`.
+
+**The specs describe the app as it is. A limit, non-goal or trade-off the source states holds as
+written, whether the source says "for now" or "never". A plan for later stays out.**
+- Why: the specs aren't a roadmap. Joe: "they're concerned with only what is of today and not what
+  is going to be in the future." This replaces #5's rule that something not built yet goes in an
+  issue.
+- Decided in: #39.
+- Likely home: `FR`.
+
+**The specs are there for the agents that build the app. They aren't the whole description of the
+app. Docs for people can live outside them.**
+- Why: Joe: "they're there to serve the development process. They're inputs to the software
+  factory, but they are not the entirety of the definition of the application." A rule that
+  guides no building decision, such as "analytics are shown only as information, not with goals",
+  shapes which issues get written, not how the code is built.
+- Decided in: #39.
+- Likely home: `FR`.
+
+**A limit goes in the spec only when it passes two checks. First, the source says what the app
+does, as well as where it stops. Second, where it stops lets the builder design something simpler.
+A ban with nothing the app does in it, such as "no advertising", stays out.**
+- Why: the spec says what the app does, not the endless list of what it doesn't. "No ads" gives a
+  builder nothing to build or leave out. "Only one person signs in" lets a builder leave out
+  accounts and roles. A limit is kept by designs that respect it more than shown by a test, so
+  being hard to test doesn't make it wrong. In the Dust Law and Facet runs, all five agents were
+  unsure what counted as a limit, and how to write a ban.
+- Decided in: #39, as a trial on the `limits-design-test` branch, since it may not work out.
+- Likely home: `FR`.
+
+**A limit goes in the section for the feature whose design it shapes. There's no Limits section.**
+- Why: under the two checks, a limit is about the design of one thing the app builds, so it sits
+  where that thing's builder reads. With a separate section, writers and reviewers couldn't agree
+  which "only" rules belonged in it. This reverses #5's Limits section.
+- Decided in: #39, as a trial on the `limits-design-test` branch.
+- Likely home: `FR`.
+
+**A skill doesn't tell the agent to take outside actions, such as opening or commenting on an issue
+or a PR. It says what goes in the doc.**
+- Why: the same skill runs for a writer, a reviewer and an implementer, and in interactive sessions
+  where the owner talks through how to handle things. The factory may not let a given agent take
+  those actions. The skill still mentions PRs in places. Joe will deal with those separately.
+- Decided in: #39.
+- Likely home: `TD`.
 
 **A limit gets a Why under the same rule as any other requirement. There's no Why shared by a
 section.**

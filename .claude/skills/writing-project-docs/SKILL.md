@@ -202,7 +202,8 @@ The one other thing that can go under a requirement is a table its own text poin
   The reader knows only what the docs say, not how similar products work. A scenario must be able
   to happen under the other requirements. It never holds a rule of its own: a rule found only in a
   scenario is a missing requirement. A vague or untestable requirement is fixed by rewriting it,
-  never by adding a scenario. A requirement can still need both.
+  never by adding a scenario. A limit is the exception to "untestable": see "Holds a limit only
+  where it guides the build" in [references/functional-spec.md](references/functional-spec.md). A requirement can still need both.
 
   > **FR-60.** When an order's total is over $50, the app shall ship it for free.
   >

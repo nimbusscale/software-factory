@@ -5,7 +5,7 @@ expected_outcome: |
   Organizer (FR-3) and Waitlist (FR-4) as problems in this change. Organizer's meaning doesn't
   depend on FR-3, which only lets an organizer cancel. FR-4 only says how a member joins a
   waitlist. It doesn't call the citation on No-show (FR-7) a problem, since what "in time" means
-  depends on FR-7's rule. It doesn't call the citation on Check-in (F-SEC-4) a problem, since
+  depends on FR-7's rule. It doesn't call the citation on Check-in (F-SEC-3) a problem, since
   that section holds every rule about checking in.
 context:
   scaffold_script: place-files.sh

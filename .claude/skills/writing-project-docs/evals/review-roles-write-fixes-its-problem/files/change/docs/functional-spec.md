@@ -10,17 +10,15 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Time slot.** A half hour that starts on the hour or on the half hour.
 - **Booking.** A room held for one member for one or more time slots in a row.
 
-## F-SEC-2. Limits
+## F-SEC-2. Making a booking
 
 **FR-1.** The app shall make a booking only for a start date up to 14 days after the day the
 member asks for it, not later.
 
-## F-SEC-3. Making a booking
-
 **FR-2.** When a member asks for a booking of a room, the app shall make the booking only if no
 other booking holds that room for any of the same time slots.
 
-## F-SEC-4. Checking in
+## F-SEC-3. Checking in
 
 **FR-3.** While a booking is under way, the app shall let the member who holds it check in
 (F-SEC-5).

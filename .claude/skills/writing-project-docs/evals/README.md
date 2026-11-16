@@ -92,7 +92,7 @@ most of these either.
 
 Most of these are reviewer cases. The reviewer is the last check before a problem gets through,
 and a writer checking its own work runs the same review checks, so one reviewer case covers both.
-`items-write-limits` is a writer case.
+`items-write-limits` and `items-write-bans` are writer cases.
 
 | Case | Task | Passes when | Without the skill |
 |---|---|---|---|
@@ -101,12 +101,15 @@ and a writer checking its own work runs the same review checks, so one reviewer 
 | `items-review-whys` | A change adds three requirements with Whys. FR-4's Why, the office's hours, passes both tests. FR-5's changes nothing, and FR-6's is clear from the rule. | It edits nothing, lists the Whys on FR-5 and FR-6 as problems in this change, and doesn't call FR-4's a problem. | 0 of 3 |
 | `items-review-examples` | A change writes three rules from planning notes and cuts both of the notes' examples. The check-in example only shows FR-5 at work. The booking-limit example held a rule, that same-day bookings don't count toward the 3, and no requirement has it. A plain line under FR-6 holds a rule. | It edits nothing, lists the lost same-day rule and FR-6's plain line as problems in this change, and doesn't call the cut check-in example a problem. | 3 of 3 |
 | `items-review-triggers` | A change adds two requirements, each with two triggers. FR-13 offers another room to a member asking for a room an admin has closed, or a room kept for the board, which lists the rooms FR-11 and FR-12 keep from a member. FR-14 emails a confirmation when an organizer cancels a booking or a member joins a waitlist. | It edits nothing, says FR-13 should cite FR-11 and FR-12 in place of its list, doesn't ask to split FR-13, and says to split FR-14. | 1 of 3 |
-| `items-write-limits` | Write a functional spec from planning notes with four limits, one with a reason that passes both tests, and a phone app planned for later. | Each limit is a requirement in the Limits section, written with "only ... not". Only the 6 pm limit has a Why. The spec doesn't mention a phone app. | 0 of 3 |
+| `items-write-limits` | Write a functional spec from planning notes that list four things the app won't do, one with a reason that passes both tests for a Why, and say it's web only for the first version, with a phone app later. | Equipment, other offices and web only are limits, written with "only ... not", with no separate Limits section. Only the 6 pm rule has a Why. The spec doesn't mention the phone app coming later. | 0 of 3 |
+| `items-write-bans` | Write a functional spec from planning notes that list four things the app won't do: no ads, no chat, no co-organizers, and no targets or nudges on the office manager's room figures. | No co-organizers is a limit, written with "only ... not". Ads, chat and targets aren't in the spec, and the room figures are. There's no separate Limits section. | 0 of 3 |
 
 The runs without the skill were on commit `f8306f9`, except for `items-review-scenarios`'s and
 `items-review-examples`'s. `items-review-scenarios`'s were on an earlier version of the case, before
-both of its scenarios changed. `items-review-examples`'s were on commit `0e33f69`, and
-`items-review-triggers`' on the commit that added the case.
+both of its scenarios changed. `items-review-examples`'s were on commit `0e33f69`.
+`items-review-triggers`' and `items-write-bans`' were on the commit that added the case.
+`items-write-limits`' were on an earlier version of the case, which put every limit in a Limits
+section.
 
 ## Running them
 

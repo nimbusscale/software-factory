@@ -10,7 +10,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Board member.** A member who sits on the company's board.
 - **Time slot.** A half hour that starts on the hour or on the half hour.
 
-## F-SEC-2. Limits
+## F-SEC-2. Making a booking
 
 **FR-1.** The app shall make a booking only for a time slot that starts up to 14 days after the
 day the member asks for it, not later.
@@ -22,8 +22,6 @@ for other members.
 
 **FR-12.** Where a room is kept for the board, the app shall book the room only for a board
 member, not for other members.
-
-## F-SEC-3. Making a booking
 
 **FR-2.** When a member asks for a booking of a room for a time slot, the app shall make the
 booking only if no other booking holds that room for that time slot.
@@ -39,7 +37,7 @@ room and time slot's waitlist first from the waitlist to a new booking of that r
 **FR-10.** When a time slot starts, the app shall remove every member from the waitlist for each
 room and that time slot.
 
-## F-SEC-4. Checking in
+## F-SEC-3. Checking in
 
 **FR-6.** While a booking is under way, the app shall let its organizer check in.
 

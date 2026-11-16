@@ -12,15 +12,13 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Booking.** A meeting room or phone room held for one member for one time slot.
 - **Organizer.** The member a booking is for.
 
-## F-SEC-2. Limits
+## F-SEC-2. Making a booking
 
 **FR-1.** The app shall make a booking only for a time slot that starts up to 14 days after the
 day the member asks for it, not later.
 
 **FR-4.** The app shall make a booking of a room only for a time slot between 8 am and 6 pm, not
 outside those hours.
-
-## F-SEC-3. Making a booking
 
 **FR-2.** When a member asks for a booking of a meeting room or phone room for a time slot,
 the app shall make the booking only if no other booking holds it for that time slot.
