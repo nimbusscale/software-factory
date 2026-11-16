@@ -228,9 +228,24 @@ change and FR-70 wouldn't.
 
 ### Terms and names
 
-A term defines a word, once, in the spec's Terms section. It never states a rule a requirement
-holds, such as a count, a limit, or when something finishes. A rule stated in two places can
-change in one and not the other.
+A term is a word and its definition, written once, in the spec's Terms section. The definition says
+what the thing is. It never states a rule a requirement holds, such as a count, a limit, or when
+something finishes. A rule stated in two places can change in one and not the other.
+
+To test each part of a definition, ask: if a requirement changed, would this part have to change
+too? If so, it states that requirement's rule. Cut it. If the word's meaning depends on the rule,
+cite the requirement in its place, as below.
+
+- **A rule:** "Admin. The one person who runs a shop's account," when FR-5 lets each shop have
+  only one admin. If FR-5 allowed two admins, "the one" would be wrong. Write "Admin. The person
+  who runs a shop's account."
+- **A definition:** "Bundle. Two or more products sold together as one item." No requirement says
+  how many products a bundle holds. "Two or more" is part of what a bundle is, so no requirement
+  changing could make it wrong.
+
+A count or a time can be either. What decides it is whether a requirement holds it. If a part of
+a definition is something the app must do or check, and no requirement holds it, it's a missing
+requirement. Write the requirement, then cut the part from the definition.
 
 A term cites something in only two cases. Otherwise it's a plain definition, with no citation.
 

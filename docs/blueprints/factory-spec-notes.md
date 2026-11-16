@@ -396,12 +396,16 @@ ran on. It records no other results.**
 passes, the whole group runs 3 times each, to catch anything a skill change broke. A case that has
 passed both with and without the skill is left out, even after the skill changes. Before a 3-run
 pass, each case runs once. A case whose setup was fixed runs once more, and goes into a 3-run pass
-only when its result has nothing to do with the setup.**
+only when its result has nothing to do with the setup. A case gets up to 3 single runs, with fixes
+to the skill, the case or its graders in between, before its 3-run pass.**
 - Why: a single run can pass by luck. `review-roles-review-clean` passed one run, then failed 3 out of 3. A
   case that has passed both ways gives no reason to run it again, and each run costs tokens. The
   single run catches a broken setup before the bigger run spends three times as much. If a setup
-  fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first.
-- Decided in: #33.
+  fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first. The 3
+  single runs give room to find and fix problems before the bigger run. Joe: "3 is just a nice
+  limit that you typically are able to work it within to get it to pass. So I just needed some
+  number. 3 seemed reasonable, and it's worked out so far."
+- Decided in: #33 and #41.
 - Likely home: `TD`.
 
 **A doc reviewer checks the docs and whether the code does what they say. It doesn't mention a

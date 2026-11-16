@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: terms-review-rules
+expected_outcome: |
+  The change adds three terms to the spec. The reviewer edits nothing. It lists Organizer and
+  Waitlist as problems in this change, since each states a rule a requirement holds. "The one
+  member" repeats FR-9's rule that a booking has only one organizer. "Until that time slot starts"
+  repeats FR-10's rule for when members leave a waitlist. It doesn't call Room's definition
+  a problem. No requirement says what a room holds, so "at least four chairs" is part of what a
+  room is, not a rule.
+context:
+  scaffold_script: place-files.sh

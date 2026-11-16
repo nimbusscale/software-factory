@@ -65,9 +65,10 @@ The runs without the skill were on commit `6eee2a4`. Some of these cases changed
 
 ### `terms`
 
-The rules for the Terms section and names: when a term cites something, that a word defined in
-Terms means only that, everywhere, and that each thing has one name. The check script can't flag
-these, so these cases also test whether the agent finds the problem.
+The rules for the Terms section and names: that a term states no rule, when a term cites
+something, that a word defined in Terms means only that, everywhere, and that each thing has one
+name. The check script can't flag these, so these cases also test whether the agent finds the
+problem.
 
 | Case | Task | Passes when | Without the skill |
 |---|---|---|---|
@@ -77,9 +78,11 @@ these, so these cases also test whether the agent finds the problem.
 | `terms-write-second-meaning` | Write a functional spec from planning notes that use "free" both for a slot nobody has booked and for costing nothing. | Every use of "free" in the spec has one meaning, and the spec still says bookings cost nothing. | 3 of 3 |
 | `terms-review-one-name` | The spec defines Meeting room, Phone room and Organizer. A change adds FR-4, which limits the hours of a booking of a "room", and FR-5, which emails the booking's "host". | It edits nothing, and lists both as problems in this change: "room" should be the full name or names, or go, and "host" should be "organizer". | 0 of 3 |
 | `terms-review-word-uses` | The spec defines Room as a meeting room or a phone room, Hold as a room and time slot kept for a member, and Round as the office manager's evening check. A change adds FR-6, which shows the hours "each room" was booked, "rounded up", and FR-7, which says the app shall "hold" a cancelled booking for 30 days. | It edits nothing, lists FR-7's "hold" as a problem in this change, and doesn't object to "rounded up" or to the bare "room". | 3 of 3 |
+| `terms-review-rules` | A change adds three terms. Organizer is "the one member" a booking is for, and FR-9 allows only one organizer. Waitlist lasts "until that time slot starts", and FR-10 empties it then. Room has "at least four chairs", and no requirement says what a room holds. | It edits nothing, lists Organizer and Waitlist as problems in this change, and doesn't object to Room's definition. | 0 of 1 |
 
 The runs without the skill were on commit `eda6175`, except for `terms-review-one-name`'s, which
-were on commit `f8306f9`, and `terms-review-word-uses`'s, which were on commit `85aba06`.
+were on commit `f8306f9`, `terms-review-word-uses`'s, which were on commit `85aba06`, and
+`terms-review-rules`'s, which was one run, on the commit that added the case.
 
 ### `items`
 
@@ -155,7 +158,8 @@ fixing things that aren't broken. Run them:
 While the skill changes, run only the failing cases in `evals/`. A case passes at 3 runs out of 3.
 
 Before a 3-run pass, do one run of each case. It costs a third as much, and it catches a broken
-setup before the bigger run.
+setup before the bigger run. A case gets up to 3 single runs, with fixes to the skill, the case or
+its graders in between, before its 3-run pass.
 
 When a case fails because of its setup, fix the setup and run that case once more. Read the reply.
 A case goes into a 3-run pass only once its result, pass or fail, has nothing to do with the

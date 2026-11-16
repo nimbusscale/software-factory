@@ -47,6 +47,7 @@ Copy this checklist into your task list and tick off each check:
 - [ ] The rewrite stayed in scope
 - [ ] No history got in
 - [ ] One name for each thing
+- [ ] No term states a rule
 - [ ] Each citation in Terms earns its place
 - [ ] One item for each fact
 - [ ] Each requirement can be tested from its own text
@@ -114,6 +115,10 @@ whether it's a real problem. It checks:
   term is a problem, and needs a different word. Most often, the word stands on its own, or says
   something about the same things the term does. For example, "the player may turn a tile" when
   Turn is a player's go.
+- **No term states a rule.** For each part of each definition, apply the test in "Terms and
+  names" in SKILL.md: if a requirement changed, would this part have to change too? A part that
+  would is a problem, such as "the one" in a term when a requirement allows only one. So is a part
+  the app must do or check that no requirement holds.
 - **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
   depends on that requirement's rule. Cover each requirement citation and read the term. If the
   word's meaning is still clear, the citation is a problem. A requirement that creates the thing,
