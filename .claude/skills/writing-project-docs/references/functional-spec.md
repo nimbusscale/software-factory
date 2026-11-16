@@ -39,7 +39,10 @@ changed in the same PR as the code or prompt change.
   because no test can prove it holds.
 
   "Only" alone doesn't make a limit. "Only the host can start a game" and "a booking can be made
-  only up to 14 days ahead" simplify no design. They're ordinary requirements.
+  only up to 14 days ahead" simplify no design. They're ordinary requirements. An ordinary
+  requirement can still be written with "only", then what it rules out, when that's the clearest
+  way to say it. Whether a rule counts as a limit decides only whether it goes in the spec, never
+  how it's written or where it sits.
 - **Puts each limit with what it bounds.** A limit goes in the section for the feature whose design
   it shapes, with that feature's other requirements. There's no separate section for limits. A
   limit on the whole app, such as FR-7, goes in the section closest to the app as a whole, such as

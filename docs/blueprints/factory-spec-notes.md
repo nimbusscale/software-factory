@@ -70,12 +70,14 @@ app. Docs for people can live outside them.**
 
 **A limit goes in the spec only when it passes two checks. First, the source says what the app
 does, as well as where it stops. Second, where it stops lets the builder design something simpler.
-A ban with nothing the app does in it, such as "no advertising", stays out.**
+A ban with nothing the app does in it, such as "no advertising", stays out. Whether a rule counts
+as a limit decides only whether it goes in the spec, not how it's written.**
 - Why: the spec says what the app does, not the endless list of what it doesn't. "No ads" gives a
   builder nothing to build or leave out. "Only one person signs in" lets a builder leave out
   accounts and roles. A limit is kept by designs that respect it more than shown by a test, so
   being hard to test doesn't make it wrong. In the Dust Law and Facet runs, all five agents were
-  unsure what counted as a limit, and how to write a ban.
+  unsure what counted as a limit, and how to write a ban. Without the last sentence, a reviewer
+  flagged an ordinary requirement written with "only ... not" as "written as a limit".
 - Decided in: #39, as a trial on the `limits-design-test` branch, since it may not work out.
 - Likely home: `FR`.
 
