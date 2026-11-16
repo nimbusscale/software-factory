@@ -5,7 +5,7 @@ user would notice. This file says what else it holds and keeps out, and how it c
 questions in "Which doc a fact goes in", in SKILL.md, decide which facts go in it.
 
 Read by anyone changing what the app should do, and anyone writing evaluations. Kept current, and
-changed in the same PR as the code or prompt change.
+changed along with the code or prompt.
 
 - **Also holds** the terms a user would recognize, defined once each.
 - **Holds a limit only where it guides the build.** A limit is a requirement that says what the

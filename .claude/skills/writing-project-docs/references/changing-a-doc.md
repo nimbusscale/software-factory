@@ -60,7 +60,7 @@ it. Remove or update each one.
 - **Split a section** when it serves two tasks, and readers of one part never need the other. Don't
   split because it's long. Agents read one section at a time, so length costs them little.
 - **Splitting retires the old section ID.** Both new sections get new IDs, and every reference to
-  the old one changes in the same PR. Renaming or moving a section keeps its ID.
+  the old one changes in the same change. Renaming or moving a section keeps its ID.
 
 ## 6. Write it
 
@@ -78,13 +78,13 @@ Follow "How to write an item" in SKILL.md.
   whether to change, replace or delete it, as in step 4.
 - **If you added a name that shares a word with an existing one,** grep the docs and code comments
   for the shared word on its own, and change each use to the full name in the same change.
-- **If you replaced or deleted an item,** search open issues for its old ID and update each one.
-  The doc checks find it in the docs and the code, but not in issues.
-- **Change the code and the doc in the same PR.** When they disagree, the doc wins, unless
+- **If you replaced or deleted an item,** name its old ID in your report, so whoever can reach
+  the issues updates each one that cites it. The doc checks find it in the docs and the code, but
+  not in issues.
+- **Change the code and the doc in the same change.** When they disagree, the doc wins, unless
   CLAUDE.md says otherwise: the doc says what the system should do. Change the code to match. If
   you can't, because the fix is outside your task or the code suggests the doc is wrong, leave
-  both as they are, and say so in the PR description or your final report. Name the item ID and
-  the code.
+  both as they are, and say so in your report. Name the item ID and the code.
 
 ## 8. Check the change
 

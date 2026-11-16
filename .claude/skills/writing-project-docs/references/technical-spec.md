@@ -6,7 +6,7 @@ This file says what else it holds and keeps out, how it changes, and how to writ
 fact goes in", in SKILL.md, decide which facts go in it.
 
 Read by every implementer and reviewer, each reading the sections their task needs. Kept current,
-and changed in the same PR as the code that changes one of its items. Split it only when different
+and changed along with the code that changes one of its items. Split it only when different
 tasks read different parts of it.
 
 - **Decisions that every part of one kind must follow** go here, such as "every endpoint returns

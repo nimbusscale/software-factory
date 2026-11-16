@@ -367,6 +367,19 @@ file, as well as the review file.**
 - Decided in: #35.
 - Likely home: `FR`.
 
+**A reviewer judges each cut against the task, not the author's account of the change. The task is
+what the change was made for, such as the issue or the prompt. The author's account is the commit
+message or PR description. A cut the task doesn't call for is a problem, whatever reason the author
+gives. With no task given, every cut is one.**
+- Why: the task is written before the work, by someone other than the author. So it shows which
+  cuts were planned without the author's reasons, which could sway the review. A reviewer that
+  reads them might accept a cut because it's explained, without asking whether it was right, or
+  look only where the author points. Without some record of planned cuts, a reviewer can't tell a
+  planned cut from a lost fact: in the third Dust Law run, the writer left blueprint facts such as
+  the tile weights out on purpose.
+- Decided in: #36.
+- Likely home: `FR`.
+
 **A skill says what a finding contains: where it is, what's wrong, a suggested rewrite and why it
 fixes it. The task's prompt says how findings are delivered. With no instructions, they go in the
 reply.**

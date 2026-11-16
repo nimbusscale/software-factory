@@ -57,7 +57,7 @@ grep -rlE '^#+ T-SEC-[0-9]+' --include='*.md' .   # technical spec
 
 If a research or blueprints folder doesn't exist, create it in the same folder as the specs. If a
 doc doesn't exist yet, create it at its default path from the template in `assets/`, and say in
-the PR that you created it.
+your report that you created it.
 
 ## Which doc a fact goes in
 
@@ -85,8 +85,9 @@ order, and stop at the first yes.
    Test it by imagining a redesign: if the redesign would still have to meet it, it's a
    requirement.
 9. **Otherwise it's a decision:** how the system meets its requirements. Then:
-   - **Not made yet?** It's an issue, such as a spike. **Rejected?** It goes nowhere. Name it in a
-     code comment only if an agent would likely change the code back to it.
+   - **Not made yet?** It's an issue, such as a spike. Name it in your report, so whoever can
+     open issues adds it. **Rejected?** It goes nowhere. Name it in a code comment only if an
+     agent would likely change the code back to it.
    - **Is there one place in the code that every case of it goes through, now and in the future?**
      Then it's a comment in that place. If new code could follow or break it without touching that
      place, it goes in the technical spec. "Every database write runs in a transaction" is a

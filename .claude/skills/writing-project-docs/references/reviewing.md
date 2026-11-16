@@ -97,10 +97,14 @@ whether it's a real problem. It checks:
 - **Nothing was dropped.** Compare each rewritten paragraph, old against new. `git diff
   --word-diff` on the doc shows them side by side. When the source is something else, such as
   another doc, an issue or notes from a conversation, go through it the same way. Every rule,
-  condition and reason is still there, or the PR says it was cut on purpose. For each example, find
-  the rule it shows, including any exception in it, such as "a gift card order earns no points".
-  That rule must be in a requirement's text. The example itself can be cut without a word in the
-  PR. It stays only as a scenario that earns its place.
+  condition and reason is still there, unless the task calls for cutting it. The task is what the
+  change was made for, such as the issue it closes or the prompt that asked for it. It isn't the
+  author's account of the change, such as a commit message or a PR description. A cut the task
+  doesn't call for is a problem, whatever reason the author gives. If you weren't told the task,
+  every cut is one. For each example, find the rule it shows, including any exception in it, such
+  as "a gift card order earns no points". That rule must be in a requirement's text. The example
+  itself can be cut even if the task doesn't mention it. It stays only as a scenario that earns its
+  place.
 - **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
   spreads further belongs in a separate change.
 - **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the
