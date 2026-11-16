@@ -384,6 +384,26 @@ supported. It writes no files.**
 - Decided in: #33.
 - Likely home: `TD`.
 
+**The docs skill is used in three ways, and it doesn't say which one it's in. The implementer and
+reviewer use it in the implementation loop, where the specs already exist and each change adds to
+them. The doc curator uses it to compare the docs and the code as a whole and raise issues for
+what's out of step. A person uses it in an interactive session, which is where specs are first
+written and often refined before an issue goes into the factory. Where the three need different
+behavior, the skill sets a default and the agent's prompt says what happens next.**
+- Why: Joe expects all three uses. A rule written for one can be wrong for another. The uncited-ID
+  signal is noise on a first draft but useful in the loop. A vague point in the source should be
+  asked about in an interactive session, but should stop an implementer that has no one to ask.
+- Decided in: #18, while planning #36, #37 and #43.
+- Likely home: `TD`, in code standards.
+
+**The docs skill doesn't assume the agent can reach GitHub. It talks about the task and the agent's
+report, not a PR or issues.**
+- Why: Joe's working assumption is that the workflow brokers what each agent sees, and agents get
+  different access. A reviewer in the loop gets only what the workflow gives it. The doc curator
+  may be allowed to read PRs, to see what changed since its last run.
+- Decided in: #18, while planning #36.
+- Likely home: `TD`, in code standards.
+
 ## Evaluations
 
 **A skill's evaluations live in an `evals/` folder inside the skill, one folder per case, and run
@@ -482,4 +502,15 @@ to the skill, the case or its graders in between, before its 3-run pass.**
 code bug that leaves the docs right.**
 - Why: code bugs aren't a doc reviewer's concern.
 - Decided in: #33.
+- Likely home: `FR`.
+
+## Issue checker
+
+**The issue checker checks that each requirement the issue asks for is clear enough to write as a
+rule a test could check. If one isn't, its questions go in the issue and the issue goes to Needs
+attention. An implementer that finds a vague point while writing a spec stops the same way.**
+- Why: clear requirements matter most for the work to come out as wanted. Catching a vague point
+  before the implementer starts saves a wasted attempt. Some vague points only show up while
+  writing, such as an edge case the issue never mentions, so the implementer still needs to stop.
+- Decided in: #18, while planning #37. It goes into whichever issue builds the issue checker.
 - Likely home: `FR`.
