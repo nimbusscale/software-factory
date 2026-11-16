@@ -96,6 +96,20 @@ missing requirement.**
 - Decided in: #41.
 - Likely home: `TD`.
 
+**"One item for each fact" decides whether a requirement with several triggers, such as "When A
+or B", gets split. Triggers that are two facts become two requirements. Triggers that are one fact
+stay one requirement. When they list the members of a set another requirement defines, the
+requirement cites that one in place of the list. The test counts only a change with a reason of
+its own, one someone could really ask for.**
+- Why: "One trigger per requirement" and "One item for each fact" pulled against each other, and
+  reviewers couldn't tell which won. Facet's FR-34 listed three cases that all answer "not found"
+  for one reason. Split, it would be three items for one fact. As a list, it repeated FR-30's and
+  FR-33's conditions, so a new kind of hidden view would have to be added in two places. Citing
+  FR-30 and FR-33 fixes both. Without the "reason of its own" bar, nearly any two triggers could be
+  called two facts by imagining some change.
+- Decided in: #40.
+- Likely home: `TD`.
+
 **A skill's examples come from a different domain than its evaluations.**
 - Why: with an organizer example in the skill, every writer copied its wording into the spec, so a
   pass showed only that it could copy. With a borrower example, the writers' wording varied and
