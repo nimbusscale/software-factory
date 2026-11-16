@@ -105,9 +105,15 @@ whether it's a real problem. It checks:
 - **One name for each thing.** For each term, and each name an item introduces, grep for it and
   for likely variants, such as "checkout step" and "checkout". Every use is the one name, with no
   variants. For each word two names share, grep for it on its own. Every use is the full name, not
-  the bare word. Every word that names a thing is in Terms or carries a citation. Then grep for
-  each term's word and its other forms, such as "turned" and "turning" for "turn". Every use has
-  the term's meaning. A use with another meaning needs a different word.
+  the bare word, unless the shared word is a term that lists the kinds it covers. Then a bare use
+  means every kind, so check that what the sentence says is true of every kind. Every word that
+  names a thing is in Terms or carries a citation. Then grep for each term's word and its other
+  forms, such as "turned" and "turning" for "turn". Every use has the term's meaning, or no reader
+  could take it for the term. A set phrase whose meaning has nothing to do with the term is fine,
+  such as "in order to" when Order is a customer's purchase. A use a reader could take for the
+  term is a problem, and needs a different word. Most often, the word stands on its own, or says
+  something about the same things the term does. For example, "the player may turn a tile" when
+  Turn is a player's go.
 - **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
   depends on that requirement's rule. Cover each requirement citation and read the term. If the
   word's meaning is still clear, the citation is a problem. A requirement that creates the thing,

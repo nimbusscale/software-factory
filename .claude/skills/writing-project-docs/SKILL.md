@@ -252,11 +252,17 @@ citation goes. Overdue keeps FR-12, since without it nothing says when a loan is
   named for what happens in it".
 - **One meaning for each term.** A word defined in Terms means only that, everywhere in the docs.
   When another meaning is needed, use a different word. For example, if "order" is defined as a
-  customer's purchase, write "sort", not "order", for how a list is arranged.
+  customer's purchase, write "sort", not "order", for how a list is arranged. This is about
+  meaning, not spelling. A set phrase that no reader could take for the term is fine, such as "in
+  order to".
 - **A name says what kind of thing it is,** even when it's the only thing of its kind: "order
   status", not "status". A short name breaks when a second thing of that kind is added.
-- **Never use a shared word alone.** When two names share a word, such as "user account" and
-  "admin account", always write the full name. "Account" alone could mean either.
+- **Never use a shared word alone, unless it's a term.** When two names share a word, such as
+  "user account" and "admin account", always write the full name. "Account" alone could mean
+  either. To use the bare word for every kind, as in "each account", define it as a term that says
+  which kinds it covers: "Account. A user account or an admin account." The term lists the kinds.
+  It doesn't say what the word means in general. Otherwise write the full names, or reword so the
+  word isn't needed.
 - **Cite where a word's meaning lives.** A word defined in a Terms section needs no citation. Any
   other word whose meaning lives in another item gets that item's ID or section ID the first time
   an item uses it. The test: could a reader of this item alone find what the word means?

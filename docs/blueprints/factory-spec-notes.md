@@ -92,22 +92,32 @@ isn't a reason to cite it.**
 - Likely home: `TD`.
 
 **A word defined in Terms means only that, everywhere in the docs. Another meaning gets a
-different word. The review greps for each term and its other forms to check every use.**
+different word. The review greps for each term and its other forms to check every use. A set
+phrase that no reader could take for the term is fine, such as "rounded down" when Round is a
+term. Whether a reader could is left to the reviewer's judgment.**
 - Why: in the second Dust Law run, Terms defined "Turn" as one player's go, and a requirement
   then used "turn" to mean rotating a tile. A reader who checks Terms gets the wrong meaning. The
   skill said each thing gets one name but not that each name keeps one meaning, so nothing
-  stopped the writer. The reviewer caught it only by chance.
-- Decided in: #25.
+  stopped the writer. The reviewer caught it only by chance. In the third Dust Law run, the rule
+  caught "rounded down" and "turns a person away", which no reader would mix up with Round or
+  Turn. One reviewer flagged both, and the other flagged only one. The rule is meant to protect
+  meaning, not ban words. A human reviewer would make this call, so an agent reviewer does too.
+- Decided in: #25, #42.
 - Likely home: `TD`.
 
 **A name says what kind of thing it is, even when it's the only thing of its kind. When two names
-share a word, the shared word is never used alone. When a new name shares a word with an existing
-one, every bare use of the word is changed to the full name in the same change.**
+share a word, the shared word is never used alone, unless it's a term that lists the kinds it
+covers. When a new name shares a word with an existing one, every bare use of the word is changed
+to the full name in the same change.**
 - Why: in road-trip-agent, "brief" was fine while the trip brief was the only one. When the worker
   brief was added, every bare "brief" became unclear, even in sections about both. In Dust Law,
   "shape" and "catalog" read much better as "tile shape" and "tile catalog", and would break the
-  same way if a second catalog were added.
-- Decided in: #16.
+  same way if a second catalog were added. In the Facet spec, "each field" meant every fact field
+  and framing field, and the rule failed it anyway. A bare word can mean every kind only when the
+  reader can tell which kinds those are, and a term that lists them says so. A reviewer only has to
+  check that Terms has the word. The term lists kinds, not a dictionary meaning, so Terms doesn't
+  fill up with common words.
+- Decided in: #16, #42.
 - Likely home: `TD`.
 
 **A requirement gets a Why only when both hold: the reason isn't clear from the rule, and knowing

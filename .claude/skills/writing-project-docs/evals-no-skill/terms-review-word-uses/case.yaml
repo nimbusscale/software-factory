@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: terms-review-word-uses
+expected_outcome: |
+  The spec defines Room as a meeting room or a phone room, Hold as a room and time slot kept for a
+  member while they finish asking for a booking, and Round as the office manager's evening check.
+  The change adds FR-6, which shows how many hours "each room" was booked, "rounded up" to a whole
+  hour, and FR-7, which says the app shall "hold" a cancelled booking for 30 days. The reviewer
+  edits nothing. It lists FR-7's "hold" as a problem in this change, since a reader could take it
+  for the term Hold and think the cancelled booking's room stays kept. It doesn't call "rounded up"
+  a problem, since no reader would take it for a round. It doesn't call the bare "room" a problem,
+  since Room is a term that lists the kinds it covers.
+context:
+  scaffold_script: place-files.sh
