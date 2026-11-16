@@ -84,6 +84,18 @@ isn't a reason to cite it.**
 - Decided in: #27.
 - Likely home: `TD`.
 
+**To tell a term's definition from a rule, ask of each part of the definition: if a requirement
+changed, would this part have to change too? If so, it states that requirement's rule and is cut.
+A count or a time can be either. A part the app must do or check, that no requirement holds, is a
+missing requirement.**
+- Why: the skill said a term never states a rule but gave no test, so terms ended up repeating
+  rules. In the third Dust Law run, the writer found the rule hard to apply, and reviewers found
+  terms that repeated a requirement's count, or when something is paid or ends. The missing
+  requirement case matches the skill's rule that a rule found only in a scenario is a missing
+  requirement.
+- Decided in: #41.
+- Likely home: `TD`.
+
 **A skill's examples come from a different domain than its evaluations.**
 - Why: with an organizer example in the skill, every writer copied its wording into the spec, so a
   pass showed only that it could copy. With a borrower example, the writers' wording varied and
