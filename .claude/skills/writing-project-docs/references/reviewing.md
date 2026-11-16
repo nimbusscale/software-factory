@@ -73,10 +73,12 @@ whether it's a real problem. It checks:
 - **References:** every doc link, section ID and item ID cited in the docs or the code resolves.
   IDs are unique within a doc, and each prefix is in its own doc. No ID range is cited. The
   functional spec has no links out. No research doc links to another doc, and no other doc links
-  to a research doc or a blueprint. As a signal only, it lists requirement IDs that nothing cites, since they may
-  be unbuilt or untested. A citation from a Terms section doesn't count for this, since a term
-  only explains a word. It doesn't look in open issues. Step 7 of `references/changing-a-doc.md`
-  covers those.
+  to a research doc or a blueprint. As a signal only, it lists each requirement that nothing cites
+  now but something cited on the base branch, since it may have lost its code or its test. A
+  requirement written before the code that meets it isn't flagged. With `--uncited`, it lists
+  every requirement nothing cites instead, for a look at the docs and the code as a whole. A
+  citation from a Terms section doesn't count for either, since a term only explains a word. It
+  doesn't look in open issues. Step 7 of `references/changing-a-doc.md` covers those.
 - **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each paragraph
   under a requirement starts with a label, such as `*Why:*`, or is a table the requirement's text
   points to. Each decision has a Why line right after it.

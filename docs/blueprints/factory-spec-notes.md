@@ -396,6 +396,15 @@ behavior, the skill sets a default and the agent's prompt says what happens next
 - Decided in: #18, while planning #36, #37 and #43.
 - Likely home: `TD`, in code standards.
 
+**By default, the doc check script flags a requirement that nothing cites only if something cited
+it on the base branch. With `--uncited`, it flags every requirement that nothing cites.**
+- Why: in the implementation loop, a requirement that loses its last citation is the useful
+  signal. A requirement written before the code that meets it is normal. On a first draft nothing
+  is cited, so the old check flagged nearly every requirement: 88 of 91 in the third Dust Law run.
+  That buried any other signal. The doc curator still needs the full list, so it uses `--uncited`.
+- Decided in: #43.
+- Likely home: `TD`.
+
 **The docs skill doesn't assume the agent can reach GitHub. It talks about the task and the agent's
 report, not a PR or issues.**
 - Why: Joe's working assumption is that the workflow brokers what each agent sees, and agents get
@@ -480,6 +489,12 @@ ran on. It records no other results.**
 **A case's planted problems are ones the doc check script flags.**
 - Why: the cases test what the agent does with a problem, not whether it can find one.
 - Decided in: #33.
+- Likely home: `TD`.
+
+**A behavior that lives in a script is tested by running the script on small repos, not by an
+evaluation case.**
+- Why: the behavior is in the script, so the script is what to test.
+- Decided in: #43.
 - Likely home: `TD`.
 
 **A failing case is run on its own until it passes 3 runs out of 3. When every case in a group

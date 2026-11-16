@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Checks a project's docs against the writing-project-docs skill's rules.
 #
-# Usage, from the repo root:  check-docs.sh <docs folder> <base branch>
+# Usage, from the repo root:  check-docs.sh [--uncited] <docs folder> <base branch>
 #
 # Docs are every .md file in the docs folder, plus CLAUDE.md and the skills in .claude/skills,
 # except this skill. Source files are the other text files in the repo that git doesn't ignore.
@@ -10,6 +10,11 @@
 #
 # The history checks look only at lines added since the base branch, uncommitted ones included.
 # A line someone kept on purpose is then never flagged again. The other checks look at every doc.
+#
+# A requirement that nothing cites is flagged only if something cited it on the base branch. A
+# requirement written before the code that meets it is normal, but one that lost its last citation
+# may have lost its code or its test. With --uncited, every requirement that nothing cites is
+# flagged instead, for a look at the docs and the code as a whole.
 #
 # It writes no files, so it runs where nothing is writable, such as an eval sandbox. Each list it
 # builds is kept in a variable, and passed to a command that needs a file through <(...).
@@ -20,7 +25,9 @@
 
 set -u
 
-usage() { echo "usage: check-docs.sh <docs folder> <base branch>, run from the repo root" >&2; exit 2; }
+usage() { echo "usage: check-docs.sh [--uncited] <docs folder> <base branch>, run from the repo root" >&2; exit 2; }
+all_uncited=
+[[ ${1:-} == --uncited ]] && { all_uncited=1; shift; }
 [[ $# -eq 2 && -d $1 ]] || usage
 [[ $(git rev-parse --show-toplevel 2>/dev/null) == "$PWD" ]] || usage
 base=$(git merge-base "$2" HEAD 2>/dev/null) || usage
@@ -126,23 +133,52 @@ cites=$(lines "$all" | xargs -d '\n' -r grep -HnoE "\b($ids|$sec_ids)\b")
 awk -F: 'NR == FNR { d[$1]; next } !($3 in d) { print "RULE " $1 ":" $2 " cites " $3 ", which isn'\''t defined" }' \
   <(lines "$defined") <(lines "$cites")
 
-# Lines inside a spec's Terms section: file, line. A section ends at the next heading of its level
-# or higher.
-terms=$(while read -r f; do
-  awk -v f="$f" '
+# The line numbers inside a spec's Terms section, for a spec read from stdin. A section ends at the
+# next heading of its level or higher.
+terms_lines() {
+  awk '
     /^#+ / { lvl = match($0, /[^#]/) - 1
       if (terms && lvl <= terms) terms = 0
       if ($0 ~ /^#+ [FT]-SEC-[0-9]+\. Terms[ \t]*$/) { terms = lvl; next } }
-    terms { print f ":" FNR }
-  ' "$f"
-done < <(lines "$specs"))
+    terms { print FNR }'
+}
 
-# Requirements that nothing cites: their only appearance is the definition. A citation from Terms
-# doesn't count, since a term only explains a word, so the requirement may still be unbuilt.
-once=$(awk -F: 'FILENAME == ARGV[1] { t[$1 FS $2]; next } !(($1 FS $2) in t) { print $3 }' \
-  <(lines "$terms") <(lines "$cites") | sort | uniq -c | awk '$1 == 1 { print $2 }')
+# How often each ID appears outside Terms sections, as "<count> <ID>". Takes the Terms lines as
+# "file:line" and the citations as "file:line:ID". A citation from Terms doesn't count, since a
+# term only explains a word, so the requirement may still be unbuilt.
+counts() {
+  awk -F: 'FILENAME == ARGV[1] { t[$1 FS $2]; next } !(($1 FS $2) in t) { print $3 }' \
+    <(lines "$1") <(lines "$2") | sort | uniq -c
+}
+
+# Requirements that nothing cites: their only appearance is the definition.
+terms=$(while read -r f; do terms_lines <"$f" | sed "s|^|$f:|"; done < <(lines "$specs"))
+once=$(counts "$terms" "$cites" | awk '$1 == 1 { print $2 }')
+
+# Requirements cited on the base: the definition and at least one citation. The files are the
+# docs and source files in the base commit, found by the same rules as above.
+if [[ -z $all_uncited ]]; then
+  self_rel=$(realpath --relative-to=. "$self_dir")
+  base_files=$(git ls-tree -r --name-only "$base" | awk -v self="$self_rel/" '
+    /\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$/ &&
+      (!/^\.claude\// || (/^\.claude\/skills\/.*\.md$/ && index($0, self) != 1))')
+  base_cites=$(lines "$base_files" | xargs -d '\n' -r git grep -nowE "$ids|$sec_ids" "$base" -- |
+    sed "s|^$base:||")
+  base_specs=$(lines "$base_files" | xargs -d '\n' -r git grep -lE '^#+ [FT]-SEC-[0-9]+' "$base" -- |
+    sed "s|^$base:||")
+  base_terms=$(while read -r f; do
+    git show "$base:$f" | terms_lines | sed "s|^|$f:|"
+  done < <(lines "$base_specs"))
+  cited_before=$(counts "$base_terms" "$base_cites" | awk '$1 > 1 { print $2 }')
+fi
+
 lines "$defs" | grep -E ":(FR|TR)-" | while IFS=: read -r f n id; do
-  has_line "$once" "$id" && echo "SIGNAL $f:$n $id isn't cited anywhere, so it may be unbuilt or untested"
+  has_line "$once" "$id" || continue
+  if [[ -n $all_uncited ]]; then
+    echo "SIGNAL $f:$n $id isn't cited anywhere, so it may be unbuilt or untested"
+  elif has_line "$cited_before" "$id"; then
+    echo "SIGNAL $f:$n $id was cited on the base branch and isn't now, so it may be unbuilt or untested"
+  fi
 done
 
 # ID ranges.
