@@ -20,9 +20,10 @@ your task. Most tasks need more than one.
 - **Adding, changing, replacing or deleting an item or a section,** in a doc or a code comment,
   or changing code that a doc describes: read
   [references/changing-a-doc.md](references/changing-a-doc.md). It gives the steps in order.
-- **Writing in a doc, or creating one:** read the file for that kind of doc. It says what the doc
-  holds and keeps out, how it changes, and how to write any kind of item only that doc has. Every
-  doc opens with one line saying what kind of doc it is, so a reader knows which of these apply.
+- **Writing in a doc, creating one, or checking a change to one:** read the file for that kind of
+  doc. It says what the doc holds and keeps out, how it changes, and how to write any kind of item
+  only that doc has. Every doc opens with one line saying what kind of doc it is, so a reader knows
+  which of these apply.
   - Functional spec: [references/functional-spec.md](references/functional-spec.md)
   - Technical spec: [references/technical-spec.md](references/technical-spec.md)
   - Research doc: [references/research-doc.md](references/research-doc.md)
@@ -30,7 +31,8 @@ your task. Most tasks need more than one.
   - Skill: [references/skill.md](references/skill.md)
   - CLAUDE.md: [references/claude-md.md](references/claude-md.md)
 - **Checking a change,** your own before you count the work as done, or someone else's: read
-  [references/reviewing.md](references/reviewing.md) and do every check in it.
+  [references/reviewing.md](references/reviewing.md) and do every check in it. Also read the
+  file above for each kind of doc the change touches.
 
 ## Find the docs
 

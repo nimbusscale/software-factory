@@ -42,6 +42,7 @@ Copy this checklist into your task list and tick off each check:
 
 ```
 - [ ] Run the doc check script and decide each SIGNAL line
+- [ ] Each item follows the rules for its kind of doc
 - [ ] Nothing was dropped
 - [ ] The rewrite stayed in scope
 - [ ] No history got in
@@ -84,6 +85,11 @@ whether it's a real problem. It checks:
 
 ## Then check by reading
 
+- **Each item follows the rules for its kind of doc.** Each kind of doc has a file of its own
+  rules, listed in "What to read for your task" in SKILL.md, such as
+  `references/functional-spec.md`. Read the file for each kind of doc the change touches. An item
+  written the way that file asks isn't a problem, even when a rule in SKILL.md seems to say a part
+  of it could go.
 - **Nothing was dropped.** Compare each rewritten paragraph, old against new. `git diff
   --word-diff` on the doc shows them side by side. When the source is something else, such as
   another doc, an issue or notes from a conversation, go through it the same way. Every rule,

@@ -254,6 +254,15 @@ rest. An agent checking its own change leaves older problems alone and doesn't m
 - Decided in: #33.
 - Likely home: `FR`.
 
+**A reviewer reads the file for each kind of doc a change touches, such as the functional spec's
+file, as well as the review file.**
+- Why: so it knows the rules for how that kind of doc is written. Without them, it judges each item
+  only by the general rules in SKILL.md, and can flag an item that follows its doc's rules as a
+  problem. A reviewer suggested cutting "not later" from a limit, when the functional spec's rules
+  ask every limit to say what it rules out.
+- Decided in: #35.
+- Likely home: `FR`.
+
 **A skill says what a finding contains: where it is, what's wrong, a suggested rewrite and why it
 fixes it. The task's prompt says how findings are delivered. With no instructions, they go in the
 reply.**
