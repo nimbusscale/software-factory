@@ -76,8 +76,9 @@ whether it's a real problem. It checks:
   be unbuilt or untested. A citation from a Terms section doesn't count for this, since a term
   only explains a word. It doesn't look in open issues. Step 7 of `references/changing-a-doc.md`
   covers those.
-- **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each decision
-  has a Why line right after it.
+- **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each paragraph
+  under a requirement starts with a label, such as `*Why:*`, or is a table the requirement's text
+  points to. Each decision has a Why line right after it.
 - **Copies,** as a signal: runs of eight or more words that a doc shares with a source file, such
   as a prompt, or with another doc.
 - **Size,** as a signal: a doc near the Read tool's 25,000-token limit, since past that an agent
@@ -93,7 +94,10 @@ whether it's a real problem. It checks:
 - **Nothing was dropped.** Compare each rewritten paragraph, old against new. `git diff
   --word-diff` on the doc shows them side by side. When the source is something else, such as
   another doc, an issue or notes from a conversation, go through it the same way. Every rule,
-  condition, reason and example is still there, or the PR says it was cut on purpose.
+  condition and reason is still there, or the PR says it was cut on purpose. For each example, find
+  the rule it shows, including any exception in it, such as "a gift card order earns no points".
+  That rule must be in a requirement's text. The example itself can be cut without a word in the
+  PR. It stays only as a scenario that earns its place.
 - **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
   spreads further belongs in a separate change.
 - **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the

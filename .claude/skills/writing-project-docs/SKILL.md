@@ -167,6 +167,14 @@ Every requirement uses this pattern. Every part but the last is optional:
 
 ### Lines under an item
 
+Every paragraph under a requirement starts with one of the labels below. A plain paragraph never
+goes there. If it holds a rule, the rule goes in the requirement's own text, or in a requirement of
+its own. If it only shows a rule at work, such as a worked example from a source doc, cut it,
+unless it passes the bar for a Scenario.
+
+The one other thing that can go under a requirement is a table its own text points to, such as
+"as this table shows". The table is part of the requirement.
+
 - **Why:**
   - On a requirement, it works like a code comment: the reason behind the rule. Add one only when
     both of these hold:

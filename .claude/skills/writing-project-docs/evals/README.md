@@ -70,7 +70,8 @@ were on commit `f8306f9`.
 ### `items`
 
 The rules for writing an item: one item for each fact, when a requirement gets a scenario or a
-Why, and how a limit is written. The check script can't flag these either.
+Why, what may go under a requirement, and how a limit is written. The check script can't flag
+most of these either.
 
 Most of these are reviewer cases. The reviewer is the last check before a problem gets through,
 and a writer checking its own work runs the same review checks, so one reviewer case covers both.
@@ -81,6 +82,7 @@ and a writer checking its own work runs the same review checks, so one reviewer 
 | `items-review-one-fact` | A change adds FR-5, which repeats FR-1's 14-day limit as "two weeks", and FR-4, a cap of 3 upcoming bookings. All three limit making a booking. | It edits nothing, lists FR-5 as a problem in this change, and doesn't call FR-4 a copy of another requirement. | 3 of 3 |
 | `items-review-scenarios` | A change adds check-ins, with a scenario under each requirement. FR-4's shows that an organizer can't check in 20 minutes into a booking, since FR-5 cancelled it at 15. FR-5's only restates FR-5. | It edits nothing, lists FR-5's scenario as a problem in this change, and doesn't call FR-4's a problem. | 0 of 3 |
 | `items-review-whys` | A change adds three requirements with Whys. FR-4's Why, the office's hours, passes both tests. FR-5's changes nothing, and FR-6's is clear from the rule. | It edits nothing, lists the Whys on FR-5 and FR-6 as problems in this change, and doesn't call FR-4's a problem. | 0 of 3 |
+| `items-review-examples` | A change writes three rules from planning notes and cuts both of the notes' examples. The check-in example only shows FR-5 at work. The booking-limit example held a rule, that same-day bookings don't count toward the 3, and no requirement has it. A plain line under FR-6 holds a rule. | It edits nothing, lists the lost same-day rule and FR-6's plain line as problems in this change, and doesn't call the cut check-in example a problem. | not run yet |
 | `items-write-limits` | Write a functional spec from planning notes with four limits, one with a reason that passes both tests, and a phone app planned for later. | Each limit is a requirement in the Limits section, written with "only ... not". Only the 6 pm limit has a Why. The spec doesn't mention a phone app. | 0 of 3 |
 
 The runs without the skill were on commit `f8306f9`, except for `items-review-scenarios`'s. Those

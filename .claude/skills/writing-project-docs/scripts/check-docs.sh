@@ -178,7 +178,9 @@ while read -r f; do
         if (why_id != "") print "RULE " f ":" why_line " " why_id " has no Why line right after it"
         why_id = ""
         id = substr(p, 3, RLENGTH - 5); body = substr(p, RLENGTH + 2)
+        req_id = ""
         if (id ~ /^(AD|TD)/) { why_id = id; why_line = n; return }
+        req_id = id; req_body = body
         if (body !~ /^(Where|While|When|The)[ ,]/)
           print "RULE " f ":" n " " id " doesn'\''t start with Where, While, When or The"
         k = gsub(/(^|[^A-Za-z])shall([^A-Za-z]|$)/, "&", body)
@@ -192,6 +194,16 @@ while read -r f; do
           last = index(order, w[i])
         }
         return
+      }
+      # Under a requirement, only labeled lines, and a table that the requirement text points to.
+      # A "shall" paragraph is left to the no-ID check below, so one problem gets one line.
+      if (p ~ /^#/) req_id = ""
+      if (req_id != "") {
+        if (p ~ /^\|/) {
+          if (tolower(req_body) !~ /table/)
+            print "RULE " f ":" n " a table under " req_id ", whose text doesn'\''t point to it"
+        } else if (p !~ /^\*(Why|Scenario|Accepted gap):\*/ && p !~ /(^|[^A-Za-z])shall([^A-Za-z]|$)/)
+          print "RULE " f ":" n " a paragraph under " req_id " with no label, such as Why or Scenario"
       }
       if (p ~ /^\*Why:\*/) { why_id = ""; return }
       if (why_id != "") print "RULE " f ":" why_line " " why_id " has no Why line right after it"

@@ -136,6 +136,30 @@ never holds a rule of its own, and a vague requirement is rewritten, not given a
 - Decided in: #12.
 - Likely home: `TD`.
 
+**Under a requirement go only a Why, a Scenario, an Accepted gap, and a table the requirement's
+text points to. A plain paragraph never does, and the doc check script flags one. There's no
+separate label for an example. A worked example from a source doc is cut unless it passes the bar
+for a scenario, and the rule it shows goes in a requirement's text.**
+- Why: in the third Dust Law spec run, the writer put the source's examples and some clarifying
+  lines in plain paragraphs under requirements. Four of them held rules no requirement had. An
+  Example label was weighed and turned down:
+  - Every one-requirement example in that run either restated its requirement or hid a rule.
+  - If a reader would get a one-requirement case wrong, the requirement needs rewriting.
+  - A second label would likely bring back the flood of scenarios the scenario bar stopped.
+    Joe: "at least for Claude-based models, you have a desire to sort of over-document".
+- Why tables are allowed: specs keep needing them, such as Dust Law's edge-matching and bounty
+  tables, and Joe found the way the writer used them fine.
+- Decided in: #38.
+- Likely home: `TD`.
+
+**When a doc is written from a source, each example in the source needs the rule it shows in a
+requirement's text. The example itself can be cut without a mention in the PR.**
+- Why: the review check asked that every example be kept or listed as cut. That likely pushed the
+  writer to keep the source's examples as plain paragraphs, since the scenario bar left them
+  nowhere else to go.
+- Decided in: #38.
+- Likely home: `TD`.
+
 **Tests trace to functional requirements, not to scenarios. Every functional requirement has at
 least one test, and counts as met when its tests pass. An issue's acceptance criteria name the
 requirements the issue must meet, which tells the workflow which tests must pass. They don't define
