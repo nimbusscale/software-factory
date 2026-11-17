@@ -24,7 +24,7 @@ changed along with the code or prompt.
      advertising" names only what's ruled out. It tells a builder nothing to build, so it stays
      out of the spec. "No matchmaking. Players join a game they've been invited to" passes, since
      its second sentence says what the app does. If you'd have to choose that part yourself, the
-     source hasn't settled it, so don't write your guess as a rule.
+     source hasn't settled it. Follow "Not settled by the source?" in SKILL.md.
   2. **Where it stops lets the builder design something simpler.** "Only one person signs in"
      means no accounts or roles to build. "Only the current version of each item" means no
      version history to store. "Email only for jobs the app runs itself" means no address books

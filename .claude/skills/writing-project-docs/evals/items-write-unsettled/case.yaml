@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: items-write-unsettled
+expected_outcome: |
+  The notes, cut down from a real design doc, say a view's section "can follow all eligible public
+  content or show selected items", and never say what makes content eligible. The writer creates
+  docs/functional-spec.md from them. It writes the parts the notes settle, such as the owner
+  choosing the items a section shows, and a section with none chosen showing nothing. It writes no
+  rule for which items a section that follows content shows: no guess such as "every public item
+  that fits the section", and no copy of the undefined "eligible". Its report raises what
+  "eligible" means as a question, and suggests an answer.
+context:
+  scaffold_script: place-files.sh

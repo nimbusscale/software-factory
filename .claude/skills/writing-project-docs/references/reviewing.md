@@ -44,6 +44,7 @@ Copy this checklist into your task list and tick off each check:
 - [ ] Run the doc check script and decide each SIGNAL line
 - [ ] Each item follows the rules for its kind of doc
 - [ ] Nothing was dropped
+- [ ] Nothing was added that the source didn't settle
 - [ ] The rewrite stayed in scope
 - [ ] No history got in
 - [ ] One name for each thing
@@ -105,6 +106,14 @@ whether it's a real problem. It checks:
   as "a gift card order earns no points". That rule must be in a requirement's text. The example
   itself can be cut even if the task doesn't mention it. It stays only as a scenario that earns its
   place.
+- **Nothing was added that the source didn't settle.** For each rule the change adds or changes,
+  find what settles it: the task, the source the change was written from, or the docs already
+  there. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
+  source never states, or a meaning for a word the source never defines. The author's account of
+  the change settles nothing, even when it lists the point as open. The suggested rewrite cuts
+  what wasn't settled and raises it as a question, as "Not settled by the source?" in SKILL.md
+  says. If you weren't given the task or the source, skip this check, and say in your report that
+  you skipped it and why.
 - **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
   spreads further belongs in a separate change.
 - **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the

@@ -380,6 +380,32 @@ gives. With no task given, every cut is one.**
 - Decided in: #36.
 - Likely home: `FR`.
 
+**When the source leaves part of a rule open, the writer writes no rule for that part, and doesn't
+copy the vague wording either. It raises a question in its report: the source text, what's
+unclear, and a suggested answer. It still writes the parts the source settles. The agent's prompt
+says what happens to the question: in an interactive session it's asked, an implementer stops and
+the issue goes to Needs attention, and a test run puts it in the report.**
+- Why: a reader of the doc alone can't tell a guess from a settled rule, and open items never go
+  in a doc, so a guess can't be marked as one. In the Facet run, the writer turned the undefined
+  "eligible public content" into "every public item that fits it", and listed it as open only in
+  the commit message, which isn't read after merge. The Dust Law runs did the same, such as a
+  requirement settling a garrison timing the source never stated. "A test could check it" isn't the bar, since
+  a limit isn't checked by a test. The bar is whether the writer would have to choose part of the
+  rule itself.
+- Decided in: #37.
+- Likely home: `FR`.
+
+**A reviewer flags a rule, or a part of one, that nothing settles: not the task, the source the
+change was written from, or the docs already there. The author's account doesn't settle anything.
+A reviewer that wasn't given the task or the source skips this check, and says so in its report.**
+- Why: writers keep writing guesses as rules, and a reviewer comparing the change to its source is
+  the last place to catch one. The reviewer only sees a change where the writer wrote a rule, since
+  an implementer that raises a question stops before review. Without the source there's nothing to
+  compare against: judging from the spec alone can't tell a guess from a choice the owner made.
+  Saying the check was skipped keeps a clean report from looking like a pass.
+- Decided in: #37.
+- Likely home: `FR`.
+
 **A skill says what a finding contains: where it is, what's wrong, a suggested rewrite and why it
 fixes it. The task's prompt says how findings are delivered. With no instructions, they go in the
 reply.**

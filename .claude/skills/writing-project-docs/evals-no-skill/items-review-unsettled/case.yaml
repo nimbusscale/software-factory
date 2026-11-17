@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: items-review-unsettled
+expected_outcome: |
+  The task, given in the prompt, is to add waitlists to the spec from the planning notes in
+  notes/waitlists.md. The notes say waitlists close "shortly before the slot starts". The change
+  adds FR-7, which empties a time slot's waitlists 30 minutes before it starts. The 30 minutes is
+  the author's guess, and the commit message doesn't mention it. FR-4, FR-5 and FR-6 each say only
+  what the notes settle. The reviewer edits nothing. It lists FR-7's 30 minutes as a problem in
+  this change, and suggests cutting the guess and asking how long before the slot waitlists close.
+  It doesn't say FR-4, FR-5 or FR-6 go beyond the notes.
+context:
+  scaffold_script: place-files.sh

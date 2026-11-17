@@ -97,6 +97,15 @@ order, and stop at the first yes.
      call each other" stays in the spec even when lint enforces it, since breaking it can mean
      redesigning a change, not a quick fix.
 
+**Not settled by the source?** When you'd have to choose part of a rule yourself, because the
+source leaves it open, write no rule for that part. Don't copy the source's vague wording into the
+doc either. Raise it as a question in your report: quote the source text, say what's unclear, and
+suggest an answer. The task says what happens to the question next. Still write the parts the
+source does settle. For example, notes say the shop emails a customer when their order ships,
+"and again if it's running late", and never say when an order counts as late. Write the rule for
+the shipping email, and ask when an order is late. A guess written as a rule looks settled to every later
+reader, and nothing in the doc can mark it as a guess.
+
 When you're sorting a long passage that mixes several kinds of text, read
 [references/worked-examples.md](references/worked-examples.md). It sorts real passages with these
 questions.
