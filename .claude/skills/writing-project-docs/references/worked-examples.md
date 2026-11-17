@@ -61,21 +61,21 @@ lost.
 **Before:** "Services never call each other. A lookup that two services need is in a shared module
 that each of them is given." No reason was written down anywhere.
 
-**Sorted:**
+**Sorted:** a decision with no Why, and a question in the report.
 
-> **TR-3.** The services shall each be usable on their own.
->
 > **TD-14.** Services never call each other. Code two services need goes in a shared module each
 > of them is given.
->
-> *Why:* a service that calls another can't be used without it, and calls between services can end
-> up in a circle.
+
+> The notes say services never call each other, but not why. Is it so each service can be used
+> on its own? If so, that's also a requirement: "The services shall each be usable on their own."
 
 A lint rule on imports between service files can enforce TD-14. Its comment cites TD-14, and TD-14
 stays in the spec, since someone designing a change needs to see it before any code exists.
 
-**What it shows:** writing the Why exposed the missing reason. Two of six decisions in that project
-had a full reason written down.
+**What it shows:** the reason sounds obvious, but nothing in the notes gives it, so the writer asks
+instead of writing one. A reason the writer made up would read as just as settled as a real one.
+The answer can also turn up a requirement the notes never stated. Two of six decisions in that
+project had a full reason written down.
 
 ## A decision mixed with how it's carried out
 

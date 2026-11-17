@@ -25,7 +25,7 @@ tasks read different parts of it.
 ## Writing a decision
 
 A decision is a one-line statement of the choice, in prose, and always has a Why. The Why says why
-this option was chosen.
+this option was chosen. Until the reason is known, follow "No reason in the source?" in SKILL.md.
 
 > **AD-1.** TypeScript for the whole app.
 >

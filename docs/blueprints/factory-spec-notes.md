@@ -291,6 +291,17 @@ code exists.**
 - Decided in: #19, in discussion with the owner.
 - Likely home: `TD`.
 
+**When the source gives no reason for a decision, the writer writes the decision with no Why and
+asks for the reason in its report. It never writes a reason the source doesn't give. The check
+script keeps flagging the missing Why until the reason is known.**
+- Why: the rule that every decision has a Why pushed writers to make up reasons, which read as
+  just as settled as real ones. "Why: unknown. Ask the owner." is a status, and statuses never go
+  in a doc. Keeping the flag means a decision can't merge without its reason unnoticed, so the rule
+  that a decision always has a Why needs no exception. Only the writer's own check changes: it
+  can't fix that flag, so it names the question that goes with it.
+- Decided in: #19, in discussion with the owner. Settles #2.
+- Likely home: `TD`.
+
 ## Skills
 
 **SKILL.md holds what every task needs, and rules shared by more than one kind of doc. A rule used

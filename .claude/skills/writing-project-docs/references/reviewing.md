@@ -10,7 +10,9 @@ change.
   nothing the change caused is left. Leave older problems alone, and don't mention them, even when
   the check script still flags them. They aren't part of your change, so a report on your change
   has nothing to say about them. When you report what the script found, say it found nothing from
-  your change, and stop there.
+  your change, and stop there. A decision with no Why, whose reason you asked for in your report,
+  isn't yours to fix: the script flags it until the reason is known. Say in your report which flag
+  goes with which question.
 - **Someone else's change:** edit nothing, and report each problem you find. Put each problem in
   one of two lists. **Problems in this change** go back to whoever made it. **Older problems** were
   there before the change. Each problem in either list says four things:
@@ -109,7 +111,9 @@ whether it's a real problem. It checks:
 - **Nothing was added that the source didn't settle.** For each rule the change adds or changes,
   find what settles it: the task, the source the change was written from, or the docs already
   there. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
-  source never states, or a meaning for a word the source never defines. The author's account of
+  source never states, or a meaning for a word the source never defines. So is a Why that none of
+  them gives. A decision with no Why is fine when none of them gives a reason, as "No reason in the
+  source?" in SKILL.md says. The author's account of
   the change settles nothing, even when it lists the point as open. The suggested rewrite cuts
   what wasn't settled and raises it as a question, as "Not settled by the source?" in SKILL.md
   says. If you weren't given the task or the source, skip this check, and say in your report that

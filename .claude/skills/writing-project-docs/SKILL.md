@@ -111,6 +111,11 @@ source does settle. For example, notes say the shop emails a customer when their
 the shipping email, and ask when an order is late. A guess written as a rule looks settled to every later
 reader, and nothing in the doc can mark it as a guess.
 
+**No reason in the source?** When the source gives no reason for a decision, write the decision
+with no Why. Never write a reason the source doesn't give, however likely it seems. Ask for the
+reason in your report: quote the decision, and suggest a reason if you have one. The check script
+flags the missing Why until the reason is known.
+
 When you're sorting a long passage that mixes several kinds of text, read
 [references/worked-examples.md](references/worked-examples.md). It sorts real passages with these
 questions.
