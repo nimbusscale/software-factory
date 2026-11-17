@@ -15,17 +15,35 @@ fact goes in", in SKILL.md, decide which spec a fact goes in, or whether it goes
 | Technical requirement | `TR` | Technical spec |
 | Architecture decision | `AD` | Technical spec |
 | Design decision | `TD` | Technical spec |
+| Code standard | `CS` | Technical spec |
 
-A requirement says what the system must achieve. A decision says how the system meets its
-requirements, and why this way:
+The kinds come in this order. Each one after the first can build on the ones before it.
+
+- **A functional requirement** says what the app does, in the user's terms. The business side
+  writes it.
+- **An architecture decision** shapes the whole system, or picks part of the tech stack. The
+  technical architect makes it, from the functional spec, their experience and any standards.
+  An architecture decision needs no requirement behind it.
+- **A technical requirement** says what the system must achieve that a user wouldn't see, so that
+  a test can check it. It can come from a functional requirement, an architecture decision, both,
+  or the architect alone. It can name a part an architecture decision created, such as a worker
+  that runs timed jobs, without citing that decision. A change to an architecture decision means
+  looking at the whole system again anyway. It cites each functional requirement it protects, as
+  "One item for each fact" below says.
+- **A design decision** says how a part meets a requirement, and cites that `FR` or `TR`.
+- **A code standard** says how all code is written, such as "a bug fix comes with a test that
+  fails without the fix". It needs no requirement behind it.
+
+A requirement leaves the how open: several ways of building it could each meet it. A decision
+picks one of those ways:
 
 | Requirement | A decision that meets it |
 |---|---|
 | When data enters the program, the data shall be checked against a defined schema, with no extra keys. | Outside data is parsed with a schema library where it enters the program. |
-| The services shall each be usable on their own. | Services never call each other. Code two services need goes in a shared module each is given. |
+| The services shall each be usable on their own. | Services never call each other. |
 
-How to write a decision, and whether it's an `AD` or a `TD`, is in "Writing a decision", under
-"Technical spec" below.
+How to write a decision or a code standard, and whether a decision is an `AD` or a `TD`, is in
+"Writing a decision", under "Technical spec" below.
 
 ### Requirements: GEARS
 
@@ -194,13 +212,13 @@ citation goes. Overdue keeps FR-12, since without it nothing says when a loan is
 
 ### IDs
 
-- **Item IDs** are a prefix and a plain number, such as `FR-42`, `TR-7`, `AD-2` or `TD-3`. The
-  number says nothing about where the item sits, so it never goes stale when the item moves. Don't
-  put a topic in an ID, such as `TD-CS-4`. It goes wrong the day the item moves to another
-  section.
+- **Item IDs** are a prefix and a plain number, such as `FR-42`, `TR-7`, `AD-2`, `TD-3` or
+  `CS-5`. The number says nothing about where the item sits, so it never goes stale when the item
+  moves. Don't put a topic in an ID, such as `TD-API-4`. It goes wrong the day the item moves to
+  another section.
 - **Section IDs** have a different shape, so they can't be mistaken for item IDs: `F-SEC-3` in the
   functional spec and `T-SEC-3` in the technical spec. They go in the heading:
-  `## T-SEC-4. Outside services`.
+  `## T-SEC-3. Code standards`.
 - **A new ID** is one more than the highest number with that prefix in the doc:
 
   ```bash
@@ -268,9 +286,10 @@ changed along with the code or prompt.
 
 ## Technical spec
 
-A technical spec says what the system must achieve that a user wouldn't see (`TR`), and how it
-meets its requirements: the decisions (`AD`, `TD`) that new code anywhere could follow or break.
-This section says what else it holds and keeps out, how it changes, and how to write a decision.
+A technical spec says what the system must achieve that a user wouldn't see (`TR`), and how it's
+built: the decisions (`AD`, `TD`) and code standards (`CS`) that new code anywhere could follow or
+break. This section says what else it holds and keeps out, how it changes, and how to write a
+decision.
 
 Read by every implementer and reviewer, each reading the sections their task needs. Kept current,
 and changed along with the code that changes one of its items. Split it only when different
@@ -279,10 +298,10 @@ tasks read different parts of it.
 - **Also holds** the terms a user wouldn't recognize, defined once each.
 - **Decisions that every part of one kind must follow** go here, such as "every endpoint returns
   errors in one shape".
-- **A code standards section** holds the decisions about how all code is written. For example, a
-  fix for a bug comes with a test that fails without the fix. Each outside service quirk the code
-  depends on has a test with a saved response that shows it. Patterns for how code is shaped go
-  here too, each with the reason that stops a wrong change.
+- **A code standards section** holds the code standards (`CS`): how all code is written. For
+  example, a fix for a bug comes with a test that fails without the fix. Each outside service
+  quirk the code depends on has a test with a saved response that shows it. Patterns for how code
+  is shaped go here too.
 - **An outside services section** holds choices about a service that span files or have no code
   to attach to, such as a monthly spending limit.
 - **A list of tests or checks the app must pass isn't written as a list.** This includes a goal for
@@ -313,13 +332,28 @@ flags the missing Why until the reason is known.
 > field change would be made twice.
 
 - Use `AD` when the decision shapes the whole system, so a change would touch most of it, such as
-  the language, the agent framework or the database. Use `TD` otherwise, such as which library
-  checks outside data.
+  the database or the parts the code is split into. Use it too for each pick in the tech stack:
+  the language, the frameworks and runtimes the code is built on, and the tools that build and
+  test it. Use `TD` otherwise, such as which library checks outside data.
 - A line that makes two choices is two decisions. "TypeScript, with React for the UI" is two.
-- A decision can cite the requirement it meets, but it doesn't have to. There's no full map from
-  every decision to a requirement.
+- A `TD` cites the requirement it meets, an `FR` or a `TR`, in its own line or its Why. The check
+  script flags a `TD` that cites none. A `TD` that meets no requirement is a sign of a problem:
+  it's an `AD` or a code standard, or a requirement is missing. An `AD` can cite a requirement,
+  but it doesn't have to.
 
-Besides the Why, and the lines in "Lines under an item" above, a decision can have:
+A code standard is written the same way, as a one-line statement in prose. It gets a Why only under
+the rule for a requirement's Why, in "Lines under an item" above. Most code standards are common
+practice, and their reason is clear from the standard. One that an agent might drop to save effort
+needs one:
 
-- **Examples:** a list of cases, for decisions about how code is written, where a list helps more
-  than a scenario.
+> **CS-3.** Each outside service quirk the code depends on has a test with a saved response that
+> shows it.
+>
+> *Why:* the service can change how it behaves at any time, and the test is how we find out. Once
+> the code looks right, the test can seem unneeded.
+
+Besides the Why, and the lines in "Lines under an item" above, a decision or a code standard can
+have:
+
+- **Examples:** a list of cases, for code standards and for decisions about how code is written,
+  where a list helps more than a scenario.

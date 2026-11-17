@@ -68,6 +68,7 @@ that each of them is given." No reason was written down anywhere.
 
 > The notes say services never call each other, but not why. Is it so each service can be used
 > on its own? If so, that's also a requirement: "The services shall each be usable on their own."
+> TD-14 would then cite it.
 
 A lint rule on imports between service files can enforce TD-14. Its comment cites TD-14, and TD-14
 stays in the spec, since someone designing a change needs to see it before any code exists.

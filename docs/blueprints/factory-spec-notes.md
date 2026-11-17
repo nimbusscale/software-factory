@@ -5,8 +5,8 @@ collects decisions made while building the factory, each with its reason, so the
 lost before the specs are written. When the specs are written, each entry is sorted into them with
 the `writing-project-docs` skill, and this file is retired.
 
-Each entry gives the rule, why, where it was decided, and a guess at its home: `FR`, `TR` or a
-decision (`AD`, `TD`). The guess is only a starting point. "Why unknown" means no reason was given.
+Each entry gives the rule, why, where it was decided, and a guess at its home: `FR`, `TR`, a
+decision (`AD`, `TD`) or a code standard (`CS`). The guess is only a starting point. "Why unknown" means no reason was given.
 
 Reasons behind the earlier doc standard, such as why GEARS and why IDs, are in
 `docs/research/docs-retro/findings.md`, not here.
@@ -335,16 +335,86 @@ decision not made yet, so the writer asks about it. The part the source settles 
 - Decided in: #19, in review of the first run. Built in #47.
 - Likely home: `FR`.
 
-**Architecture decisions come first, made from the functional spec. Technical requirements and
-design decisions follow from them. A technical requirement can name a part an architecture
-decision created, such as the engine.**
-- Why: this is how Joe sees who owns what. The business side owns the functional spec. The
-  technical architect makes the architecture decisions from it, from experience and from any
-  standards. The architect then sets out the technical requirements and design decisions that drive
-  the build. The skill had the order the other way, so a reviewer said TR-5 shouldn't name the
-  engine, though DESIGN gives the engine that job. The exact wording of the redesign test is
-  settled in #48.
-- Decided in: #19, in review of the first run. Built in #48.
+**The kinds of item come in this order. The business side writes the functional requirements.
+The technical architect makes the architecture decisions, from the functional spec, their
+experience and any standards. A technical requirement comes from a functional requirement, an
+architecture decision, both, or the architect alone. A design decision says how a part meets a
+requirement.**
+- Why: this is how Joe sees who owns what. An architecture decision needs no requirement behind
+  it: in the end it's there because the architect chose it. A technical requirement often ties a
+  functional requirement to the architecture. "The server checks every action" ties the game rules
+  a cheater could break to the decision that created the server. It can also be the
+  architect's alone, such as "the user IDs the app stores are its own and never change", whatever
+  the sign-in service an architecture decision picked gives. The skill had requirements first, so
+  a reviewer said TR-5 shouldn't name the engine, though DESIGN gives the engine that job.
+- Decided in: #19, in review of the first run, and #48.
+- Likely home: `TD`.
+
+**A technical requirement can name a part an architecture decision created without citing that
+decision.**
+- Why: an architecture decision is wide. Changing one means looking at the whole system again
+  anyway, so a citation on every item that names its parts adds nothing.
+- Decided in: #48.
+- Likely home: `TD`.
+
+**A requirement leaves the how open: several ways of building it could each meet it. A decision
+picks one of those ways. This test replaces imagining a redesign.**
+- Why: imagining any redesign flagged TR-5 for naming the engine. Imagining only redesigns that
+  keep the architecture decisions still failed: a design that keeps the sign-in service could use
+  that service's user IDs, so "the app's user IDs are its own" would count as a decision, though
+  it's a requirement the architect set. Joe: it's the better test "as long as it's relatively easy
+  to apply and understand the outcome".
+- Decided in: #48.
+- Likely home: `TD`.
+
+**Each pick in the tech stack is an architecture decision: the language, the frameworks and
+runtimes the code is built on, and the tools that build and test it.**
+- Why: changing part of the tech stack is a wide change. Dust Law's DESIGN lists TypeScript,
+  React, Vite and Node together, and the writer made TypeScript an architecture decision and the
+  other three design decisions.
+- Decided in: #48.
+- Likely home: `TD`.
+
+**A design decision cites the requirement it meets, a functional or a technical one, in its own
+line or its Why. The check script flags one that cites none. One that meets no requirement is
+either an architecture decision or a code standard, or a requirement is missing.**
+- Why: in the first technical spec run, once the tech stack picks became architecture decisions,
+  every design decision outside the code standards could be traced to a requirement. Two looked
+  like they couldn't. TD-4, the shape catalog as data, held a technical requirement: the weights
+  can change without touching the game logic. TD-10, tiles drawn in code, meets FR-81. A script
+  check is free, so no reviewer case tests for a missing citation. A citation to a requirement the
+  decision doesn't really meet isn't tested until a run shows reviewers miss it.
+- Decided in: #48.
+- Likely home: `TD`.
+
+**Code standards are their own kind of item, `CS`, in the technical spec's code standards
+section. They need no requirement behind them.**
+- Why: they say how all code is written, and most meet no requirement. As design decisions, they
+  were the one exception to a design decision citing a requirement, marked only by the section
+  they sat in. They had been folded into the design decisions to streamline the kinds of item.
+  They aren't a separate doc, since sharing standards across projects isn't a goal. Each project's
+  standards go in its own technical spec.
+- Decided in: #48.
+- Likely home: `TD`.
+
+**The technical spec's code standards come third, as T-SEC-3, after the terms and the
+architecture decisions. The sections for each area of the system come after them.**
+- Why unknown.
+- Decided in: #48.
+- Likely home: `TD`.
+
+**A code standard gets a Why only under the rule for a requirement's Why: when its reason isn't
+clear and knowing it would change how it's applied. The check script doesn't flag a code standard
+with no Why.**
+- Why: many code standards write down common practice, so most Whys would add little.
+- Decided in: #48.
+- Likely home: `TD`.
+
+**Recovery point and recovery time objectives stay technical requirements. "Would a user notice
+if it changed?" stays the test for a functional requirement.**
+- Why: they're business goals a user doesn't see. Joe didn't want a third kind of requirement for
+  them, and the test is good enough for the factory's needs.
+- Decided in: #48.
 - Likely home: `TD`.
 
 **A technical requirement that protects rules spread across several sections cites those
@@ -435,7 +505,7 @@ IDs. Every reference file is linked directly from SKILL.md, with no file linking
   spec item, such as a blueprint or a skill, and pushed it past 5,000 tokens. The two specs are
   usually written and checked together, so a file for each saved little: a spec writer read both.
 - Decided in: #18. The shared specs file in #19, in discussion with the owner.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **A skill gives the standard a doc must meet and trusts the model on method. The docs skill has no
 step-by-step method for turning existing docs into specs. It only checks that nothing in the source
@@ -445,32 +515,32 @@ was dropped, whatever the source is.**
   explanation, and the same standard and check fit them all. Guidance gets added only if the Dust
   Law and Facet runs show it's needed.
 - Decided in: #20.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **The docs skill doesn't say what happens to source docs after they're turned into specs. The
 task's prompt says it, such as "delete the foundation docs".**
 - Why: it won't always be the same. Some projects may keep their source docs.
 - Decided in: #18, after the second Dust Law run.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **A skill keeps a reason only when, without it, an agent would likely act differently. Other
 reasons go in the specs.**
 - Why: a skill's body is read every time it's used, so a sentence that doesn't change what the
   agent does is clutter.
 - Decided in: #18, about the ID section.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **Skill names use the gerund form, such as `writing-project-docs`, and don't name the factory.**
 - Why: Anthropic recommends the gerund form. The model sees the name next to the description, and
   the name is the command a person types. A project using the skill doesn't need to know where it
   came from.
 - Decided in: #18.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **Skill descriptions are written in the third person, such as "Writes and reviews…".**
 - Why: Anthropic's guidance says to always write descriptions in the third person.
 - Decided in: #18.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **A draft skill sets `disable-model-invocation: true`, so it loads only when typed as a command.
 Whether its description loads it is tested once the skill is complete, then the setting is
@@ -485,7 +555,7 @@ removed.**
 "follow the project's guidance for writing code comments".**
 - Why: a skill may be renamed, and a project may not have it.
 - Decided in: #18.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **A skill with steps in order, or a list of checks, gives a checklist the agent copies into its
 task list. A file an agent may read on its own, such as the review file, has its own checklist.**
@@ -494,7 +564,7 @@ task list. A file an agent may read on its own, such as the review file, has its
   checking it. Within checking, the reading checks are skipped most easily, since a script can't
   do them. A reviewer reads only the review file, so it can't use another file's checklist.
 - Decided in: #18 and #22.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **An agent checking its own change fixes what it finds. A reviewer checking someone else's change
 edits nothing and reports what it finds.**
@@ -601,7 +671,7 @@ behavior, the skill sets a default and the agent's prompt says what happens next
   signal is noise on a first draft but useful in the loop. A vague point in the source should be
   asked about in an interactive session, but should stop an implementer that has no one to ask.
 - Decided in: #18, while planning #36, #37 and #43.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 **By default, the doc check script flags a requirement that nothing cites only if something cited
 it on the base branch. With `--uncited`, it flags every requirement that nothing cites.**
@@ -619,7 +689,7 @@ report, not a PR or issues.**
   may be allowed to read PRs, to see what changed since its last run.
 - Decided in: #18, while planning #36. The last wording that sent facts to issues was removed in
   #46.
-- Likely home: `TD`, in code standards.
+- Likely home: `CS`.
 
 ## Evaluations
 

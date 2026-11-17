@@ -36,7 +36,7 @@ blueprints_dir=$(realpath -m "$docs_dir/blueprints")
 research_dir=$(realpath -m "$docs_dir/research")
 self_dir=$(realpath "$(dirname "$0")/..")
 self_rel=$(realpath --relative-to=. "$self_dir")
-ids='(FR|TR|AD|TD)-[0-9]+'
+ids='(FR|TR|AD|TD|CS)-[0-9]+'
 sec_ids='[FT]-SEC-[0-9]+'
 
 # Prints a list kept in a variable, one item per line. An empty list prints nothing.
@@ -119,7 +119,7 @@ defined=$(lines "$defs" | cut -d: -f3 | sort -u)
 lines "$defs" |
   awk -F: '{ k = $1 FS $3 } seen[k]++ { print "RULE " $1 ":" $2 " " $3 " is defined twice in this doc" }'
 while IFS=: read -r f n id; do
-  if has_line "$fspec" "$f" && [[ $id =~ ^(TR|AD|TD|T-SEC) ]]; then
+  if has_line "$fspec" "$f" && [[ $id =~ ^(TR|AD|TD|CS|T-SEC) ]]; then
     echo "RULE $f:$n $id belongs in the technical spec"
   elif has_line "$tspec" "$f" && [[ $id =~ ^(FR|F-SEC) ]]; then
     echo "RULE $f:$n $id belongs in the functional spec"
@@ -201,12 +201,24 @@ done < <(lines "$docs")
 while read -r f; do
   awk -v f="$f" '
     function flush() { if (para != "") check(para, start); para = "" }
+    # A design decision cites the requirement it meets in its own line or its Why.
+    function cites_req(t) { return t ~ /(^|[^A-Za-z])(FR|TR)-[0-9]+/ }
+    function check_td(p) {
+      if (td_id == "") return
+      if (p ~ /^\*Why:\*/ && cites_req(p)) td_ok = 1
+      if (!td_ok) print "RULE " f ":" td_line " " td_id " cites no requirement, an FR or a TR, in its line or its Why"
+      td_id = ""
+    }
     function check(p, n,   id, body, pre, w, i, k, last, order) {
-      if (match(p, /^\*\*(FR|TR|AD|TD)-[0-9]+\.\*\*/)) {
+      check_td(p)
+      if (match(p, /^\*\*(FR|TR|AD|TD|CS)-[0-9]+\.\*\*/)) {
         if (why_id != "") print "RULE " f ":" why_line " " why_id " has no Why line right after it"
         why_id = ""
         id = substr(p, 3, RLENGTH - 5); body = substr(p, RLENGTH + 2)
         req_id = ""
+        if (id ~ /^TD/) { td_id = id; td_line = n; td_ok = cites_req(body) }
+        # A code standard gets a Why only when it needs one, as a requirement does.
+        if (id ~ /^CS/) return
         if (id ~ /^(AD|TD)/) { why_id = id; why_line = n; return }
         req_id = id; req_body = body
         if (body !~ /^(Where|While|When|The)[ ,]/)
@@ -244,7 +256,8 @@ while read -r f; do
     /^[ \t>]*$/ { flush(); next }
     { line = $0; sub(/^[ \t>]+/, "", line)
       if (para == "") { start = NR; para = line } else para = para " " line }
-    END { flush(); if (why_id != "") print "RULE " f ":" why_line " " why_id " has no Why line right after it" }
+    END { flush(); check_td("")
+      if (why_id != "") print "RULE " f ":" why_line " " why_id " has no Why line right after it" }
   ' "$f"
 done < <(lines "$specs")
 

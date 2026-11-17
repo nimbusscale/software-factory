@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: items-review-tr-names-part
+expected_outcome: |
+  The technical spec's AD-2 splits the app into a web server and a worker that runs every task due
+  at a set time. The change adds TR-2, which says that when the worker starts after being stopped,
+  it runs every task whose time passed while it was stopped, and TD-1, which keeps tasks as rows in
+  the database to meet TR-2. TR-2 names the worker, a part AD-2 created, and leaves open how the
+  worker meets it, so it's a requirement. The reviewer edits nothing, and doesn't say that TR-2
+  shouldn't name the worker, or that TR-2 is a decision rather than a requirement.
+context:
+  scaffold_script: place-files.sh

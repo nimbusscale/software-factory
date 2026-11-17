@@ -81,11 +81,16 @@ Ask these questions in order, and stop at the first yes.
    who tampers with the app, such as by changing what their browser sends, isn't something a user
    sees. It's a technical requirement. See "One item for each fact" in
    [references/specs.md](references/specs.md) for how the two cite each other.
-7. **Is it something the system must achieve that a user wouldn't see,** with no implementation
-   in it? It's a technical requirement (`TR`). For example, "backups meet a set recovery point".
-   Test it by imagining a redesign: if the redesign would still have to meet it, it's a
-   requirement.
-8. **Otherwise it's a decision:** how the system meets its requirements. Then:
+7. **Is it something the system must achieve that a user wouldn't see?** It's a technical
+   requirement (`TR`), such as "backups meet a set recovery point". It may name a part an
+   architecture decision created. For example, an architecture decision picks an outside service
+   to sign users in, and a `TR` says the user IDs the app stores are its own, never change and are
+   never reused, whatever IDs that service gives. Test it by asking whether it leaves the how open.
+   If several ways of building it could each meet it, it's a requirement. If it picks one of those
+   ways, it's a decision.
+8. **Otherwise it's a decision about how the system is built:** an architecture decision, a design
+   decision or a code standard. "Kinds of item" in [references/specs.md](references/specs.md) says
+   which. Then:
    - **Not made yet?** It goes in no doc. Name it in your report as a decision still to make, such
      as one that needs a spike to settle. **Rejected?** It goes nowhere. Name it in a code comment
      only if an agent would likely change the code back to it.
