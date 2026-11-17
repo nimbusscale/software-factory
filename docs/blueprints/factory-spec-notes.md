@@ -460,14 +460,29 @@ if it changed?" stays the test for a functional requirement.**
 - Likely home: `TD`.
 
 **A technical requirement that protects rules spread across several sections cites those
-sections, plus the IDs of the protected requirements outside them. It never cites the whole
-functional spec.**
+sections, plus the IDs of the protected requirements outside them. Its own wording says which
+rules in those sections it covers. It never cites the whole functional spec.**
 - Why: citations are there so a change's effects can be traced. Citing the whole functional spec
   loses that, since no one can tell what the technical requirement covers without reading all of
   it. Listing every ID adds little. With sections and IDs, a miss can be seen and discussed, as when
-  a reviewer asked why TR-1 left out FR-4 and FR-46. A new section can still be missed. No step was
-  added for that, since review can catch it and the procedure is already heavy on steps.
-- Decided in: #19, in review of the first run. Built in #49.
+  a reviewer asked why TR-1 left out FR-4 and FR-46. Requiring a cited section to hold only
+  protected rules would mean listing about 40 IDs for TR-1, or laying out the functional spec
+  around what the server checks. Dust Law's TR-1 already shows the wording doing the work: it
+  covers what's "allowed by the rules in" its sections, so a setup rule like "lay a start tile"
+  in F-SEC-3 isn't covered.
+- Decided in: #19, in review of the first run, and #49.
+- Likely home: `TD`.
+
+**When a change adds an item to a section, or edits one in it, the check script flags each
+citation of that section from before the change. A citation added in the same change isn't
+flagged. No step was added to the procedure for this.**
+- Why: a citation of a section covers whatever the section holds now, so a new rule can fit a
+  technical requirement's wording without being one it should cover. Joe's worry was exactly that
+  case. The flag tells the writer and the reviewer to check that the citation still fits, and the
+  review already says to decide each SIGNAL line, so no new step is needed. A citation written in
+  the same change was written against the section as it is now, so flagging it would only add
+  noise, such as a flag for every section citation in a new spec.
+- Decided in: #49.
 - Likely home: `TD`.
 
 **A term in the technical spec never states a decision's choice. It cites a decision only when the

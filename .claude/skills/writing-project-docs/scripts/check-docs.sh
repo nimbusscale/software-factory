@@ -16,6 +16,9 @@
 # may have lost its code or its test. With --uncited, every requirement that nothing cites is
 # flagged instead, for a look at the docs and the code as a whole.
 #
+# When a change adds an item to a section, or edits one in it, each citation of that section from
+# before the change is flagged. The citation now covers the item, and may not fit it.
+#
 # It writes no files, so it runs where nothing is writable, such as an eval sandbox. Each list it
 # builds is kept in a variable, and passed to a command that needs a file through <(...).
 #
@@ -176,6 +179,52 @@ lines "$defs" | grep -E ":(FR|TR)-" | while IFS=: read -r f n id; do
     echo "SIGNAL $f:$n $id was cited on the base branch and isn't now, so it may be unbuilt or untested"
   fi
 done
+
+# Older citations of a section that this change adds an item to, or edits an item in. A citation of
+# a section means whatever the section holds now, so it may now cover an item it shouldn't.
+# A citation on an added line is left out, since it was written against the section as it is now.
+# First, each item in the specs, as "<file> <ID> <first line> <last line> <sections>". An item is
+# its own paragraph. Its sections are the one it's in and the ones around that.
+items=$(while read -r f; do
+  awk -v f="$f" '
+    function flush(   s, l) {
+      if (id == "") return
+      s = ""; for (l = 1; l <= 9; l++) if (sec[l] != "") s = s " " sec[l]
+      print f "\t" id "\t" from "\t" to "\t" s; id = ""
+    }
+    /^[ \t>]*(```|~~~)/ { flush(); fence = !fence; next }
+    fence { next }
+    /^#+ / { flush(); lvl = match($0, /[^#]/) - 1
+      for (l = lvl; l <= 9; l++) sec[l] = ""
+      if (match($0, /[FT]-SEC-[0-9]+/) && RSTART == lvl + 2) sec[lvl] = substr($0, RSTART, RLENGTH)
+      next }
+    /^[ \t>]*$/ { flush(); next }
+    /^[ \t>]*\*\*(FR|TR|AD|TD|CS)-[0-9]+\.\*\*/ { flush()
+      match($0, /(FR|TR|AD|TD|CS)-[0-9]+/); id = substr($0, RSTART, RLENGTH); from = FNR }
+    { to = FNR }
+    END { flush() }
+  ' "$f"
+done < <(lines "$specs"))
+
+# Then each section with an added or edited item, as "<section> <ID>".
+declare -A added
+grown=$(while IFS=$'\t' read -r f id from to secs; do
+  [[ -v added[$f] ]] || added[$f]=$(added_lines "$f")
+  lines "${added[$f]}" | awk -v a="$from" -v b="$to" '$1 >= a && $1 <= b { hit = 1; exit }
+    END { exit !hit }' || continue
+  for s in $secs; do echo "$s $id"; done
+done < <(lines "$items"))
+
+if [[ -n $grown ]]; then
+  while IFS=: read -r f n s; do
+    changed=$(lines "$grown" | awk -v s="$s" '$1 == s && !seen[$2]++ { printf "%s%s", sep, $2; sep = ", " }')
+    [[ -n $changed ]] || continue
+    has_line "$defs" "$f:$n:$s" && continue
+    [[ -v added[$f] ]] || added[$f]=$(added_lines "$f")
+    has_line "${added[$f]}" "$n" && continue
+    echo "SIGNAL $f:$n cites $s, which this change adds to or edits: $changed. Check that the citation still fits"
+  done < <(lines "$cites" | grep -E ":$sec_ids$" | sort -u)
+fi
 
 # ID ranges.
 lines "$all" | xargs -d '\n' -r grep -HnoE "\b$ids( (to|through) | ?[-–—] ?)(($ids)|[0-9]+)\b" |

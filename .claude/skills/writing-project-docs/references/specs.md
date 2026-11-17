@@ -173,8 +173,21 @@ requirement it protects, instead of repeating it:
 If TR-4 repeated FR-80's rule, letting a customer see a partner's orders would mean changing both.
 Citing FR-80 makes them two facts. FR-80 changes when who may see an order changes. TR-4 changes
 only if the app trusts each browser to hide what it's sent. The citation also shows whoever changes
-FR-80 that TR-4 depends on it. Cite a section in place of the requirements only when the section
-holds every one the technical half protects.
+FR-80 that TR-4 depends on it.
+
+When the requirements a technical half protects are spread across several sections, it may cite
+those sections in place of their IDs. Its own wording then says which rules in them it covers. It
+cites by ID each protected requirement outside those sections. It never cites the whole
+functional spec, since nobody could then tell what it protects without reading all of it:
+
+> **TR-6.** When the server receives an order, the server shall accept it only if the rules in
+> F-SEC-4 and F-SEC-5, and FR-31, allow it.
+
+F-SEC-4 also holds FR-22, which emails the customer when an order ships. It isn't a rule about
+whether an order is allowed, so TR-6 doesn't cover it. A citation of a section means whatever the
+section holds now, so a requirement added to F-SEC-5 later is covered if TR-6's wording fits it.
+The check script flags each older citation of a section that a change adds to or edits, so whoever
+makes the change can check that the citation still fits.
 
 ### The Terms section
 

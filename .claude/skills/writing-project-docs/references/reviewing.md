@@ -83,7 +83,10 @@ whether it's a real problem. It checks:
   every requirement nothing cites instead, for a look at the docs and the code as a whole. A
   citation from a Terms section doesn't count for either, since a term only explains a word. It
   doesn't look outside the repo. "A changed item keeps its ID only if its meaning stayed the same"
-  in `references/changing-a-doc.md` covers that.
+  in `references/changing-a-doc.md` covers that. Also as a signal, when the change adds an item
+  to a section or edits one in it, it lists each citation of that section written before the
+  change. The citation now covers that item. Read the citing item and decide whether its wording
+  should cover the item. If it shouldn't, the citing item needs a change.
 - **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each paragraph
   under a requirement starts with a label, such as `*Why:*`, or is a table the requirement's text
   points to. Each decision has a Why line right after it.
