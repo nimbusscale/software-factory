@@ -31,7 +31,3 @@ Design decisions about how all code is written, each with its reason, and exampl
 ## T-SEC-5. Outside services
 
 Choices about an outside service that span files or have no code to attach to.
-
-## T-SEC-6. Commands
-
-Where commands are defined, and the one command that says work is done.
