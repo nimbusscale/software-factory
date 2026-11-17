@@ -138,15 +138,18 @@ whether it's a real problem. It checks:
   something about the same things the term does. For example, "the player may turn a tile" when
   Turn is a player's go.
 - **No term states a rule.** For each part of each definition, apply the test in "The Terms
-  section" in `references/specs.md`: if a requirement changed, would this part have to change too? A part that
-  would is a problem, such as "the one" in a term when a requirement allows only one. So is a part
-  the app must do or check that no requirement holds.
-- **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
-  depends on that requirement's rule. Cover each requirement citation and read the term. If the
+  section" in `references/specs.md`: if a requirement or a decision changed, would this part have
+  to change too? A part that would is a problem, such as "the one" in a term when a requirement
+  allows only one. So is a part the app must do or check that no requirement holds. A term for a
+  part an architecture decision created may name the part's main job. A part of it that copies
+  the decision's details is a problem.
+- **Each citation in Terms earns its place.** A term cites a requirement or a design decision only
+  when its meaning depends on that item's rule. Cover each such citation and read the term. If the
   word's meaning is still clear, the citation is a problem. A requirement that creates the thing,
   or decides who fills a role, such as who a loan's borrower is, isn't a reason to cite it. A
   term cites a section only when that section holds the rules for the thing it names. Any other
-  citation on a term is a problem.
+  citation on a term is a problem, including one of an architecture decision or of the section
+  that holds them.
 - **One item for each fact.** For each pair of items that limit the same action or share a trigger,
   apply the test in "One item for each fact" in `references/specs.md`. A pair that's one fact is a problem.
   Apply it as well to the triggers of each requirement with more than one. Triggers that are two

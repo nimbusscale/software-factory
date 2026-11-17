@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: terms-write-decisions
+expected_outcome: |
+  The writer creates docs/technical-spec.md from the notes. The notes split the app into a web
+  server and a worker, which is an architecture decision, so each part gets a term. Each term names
+  the part's main job, cites no architecture decision, and doesn't copy the decision's details,
+  such as the worker being the only part that runs jobs. The term for a dead job cites the item
+  that says how many tries a job gets, since its meaning depends on that count.
+context:
+  scaffold_script: place-files.sh

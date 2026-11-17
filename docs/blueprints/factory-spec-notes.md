@@ -128,6 +128,48 @@ isn't a reason to cite it.**
 - Decided in: #27.
 - Likely home: `TD`.
 
+**A term never states a rule a decision holds, as well as a requirement. The test asks whether a
+change to either would force a change to the term.**
+- Why: in the first Dust Law technical spec run, the Engine term copied AD-3's "holds the game
+  rules and game state". The skill's test only asked about requirements, so it didn't cover that.
+- Decided in: #51.
+- Likely home: `TD`.
+
+**A term never cites an architecture decision, or the section that holds them.**
+- Why: the same reason a technical requirement can name a part an architecture decision created
+  without citing it. Changing an architecture decision means looking at the whole system again
+  anyway, so the citation adds nothing. In the first Dust Law technical spec run, the writer cited
+  AD-3 on Engine and AD-6 on Server because the skill only talked about requirements. Both
+  reviewers flagged the citations.
+- Decided in: #51.
+- Likely home: `TD`.
+
+**A term may cite a design decision its meaning depends on, the same way it cites a requirement.
+For example, "Failed task. A task that still fails after its last try (TD-2)."**
+- Why: a design decision can change on its own, like a requirement. Without the citation, the term
+  either leaves the reader unable to tell what it means, or copies the decision's rule, which then
+  goes stale when the decision changes.
+- Decided in: #51.
+- Likely home: `TD`.
+
+**A term for a part an architecture decision created names the part's main job and says no more.
+It doesn't copy the decision's details. "Worker. The part of the app that runs tasks" is fine.
+Adding "and the only part that runs them" copies the decision that the web server runs no task.**
+- Why: any definition of a part echoes the decision that made it, so a strict rule would leave
+  only "a part of the code", which doesn't tell a reader which part. Copying every detail makes
+  two copies of the decision. Naming the main job lets a reader tell the parts apart, and a change
+  to an architecture decision means rereading Terms anyway. Joe chose this over a strict rule and
+  a loose one.
+- Decided in: #51.
+- Likely home: `TD`.
+
+**A part an architecture decision creates always gets a term. The decision uses the name but
+isn't its home.**
+- Why: items name the part without citing the decision. If the decision were the name's home,
+  "cite where a word's meaning lives" would make every one of them cite it.
+- Decided in: #51.
+- Likely home: `TD`.
+
 **To tell a term's definition from a rule, ask of each part of the definition: if a requirement
 changed, would this part have to change too? If so, it states that requirement's rule and is cut.
 A count or a time can be either. A part the app must do or check, that no requirement holds, is a

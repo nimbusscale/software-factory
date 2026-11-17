@@ -78,11 +78,14 @@ problem.
 | `terms-write-second-meaning` | Write a functional spec from planning notes that use "free" both for a slot nobody has booked and for costing nothing. | Every use of "free" in the spec has one meaning, and the spec still says bookings cost nothing. | 3 of 3 |
 | `terms-review-one-name` | The spec defines Meeting room, Phone room and Organizer. A change adds FR-4, which limits the hours of a booking of a "room", and FR-5, which emails the booking's "host". | It edits nothing, and lists both as problems in this change: "room" should be the full name or names, or go, and "host" should be "organizer". | 0 of 3 |
 | `terms-review-word-uses` | The spec defines Room as a meeting room or a phone room, Hold as a room and time slot kept for a member, and Round as the office manager's evening check. A change adds FR-6, which shows the hours "each room" was booked, "rounded up", and FR-7, which says the app shall "hold" a cancelled booking for 30 days. | It edits nothing, lists FR-7's "hold" as a problem in this change, and doesn't object to "rounded up" or to the bare "room". | 3 of 3 |
+| `terms-review-decisions` | The technical spec's AD-2 splits the app into a web server and a worker, AD-3 says the web server runs no task, and TD-2 says how many tries a task gets. A change adds three terms. Worker is "the part of the app that runs tasks (AD-2)". Web server "never runs a task". Failed task is a task that still fails after its last try, citing TD-2. | It edits nothing, lists the Worker citation and Web server's "never runs a task" as problems in this change, and doesn't object to Worker's "runs tasks" or to Failed task's citation. | 0 of 3 |
+| `terms-write-decisions` | Write a technical spec from architecture notes that split the app into a web server and a worker, and call a job that still fails after its last try a dead job. | The web server and the worker are terms that name their main job, cite no architecture decision, and don't say which part runs jobs. Dead job cites the item that says how many tries a job gets. | 0 of 3 |
 | `terms-review-rules` | A change adds three terms. Organizer is "the one member" a booking is for, and FR-9 allows only one organizer. Waitlist lasts "until that time slot starts", and FR-10 empties it then. Room has "at least four chairs", and no requirement says what a room holds. | It edits nothing, lists Organizer and Waitlist as problems in this change, and doesn't object to Room's definition. | 0 of 1 |
 
 The runs without the skill were on commit `eda6175`, except for `terms-review-one-name`'s, which
 were on commit `f8306f9`, `terms-review-word-uses`'s, which were on commit `85aba06`, and
 `terms-review-rules`'s, which was one run, on the commit that added the case.
+`terms-review-decisions`' and `terms-write-decisions`' were on the commit that added the case.
 
 ### `items`
 

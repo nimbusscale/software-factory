@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: terms-review-decisions
+expected_outcome: |
+  The technical spec's AD-2 splits the app into a web server and a worker, and AD-3 says the worker
+  runs every task and the web server runs none. TD-2 says a task is tried up to three times. The
+  change adds three terms and TR-3. Worker is "the part of the app that runs tasks (AD-2)": its
+  definition names the worker's main job, which is fine, but a term never cites an architecture
+  decision. Web server says it "never runs a task", which copies AD-3. Failed task is "a task that
+  still fails after its last try (TD-2)", and its meaning depends on TD-2's count, so the citation
+  is fine. The reviewer edits nothing, lists the Worker citation and Web server's "never runs a
+  task" as problems in this change, and doesn't object to Worker's "runs tasks" or to Failed
+  task's citation.
+context:
+  scaffold_script: place-files.sh

@@ -179,12 +179,13 @@ holds every one the technical half protects.
 ### The Terms section
 
 A term is a word and its definition, written once, in the spec's Terms section. The definition says
-what the thing is. It never states a rule a requirement holds, such as a count, a limit, or when
-something finishes. A rule stated in two places can change in one and not the other.
+what the thing is. It never states a rule a requirement or a decision holds, such as a count, a
+limit, or when something finishes. A rule stated in two places can change in one and not the
+other.
 
-To test each part of a definition, ask: if a requirement changed, would this part have to change
-too? If so, it states that requirement's rule. Cut it. If the word's meaning depends on the rule,
-cite the requirement in its place, as below.
+To test each part of a definition, ask: if a requirement or a decision changed, would this part
+have to change too? If so, it states that item's rule. Cut it. If the word's meaning depends on
+the rule, cite the item in its place, as below.
 
 - **A rule:** "Admin. The one person who runs a shop's account," when FR-5 lets each shop have
   only one admin. If FR-5 allowed two admins, "the one" would be wrong. Write "Admin. The person
@@ -197,10 +198,23 @@ A count or a time can be either. What decides it is whether a requirement holds 
 a definition is something the app must do or check, and no requirement holds it, it's a missing
 requirement. Write the requirement, then cut the part from the definition.
 
+A term for a part an architecture decision created names the part's main job, so a reader can tell
+it from the other parts, and says no more. That job is what the part is, so naming it doesn't count
+as stating the decision's rule. Any change to an architecture decision means looking at the whole
+system again anyway, Terms included. The decision's details stay out:
+
+- **The main job:** "Worker. The part of the app that runs tasks," when AD-2 splits the app into a
+  web server and a worker.
+- **A detail:** "Worker. The part of the app that runs tasks, and the only part that runs them,"
+  when AD-3 says the web server runs no task. If AD-3 let the web server run quick tasks, "the only
+  part" would be wrong. Cut it.
+
 A term cites something in only two cases. Otherwise it's a plain definition, with no citation.
 
-- **Its meaning depends on a requirement's rule.** It cites that requirement. For example,
-  "Overdue. A loan past its due date (FR-12)," where FR-12 says when a loan is due.
+- **Its meaning depends on a requirement's or a design decision's rule.** It cites that item. For
+  example, "Overdue. A loan past its due date (FR-12)," where FR-12 says when a loan is due.
+  "Failed task. A task that still fails after its last try (TD-2)," where TD-2 says how many tries
+  a task gets.
 - **A section holds the rules for the thing it names.** It may cite that section, such as
   "Refund. Money returned to a customer for an order (F-SEC-6)."
 
@@ -209,6 +223,10 @@ requirement that creates the thing, or one that decides who fills a role. For ex
 "Borrower. The member a loan is for" cites nothing, even when requirements decide whose loan it
 is. To test a citation, cover it and read the term. If the word's meaning is still clear, the
 citation goes. Overdue keeps FR-12, since without it nothing says when a loan is due.
+
+A term never cites an architecture decision, or the section that holds them. A part's main job
+makes its meaning clear without one, and a change to an architecture decision means looking at the
+whole system again anyway. "Worker. The part of the app that runs tasks (AD-2)" drops "(AD-2)".
 
 ### IDs
 
