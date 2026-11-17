@@ -6,6 +6,7 @@ expected_outcome: |
   member" repeats FR-9's rule that a booking has only one organizer. "Until that time slot starts"
   repeats FR-10's rule for when members leave a waitlist. It doesn't call Room's definition
   a problem. No requirement says what a room holds, so "at least four chairs" is part of what a
-  room is, not a rule.
+  room is, not a rule. The reviewer isn't given a source, so it may say to check Room's details
+  against one.
 context:
   scaffold_script: place-files.sh

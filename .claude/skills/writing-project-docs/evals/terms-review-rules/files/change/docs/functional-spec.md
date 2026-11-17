@@ -6,7 +6,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 ## F-SEC-1. Terms
 
 - **Member.** A person with an account in the app.
-- **Room.** A closed space in the office with a table, a screen and at least four chairs.
+- **Room.** A closed space with a table, a screen and at least four chairs.
 - **Organizer.** The one member a booking is for.
 - **Waitlist.** The members waiting for a room and time slot that a booking holds, until that time
   slot starts.
