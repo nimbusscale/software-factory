@@ -70,8 +70,8 @@ order, and stop at the first yes.
    message from them.
 2. **Is it how to do one task?** It's a skill.
 3. **Is it a record of something tried and measured?** It's a new research doc.
-4. **Is it something to build from before the code exists,** such as an implementation plan for a
-   part of the system that isn't built yet? It's a blueprint.
+4. **Is it a plan for how to build something,** such as the order to build the parts in? It's a
+   blueprint.
 5. **Is it a quirk of an outside service,** such as an API that returns an empty list where you'd
    expect an error? It's a comment on the code that handles it, not a doc.
 6. **Does a type, a lint rule or a setting already enforce it, and is breaking it a quick fix?**
@@ -96,6 +96,11 @@ order, and stop at the first yes.
    - **If a check also enforces it,** the check's comment cites the decision's ID. "Services never
      call each other" stays in the spec even when lint enforces it, since breaking it can mean
      redesigning a change, not a quick fix.
+
+**Is the code not written yet?** When a fact's home is in code that doesn't exist yet, such as a
+code comment, a check, a setting or a data file the code reads, the fact goes in a blueprint until
+the code is written. The blueprint's retirement steps then move it to its home. Requirements, and
+decisions the technical spec holds, go in the specs even before any code exists.
 
 **Not settled by the source?** When you'd have to choose part of a rule yourself, because the
 source leaves it open, write no rule for that part. Don't copy the source's vague wording into the

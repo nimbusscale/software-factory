@@ -268,6 +268,29 @@ If each would change for a different reason, both stay, even when they limit the
 - Decided in: #18, while reviewing the split skill.
 - Likely home: none. It's a reason not to add a rule.
 
+**One agent writes the functional and technical specs together, from all of the source docs. It
+doesn't write the technical spec after the functional spec is done.**
+- Why: with both specs open, every fact meets one choice, functional or technical, and a wrong
+  choice shows up in one place. Written one after the other, the functional spec is fixed before
+  the technical spec starts. A technical fact already in it can't move, so it turns into a repeat
+  or a gap, which is harder to trace back. If the functional spec gets worse when written together,
+  one after the other is the fallback. The Dust Law runs keep TILES.md as a source, since about half
+  of it is rules a player sees.
+- Decided in: #19, in discussion with the owner.
+- Likely home: unclear. It may only be how the skill is tested.
+
+**A blueprint holds a fact whose home is in code that doesn't exist yet, such as a code comment, a
+check, a setting or a data file. Requirements and spec decisions go in the specs even before any
+code exists.**
+- Why: the questions that sort a fact sent some facts to code comments and checks, which a new
+  project doesn't have yet. With no home, a writer forces them into a spec or drops them, and a cut
+  the task didn't ask for is a problem. The blueprint's retirement steps already move items to
+  comments, tests and checks, so it's the natural place to hold them. The old blueprint question,
+  "something to build from before the code exists", caught every fact in a new project,
+  requirements included, so it now covers only plans for how to build something.
+- Decided in: #19, in discussion with the owner.
+- Likely home: `TD`.
+
 ## Skills
 
 **SKILL.md holds what every task needs, and rules shared by more than one kind of doc. A rule used
