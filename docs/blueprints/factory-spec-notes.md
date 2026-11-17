@@ -326,7 +326,67 @@ requirement states is a missing requirement.**
 - Decided in: #19, in discussion with the owner.
 - Likely home: `TD`.
 
+**A source's "may", "could" or "such as" names options, not a decision. Choosing among them is a
+decision not made yet, so the writer asks about it. The part the source settles is still written.**
+- Why: in the first technical spec run, DESIGN said the client "may use" the engine to show legal
+  moves, and the writer wrote TD-1 as the client using the engine. The choice may be right, but it
+  wasn't the writer's to make. Joe: words that aren't definite "should not be looked at as
+  decisions. They should be looked at options that a decision has to be made about."
+- Decided in: #19, in review of the first run. Built in #47.
+- Likely home: `FR`.
+
+**Architecture decisions come first, made from the functional spec. Technical requirements and
+design decisions follow from them. A technical requirement can name a part an architecture
+decision created, such as the engine.**
+- Why: this is how Joe sees who owns what. The business side owns the functional spec. The
+  technical architect makes the architecture decisions from it, from experience and from any
+  standards. The architect then sets out the technical requirements and design decisions that drive
+  the build. The skill had the order the other way, so a reviewer said TR-5 shouldn't name the
+  engine, though DESIGN gives the engine that job. The exact wording of the redesign test is
+  settled in #48.
+- Decided in: #19, in review of the first run. Built in #48.
+- Likely home: `TD`.
+
+**A technical requirement that protects rules spread across several sections cites those
+sections, plus the IDs of the protected requirements outside them. It never cites the whole
+functional spec.**
+- Why: citations are there so a change's effects can be traced. Citing the whole functional spec
+  loses that, since no one can tell what the technical requirement covers without reading all of
+  it. Listing every ID adds little. With sections and IDs, a miss can be seen and discussed, as when
+  a reviewer asked why TR-1 left out FR-4 and FR-46. A new section can still be missed. No step was
+  added for that, since review can catch it and the procedure is already heavy on steps.
+- Decided in: #19, in review of the first run. Built in #49.
+- Likely home: `TD`.
+
+**A term in the technical spec never states a decision's choice. It cites a decision only when the
+citation passes the cover test.**
+- Why: "Engine. The part of the code that holds the game rules and game state (AD-3)" repeats
+  AD-3's choice, so changing AD-3 would mean changing the term too: one fact in two places. That
+  was a reviewer's reasoning, and Joe agreed with it.
+- Decided in: #19, in review of the first run. Built in #51.
+- Likely home: `TD`.
+
+**Commands and pointers, such as the command that says work is done or where the settings file
+is, don't go in the technical spec. A choice about them, such as keeping settings in a config file
+versioned with the code, is still a design decision. CLAUDE.md works as a directory that tells an
+agent where to find them.**
+- Why: they're operational, not about how the app works, and the technical spec keeps out process.
+  Joe sees CLAUDE.md as a directory to the repo's other docs. It holds little itself, since it's
+  shared with other concerns. road-trip-agent's `development.md` held things like this and turned
+  into a ledger of development activity, so whatever home is chosen needs rules against that.
+- Decided in: #19, in review of the first run. Built in #52. The home is decided in #53.
+- Likely home: `TD`.
+
 ## Skills
+
+**The docs skill covers only the functional spec, the technical spec and blueprints. Research
+docs, skills, CLAUDE.md and a README are other concerns.**
+- Why: Joe: the specs and blueprints "are effectively the code that we input into an agent to do
+  work". They're owned entirely by the agents that use the skill. CLAUDE.md is shared with other
+  concerns, and a README is mostly read by people. The skill has also grown large, and its
+  procedure is getting heavy on steps.
+- Decided in: #19, in review of the first run. Built in #46, under #1.
+- Likely home: `TD`.
 
 **SKILL.md holds what every task needs. A rule used by one kind of doc goes in that doc's reference
 file. The two specs share one reference file, `references/specs.md`, which also holds the rules for
@@ -440,6 +500,16 @@ gives. With no task given, every cut is one.**
   planned cut from a lost fact: in the third Dust Law run, the writer left blueprint facts such as
   the tile weights out on purpose.
 - Decided in: #36.
+- Likely home: `FR`.
+
+**A fact whose home is outside the specs and blueprints isn't dropped when it's left out of them.
+The reviewer decides that from the skill's rules, not from the author's account. The writer names
+each such fact, and where it likely belongs, in its report.**
+- Why: the specs and blueprints aren't a project's only docs. They hold the details that drive
+  development. DESIGN's purpose paragraph belongs in something like a README or CLAUDE.md, and the
+  writer said so, but both reviewers counted it as dropped. The reviewer judges it itself, so the
+  rule above about judging cuts against the task still holds.
+- Decided in: #19, in review of the first run. Built in #50.
 - Likely home: `FR`.
 
 **When the source leaves part of a rule open, the writer writes no rule for that part, and doesn't
@@ -619,6 +689,15 @@ code bug that leaves the docs right.**
 - Why: code bugs aren't a doc reviewer's concern.
 - Decided in: #33.
 - Likely home: `FR`.
+
+**A gap that only shows up because of how a test run is set up isn't a skill lesson. In the Dust
+Law runs, reviewers don't see the writer's questions, on purpose.**
+- Why: the non-interactive conversions are a stress test, not a real mode. In real use, questions
+  are answered live in an interactive session, or raised by the issue checker or the implementer
+  in the factory. Keeping the questions from reviewers means each agent makes its own judgment,
+  without being swayed. The source docs are deleted only so the check script doesn't flag copies.
+- Decided in: #19, in review of the first run.
+- Likely home: unclear. It may only be how the skill is tested.
 
 ## Issue checker
 
