@@ -19,6 +19,11 @@ tasks read different parts of it.
   to attach to, such as a monthly spending limit.
 - **Pointers,** such as "settings are in `settings.json`", and where commands are defined, plus
   the one command that says work is done. It also defines the terms a user wouldn't recognize.
+- **A list of tests or checks the app must pass isn't written as a list.** This includes a goal for
+  the whole app, such as "two people can play a game to the end." Every requirement has at least
+  one test, so an entry the requirements already cover adds nothing. An entry that tests something
+  no requirement states is a missing requirement, so write the requirement. A rule for how all
+  tests are written, such as "a fix comes with a test that fails without it", is a code standard.
 - **Keeps out** process, statuses and merge rules. Those are in the workflow's code and its role
   prompts.
 

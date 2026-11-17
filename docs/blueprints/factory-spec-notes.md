@@ -315,6 +315,17 @@ each functional requirement it protects instead of repeating it.**
 - Decided in: #19, in discussion with the owner.
 - Likely home: `TD`.
 
+**A list of tests or checks the app must pass, including a goal for the whole app, isn't written
+as a list. An entry the requirements already cover adds nothing. One that tests something no
+requirement states is a missing requirement.**
+- Why: every requirement has at least one test, so a list of what the tests cover repeats the
+  requirements. Without this, a writer turns Dust Law's list of engine tests into technical
+  requirements that repeat the functional ones, or drops it, which is a cut the task didn't ask
+  for. A goal like "two people can play a game to the end" isn't an open item either, so it isn't
+  something to suggest an issue for. Each step in it is already a requirement.
+- Decided in: #19, in discussion with the owner.
+- Likely home: `TD`.
+
 ## Skills
 
 **SKILL.md holds what every task needs, and rules shared by more than one kind of doc. A rule used
