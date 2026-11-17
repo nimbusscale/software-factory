@@ -328,13 +328,17 @@ requirement states is a missing requirement.**
 
 ## Skills
 
-**SKILL.md holds what every task needs, and rules shared by more than one kind of doc. A rule used
-by one kind of doc goes in that doc's reference file. Every reference file is linked directly from
-SKILL.md, with no file linking on to another.**
+**SKILL.md holds what every task needs. A rule used by one kind of doc goes in that doc's reference
+file. The two specs share one reference file, `references/specs.md`, which also holds the rules for
+writing their items: GEARS, the lines under an item, one item for each fact, the Terms section and
+IDs. Every reference file is linked directly from SKILL.md, with no file linking on to another.**
 - Why: Anthropic and agentskills.io recommend a SKILL.md under 500 lines and 5,000 tokens. Files it
   links to cost nothing until read. An agent may only partly read a file it reaches through another
-  file.
-- Decided in: #18.
+  file. The item rules apply to both specs, so they first stayed in SKILL.md as rules shared by
+  more than one kind of doc. That made them over half of SKILL.md, loaded for tasks that write no
+  spec item, such as a blueprint or a skill, and pushed it past 5,000 tokens. The two specs are
+  usually written and checked together, so a file for each saved little: a spec writer read both.
+- Decided in: #18. The shared specs file in #19, in discussion with the owner.
 - Likely home: `TD`, in code standards.
 
 **A skill gives the standard a doc must meet and trusts the model on method. The docs skill has no

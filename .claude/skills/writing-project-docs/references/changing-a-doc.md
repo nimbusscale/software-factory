@@ -2,7 +2,8 @@
 
 Use these steps to add, change, replace or delete an item or a section, in a doc or a code
 comment, and when a code change makes a doc out of step. Work through them in order. Each one depends on the one before. Steps 1, 3 and 6 are sections of
-SKILL.md, and step 8 is `references/reviewing.md`. They're listed here so the order is clear.
+SKILL.md, step 6 also uses `references/specs.md` for a spec item, and step 8 is
+`references/reviewing.md`. They're listed here so the order is clear.
 
 Copy this checklist into your task list and tick off each step:
 
@@ -64,7 +65,8 @@ it. Remove or update each one.
 
 ## 6. Write it
 
-Follow "How to write an item" in SKILL.md.
+Follow "How to write any doc" in SKILL.md. For an item in a spec, also follow "Spec items" in
+`references/specs.md`.
 
 ## 7. Follow the change
 

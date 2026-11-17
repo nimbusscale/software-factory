@@ -14,7 +14,7 @@ an agent can't tell which copy is right.
 ## What to read for your task
 
 This file holds what every task needs: where the docs are, which doc a fact goes in, and how to
-write an item. The files below hold the rest. Before you start, read every file that applies to
+write any doc. The files below hold the rest. Before you start, read every file that applies to
 your task. Most tasks need more than one.
 
 - **Adding, changing, replacing or deleting an item or a section,** in a doc or a code comment,
@@ -24,8 +24,8 @@ your task. Most tasks need more than one.
   doc. It says what the doc holds and keeps out, how it changes, and how to write any kind of item
   only that doc has. Every doc opens with one line saying what kind of doc it is, so a reader knows
   which of these apply.
-  - Functional spec: [references/functional-spec.md](references/functional-spec.md)
-  - Technical spec: [references/technical-spec.md](references/technical-spec.md)
+  - Functional spec or technical spec: [references/specs.md](references/specs.md). It also says
+    how to write each kind of item, the Terms section and IDs.
   - Research doc: [references/research-doc.md](references/research-doc.md)
   - Blueprint: [references/blueprint.md](references/blueprint.md)
   - Skill: [references/skill.md](references/skill.md)
@@ -81,8 +81,8 @@ order, and stop at the first yes.
 7. **Would a user notice if it changed?** It's a functional requirement (`FR`), in the user's
    terms. A user uses the app through its own screens, as it's meant to be used. What stops someone
    who tampers with the app, such as by changing what their browser sends, isn't something a user
-   sees. It's a technical requirement. See "One item for each fact" for how the two cite each
-   other.
+   sees. It's a technical requirement. See "One item for each fact" in
+   [references/specs.md](references/specs.md) for how the two cite each other.
 8. **Is it something the system must achieve that a user wouldn't see,** with no implementation
    in it? It's a technical requirement (`TR`). For example, "backups meet a set recovery point".
    Test it by imagining a redesign: if the redesign would still have to meet it, it's a
@@ -114,16 +114,11 @@ source does settle. For example, notes say the shop emails a customer when their
 the shipping email, and ask when an order is late. A guess written as a rule looks settled to every later
 reader, and nothing in the doc can mark it as a guess.
 
-**No reason in the source?** When the source gives no reason for a decision, write the decision
-with no Why. Never write a reason the source doesn't give, however likely it seems. Ask for the
-reason in your report: quote the decision, and suggest a reason if you have one. The check script
-flags the missing Why until the reason is known.
-
 When you're sorting a long passage that mixes several kinds of text, read
 [references/worked-examples.md](references/worked-examples.md). It sorts real passages with these
 questions.
 
-## How to write an item
+## How to write any doc
 
 For every sentence, in any doc:
 
@@ -137,188 +132,7 @@ For every sentence, in any doc:
 When the questions in "Which doc a fact goes in" make the fact's home a code comment, follow the
 project's guidance for writing code comments.
 
-### Kinds of item
-
-| Kind | Prefix | Doc |
-|---|---|---|
-| Functional requirement | `FR` | Functional spec |
-| Technical requirement | `TR` | Technical spec |
-| Architecture decision | `AD` | Technical spec |
-| Design decision | `TD` | Technical spec |
-
-A requirement says what the system must achieve. A decision says how the system meets its
-requirements, and why this way:
-
-| Requirement | A decision that meets it |
-|---|---|
-| When data enters the program, the data shall be checked against a defined schema, with no extra keys. | Outside data is parsed with a schema library where it enters the program. |
-| The services shall each be usable on their own. | Services never call each other. Code two services need goes in a shared module each is given. |
-
-How to write a decision, and whether it's an `AD` or a `TD`, is in
-[references/technical-spec.md](references/technical-spec.md).
-
-### Requirements: GEARS
-
-Every requirement uses this pattern. Every part but the last is optional:
-
-> [Where \<fixed precondition\>] [While \<state at run time\>] [When \<trigger\>] The \<subject\>
-> shall \<behavior\>.
-
-- Where, While and When each appear at most once, in that order.
-- The requirement starts with Where, While, When, or The.
-- One behavior per requirement, so exactly one "shall". Two behaviors are two requirements.
-- One trigger per requirement. A paragraph with several triggers becomes several requirements,
-  unless the triggers are one fact. See "One item for each fact".
-- The subject is a part of the system, or the code or data the rule is about. A plural subject
-  keeps the "The" form: "The services shall each be usable on their own."
-- State the condition a requirement depends on in its Where or While, even when it's always true
-  today. A requirement written when a value was always empty breaks the day that value gets a
-  default, unless "while it's empty" is in the requirement.
-- When a requirement limits who may do something, say what's allowed, not what's refused, and cite
-  the set it applies to. A list of what's refused misses whatever no one thought of. Check that
-  every member of the set belongs, and that no other requirement makes an exception to it.
-
-> **FR-12.** While the user hasn't set a time zone, the app shall show times in the time zone of
-> the user's browser.
-
-> **FR-30.** Where the account is a team account, the app shall ask an admin to approve each new
-> member.
-
-> **FR-41.** When a user deletes their account, the app shall keep their order history for seven
-> years.
->
-> *Why:* tax law requires order records for seven years.
-
-### Lines under an item
-
-Every paragraph under a requirement starts with one of the labels below. A plain paragraph never
-goes there. If it holds a rule, the rule goes in the requirement's own text, or in a requirement of
-its own. If it only shows a rule at work, such as a worked example from a source doc, cut it,
-unless it passes the bar for a Scenario.
-
-The one other thing that can go under a requirement is a table its own text points to, such as
-"as this table shows". The table is part of the requirement.
-
-- **Why:**
-  - On a requirement, it works like a code comment: the reason behind the rule. Add one only when
-    both of these hold:
-    - the reason isn't clear from the rule itself, and
-    - knowing it would change how someone applies or changes the rule.
-
-    FR-41 needs one, since without it an agent might shorten the period to save storage. FR-12
-    doesn't, since its reason is clear from the rule. "When an order ships, the app shall email the
-    customer a tracking link", with the Why "customers want to know where their order is", fails
-    the second test. Knowing it changes nothing.
-  - A Why can keep a rule that looks unneeded from being deleted, such as a rule that never fires
-    under the other rules:
-
-    > **FR-52.** While an order's total is zero, the app shall skip the payment step.
-    >
-    > *Why:* the payment provider rejects a charge of zero, so a free item or a full discount would
-    > otherwise block the order.
-  - A Why never states a fact about the rest of the system today, such as "no check uses this yet".
-    That kind of fact goes stale when other items change. A condition goes in the Where or While.
-- **Scenario:** Given, when, then. Add one only when both of these hold:
-  - the result comes from several requirements working together, and
-  - a reader of one of those requirements and the Terms would likely get it wrong.
-
-  The reader knows only what the docs say, not how similar products work. A scenario must be able
-  to happen under the other requirements. It never holds a rule of its own: a rule found only in a
-  scenario is a missing requirement. A vague or untestable requirement is fixed by rewriting it,
-  never by adding a scenario. A limit is the exception to "untestable": see "Holds a limit only
-  where it guides the build" in [references/functional-spec.md](references/functional-spec.md). A requirement can still need both.
-
-  > **FR-60.** When an order's total is over $50, the app shall ship it for free.
-  >
-  > *Scenario:* Given a $55 order and a $10 discount code, when the customer checks out, then
-  > shipping is charged, since the total is now $45.
-- **Accepted gap:** a gap the item knowingly leaves, and the reason it's accepted. Without the
-  reason, a reviewer can't judge whether the gap still fits.
-
-### One item for each fact
-
-Two items are the same fact if changing one would force a change to the other. Merge them into one
-item. If each would change for a different reason, they're two facts, and both stay, even when
-they limit the same action. Test with a change that has a reason of its own, one someone could
-really ask for. Nearly any two items could change apart for no reason, and that doesn't make them
-two facts.
-
-> **FR-70.** The app shall accept changes to an account's shipping address only from the account's
-> owner.
->
-> **FR-71.** When a shipping address is saved, the app shall accept it only if it's in a country the
-> shop ships to.
-
-Both limit changing a shipping address, but they're two facts. If an account could have several
-users, FR-70 would change and FR-71 wouldn't. If the shop shipped to more countries, FR-71 would
-change and FR-70 wouldn't.
-
-The same test applies to the triggers of one requirement, such as "When A or B". Triggers that are
-two facts become two requirements. "When a customer places an order or changes their email
-address, the app shall email them a confirmation" is two facts: the order email could gain a
-delivery date without the other one changing.
-
-Triggers that are one fact stay one requirement. When they list the members of a set another
-requirement defines, cite that requirement in place of the list. Otherwise the list has to be
-updated by hand each time the set changes.
-
-> **FR-72.** Where a product is discontinued or not yet launched, the shop shall show it only to
-> staff.
->
-> **FR-73.** When a customer asks for a product that FR-72 keeps from them, the shop shall answer
-> "not found".
-
-Written as "When a customer asks for a discontinued product or a product not yet launched", FR-73
-would repeat FR-72's list. A third kind of hidden product would then have to be added in both.
-
-The same test applies across the two specs. A rule a user sees often has a technical half that
-stops someone who tampers with the app from getting around it. The technical half cites each
-requirement it protects, instead of repeating it:
-
-> **FR-80.** The app shall show each customer only their own orders.
->
-> **TR-4.** The server shall send each customer's browser only the orders that FR-80 lets that
-> customer see.
-
-If TR-4 repeated FR-80's rule, letting a customer see a partner's orders would mean changing both.
-Citing FR-80 makes them two facts. FR-80 changes when who may see an order changes. TR-4 changes
-only if the app trusts each browser to hide what it's sent. The citation also shows whoever changes
-FR-80 that TR-4 depends on it. Cite a section in place of the requirements only when the section
-holds every one the technical half protects.
-
-### Terms and names
-
-A term is a word and its definition, written once, in the spec's Terms section. The definition says
-what the thing is. It never states a rule a requirement holds, such as a count, a limit, or when
-something finishes. A rule stated in two places can change in one and not the other.
-
-To test each part of a definition, ask: if a requirement changed, would this part have to change
-too? If so, it states that requirement's rule. Cut it. If the word's meaning depends on the rule,
-cite the requirement in its place, as below.
-
-- **A rule:** "Admin. The one person who runs a shop's account," when FR-5 lets each shop have
-  only one admin. If FR-5 allowed two admins, "the one" would be wrong. Write "Admin. The person
-  who runs a shop's account."
-- **A definition:** "Bundle. Two or more products sold together as one item." No requirement says
-  how many products a bundle holds. "Two or more" is part of what a bundle is, so no requirement
-  changing could make it wrong.
-
-A count or a time can be either. What decides it is whether a requirement holds it. If a part of
-a definition is something the app must do or check, and no requirement holds it, it's a missing
-requirement. Write the requirement, then cut the part from the definition.
-
-A term cites something in only two cases. Otherwise it's a plain definition, with no citation.
-
-- **Its meaning depends on a requirement's rule.** It cites that requirement. For example,
-  "Overdue. A loan past its due date (FR-12)," where FR-12 says when a loan is due.
-- **A section holds the rules for the thing it names.** It may cite that section, such as
-  "Refund. Money returned to a customer for an order (F-SEC-6)."
-
-A citation that only says where the thing comes from adds nothing. Leave it out. That includes a
-requirement that creates the thing, or one that decides who fills a role. For example,
-"Borrower. The member a loan is for" cites nothing, even when requirements decide whose loan it
-is. To test a citation, cover it and read the term. If the word's meaning is still clear, the
-citation goes. Overdue keeps FR-12, since without it nothing says when a loan is due.
+### Names
 
 - **One name for each thing.** Before naming a part of the app, a step or a state, search the docs
   for what they already call it, and use that exact name. A new name gets one home: a term in the
@@ -342,24 +156,8 @@ citation goes. Overdue keeps FR-12, since without it nothing says when a loan is
   other word whose meaning lives in another item gets that item's ID or section ID the first time
   an item uses it. The test: could a reader of this item alone find what the word means?
 
-### IDs
+### Citing IDs
 
-- **Item IDs** are a prefix and a plain number, such as `FR-42`, `TR-7`, `AD-2` or `TD-3`. The
-  number says nothing about where the item sits, so it never goes stale when the item moves. Don't
-  put a topic in an ID, such as `TD-CS-4`. It goes wrong the day the item moves to another
-  section.
-- **Section IDs** have a different shape, so they can't be mistaken for item IDs: `F-SEC-3` in the
-  functional spec and `T-SEC-3` in the technical spec. They go in the heading:
-  `## T-SEC-4. Outside services`.
-- **A new ID** is one more than the highest number with that prefix in the doc:
-
-  ```bash
-  grep -oE '\bFR-[0-9]+' docs/functional-spec.md | grep -oE '[0-9]+$' | sort -n | tail -1
-  ```
-
-  An ID that was retired and deleted can come back this way. That's accepted, since a retired ID
-  shouldn't be cited anywhere. Use only the doc's current text, not its git history.
-- **Citing:** to point to a group of items, cite the section ID. It means whatever the section
-  holds now. To point to specific items, list each ID. Never cite a range, such as "FR-12 to
-  FR-18". A new item placed among them gets the next free number, so a range can't say whether
-  it's included.
+To point to a group of items, cite the section ID. It means whatever the section holds now. To
+point to specific items, list each ID. Never cite a range, such as "FR-12 to FR-18". A new item
+placed among them gets the next free number, so a range can't say whether it's included.

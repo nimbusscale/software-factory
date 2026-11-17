@@ -94,7 +94,7 @@ whether it's a real problem. It checks:
 
 - **Each item follows the rules for its kind of doc.** Each kind of doc has a file of its own
   rules, listed in "What to read for your task" in SKILL.md, such as
-  `references/functional-spec.md`. Read the file for each kind of doc the change touches. An item
+  `references/specs.md`. Read the file for each kind of doc the change touches. An item
   written the way that file asks isn't a problem, even when a rule in SKILL.md seems to say a part
   of it could go.
 - **Nothing was dropped.** Compare each rewritten paragraph, old against new. `git diff
@@ -113,7 +113,7 @@ whether it's a real problem. It checks:
   there. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
   source never states, or a meaning for a word the source never defines. So is a Why that none of
   them gives. A decision with no Why is fine when none of them gives a reason, as "No reason in the
-  source?" in SKILL.md says. The author's account of
+  source?" in `references/specs.md` says. The author's account of
   the change settles nothing, even when it lists the point as open. The suggested rewrite cuts
   what wasn't settled and raises it as a question, as "Not settled by the source?" in SKILL.md
   says. If you weren't given the task or the source, skip this check, and say in your report that
@@ -134,8 +134,8 @@ whether it's a real problem. It checks:
   term is a problem, and needs a different word. Most often, the word stands on its own, or says
   something about the same things the term does. For example, "the player may turn a tile" when
   Turn is a player's go.
-- **No term states a rule.** For each part of each definition, apply the test in "Terms and
-  names" in SKILL.md: if a requirement changed, would this part have to change too? A part that
+- **No term states a rule.** For each part of each definition, apply the test in "The Terms
+  section" in `references/specs.md`: if a requirement changed, would this part have to change too? A part that
   would is a problem, such as "the one" in a term when a requirement allows only one. So is a part
   the app must do or check that no requirement holds.
 - **Each citation in Terms earns its place.** A term cites a requirement only when its meaning
@@ -145,7 +145,7 @@ whether it's a real problem. It checks:
   term cites a section only when that section holds the rules for the thing it names. Any other
   citation on a term is a problem.
 - **One item for each fact.** For each pair of items that limit the same action or share a trigger,
-  apply the test in "One item for each fact" in SKILL.md. A pair that's one fact is a problem.
+  apply the test in "One item for each fact" in `references/specs.md`. A pair that's one fact is a problem.
   Apply it as well to the triggers of each requirement with more than one. Triggers that are two
   facts in one requirement are a problem. So is a list of triggers that repeats the members of a
   set another requirement defines.
@@ -153,7 +153,7 @@ whether it's a real problem. It checks:
   it alone.
 - **Each scenario earns its place:** its result comes from several requirements together, it can
   happen under the other requirements, and it holds no rule that isn't in a requirement.
-- **Each requirement's Why passes both tests** in "Lines under an item" in SKILL.md. A Why that
+- **Each requirement's Why passes both tests** in "Lines under an item" in `references/specs.md`. A Why that
   fails either test is a problem.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in
   SKILL.md.
