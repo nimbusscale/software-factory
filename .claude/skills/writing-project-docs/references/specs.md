@@ -276,6 +276,7 @@ Read by every implementer and reviewer, each reading the sections their task nee
 and changed along with the code that changes one of its items. Split it only when different
 tasks read different parts of it.
 
+- **Also holds** the terms a user wouldn't recognize, defined once each.
 - **Decisions that every part of one kind must follow** go here, such as "every endpoint returns
   errors in one shape".
 - **A code standards section** holds the decisions about how all code is written. For example, a
@@ -284,8 +285,6 @@ tasks read different parts of it.
   here too, each with the reason that stops a wrong change.
 - **An outside services section** holds choices about a service that span files or have no code
   to attach to, such as a monthly spending limit.
-- **Pointers,** such as "settings are in `settings.json`", and where commands are defined, plus
-  the one command that says work is done. It also defines the terms a user wouldn't recognize.
 - **A list of tests or checks the app must pass isn't written as a list.** This includes a goal for
   the whole app, such as "two people can play a game to the end." Every requirement has at least
   one test, so an entry the requirements already cover adds nothing. An entry that tests something
@@ -293,6 +292,10 @@ tasks read different parts of it.
   tests are written, such as "a fix comes with a test that fails without it", is a code standard.
 - **Keeps out** process, statuses and merge rules. Those are in the workflow's code and its role
   prompts.
+- **Keeps out commands and pointers,** such as the command that says work is done, or "settings
+  are in `settings.json`". A choice behind a pointer can still be a decision, such as keeping
+  settings in a config file versioned with the code. Name the commands and pointers in your report,
+  as question 2 of "Which doc a fact goes in" in SKILL.md says.
 
 ### Writing a decision
 
