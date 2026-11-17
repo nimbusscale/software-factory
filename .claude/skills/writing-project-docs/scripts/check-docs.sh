@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Checks a project's docs against the writing-project-docs skill's rules.
+# Checks a project's specs and blueprints against the writing-project-docs skill's rules.
 #
 # Usage, from the repo root:  check-docs.sh [--uncited] <docs folder> <base branch>
 #
-# Docs are every .md file in the docs folder, plus CLAUDE.md and the skills in .claude/skills,
-# except this skill. Source files are the other text files in the repo that git doesn't ignore.
-# The specs are found by their F-SEC and T-SEC headings. Research docs and blueprints are the ones
-# in <docs folder>/research and <docs folder>/blueprints.
+# Docs are the specs and the blueprints. The specs are the .md files in the docs folder with F-SEC
+# or T-SEC headings. Blueprints are the .md files in <docs folder>/blueprints. Source files are the
+# other text files in the repo that git doesn't ignore, including other docs such as CLAUDE.md and
+# the skills in .claude/skills, except this skill. Spec IDs cited in source files are checked too.
 #
 # The history checks look only at lines added since the base branch, uncommitted ones included.
 # A line someone kept on purpose is then never flagged again. The other checks look at every doc.
@@ -32,9 +32,10 @@ all_uncited=
 [[ $(git rev-parse --show-toplevel 2>/dev/null) == "$PWD" ]] || usage
 base=$(git merge-base "$2" HEAD 2>/dev/null) || usage
 docs_dir=${1%/}
-research_dir=$(realpath -m "$docs_dir/research")
 blueprints_dir=$(realpath -m "$docs_dir/blueprints")
+research_dir=$(realpath -m "$docs_dir/research")
 self_dir=$(realpath "$(dirname "$0")/..")
+self_rel=$(realpath --relative-to=. "$self_dir")
 ids='(FR|TR|AD|TD)-[0-9]+'
 sec_ids='[FT]-SEC-[0-9]+'
 
@@ -45,19 +46,21 @@ has_line() { [[ $'\n'$1$'\n' == *$'\n'"$2"$'\n'* ]]; }
 
 # --- Which files are which ---------------------------------------------------------------------
 
-docs=$({
-  find "$docs_dir" -name '*.md' -type f
-  [[ -f CLAUDE.md ]] && echo CLAUDE.md
-  [[ -d .claude/skills ]] && find .claude/skills -name '*.md' -type f
-} | while read -r f; do
-  [[ $(realpath "$f") == "$self_dir"/* ]] || echo "${f#./}"
-done | sort -u)
-
-src=$(git ls-files --cached --others --exclude-standard | grep -E '\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$' |
-  grep -vxFf <(lines "$docs") | grep -v '^\.claude/' | while read -r f; do [[ -f $f ]] && echo "$f"; done | sort)
-
-is_research() { [[ $(realpath -m "$1") == "$research_dir"/* ]]; }
 is_blueprint() { [[ $(realpath -m "$1") == "$blueprints_dir"/* ]]; }
+
+md_files=$(find "$docs_dir" -name '*.md' -type f | sed 's|^\./||' | sort)
+fspec=$(lines "$md_files" | xargs -d '\n' -r grep -lE '^#+ F-SEC-[0-9]+')
+tspec=$(lines "$md_files" | xargs -d '\n' -r grep -lE '^#+ T-SEC-[0-9]+')
+specs=$(lines "$fspec"; lines "$tspec")
+docs=$({ lines "$specs"; while read -r f; do is_blueprint "$f" && echo "$f"; done < <(lines "$md_files"); } | sort -u)
+
+# The same rule picks the source files in the base commit, further down.
+is_src() {
+  awk -v self="$self_rel/" '/\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$/ &&
+    (!/^\.claude\// || (/^\.claude\/skills\/.*\.md$/ && index($0, self) != 1))'
+}
+src=$(git ls-files --cached --others --exclude-standard | is_src |
+  grep -vxFf <(lines "$docs") | while read -r f; do [[ -f $f ]] && echo "$f"; done | sort)
 
 # The line numbers in a file that were added since the base. Every line, for a new file.
 added_lines() {
@@ -69,10 +72,6 @@ added_lines() {
     awk 'END { for (i = 1; i <= NR; i++) print i }' "$1"
   fi
 }
-
-fspec=$(lines "$docs" | xargs -d '\n' -r grep -lE '^#+ F-SEC-[0-9]+')
-tspec=$(lines "$docs" | xargs -d '\n' -r grep -lE '^#+ T-SEC-[0-9]+')
-specs=$(lines "$fspec"; lines "$tspec")
 
 # Prints a file with its fenced code blocks and inline code blanked out, keeping line numbers.
 # With "scenarios" as the second argument, it blanks Scenario paragraphs too.
@@ -89,10 +88,10 @@ prose() {
 
 # --- History -----------------------------------------------------------------------------------
 
-# Each match prints as "<line> <what>", and only matches on added lines are kept.
+# Only the specs are checked, since a blueprint can hold history. Each match prints as
+# "<line> <what>", and only matches on added lines are kept.
 months='(January|February|March|April|May|June|July|August|September|October|November|December)'
 while read -r f; do
-  is_research "$f" || is_blueprint "$f" && continue
   prose=$(prose "$f" scenarios | sed -E 's/\]\([^)]*\)/]/g')
   hist=$({
     grep -noE "\b20[0-9]{2}-[0-9]{2}-[0-9]{2}\b|\b$months [0-9]{1,2}\b" <(lines "$prose") |
@@ -105,7 +104,7 @@ while read -r f; do
   })
   added_lines "$f" | awk -v f="$f" 'NR == FNR { added[$1]; next }
     ($1 in added) { n = $1; $1 = ""; print "SIGNAL " f ":" n " may be history:" $0 }' - <(lines "$hist")
-done < <(lines "$docs")
+done < <(lines "$specs")
 
 # --- References --------------------------------------------------------------------------------
 
@@ -158,10 +157,7 @@ once=$(counts "$terms" "$cites" | awk '$1 == 1 { print $2 }')
 # Requirements cited on the base: the definition and at least one citation. The files are the
 # docs and source files in the base commit, found by the same rules as above.
 if [[ -z $all_uncited ]]; then
-  self_rel=$(realpath --relative-to=. "$self_dir")
-  base_files=$(git ls-tree -r --name-only "$base" | awk -v self="$self_rel/" '
-    /\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$/ &&
-      (!/^\.claude\// || (/^\.claude\/skills\/.*\.md$/ && index($0, self) != 1))')
+  base_files=$(git ls-tree -r --name-only "$base" | is_src)
   base_cites=$(lines "$base_files" | xargs -d '\n' -r git grep -nowE "$ids|$sec_ids" "$base" -- |
     sed "s|^$base:||")
   base_specs=$(lines "$base_files" | xargs -d '\n' -r git grep -lE '^#+ [FT]-SEC-[0-9]+' "$base" -- |
@@ -194,10 +190,6 @@ while read -r f; do
     [[ -e $path ]] || echo "RULE $f:$n links to $target, which doesn't exist"
     if has_line "$fspec" "$f"; then
       echo "RULE $f:$n the functional spec links out, to $target"
-    elif is_research "$f"; then
-      echo "RULE $f:$n a research doc links to another doc, $target"
-    elif [[ $path == "$research_dir"/* ]]; then
-      echo "RULE $f:$n links to a research doc, $target"
     elif [[ $path == "$blueprints_dir"/* ]] && ! is_blueprint "$f"; then
       echo "RULE $f:$n links to a blueprint, $target"
     fi
@@ -258,12 +250,12 @@ done < <(lines "$specs")
 
 # --- Copies ------------------------------------------------------------------------------------
 
-# Every run of eight words, with the file and line it starts on. Research docs are left out.
-copy_docs=$(while read -r f; do
-  is_research "$f" || echo "$f"
-done < <(lines "$docs"))
+# Every run of eight words, with the file and line it starts on. Research docs in
+# <docs folder>/research are left out. They're frozen records that no agent reads as a current
+# rule, and specs are often written from them, so shared text there is expected.
 runs() {
-  { lines "$copy_docs"; lines "$src"; } | while read -r f; do
+  { lines "$docs"; lines "$src"; } | while read -r f; do
+    [[ $(realpath -m "$f") == "$research_dir"/* ]] && continue
     awk -v f="$f" '{
       s = tolower($0); gsub(/[^a-z0-9'\'']+/, " ", s); k = split(s, w, " ")
       for (i = 1; i <= k; i++) { buf[++nw] = w[i]; at[nw] = FNR
@@ -287,7 +279,7 @@ awk -F'\t' '
     }
   }
   END { flush(); for (k in count) print "SIGNAL " first[k] " (" count[k] " shared 8-word runs)" }
-' <(lines "$copy_docs") <(runs) | sort
+' <(lines "$docs") <(runs) | sort
 
 # --- Size --------------------------------------------------------------------------------------
 

@@ -1,43 +1,35 @@
 # Adding or changing an item
 
-Use these steps to add, change, replace or delete an item or a section, in a doc or a code
-comment, and when a code change makes a doc out of step. Work through them in order. Each one depends on the one before. Steps 1, 3 and 6 are sections of
-SKILL.md, step 6 also uses `references/specs.md` for a spec item, and step 8 is
-`references/reviewing.md`. They're listed here so the order is clear.
+Use this to add, change, replace or delete an item or a section, in a doc or a code comment, and
+when a code change makes a doc out of step. Each section below is something that must hold when
+you're done. Two of them have to come in order. Search for the fact before you write anything,
+since what you find decides whether you add an item or change one. Check the change last.
 
-Copy this checklist into your task list and tick off each step:
+Copy this checklist into your task list, and tick off each one once it holds:
 
 ```
-- [ ] 1. Find the docs
-- [ ] 2. Check whether it's already written down
-- [ ] 3. Decide what kind of fact it is
-- [ ] 4. Change, replace or delete it (only if step 2 found it)
-- [ ] 5. Decide where it goes in the doc
-- [ ] 6. Write it
-- [ ] 7. Follow the change
-- [ ] 8. Check the change
+- [ ] The fact is written down once
+- [ ] A changed item keeps its ID only if its meaning stayed the same
+- [ ] It's in the section whose readers need it
+- [ ] Everything that depended on it still holds
+- [ ] The code and the docs agree
+- [ ] The change passes every check
 ```
 
-## 1. Find the docs
+To find the docs, follow "Find the docs" in SKILL.md. To decide what kind of fact it is, ask the
+questions in "Which doc a fact goes in" in SKILL.md. To write it, follow "How to write any doc" in
+SKILL.md, and for an item in a spec, "Spec items" in `references/specs.md`.
 
-Follow "Find the docs" in SKILL.md.
-
-## 2. Check whether it's already written down
+## The fact is written down once
 
 Before adding anything, search for it. Grep the docs for its key terms, list the headings of the
 doc it would go in, and read the sections that look close. Also grep the code for comments on it.
 
-If it's already there, you're changing, replacing or deleting an item, not adding one. Go to
-step 4. If something close is there, decide whether it's the same fact, by the test in "One item for each
-fact" in SKILL.md. If it is, you're changing that item: go to step 4. If not, yours is a new item.
+If it's already there, you're changing, replacing or deleting that item, not adding one. If
+something close is there, decide whether it's the same fact, by the test in "One item for each
+fact" in `references/specs.md`. If it is, you're changing that item. If not, yours is a new item.
 
-## 3. Decide what kind of fact it is
-
-Ask the questions in "Which doc a fact goes in" in SKILL.md.
-
-## 4. Decide whether to change, replace or delete the item
-
-This step is for an item step 2 found already written down. For a new fact, go on to step 5.
+## A changed item keeps its ID only if its meaning stayed the same
 
 **If the meaning stays the same, change it in place and keep its ID.** Sharpening the wording,
 adding an example, or adding a condition that was always meant are all changes. Everything that
@@ -46,15 +38,19 @@ go. Don't append an exception to the end. A rule that collects exceptions turns 
 nobody can cite.
 
 **If the meaning changes, replace it.** It's now a different requirement or decision, such as
-showing times in a time zone the user picks, instead of the browser's. Delete the old item and add the
-new one with a new ID. Every place that still cites the old ID is now flagged by the doc checks,
-so you visit each one and update it to fit the new meaning. If you kept the old ID, those places
-would look fine but describe or test the old behavior.
+showing times in a time zone the user picks, instead of the browser's. Delete the old item and add
+the new one with a new ID. Every place that still cites the old ID is now flagged by the doc
+checks, so you visit each one and update it to fit the new meaning. If you kept the old ID, those
+places would look fine but describe or test the old behavior.
 
 **If the item isn't needed at all, delete it.** The doc checks flag each place that still cites
 it. Remove or update each one.
 
-## 5. Decide where it goes in the doc
+**If you replaced or deleted an item,** name its old ID in your report. The doc checks find
+citations in the docs and the code, but not in anything outside the repo, such as a planned task
+that cites the ID.
+
+## It's in the section whose readers need it
 
 - **Put it in the section whose readers need it.** Each section serves one kind of task.
 - **Add a section** when no section's readers would look there.
@@ -63,12 +59,7 @@ it. Remove or update each one.
 - **Splitting retires the old section ID.** Both new sections get new IDs, and every reference to
   the old one changes in the same change. Renaming or moving a section keeps its ID.
 
-## 6. Write it
-
-Follow "How to write any doc" in SKILL.md. For an item in a spec, also follow "Spec items" in
-`references/specs.md`.
-
-## 7. Follow the change
+## Everything that depended on it still holds
 
 - **If your edit makes something true that wasn't, or untrue that was,** search every doc for
   items whose Where or While depends on it. This holds for adding a new item too, not only for
@@ -77,17 +68,19 @@ Follow "How to write any doc" in SKILL.md. For an item in a spec, also follow "S
   signup sets the user's time zone from their address. An older item says "While the user hasn't
   set a time zone, the app shall show times in the browser's time zone." Neither cites the other,
   but the older one no longer applies to new users. For each item that no longer holds, decide
-  whether to change, replace or delete it, as in step 4.
+  whether to change, replace or delete it, as "A changed item keeps its ID only if its meaning
+  stayed the same" says.
 - **If you added a name that shares a word with an existing one,** grep the docs and code comments
   for the shared word on its own, and change each use to the full name in the same change.
-- **If you replaced or deleted an item,** name its old ID in your report, so whoever can reach
-  the issues updates each one that cites it. The doc checks find it in the docs and the code, but
-  not in issues.
-- **Change the code and the doc in the same change.** When they disagree, the doc wins, unless
-  CLAUDE.md says otherwise: the doc says what the system should do. Change the code to match. If
-  you can't, because the fix is outside your task or the code suggests the doc is wrong, leave
-  both as they are, and say so in your report. Name the item ID and the code.
 
-## 8. Check the change
+## The code and the docs agree
 
-Do every check in `references/reviewing.md`. Add its checklist to your task list under this step.
+Change the code and the doc in the same change. When they disagree, the doc wins, unless CLAUDE.md
+says otherwise: the doc says what the system should do. Change the code to match. If you can't,
+because the fix is outside your task or the code suggests the doc is wrong, leave both as they
+are, and say so in your report. Name the item ID and the code.
+
+## The change passes every check
+
+Do every check in `references/reviewing.md`, last. Add its checklist to your task list under this
+one.

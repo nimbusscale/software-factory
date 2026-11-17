@@ -388,6 +388,42 @@ docs, skills, CLAUDE.md and a README are other concerns.**
 - Decided in: #19, in review of the first run. Built in #46, under #1.
 - Likely home: `TD`.
 
+**The docs skill's guidance on research docs and skills is dropped, not moved. Its guidance on
+CLAUDE.md waits in #54, including that CLAUDE.md holds a short table of where each kind of fact
+goes. The docs skill still reads CLAUDE.md's doc map to find each doc.**
+- Why: dropping research docs and skills was Claude's proposal, since no other skill in the repo
+  writes them. Joe hasn't given a reason of his own. Joe didn't want the CLAUDE.md guidance to get
+  lost when it left the skill, so it went into an issue right away rather than being dropped.
+- Decided in: #46.
+- Likely home: `TD`.
+
+**The docs skill's check script checks only the specs and blueprints, and the spec IDs cited
+anywhere in the repo. The checks it used to run on other docs, such as history in CLAUDE.md and
+links into research docs, wait in #55.**
+- Why: Joe wanted the script's scope to match the skill's. He didn't want the checks on other docs
+  lost, so they went into an issue right away.
+- Decided in: #46.
+- Likely home: `TD`.
+
+**The docs skill decides when a fact's home is a code comment instead of a spec. The project's
+guidance for code comments, such as a code-comments skill, says how to write the comment.**
+- Why: Joe wants the docs skill linked to the code-comments skill. That skill is still a draft in
+  `docs/research/docs-retro/code-comments/`, and will be made real the same way once the docs skill
+  is in an acceptable place.
+- Decided in: #46.
+- Likely home: `TD`.
+
+**The docs skill's procedures say what must hold when the work is done, not how to get there. They
+give an order only where it matters: search for a fact before writing it, and check the change
+last. Each procedure still has a checklist of those goals for the agent to copy into its task list
+and tick off.**
+- Why: the procedure was getting heavy on steps. Joe asked to state goals where a step wasn't
+  needed. The checklist stays because Anthropic's skill best practices recommend one for complex,
+  multistep work, so Claude doesn't skip a check. The evals were also tuned with it in place. Joe
+  would rather keep what's known to work than spend time testing with and without it.
+- Decided in: #19, in review of the first run. Built in #46.
+- Likely home: `TD`.
+
 **SKILL.md holds what every task needs. A rule used by one kind of doc goes in that doc's reference
 file. The two specs share one reference file, `references/specs.md`, which also holds the rules for
 writing their items: GEARS, the lines under an item, one item for each fact, the Terms section and
@@ -581,7 +617,8 @@ report, not a PR or issues.**
 - Why: Joe's working assumption is that the workflow brokers what each agent sees, and agents get
   different access. A reviewer in the loop gets only what the workflow gives it. The doc curator
   may be allowed to read PRs, to see what changed since its last run.
-- Decided in: #18, while planning #36.
+- Decided in: #18, while planning #36. The last wording that sent facts to issues was removed in
+  #46.
 - Likely home: `TD`, in code standards.
 
 ## Evaluations

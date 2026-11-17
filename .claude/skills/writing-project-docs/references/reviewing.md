@@ -57,14 +57,15 @@ Copy this checklist into your task list and tick off each check:
 - [ ] Each scenario earns its place
 - [ ] Each requirement's Why passes both tests
 - [ ] Every new item is in the right home
-- [ ] Every other step in changing-a-doc.md holds
+- [ ] Everything else in changing-a-doc.md holds
 ```
 
 ## Run the script
 
 From the repo root, run this skill's `scripts/check-docs.sh` with the docs folder and the branch
 the change will merge into, such as `bash <this skill's folder>/scripts/check-docs.sh docs main`.
-It prints one line per thing it flags. A `RULE` line is a broken rule, so it's always a problem. A
+It checks the specs and blueprints, and the spec IDs cited anywhere in the repo. It prints one line
+per thing it flags. A `RULE` line is a broken rule, so it's always a problem. A
 `SIGNAL` line is only something to look at. For each `SIGNAL` line, look at the line and decide
 whether it's a real problem. It checks:
 
@@ -72,23 +73,25 @@ whether it's a real problem. It checks:
   `drafted`, `assumption`, `for now`, `to come`, `in progress`), and words about the doc's past
   (`was` with `now`, `no longer`, `the new`, `used to`). Each can also be a real use, such as "no
   longer" in a requirement's While. It looks only at lines the change added, so a line kept on
-  purpose isn't flagged again. Code, scenarios, research docs and blueprints are left out.
-- **References:** every doc link, section ID and item ID cited in the docs or the code resolves.
-  IDs are unique within a doc, and each prefix is in its own doc. No ID range is cited. The
-  functional spec has no links out. No research doc links to another doc, and no other doc links
-  to a research doc or a blueprint. As a signal only, it lists each requirement that nothing cites
+  purpose isn't flagged again. It looks only at the specs, and leaves out scenarios.
+- **References:** every link in a spec or a blueprint resolves. Every section ID and item ID
+  cited anywhere in the repo resolves, such as in the code, CLAUDE.md or a skill. IDs are unique
+  within a doc, and each prefix is in its own doc. No ID range is cited. The functional spec has
+  no links out, and neither spec links to a blueprint. As a signal only, it lists each requirement that nothing cites
   now but something cited on the base branch, since it may have lost its code or its test. A
   requirement written before the code that meets it isn't flagged. With `--uncited`, it lists
   every requirement nothing cites instead, for a look at the docs and the code as a whole. A
   citation from a Terms section doesn't count for either, since a term only explains a word. It
-  doesn't look in open issues. Step 7 of `references/changing-a-doc.md` covers those.
+  doesn't look outside the repo. "A changed item keeps its ID only if its meaning stayed the same"
+  in `references/changing-a-doc.md` covers that.
 - **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each paragraph
   under a requirement starts with a label, such as `*Why:*`, or is a table the requirement's text
   points to. Each decision has a Why line right after it.
-- **Copies,** as a signal: runs of eight or more words that a doc shares with a source file, such
-  as a prompt, or with another doc.
-- **Size,** as a signal: a doc near the Read tool's 25,000-token limit, since past that an agent
-  can't read it whole in one call.
+- **Copies,** as a signal: runs of eight or more words that a spec or a blueprint shares with
+  another one, or with any other text file, such as a prompt or a README. Research docs are left
+  out.
+- **Size,** as a signal: a spec or a blueprint near the Read tool's 25,000-token limit, since past
+  that an agent can't read it whole in one call.
 
 ## Then check by reading
 
@@ -157,4 +160,4 @@ whether it's a real problem. It checks:
   fails either test is a problem.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in
   SKILL.md.
-- **Every other step in `references/changing-a-doc.md` holds.**
+- **Everything else in `references/changing-a-doc.md` holds.**

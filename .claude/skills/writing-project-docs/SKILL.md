@@ -1,15 +1,16 @@
 ---
 name: writing-project-docs
-description: Writes, changes and reviews a project's docs (functional spec, technical spec, skills, research docs, blueprints), and decides whether a fact goes in a doc, a code comment, a check or an issue. Use when adding, changing or removing a requirement, a decision or a reason in any doc or code comment, creating a doc, or reviewing a change that touches docs, even if the task only says "update the spec", "write down why" or "document this", or is a code change that makes a doc out of step.
+description: Writes, changes and reviews a project's functional spec, technical spec and blueprints, and decides whether a fact goes in one of them, a code comment or a check. Use when adding, changing or removing a requirement, a decision or a reason in a spec, a blueprint or a code comment, creating a spec or a blueprint, or reviewing a change that touches them, even if the task only says "update the spec", "write down why" or "document this", or is a code change that makes a spec out of step.
 disable-model-invocation: true
 ---
 
 # Writing project docs
 
-Most readers of these docs are agents. They list a doc's headings, read one section, and act on
-it. So every item has to be findable by its heading, make sense on its own, and say exactly what
-it means. Every fact has one home, and other places point to it by ID. A second copy drifts, and
-an agent can't tell which copy is right.
+The functional spec, the technical spec and blueprints are the input an agent turns into code.
+Most of their readers are agents. They list a doc's headings, read one section, and act on it. So
+every item has to be findable by its heading, make sense on its own, and say exactly what it
+means. Every fact has one home, and other places point to it by ID. A second copy drifts, and an
+agent can't tell which copy is right.
 
 ## What to read for your task
 
@@ -19,17 +20,15 @@ your task. Most tasks need more than one.
 
 - **Adding, changing, replacing or deleting an item or a section,** in a doc or a code comment,
   or changing code that a doc describes: read
-  [references/changing-a-doc.md](references/changing-a-doc.md). It gives the steps in order.
+  [references/changing-a-doc.md](references/changing-a-doc.md). It says what must hold when
+  you're done.
 - **Writing in a doc, creating one, or checking a change to one:** read the file for that kind of
   doc. It says what the doc holds and keeps out, how it changes, and how to write any kind of item
   only that doc has. Every doc opens with one line saying what kind of doc it is, so a reader knows
   which of these apply.
   - Functional spec or technical spec: [references/specs.md](references/specs.md). It also says
     how to write each kind of item, the Terms section and IDs.
-  - Research doc: [references/research-doc.md](references/research-doc.md)
   - Blueprint: [references/blueprint.md](references/blueprint.md)
-  - Skill: [references/skill.md](references/skill.md)
-  - CLAUDE.md: [references/claude-md.md](references/claude-md.md)
 - **Checking a change,** your own before you count the work as done, or someone else's: read
   [references/reviewing.md](references/reviewing.md) and do every check in it. Also read the
   file above for each kind of doc the change touches.
@@ -43,9 +42,7 @@ look in the defaults:
 |---|---|
 | Functional spec | `docs/functional-spec.md` |
 | Technical spec | `docs/technical-spec.md` |
-| Research docs | `docs/research/` |
 | Blueprints | `docs/blueprints/` |
-| Skills | `.claude/skills/<name>/SKILL.md` |
 
 If a spec isn't at its default, search for its section IDs. They only appear in its own headings,
 so they find the right file even though other docs cite its item IDs:
@@ -55,42 +52,43 @@ grep -rlE '^#+ F-SEC-[0-9]+' --include='*.md' .   # functional spec
 grep -rlE '^#+ T-SEC-[0-9]+' --include='*.md' .   # technical spec
 ```
 
-If a research or blueprints folder doesn't exist, create it in the same folder as the specs. If a
+If the blueprints folder doesn't exist, create it in the same folder as the specs. If a
 doc doesn't exist yet, create it at its default path from the template in `assets/`, and say in
 your report that you created it.
 
 ## Which doc a fact goes in
 
-CLAUDE.md's table gives the short version. These questions are the long version. Ask them in this
-order, and stop at the first yes.
+Ask these questions in order, and stop at the first yes.
 
 1. **Is it about the past or the work in progress?** When something was decided, by whom, what
-   was tried in a session, status, open items. It goes in the commit, the PR or an issue, never a
-   doc. Keep notes in a file in the session's scratchpad while you work, and write the commit
-   message from them.
-2. **Is it how to do one task?** It's a skill.
-3. **Is it a record of something tried and measured?** It's a new research doc.
-4. **Is it a plan for how to build something,** such as the order to build the parts in? It's a
+   was tried in a session, status. It goes in the commit message, never a doc. Keep notes in a
+   file in the session's scratchpad while you work, and write the commit message from them. Name
+   any work left to do in your report.
+2. **Is it about something other than what the app does and how it's built?** For example, how
+   to do one task, a record of something tried and measured, or who the project is for. It
+   doesn't go in a spec or a blueprint. Name it in your report, with where it likely belongs,
+   such as a skill, a research doc or a README. The task says what happens to it next.
+3. **Is it a plan for how to build something,** such as the order to build the parts in? It's a
    blueprint.
-5. **Is it a quirk of an outside service,** such as an API that returns an empty list where you'd
+4. **Is it a quirk of an outside service,** such as an API that returns an empty list where you'd
    expect an error? It's a comment on the code that handles it, not a doc.
-6. **Does a type, a lint rule or a setting already enforce it, and is breaking it a quick fix?**
+5. **Does a type, a lint rule or a setting already enforce it, and is breaking it a quick fix?**
    A file naming rule is one: when the check fails, you rename the file. The check is its
    documentation, so it isn't written in a doc. If its reason isn't obvious, a comment at the check
    gives it.
-7. **Would a user notice if it changed?** It's a functional requirement (`FR`), in the user's
+6. **Would a user notice if it changed?** It's a functional requirement (`FR`), in the user's
    terms. A user uses the app through its own screens, as it's meant to be used. What stops someone
    who tampers with the app, such as by changing what their browser sends, isn't something a user
    sees. It's a technical requirement. See "One item for each fact" in
    [references/specs.md](references/specs.md) for how the two cite each other.
-8. **Is it something the system must achieve that a user wouldn't see,** with no implementation
+7. **Is it something the system must achieve that a user wouldn't see,** with no implementation
    in it? It's a technical requirement (`TR`). For example, "backups meet a set recovery point".
    Test it by imagining a redesign: if the redesign would still have to meet it, it's a
    requirement.
-9. **Otherwise it's a decision:** how the system meets its requirements. Then:
-   - **Not made yet?** It's an issue, such as a spike. Name it in your report, so whoever can
-     open issues adds it. **Rejected?** It goes nowhere. Name it in a code comment only if an
-     agent would likely change the code back to it.
+8. **Otherwise it's a decision:** how the system meets its requirements. Then:
+   - **Not made yet?** It goes in no doc. Name it in your report as a decision still to make, such
+     as one that needs a spike to settle. **Rejected?** It goes nowhere. Name it in a code comment
+     only if an agent would likely change the code back to it.
    - **Is there one place in the code that every case of it goes through, now and in the future?**
      Then it's a comment in that place. If new code could follow or break it without touching that
      place, it goes in the technical spec. "Every database write runs in a transaction" is a
@@ -99,6 +97,11 @@ order, and stop at the first yes.
    - **If a check also enforces it,** the check's comment cites the decision's ID. "Services never
      call each other" stays in the spec even when lint enforces it, since breaking it can mean
      redesigning a change, not a quick fix.
+
+**Is its home a code comment?** These questions decide when a fact goes in a comment instead of a
+spec. The project's guidance for code comments, such as a code-comments skill, says how to write
+the comment. It may also find a better home in the code, such as a clearer name or a type. Either
+way, the fact stays out of the specs.
 
 **Is the code not written yet?** When a fact's home is in code that doesn't exist yet, such as a
 code comment, a check, a setting or a data file the code reads, the fact goes in a blueprint until
@@ -128,9 +131,6 @@ For every sentence, in any doc:
   evidence stays. The history goes.
 - **Make each section stand on its own.** The reader may not have read the section before it.
 - **Point, don't restate.** Cite another item's ID instead of repeating what it says.
-
-When the questions in "Which doc a fact goes in" make the fact's home a code comment, follow the
-project's guidance for writing code comments.
 
 ### Names
 
