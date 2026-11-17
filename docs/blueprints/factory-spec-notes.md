@@ -368,12 +368,18 @@ requirement states is a missing requirement.**
 - Decided in: #19, in discussion with the owner.
 - Likely home: `TD`.
 
-**A source's "may", "could" or "such as" names options, not a decision. Choosing among them is a
-decision not made yet, so the writer asks about it. The part the source settles is still written.**
+**A source's "may", "could" or "such as" names options, not a decision, when it says what the
+system might do or what its builders might choose. Choosing among them is a decision not made yet,
+so the writer asks about it. The part the source settles is still written. A "may" that says what
+a person is allowed to do is a rule, and a "such as" that gives an example of a rule is an
+example.**
 - Why: in the first technical spec run, DESIGN said the client "may use" the engine to show legal
   moves, and the writer wrote TD-1 as the client using the engine. The choice may be right, but it
   wasn't the writer's to make. Joe: words that aren't definite "should not be looked at as
-  decisions. They should be looked at options that a decision has to be made about."
+  decisions. They should be looked at options that a decision has to be made about." The two
+  limits keep the writer from dropping settled text. "A member may cancel a booking" is a rule
+  the app has to follow. The same DESIGN passage uses "such as highlighting where a tile fits" as
+  an example of a settled rule.
 - Decided in: #19, in review of the first run. Built in #47.
 - Likely home: `FR`.
 

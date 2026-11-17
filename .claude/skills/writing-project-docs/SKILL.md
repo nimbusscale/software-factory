@@ -122,6 +122,18 @@ source does settle. For example, notes say the shop emails a customer when their
 the shipping email, and ask when an order is late. A guess written as a rule looks settled to every later
 reader, and nothing in the doc can mark it as a guess.
 
+Words such as "may" and "could" often leave a part open. When they say what the system might do,
+or what the people building it might choose, they name options, not a decision. Choosing among them
+is a decision not made yet, so raise it as a question, and don't write the "may" into the doc. The
+same goes for a "such as" that names a choice still to make, as in "a database such as
+PostgreSQL". Still write everything the source says that holds whichever option is chosen, even
+when it's in the same sentence as the option. For example, notes say a phone app shows a customer
+their past orders, keeps no other customer data, and "may keep a copy of the orders on the phone so
+it works offline". Write the rules for showing past orders and keeping no other data, since they
+hold either way, and ask whether the app keeps a copy. Two uses of these words do settle something. A "may" that says what a person is
+allowed to do is a rule: "a member may cancel a booking before it starts" means the app lets them.
+A "such as" that gives an example of a rule is an example, not an option.
+
 When you're sorting a long passage that mixes several kinds of text, read
 [references/worked-examples.md](references/worked-examples.md). It sorts real passages with these
 questions.

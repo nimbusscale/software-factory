@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: items-write-options
+expected_outcome: |
+  The notes, cut down from a real design doc, say the client holds no rules logic of its own beyond
+  what it needs to show options, and that it "may use" the engine to show legal moves. The writer
+  creates docs/technical-spec.md from them. The "may" names an option, not a decision, so no item
+  says whether the client uses the engine, and none copies the "may". The part the notes settle is
+  still written: the client holds no rules logic beyond what it needs to show options. It's an
+  architecture decision, since it's part of how the code is split into parts, and it meets no
+  particular requirement. The report asks whether the client should use the engine to show
+  options, and suggests an answer.
+context:
+  scaffold_script: place-files.sh
