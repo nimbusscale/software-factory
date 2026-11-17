@@ -1,0 +1,18 @@
+schema_version: "1.1"
+name: items-review-facet-guesses
+expected_outcome: |
+  The files come from a real run of the skill. The source is Facet's design doc, and the change
+  adds the functional spec a writer wrote from it. The writer turned some points the design doc
+  leaves open into rules, and its commit message lists them as open questions. In the real run,
+  one reviewer flagged them only because the commit message did, and the other let them through
+  because the commit message raised them.
+  - FR-18 says a view section can "follow every public item that fits it". The design doc says
+    "eligible public content", and never says what makes content eligible.
+  - FR-43 and FR-44 give the site, as well as the admin, keyboard use and screen-reader labels. The
+    design doc lists those for the admin, and says only that public pages "aim to be" accessible.
+  The reviewer edits nothing. It lists both as problems in this change, to cut the guess and ask
+  the owner, whatever the commit message says. It doesn't call FR-31's one hour a guess, since the
+  design doc says password-view tokens last an hour. The reviewer may find many other problems.
+  The graders don't check them.
+context:
+  scaffold_script: place-files.sh

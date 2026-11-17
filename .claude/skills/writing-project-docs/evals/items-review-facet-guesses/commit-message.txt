@@ -1,0 +1,71 @@
+Add Facet's functional spec, written from its design doc
+
+This creates docs/functional-spec.md from the skill's template. It turns the user-facing
+rules in source/DESIGN.md into 45 GEARS requirements. The design doc is left in place.
+Its user-facing rules now also live in the spec, so the two will drift if both are kept.
+
+Facts left out of the spec, and where each belongs:
+
+- Technical spec, as architecture decisions:
+  - SQLite is the only database. Why: one owner doesn't need horizontal scaling, and backups are
+    file copies. It helps meet FR-3, FR-4 and FR-15.
+  - Files are stored on local disk. Why: no outside storage service to set up or pay for. Meets FR-4.
+  - Facet ships as a single container. Why: the simplest thing to run and the easiest to explain.
+    The container itself is in FR-3; this reason belongs with the decision.
+  - Facet is built on PocketBase, which hasn't reached 1.0. Why it's accepted: it's widely used,
+    Facet pins its version, and dependency updates go through the full test workflow.
+  - Facet has no plugin system. Extensions are changes to the code.
+- Technical spec, as design decisions:
+  - Rate limits are kept in memory, so a restart resets them. Why: one process and one owner.
+  - A share link's token is checked at /s/<token>, stored in a cookie, and then the visitor is
+    redirected. Meets FR-28 and FR-30.
+  - Password-view access tokens are stateless, so they can't be revoked. Meets the accepted gap on
+    FR-31.
+  - Site pages are server-rendered and light on JavaScript, so they're fast.
+- Technical spec or a skill: where to extend Facet. New import sources go in the `sources`
+  collection and a service. New AI provider types go in `ai_providers` and the AI service. New view
+  sections, design options, and webhook events for features that exist are also good places.
+  Multiple owners or roles, social features, tracking and multi-tenant hosting need a rethink first.
+  The limits FR-1, FR-6, FR-7 and FR-9 hold the user-facing side of that.
+- Code comments:
+  - A view's stored legacy "default" flag never replaces the homepage. This is a comment where the
+    homepage is chosen, citing FR-25.
+  - The reserved view slugs live in frontend/src/params.ts. That list gets a comment citing FR-29.
+  - The browser tests that guard colour contrast get a comment citing the contrast requirement,
+    once it exists (see open questions).
+- AI prompts: the prompt wording that tells the model not to invent facts or numbers, and to write
+  plainly. The prompts cite FR-38 and FR-39.
+
+History removed: "including on older pages" (FR-19 and FR-20 hold the rule), "old /v/ links"
+(FR-27), and "legacy" on the default flag.
+
+Naming: the design doc also calls a view "a Facet" ("opening or saving a Facet"). The spec uses
+"view" only, and "Facet" only for the app.
+
+Cut on purpose:
+- "Delete your data whenever you like" is covered by FR-14, full control while signed in.
+- The motivation for views ("show everything to everyone" or "flip visibility switches") is cut.
+  The third bad option, keeping copies in step by hand, is FR-17's Why.
+- "The profile part of a professional network without the network" is a description, not a rule.
+
+Open questions. I didn't invent answers to these:
+- Colour contrast: which standard, such as WCAG AA? Without a level the requirement can't be tested,
+  so it's left out.
+- Several principles are too vague to test as written: "calm, not a CMS", "information density is
+  earned", "tending, not managing", "powerful, but out of the way", and site pages being readable,
+  fast and printable. Each needs a concrete behaviour or a number before it can be a requirement.
+- Comment moderation (FR-41): does the owner approve comments before they show, or only remove them?
+- Export (FR-16): what format?
+- "Eligible public content" (FR-18 says "every public item that fits it"): what makes an item fit a
+  view section?
+- Item visibility: are public and private the only values?
+- FR-34 treats a private view like a private item ("not found"). The design doc names only unlisted
+  views and private items there.
+- How long a share link's access lasts in the visitor's browser isn't stated.
+- FR-22 (a view can change framing fields, not fact fields) has no Why. The design doc gives no
+  reason.
+- Accessibility for site pages: the design doc lists keyboard, screen-reader labels and contrast for
+  the admin, and says site pages aim to be accessible. FR-43 and FR-44 apply the first two to both.
+
+Check script: nothing from this change. It flagged a copy signal for short phrases shared with the
+design doc, which is the source.
