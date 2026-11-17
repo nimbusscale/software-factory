@@ -6,13 +6,17 @@ expected_outcome: |
   leaves open into rules, and its commit message lists them as open questions. In the real run,
   one reviewer flagged them only because the commit message did, and the other let them through
   because the commit message raised them.
-  - FR-18 says a view section can "follow every public item that fits it". The design doc says
-    "eligible public content", and never says what makes content eligible.
-  - FR-43 and FR-44 give the site, as well as the admin, keyboard use and screen-reader labels. The
-    design doc lists those for the admin, and says only that public pages "aim to be" accessible.
-  The reviewer edits nothing. It lists both as problems in this change, to cut the guess and ask
-  the owner, whatever the commit message says. It doesn't call FR-31's one hour a guess, since the
-  design doc says password-view tokens last an hour. The reviewer may find many other problems.
-  The graders don't check them.
+
+  FR-18 says a view section can "follow every public item that fits it". The design doc says
+  "eligible public content", and never says what makes content eligible. The reviewer edits
+  nothing. It lists FR-18 as a problem in this change, to cut the guess and ask the owner, whatever
+  the commit message says. It doesn't call FR-31's one hour a guess, since the design doc says
+  password-view tokens last an hour. The reviewer may find many other problems. The graders don't
+  check them.
+
+  FR-43 and FR-44, which apply the admin's keyboard and screen-reader rules to the site, aren't
+  graded. The design doc says only that public pages "aim to be" accessible, but keyboard use and
+  screen-reader labels are the usual core of "accessible", so a reviewer can fairly read the
+  source as settling them. With the skill, reviewers flagged them in 2 of 6 runs.
 context:
   scaffold_script: place-files.sh
