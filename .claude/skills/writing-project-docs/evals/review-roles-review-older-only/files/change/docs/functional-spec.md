@@ -5,7 +5,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 
 ## F-SEC-1. Terms
 
-- **Member.** A person with an account in the app.
+- **Member.** A person with an account and an email address in the app.
 - **Room.** A meeting room in the office.
 - **Time slot.** A half hour that starts on the hour or on the half hour.
 - **Booking.** A room held for one member for one or more time slots in a row.
@@ -26,5 +26,5 @@ other booking holds that room for any of the same time slots.
 **FR-4.** While nobody has checked in to a booking, when 15 minutes have passed since it started,
 the app shall cancel the booking.
 
-**FR-5.** When the app cancels a booking under FR-4, the app shall email the member who held it to
-say that the booking was cancelled because nobody checked in.
+**FR-5.** When the app cancels a booking under FR-4, the app shall email the member who held it,
+naming the booking's room and start time, to say that it was cancelled because nobody checked in.

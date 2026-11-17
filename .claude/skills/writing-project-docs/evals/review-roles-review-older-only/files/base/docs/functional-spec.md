@@ -5,7 +5,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 
 ## F-SEC-1. Terms
 
-- **Member.** A person with an account in the app.
+- **Member.** A person with an account and an email address in the app.
 - **Room.** A meeting room in the office.
 - **Time slot.** A half hour that starts on the hour or on the half hour.
 - **Booking.** A room held for one member for one or more time slots in a row.

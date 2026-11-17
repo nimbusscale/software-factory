@@ -26,4 +26,4 @@ def cancel_no_shows(bookings, now):
     for b in bookings:
         if not b.cancelled and not b.checked_in and now - b.start >= CHECK_IN_WINDOW:
             b.cancel()
-            send_email(b.member, "no-show")
+            send_email(b.member, "no-show", room=b.room, start=b.start)
