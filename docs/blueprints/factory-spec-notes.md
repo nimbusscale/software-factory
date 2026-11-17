@@ -302,6 +302,19 @@ script keeps flagging the missing Why until the reason is known.**
 - Decided in: #19, in discussion with the owner. Settles #2.
 - Likely home: `TD`.
 
+**A user uses the app through its own screens, as it's meant to be used. What stops someone who
+tampers with the app is a technical requirement. When it protects a rule a user sees, it cites
+each functional requirement it protects instead of repeating it.**
+- Why: "would a user notice if it changed?" had no answer for a cheater. If the server stopped
+  checking moves and only honest browsers did, no honest player would notice, so it isn't
+  functional. Repeating the functional rule makes one fact in two docs: in Dust Law, open hands
+  would change both "each player sees only their own hand" and "each browser is sent only its
+  player's hand". Citing the requirement makes them two facts, and shows whoever changes the
+  functional requirement which technical requirement depends on it. Citing the whole functional
+  spec instead would leave them searching the technical spec for what to change.
+- Decided in: #19, in discussion with the owner.
+- Likely home: `TD`.
+
 ## Skills
 
 **SKILL.md holds what every task needs, and rules shared by more than one kind of doc. A rule used

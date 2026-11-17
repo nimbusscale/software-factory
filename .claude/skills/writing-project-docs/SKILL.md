@@ -79,7 +79,10 @@ order, and stop at the first yes.
    documentation, so it isn't written in a doc. If its reason isn't obvious, a comment at the check
    gives it.
 7. **Would a user notice if it changed?** It's a functional requirement (`FR`), in the user's
-   terms.
+   terms. A user uses the app through its own screens, as it's meant to be used. What stops someone
+   who tampers with the app, such as by changing what their browser sends, isn't something a user
+   sees. It's a technical requirement. See "One item for each fact" for how the two cite each
+   other.
 8. **Is it something the system must achieve that a user wouldn't see,** with no implementation
    in it? It's a technical requirement (`TR`). For example, "backups meet a set recovery point".
    Test it by imagining a redesign: if the redesign would still have to meet it, it's a
@@ -267,6 +270,21 @@ updated by hand each time the set changes.
 
 Written as "When a customer asks for a discontinued product or a product not yet launched", FR-73
 would repeat FR-72's list. A third kind of hidden product would then have to be added in both.
+
+The same test applies across the two specs. A rule a user sees often has a technical half that
+stops someone who tampers with the app from getting around it. The technical half cites each
+requirement it protects, instead of repeating it:
+
+> **FR-80.** The app shall show each customer only their own orders.
+>
+> **TR-4.** The server shall send each customer's browser only the orders that FR-80 lets that
+> customer see.
+
+If TR-4 repeated FR-80's rule, letting a customer see a partner's orders would mean changing both.
+Citing FR-80 makes them two facts. FR-80 changes when who may see an order changes. TR-4 changes
+only if the app trusts each browser to hide what it's sent. The citation also shows whoever changes
+FR-80 that TR-4 depends on it. Cite a section in place of the requirements only when the section
+holds every one the technical half protects.
 
 ### Terms and names
 
