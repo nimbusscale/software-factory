@@ -24,8 +24,8 @@ booking only if no other booking holds that room for that time slot.
 
 ## F-SEC-3. Checking in
 
-**FR-4.** While a booking's time slot has started and hasn't ended, and the booking hasn't been
-cancelled, the app shall let its organizer check in to it.
+**FR-4.** The app shall let a booking's organizer check in to it only while its time slot has
+started and hasn't ended, and the booking hasn't been cancelled.
 
 *Scenario:* Given a booking for 14:00 that nobody has checked in to, when its organizer tries to
 check in at 14:20, then they can't, since the app cancelled the booking at 14:15.

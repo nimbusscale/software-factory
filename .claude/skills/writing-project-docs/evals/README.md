@@ -121,7 +121,7 @@ section.
 From this skill's folder:
 
 ```bash
-claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonnet -j 4 --ablation none
+claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonnet -j 8 --ablation none
 ```
 
 - `--scaffold` lets each case's `place-files.sh` run. Without it, the agent gets an empty folder.
@@ -135,8 +135,8 @@ claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonn
   `terms` group's reviewer cases. With `--tag`, a case has to match both. Give `--case` only once.
   Given twice, it runs only the last one.
 - `--model <model>` overrides every case's `model`.
-- `-j <n>` runs up to n agent runs at once, from 1 to 8. It's 1 by default, which is slow, so use at
-  least 4. It can only be set on the command line.
+- `-j <n>` runs up to n agent runs at once, from 1 to 8. It's 1 by default, which is slow, so use
+  8. It can only be set on the command line.
 - `--keep-temp` keeps each run's folder, so you can see what the agent did.
 - `--eval-dir evals-no-skill` runs the cases in `evals-no-skill/` in place of `evals/`. Their
   results go in `evals-no-skill/results/`.
