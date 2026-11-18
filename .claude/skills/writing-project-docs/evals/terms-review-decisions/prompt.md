@@ -1,7 +1,8 @@
 ---
 plugins: ["../.."]
-tags: [review, terms]
+tags: [review, terms, items]
 model: opus
+runs: 1
 max_turns: 40
 timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Skill, Write, Edit, Bash]

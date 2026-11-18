@@ -1,0 +1,17 @@
+schema_version: "1.1"
+name: items-review-from-notes
+expected_outcome: |
+  The task, given in the prompt, is to add the rules in notes/booking-rules.md to the spec. The
+  change writes them as FR-4, FR-5 and FR-6. It cuts both of the notes' examples. The check-in
+  example only shows FR-5 at work: a 14:00 booking's time slot ends at 14:30, so cutting it loses
+  nothing. The booking-limit example holds a rule: bookings for the same day don't count toward the
+  3. No requirement says that, and FR-4 with Upcoming booking counts them. Under FR-6, a plain line
+  with no label holds a rule: no confirmation for an organizer who turned emails off. The change
+  also leaves out the notes' opening paragraph, which says the first version is for an office of
+  20 to try for a month. That's about who the project is for, so its home is outside the specs and
+  blueprints, and leaving it out isn't dropping it. The reviewer edits nothing. It lists the lost
+  same-day rule and the rule in FR-6's plain line as problems in this change, and suggests putting
+  each rule in a requirement's text. It doesn't call the cut check-in example or the left-out
+  opening paragraph a problem.
+context:
+  scaffold_script: place-files.sh

@@ -9,7 +9,7 @@ the code are comments there instead.
 
 The internal terms, the ones a user wouldn't recognize.
 
-**Failed task.** A task that still fails after its last try (TD-2).
+**Failed task.** A task that still fails after its last try (TD-1).
 
 **Task.** A job the app runs at a set time, with no member asking for it.
 
@@ -63,13 +63,13 @@ for would stay held.
 **TR-3.** When a task becomes a failed task, the worker shall store the error from its last try
 with the task.
 
-**TD-1.** Each task is a row in the database, with the time it's due, and the worker runs every
+**TD-1.** A task that fails is tried again up to three times, five minutes apart, to meet FR-4.
+
+*Why:* most failures come from the database being out of reach for a moment, and a cancellation
+that never runs leaves a room held.
+
+**TD-2.** Each task is a row in the database, with the time it's due, and the worker runs every
 row whose time has passed and that hasn't run yet.
 
 *Why:* a task kept in the database is still there after the worker stops, so the worker can find
 and run it when it starts again (TR-2).
-
-**TD-2.** A task that fails is tried again up to three times, five minutes apart, to meet FR-4.
-
-*Why:* most failures come from the database being out of reach for a moment, and a cancellation
-that never runs leaves a room held.

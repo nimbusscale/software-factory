@@ -1,16 +1,22 @@
 schema_version: "1.1"
 name: items-write-limits
 expected_outcome: |
-  The notes list four things the app won't do: book equipment, serve other offices, take bookings
-  more than two weeks ahead, or let a booking run past 6 pm. They also say the app is web only for
-  the first version, with a phone app wanted later. The writer creates docs/functional-spec.md from
-  them. Three of these are limits, since each says what the app does and where it stops, and the
-  stop lets a builder leave something out: the app books rooms, not equipment; it serves this
-  office only; and it runs only in a web browser, not as a phone app. Each is a requirement with
-  its own FR ID, written with "only" and then what it rules out, in the section it bounds. There's
-  no separate Limits section. The two-week and 6 pm rules simplify no design, so they're ordinary
+  The notes list eight things the app won't do: book equipment, serve other offices, take bookings
+  more than two weeks ahead, let a booking run past 6 pm, show ads, offer chat between members,
+  allow co-organizers, or set targets and nudges on the office manager's room figures. They also
+  say the app is web only for the first version, with a phone app wanted later. The writer creates
+  docs/functional-spec.md from them. Four of these are limits, since each says what the app does
+  and where it stops, and the stop lets a builder leave something out: the app books rooms, not
+  equipment; it serves this office only; it runs only in a web browser, not as a phone app; and a
+  booking has only one organizer, the member who made it. Each is a requirement with its own FR
+  ID, written with "only" and then what it rules out, in the section it bounds. There's no
+  separate Limits section. The two-week and 6 pm rules simplify no design, so they're ordinary
   booking requirements. Only the 6 pm rule has a Why, since the building's hours aren't clear from
-  the rule and knowing them stops someone from moving it. The spec says nothing about a phone app
-  coming later, since the spec describes the app as it is, not a plan.
+  the rule and knowing them stops someone from moving it. "No ads" and "no chat between members"
+  name only what's ruled out, with nothing the app does in their place, so they stay out of the
+  spec. "No targets or nudges" says where showing the room figures stops, but simplifies nothing
+  about how they're built, so it stays out, while the office manager's view of the figures stays
+  as an ordinary requirement. The spec says nothing about a phone app coming later, since the spec
+  describes the app as it is, not a plan.
 context:
   scaffold_script: place-files.sh

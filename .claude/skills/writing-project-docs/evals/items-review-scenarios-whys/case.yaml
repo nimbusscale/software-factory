@@ -1,0 +1,15 @@
+schema_version: "1.1"
+name: items-review-scenarios-whys
+expected_outcome: |
+  The change adds FR-4, FR-5 and FR-6, each with a Why, and check-ins: FR-7 and FR-8, each with a
+  scenario. FR-4's Why passes both tests: the office's hours aren't clear from the rule, and
+  knowing them stops someone from moving the limit later to suit members. FR-5's Why changes
+  nothing about how the rule is applied or changed. FR-6's Why is clear from the rule itself.
+  FR-7's scenario earns its place. Its result comes from FR-7 and FR-8 together: a reader of FR-7
+  alone would think an organizer can check in any time during the time slot, but FR-8 has already
+  cancelled the booking 15 minutes in. FR-8's scenario only shows what FR-8 says on its own. The
+  reviewer edits nothing. It lists the Whys on FR-5 and FR-6 and FR-8's scenario as problems in
+  this change, and suggests removing them, or replacing the scenario. It doesn't call FR-4's Why or
+  FR-7's scenario a problem.
+context:
+  scaffold_script: place-files.sh

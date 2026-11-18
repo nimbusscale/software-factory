@@ -5,15 +5,23 @@ meeting rooms. Nothing is built yet.
 
 Anyone with an account can book. We call them members. Rooms are booked in half-hour slots,
 starting on the hour or the half hour. A member picks a room and a slot, and the app books it if
-nobody else has that room for that slot.
+nobody else has that room for that slot. The member who makes a booking is its organizer. Only the
+organizer can cancel a booking.
 
-Some things the app won't do:
+The office manager can see how many hours each room was booked last month.
+
+Things we agreed the app won't do:
 
 - It books rooms, not equipment such as projectors.
 - It's for this office only. The other offices aren't part of this.
 - Bookings can be made up to two weeks ahead, never more.
 - No booking can run past 6 pm. The building turns off its heating and lights at 6, and people
   were getting stuck in cold, dark rooms.
+- No ads, ever.
+- No chat between members.
+- No co-organizers. A booking has one organizer, the member who made it.
+- The room figures are just for the office manager's curiosity. No targets, and no nudges to get
+  people booking more.
 
 For the first version the app is web only. We'd like a phone app later, once the web version has
 settled.

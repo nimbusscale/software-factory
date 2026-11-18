@@ -48,19 +48,7 @@ it only if FR-3 lets the member who sent it cancel that booking.
 
 How the worker runs tasks.
 
-**TR-2.** When the worker starts after being stopped, the worker shall run every task whose time
-passed while it was stopped.
-
-*Why:* otherwise a restart could skip the cancellations FR-4 makes, and a room nobody turned up
-for would stay held.
-
-**TD-1.** Each task is a row in the database, with the time it's due, and the worker runs every
-row whose time has passed and that hasn't run yet.
-
-*Why:* a task kept in the database is still there after the worker stops, so the worker can find
-and run it when it starts again (TR-2).
-
-**TD-2.** A task that fails is tried again up to three times, five minutes apart, to meet FR-4.
+**TD-1.** A task that fails is tried again up to three times, five minutes apart, to meet FR-4.
 
 *Why:* most failures come from the database being out of reach for a moment, and a cancellation
 that never runs leaves a room held.

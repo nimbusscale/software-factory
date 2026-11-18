@@ -904,6 +904,39 @@ Law runs, reviewers don't see the writer's questions, on purpose.**
 - Decided in: #19, in review of the first run.
 - Likely home: unclear. It may only be how the skill is tested.
 
+**Two eval cases can be merged into one when they share a base spec or notes and their planted
+problems don't touch each other. The merged case keeps every grader. A merge is backed out when a
+grader that passed in its old case fails in the merged case, and the merge is the cause.**
+- Why: almost all of a run's cost is agent runs. One agent run costs $0.30 to $0.75, and the judge
+  costs about $0.01 to $0.03 for each `llm` grader, so judging is about 10% of a case. Merging two
+  cases saves one agent run each time the case runs, and adds no judge calls. A full run of all 30
+  cases, 3 times each, cost about $37.
+- What issue 58 showed: four merges held, so 30 cases became 26. `items-review-scenarios` and
+  `items-review-whys` became `items-review-scenarios-whys`, `items-review-examples` and
+  `items-review-handed-off` became `items-review-from-notes`, `items-write-bans` went into
+  `items-write-limits`, and `items-review-tr-names-part` went into `terms-review-decisions`. Each
+  passed 3 of 3 with the skill, as its old cases did. `items-write-limits` failed its one-organizer
+  grader once in its first 3-run, then passed 3 of 3 in a rerun. Its rerun wrote the same
+  requirement word for word, and all three judges passed it, so the failure was judge noise. Two
+  parts were backed out, because the added content changed what the reviewer did, even though the
+  planted problems looked separate:
+  - Adding `items-review-unsettled`'s waitlists to `items-review-from-notes` made a real clash with
+    the booking limit: should a waitlist booking count toward the 3? One reviewer called that clash
+    something the notes didn't settle, and the judge counted it against the waitlist requirements.
+    That grader passed 3 of 3 in the old case, and 2 of 3 merged.
+  - Adding `terms-review-second-meaning`'s Free term and its "free of charge" requirement to
+    `terms-review-word-uses` dropped the "free of charge" grader to 1 of 3 with the skill. The old
+    case, run again on its own, passed 3 of 3. In the merged case, reviewers spent their attention
+    on how the Free term met the other new requirement, which keeps cancelled bookings, and let
+    "free of charge" through as a set phrase, or mentioned it only in passing.
+- So: a case can hold several planted problems, but only when the content around each one doesn't
+  raise new questions about the others. A new check is still tuned in a small case first. Before
+  its planted problem and grader move into a bigger case, check whether the added content touches
+  anything already there. Then run the merged case 3 times and compare each grader with the old
+  case.
+- Decided in: #58.
+- Likely home: `TD`.
+
 ## Issue checker
 
 **The issue checker checks that each requirement the issue asks for is clear enough to write as a
