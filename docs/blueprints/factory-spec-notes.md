@@ -21,6 +21,27 @@ retired ID is a best effort, not a guarantee.**
 - Decided in: #14.
 - Likely home: `FR` that IDs aren't reused as a best effort; `TD` for how a new ID is found.
 
+**Item IDs only need to be unique. Their order in a doc doesn't matter, so TR-4 can sit after
+TR-12, and a spec is never renumbered to put them back in order.**
+- Why: Joe: IDs are labels. They count up only because that's easy, and they could as well be
+  UUIDs.
+- Decided in: #1, reviewing Joe's interactive Dust Law session (nimbusscale/dust-law#17).
+- Likely home: `FR`.
+
+**A blueprint's front matter holds its status, `active` or `retired`, and its retired date. The
+status is about the doc, never about progress through the work.**
+- Why: Joe wants the doc itself to show whether it's retired, even though GitHub tracks status
+  too. Why the doc and not only GitHub is unknown. The status stays about the doc because the
+  status of work goes in commit messages, never a doc.
+- Decided in: #1, reviewing Joe's interactive Dust Law session. Built in #62.
+- Likely home: `FR`.
+
+**A build plan blueprint retires once the GitHub issues for its phases are created.**
+- Why unknown. Claude pointed out that a plan kept both in a blueprint and in issues would drift
+  apart. Joe didn't say whether that's his reason.
+- Decided in: #1, reviewing Joe's interactive Dust Law session. Built in #63.
+- Likely home: `FR`.
+
 **When a doc and the code disagree, the doc wins, unless CLAUDE.md says otherwise. If the agent
 can't fix the code within its task, it leaves both and reports the disagreement in the PR
 description or its final report, naming the item ID and the code.**
@@ -342,6 +363,15 @@ script keeps flagging the missing Why until the reason is known.**
   that a decision always has a Why needs no exception. Only the writer's own check changes: it
   can't fix that flag, so it names the question that goes with it.
 - Decided in: #19, in discussion with the owner. Settles #2.
+- Likely home: `TD`.
+
+**A decision with no Why is also a sign the item may not be a decision at all. There's no way to
+mark a decision as having no reason. One is added only if a real decision with no reason turns
+up.**
+- Why: in Joe's interactive Dust Law session, the two decisions with no reason, TD-3 and TD-4,
+  turned out to be facts with no other option: the tile type's shape, and how border positions face
+  each other. Joe: "maybe this is a smell, right? It's a signal."
+- Decided in: #1, reviewing that session (nimbusscale/dust-law#17). Built in #61.
 - Likely home: `TD`.
 
 **A user uses the app through its own screens, as it's meant to be used. What stops someone who
@@ -771,6 +801,24 @@ report, not a PR or issues.**
 - Decided in: #18, while planning #36. The last wording that sent facts to issues was removed in
   #46.
 - Likely home: `CS`.
+
+**The docs skill isn't changed to make the writer's check of its own work deeper. A fresh reviewer
+is the real check.**
+- Why: Joe expected the writer's own check to be thin, which is why a reviewer runs after it. In
+  his interactive Dust Law session, the writer ran the check script and a few searches. It missed a
+  contradiction between two requirements and four leftover uses of a word it had renamed itself.
+  The reviewer caught both.
+- Decided in: #1, reviewing that session (nimbusscale/dust-law#17). See #21 for who runs reviews.
+- Likely home: `TD`.
+
+**A milestone in a project's life, such as starting a project, is a slash command or a script, not
+a skill that loads on its own. Work that can come up in any session, such as creating an issue, is
+a skill.**
+- Why: Joe: for starting a project, a script is probably fine and a skill isn't needed. Interactive
+  sessions after a project starts need to know how to create issues and what the statuses mean,
+  and a command only runs when someone types it.
+- Decided in: #1, reviewing Joe's interactive Dust Law session. Built in #63 and #64.
+- Likely home: `TD`.
 
 ## Evaluations
 
