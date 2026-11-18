@@ -95,7 +95,8 @@ most of these either.
 
 Most of these are reviewer cases. The reviewer is the last check before a problem gets through,
 and a writer checking its own work runs the same review checks, so one reviewer case covers both.
-`items-write-limits`, `items-write-bans` and `items-write-unsettled` are writer cases.
+`items-write-limits`, `items-write-bans`, `items-write-unsettled` and `items-write-options` are
+writer cases.
 
 | Case | Task | Passes when | Without the skill |
 |---|---|---|---|
@@ -111,13 +112,15 @@ and a writer checking its own work runs the same review checks, so one reviewer 
 | `items-review-unsettled` | The task is to add waitlists to the spec from planning notes, which say waitlists close "shortly before the slot starts". The change adds FR-7, which empties a slot's waitlists 30 minutes before it starts. FR-4, FR-5 and FR-6 say only what the notes settle. | It edits nothing, lists FR-7's 30 minutes as a problem in this change, and doesn't say FR-4, FR-5 or FR-6 go beyond the notes. | 3 of 3 |
 | `items-review-tr-names-part` | The technical spec's AD-2 splits the app into a web server and a worker that runs timed tasks. A change adds TR-2, which says the worker runs every task that came due while it was stopped, and TD-1, which meets it. | It edits nothing, and doesn't say TR-2 shouldn't name the worker or is a decision rather than a requirement. | 3 of 3 |
 | `items-write-unsettled` | Write a functional spec from planning notes that say a view's section "can follow all eligible public content or show selected items", and never say what makes content eligible. | No rule says which items a following section shows, and none uses "eligible". The spec keeps the rule for selected items. The report asks what "eligible" means and suggests an answer. | 0 of 3 |
+| `items-write-options` | Write a technical spec from architecture notes that say the engine is shared code and the client "may use" it to show legal moves, and that the client holds no rules logic of its own beyond what it needs to show options. | No item says whether the client uses the engine, and none copies the "may". The report asks whether the client should use it and suggests an answer. | 0 of 3 |
 
 The runs without the skill were on commit `f8306f9`, except for `items-review-scenarios`'s and
 `items-review-examples`'s. `items-review-scenarios`'s were on an earlier version of the case, before
 both of its scenarios changed. `items-review-examples`'s were on commit `0e33f69`.
 `items-review-triggers`', `items-review-cuts`', `items-write-bans`', `items-review-unsettled`',
 `items-write-unsettled`', `items-review-facet-guesses`' and `items-review-tr-names-part`' were on
-the commit that added the case.
+the commit that added the case. `items-write-options`' were on the commit that dropped its grader
+for the client rule.
 `items-write-limits`' were on an earlier version of the case, which put every limit in a Limits
 section.
 

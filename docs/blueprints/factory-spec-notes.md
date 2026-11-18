@@ -393,6 +393,14 @@ only makes sense when one option is chosen is part of the same question.**
 - Decided in: #47, in discussion with the owner.
 - Likely home: `FR`.
 
+**A reworded sentence that holds whichever option is chosen must still hold either way.**
+- Why: in #47's case runs, writers turned "holds no rules logic of its own beyond what it needs to
+  show options" into "uses game rules only to show options". Next to an item that puts every game
+  rule in the engine, that says the client uses the engine, which settles the option. Dropping "of
+  its own" changed a limit on the client's own code into a statement about what it uses.
+- Decided in: #47, in discussion with the owner.
+- Likely home: `FR`.
+
 **The kinds of item come in this order. The business side writes the functional requirements.
 The technical architect makes the architecture decisions, from the functional spec, their
 experience and any standards. A technical requirement comes from a functional requirement, an

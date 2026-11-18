@@ -4,10 +4,9 @@ expected_outcome: |
   The notes, cut down from a real design doc, say the client holds no rules logic of its own beyond
   what it needs to show options, and that it "may use" the engine to show legal moves. The writer
   creates docs/technical-spec.md from them. The "may" names an option, not a decision, so no item
-  says whether the client uses the engine, and none copies the "may". The part the notes settle is
-  still written: the client holds no rules logic beyond what it needs to show options. It can be
-  an architecture decision or a design decision. The skill doesn't clearly put it in one, and this
-  case tests telling an option from a decision, not which kind of decision it is. The report asks
-  whether the client should use the engine to show options, and suggests an answer.
+  says whether the client uses the engine, and none copies the "may". The report asks whether the
+  client should use the engine to show options, and suggests an answer. The case doesn't check
+  whether the writer keeps the client rule. Read with "all game rules live" in the engine, it can
+  depend on the open choice, so leaving it out and asking about it is fine too.
 context:
   scaffold_script: place-files.sh

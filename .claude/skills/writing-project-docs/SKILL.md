@@ -131,12 +131,15 @@ holds whichever option is chosen, even when it's in the same sentence as the opt
 notes say a phone app shows a customer their past orders, keeps no other customer data, and "may
 keep a copy of the orders on the phone so it works offline". Write the rules for showing past
 orders and keeping no other data, since they hold either way, and ask whether the app keeps a copy.
-A sentence that sounds settled can still depend on the option. If it only makes sense when one
-option is chosen, it's part of the same question: leave it out too, and ask about the two together.
-If the same notes say the order list "syncs to the phone", that only makes sense if the app keeps a
-copy, so it goes in the question. Two uses of these words do settle something. A "may" that says
-what a person is allowed to do is a rule: "a member may cancel a booking before it starts" means
-the app lets them. A "such as" that gives an example of a rule is an example, not an option.
+When you reword a sentence that holds either way, check that your wording still does. "Keeps no
+other customer data" holds whether or not the app keeps a copy of the orders. "Keeps only the
+orders on the phone" doesn't, since it says the app keeps them there. A sentence that sounds
+settled can still depend on the option. If it only makes sense when one option is chosen, it's part
+of the same question: leave it out too, and ask about the two together. If the same notes say the
+order list "syncs to the phone", that only makes sense if the app keeps a copy, so it goes in the
+question. Two uses of these words do settle something. A "may" that says what a person is allowed
+to do is a rule: "a member may cancel a booking before it starts" means the app lets them. A "such
+as" that gives an example of a rule is an example, not an option.
 
 When you're sorting a long passage that mixes several kinds of text, read
 [references/worked-examples.md](references/worked-examples.md). It sorts real passages with these
