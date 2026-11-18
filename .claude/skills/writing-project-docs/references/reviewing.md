@@ -113,7 +113,11 @@ whether it's a real problem. It checks:
   every cut is one. For each example, find the rule it shows, including any exception in it, such
   as "a gift card order earns no points". That rule must be in a requirement's text. The example
   itself can be cut even if the task doesn't mention it. It stays only as a scenario that earns its
-  place.
+  place. A fact whose home is outside the specs and blueprints isn't dropped when the change leaves
+  it out of them, such as who the project is for, or how good the first version needs to be. Its
+  home is somewhere else, such as a README. Decide where its home is from "Which doc a fact goes
+  in" in SKILL.md, not from the author's account. A fact whose home is a spec or a blueprint is
+  still dropped when it's left out.
 - **Nothing was added that the source didn't settle.** For each rule the change adds or changes,
   find what settles it: the task, the source the change was written from, or the docs already
   there. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
