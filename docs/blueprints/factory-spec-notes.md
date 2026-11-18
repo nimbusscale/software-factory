@@ -383,6 +383,16 @@ example.**
 - Decided in: #19, in review of the first run. Built in #47.
 - Likely home: `FR`.
 
+**The option can't come back in other words, such as "can". A sentence that sounds settled but
+only makes sense when one option is chosen is part of the same question.**
+- Why: in #47's case runs, DESIGN says "The engine is shared code" just before the client "may
+  use" it. One writer wrote "The engine is shared code, which the server and the client can each
+  import", which settles the option. Joe found the passage ambiguous as a whole, even though each
+  sentence alone is clear: "shared" only makes sense if the client uses the engine. The skill
+  didn't say where the line falls, so this gives the writer a test for it.
+- Decided in: #47, in discussion with the owner.
+- Likely home: `FR`.
+
 **The kinds of item come in this order. The business side writes the functional requirements.
 The technical architect makes the architecture decisions, from the functional spec, their
 experience and any standards. A technical requirement comes from a functional requirement, an

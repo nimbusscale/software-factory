@@ -5,9 +5,9 @@ expected_outcome: |
   what it needs to show options, and that it "may use" the engine to show legal moves. The writer
   creates docs/technical-spec.md from them. The "may" names an option, not a decision, so no item
   says whether the client uses the engine, and none copies the "may". The part the notes settle is
-  still written: the client holds no rules logic beyond what it needs to show options. It's an
-  architecture decision, since it's part of how the code is split into parts, and it meets no
-  particular requirement. The report asks whether the client should use the engine to show
-  options, and suggests an answer.
+  still written: the client holds no rules logic beyond what it needs to show options. It can be
+  an architecture decision or a design decision. The skill doesn't clearly put it in one, and this
+  case tests telling an option from a decision, not which kind of decision it is. The report asks
+  whether the client should use the engine to show options, and suggests an answer.
 context:
   scaffold_script: place-files.sh
