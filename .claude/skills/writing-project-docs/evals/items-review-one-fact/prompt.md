@@ -1,6 +1,6 @@
 ---
 plugins: ["../.."]
-tags: [review, terms]
+tags: [review, items, passes-without-skill]
 model: opus
 max_turns: 40
 timeout_seconds: 900

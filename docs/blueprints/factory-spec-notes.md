@@ -790,24 +790,40 @@ reply's headings or layout.**
 - Likely home: `TD`.
 
 **Evaluations run with the skill only. A case also runs without the skill when it's new or changes
-a lot.**
+a lot, and every case does when re-baselining.**
 - Why: an agent can't guess the project's standards, such as its IDs and prose, without the skill,
   so running without it mostly shows that. What it does show is whether a case depends on the
   skill.
-- Decided in: #33.
+- Decided in: #33. Re-baselining added in #57.
 - Likely home: `TD`.
 
-**A case that passes without the skill moves to a second folder, `evals-no-skill/`, next to
-`evals/`. A plain run runs only `evals/`. The second folder runs when an agent's model or effort
-changes, after which every case is sorted again, and in a full run after a batch of skill
-changes.**
-- Why: a case that passes without the skill shows no value from the skill, and runs add up. Joe:
-  the work and runs for one issue took about 6% of his allocation. But the case still records a
-  behavior we cared about. If the writer moves from Opus to Sonnet, or from high effort to medium,
-  it may start to fail, and the folder is a checklist for that change. A folder, not a tag,
-  because the runner has no way to leave a tagged case out by default.
-- Open: Joe may change how full runs are done, because of their cost.
-- Decided in: #38.
+**All of a skill's cases live in one `evals/` folder. A case that passes 3 of 3 without the skill
+has the `passes-without-skill` tag, and stays in full runs.**
+- Why: this replaces a second folder, `evals-no-skill/`, that kept those cases out of plain runs
+  because they show no value from the skill. With `runs: 1`, each of them costs one run, so there's
+  little reason to keep them out. A full run after a batch of skill changes ran both folders
+  anyway, and one folder makes it one command with one results folder. The cases still matter.
+  They catch a model or effort change that breaks something the agent used to do on its own, and
+  the skill making the agent worse, such as fixing things that aren't broken. The tag keeps the
+  record of which cases they are, and `--tag passes-without-skill` runs just those. The cost: a
+  group run, such as `--tag terms`, also picks up that group's no-skill cases, at their own run
+  count.
+- Decided in: #57, replacing #38's second folder.
+- Likely home: `TD`.
+
+**Each case sets its own run count with `runs` in its `prompt.md`. A case that passes 3 of 3 in a
+full run gets `runs: 1`. The rest run 3 times. When a 1-run case fails, it reruns 3 times right
+away. If it passes 3 of 3, it stays at 1 run. If not, it goes back to 3. To re-baseline, such as
+when the agent's model or effort changes, every case runs 3 times with and without the skill, and
+the tags and run counts are updated.**
+- Why: a full run is costly when every case runs 3 times. Joe: the work and runs for one issue took
+  about 6% of his allocation. Anthropic's post "Demystifying evals for AI agents" splits evals into
+  capability evals, which test what the agent can't do well yet, and regression evals, which check
+  it still does what it used to. A capability eval that passes reliably moves into the regression
+  suite. The 3-run rerun keeps one bad run from deciding anything, without needing a history of
+  results. `runs` goes in `prompt.md` because `model` and `max_turns`, the other run settings, are
+  there.
+- Decided in: #57.
 - Likely home: `TD`.
 
 **The judge model is Sonnet. The agent under test runs on Opus for now.**
@@ -840,9 +856,10 @@ the real input that led to the mistake, cut down, when there is one.**
 
 **The evals README records how each case did in its last run without the skill, and the commit it
 ran on. It records no other results.**
-- Why: that's the baseline. It says which cases depend on the skill, so later runs can leave out
-  the ones that don't. Other results change with every run, and they go in the PR and the issue.
-- Decided in: #27.
+- Why: that's the baseline. It says which cases depend on the skill, which decides the
+  `passes-without-skill` tag. Other results change with every run, and they go in the PR and the
+  issue.
+- Decided in: #27. The tag replaced leaving those cases out in #57.
 - Likely home: `TD`.
 
 **A case's planted problems are ones the doc check script flags.**
@@ -857,19 +874,19 @@ evaluation case.**
 - Likely home: `TD`.
 
 **A failing case is run on its own until it passes 3 runs out of 3. When every case in a group
-passes, the whole group runs 3 times each, to catch anything a skill change broke. A case that has
-passed both with and without the skill is left out, even after the skill changes. Before a 3-run
+passes, the whole group runs, each case at its own run count, to catch anything a skill change
+broke. Before a 3-run
 pass, each case runs once. A case whose setup was fixed runs once more, and goes into a 3-run pass
 only when its result has nothing to do with the setup. A case gets up to 3 single runs, with fixes
 to the skill, the case or its graders in between, before its 3-run pass.**
 - Why: a single run can pass by luck. `review-roles-review-clean` passed one run, then failed 3 out of 3. A
-  case that has passed both ways gives no reason to run it again, and each run costs tokens. The
-  single run catches a broken setup before the bigger run spends three times as much. If a setup
+  case that has passed reliably runs once, since each run costs tokens. The single run catches a broken setup before the bigger run spends three times as much. If a setup
   fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first. The 3
   single runs give room to find and fix problems before the bigger run. Joe: "3 is just a nice
   limit that you typically are able to work it within to get it to pass. So I just needed some
   number. 3 seemed reasonable, and it's worked out so far."
-- Decided in: #33 and #41.
+- Decided in: #33 and #41. Per-case run counts replaced leaving out a case that passed both ways
+  in #57.
 - Likely home: `TD`.
 
 **A doc reviewer checks the docs and whether the code does what they say. It doesn't mention a

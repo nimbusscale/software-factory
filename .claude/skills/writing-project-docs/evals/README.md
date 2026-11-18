@@ -1,24 +1,15 @@
 # Evaluations for writing-project-docs
 
-Each folder here, and in `../evals-no-skill/`, is one test case, in the layout `claude plugin eval`
-reads. A case gives a fresh agent one small task, in a throwaway repo that the case's scaffold
-script builds. Then graders check what the agent produced.
-
-The two folders split the cases by whether they need the skill:
-
-- **`evals/`** holds the cases that fail without the skill. A run with no `--eval-dir` runs only
-  these, so they're the ones run while the skill changes.
-- **`evals-no-skill/`** holds the cases that pass without the skill, on the model and effort the
-  cases use today. They're a record of behavior worth checking. See "With or without the skill"
-  for when they run.
-
-This README covers both folders.
+Each folder here is one test case, in the layout `claude plugin eval` reads. A case gives a fresh
+agent one small task, in a throwaway repo that the case's scaffold script builds. Then graders
+check what the agent produced.
 
 ## A case folder
 
 - `prompt.md`: run settings, then the task exactly as a user would type it. `plugins: ["../.."]`
   points the runner at this skill's folder. `model` sets the agent's model. `tags` puts the case in
-  groups you can run together.
+  groups you can run together. `runs` sets how many times the case runs. A case without it runs 3
+  times. See "How many runs" below.
 - `case.yaml`: the case's name, a plain description of a good result, and the scaffold script. The
   description is for people. The runner never shows it to the judge.
 - `place-files.sh`: builds the repo the agent works in, as a git repo, from `files/`. `base/` is
@@ -35,15 +26,13 @@ This README covers both folders.
 
 ## Cases
 
-Each case has two tags. One names the group of cases it belongs to. The other says whose work the
-agent checks: `write` for its own, `review` for someone else's. A case's name starts with both, in
-that order, such as `terms-review-citations`.
-
-A case whose "Without the skill" column says 3 of 3 is in `evals-no-skill/`. Every other case is
-in `evals/`.
+Each case has a group tag and a role tag. The group tag names the group of cases it belongs to.
+The role tag says whose work the agent checks: `write` for its own, `review` for someone else's. A case's name starts with both, in
+that order, such as `terms-review-citations`. Some cases have a third tag, below.
 
 The "Without the skill" column says how the case did in its last run without the skill. A case
-that passes without the skill doesn't depend on it. See "With or without the skill" below.
+that passes without the skill doesn't depend on it. A case whose column says 3 of 3 also has the
+`passes-without-skill` tag. See "With or without the skill" below.
 
 ### `review-roles`
 
@@ -137,9 +126,11 @@ claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonn
 - `--judge-model sonnet` sets the judge. It's Haiku by default. Anthropic's guide for writing these
   evals recommends a Sonnet-class judge.
 - `--ablation none` skips the runs without the skill. See below for when to leave it off.
-- Each case runs 3 times by default. `--runs <n>` changes that.
+- Each case runs as many times as its `runs` says, or 3 times if it has none. `--runs <n>` runs
+  every case n times, whatever its `runs` says.
 - `--tag <tag>` runs the cases with that tag, such as `--tag review-roles`. Given more than one
-  tag, it runs the cases that have any of them, not all of them.
+  tag, it runs the cases that have any of them, not all of them. A group's tag also picks up the
+  group's `passes-without-skill` cases.
 - `--case <name>` runs one case, and takes a glob, such as `--case 'terms-review-*'` for the
   `terms` group's reviewer cases. With `--tag`, a case has to match both. Give `--case` only once.
   Given twice, it runs only the last one.
@@ -147,34 +138,51 @@ claude plugin eval . --scaffold --allow-tools Write,Edit,Bash --judge-model sonn
 - `-j <n>` runs up to n agent runs at once, from 1 to 8. It's 1 by default, which is slow, so use
   8. It can only be set on the command line.
 - `--keep-temp` keeps each run's folder, so you can see what the agent did.
-- `--eval-dir evals-no-skill` runs the cases in `evals-no-skill/` in place of `evals/`. Their
-  results go in `evals-no-skill/results/`.
 
 These are real, billed model runs.
 
 ### With or without the skill
 
-Run with the skill only, using `--ablation none`. Without that flag, each case also runs 3 times
-without the skill, which doubles the cost.
+Run with the skill only, using `--ablation none`. Without that flag, each case also runs without
+the skill, which doubles the cost.
 
-Leave the flag off only when a case is new or has changed a lot. The runs without the skill show
-whether the case depends on the skill at all. An agent can't guess this project's standards, such
-as its IDs, its prose and the two lists a reviewer reports, without the skill. So for most cases,
-runs without it only confirm that, and running them every time adds nothing.
+Leave the flag off only when a case is new or has changed a lot, or when re-baselining (see "How
+many runs"). The runs without the skill show whether the case depends on the skill at all. An agent
+can't guess this project's standards, such as its IDs, its prose and the two lists a reviewer
+reports, without the skill. So for most cases, runs without it only confirm that, and running them
+every time adds nothing.
 
-A case that passes 3 of 3 without the skill moves to `evals-no-skill/`. It doesn't show that the
-skill helps, so it isn't run while the skill changes. It stays because it records a behavior worth
-checking, and some of these cases also check that the skill doesn't make the agent worse, such as
-fixing things that aren't broken. Run them:
+A case that passes 3 of 3 without the skill gets the `passes-without-skill` tag. It doesn't show
+that the skill helps, but it still matters. It catches a model or effort change that breaks
+something the agent used to do on its own. Some of these cases also catch the skill making the
+agent worse, such as fixing things that aren't broken. `--tag passes-without-skill` runs just
+these cases.
 
-- **When the agent's model or effort changes,** such as moving the writer from Opus to Sonnet. First
-  run every case in both folders without `--ablation none`, and move each case to the folder its
-  result says. Then decide whether a reviewer case also needs a writer case on the new model.
-- **In a full run after a batch of skill changes,** with the skill only.
+### How many runs
+
+A full run is costly when every case runs 3 times, so each case sets its own run count with `runs`
+in `prompt.md`. Anthropic's post
+[Demystifying evals for AI agents](https://www.anthropic.com/research/demystifying-evals-for-ai-agents)
+splits evals into capability evals, which test what the agent can't do well yet, and regression
+evals, which check it still does what it used to. A capability eval that passes reliably moves into
+the regression suite. Here, that works like this:
+
+- **After a full run,** a case that passed 3 of 3 gets `runs: 1`. The rest stay at 3, with no
+  `runs` line.
+- **When a 1-run case fails,** rerun it 3 times right away, with `--case <name> --runs 3`. If it
+  passes 3 of 3, it stays at 1 run. If not, remove its `runs` line, so it goes back to 3 runs. This
+  keeps one bad run from deciding anything, without needing a history of results.
+- **To re-baseline,** such as when the agent's model or effort changes, run every case without
+  `--ablation none` and with `--runs 3`. Then update each case's `passes-without-skill` tag, its
+  "Without the skill" column and its `runs`. On a model change, also decide whether a reviewer case
+  needs a writer case on the new model.
 
 ### Which cases to run
 
-While the skill changes, run only the failing cases in `evals/`. A case passes at 3 runs out of 3.
+While the skill changes, run only the failing cases. A case passes at 3 runs out of 3.
+
+A full run after a batch of skill changes runs every case, each at its own run count: the command
+above, with no `--tag` or `--case`.
 
 Before a 3-run pass, do one run of each case. It costs a third as much, and it catches a broken
 setup before the bigger run. A case gets up to 3 single runs, with fixes to the skill, the case or
