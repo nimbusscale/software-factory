@@ -124,15 +124,20 @@ whether it's a real problem. It checks:
   still dropped when it's left out.
 - **Nothing was added that the source didn't settle.** For each rule the change adds or changes,
   find what settles it: the task, the source the change was written from, or the docs already
-  there. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
+  there. When it came from the source, put the requirement next to the source sentence it came
+  from. Each word the requirement uses in place of one of the source's, and each condition or
+  number it adds, needs something that settles it. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
   source never states, or a meaning for a word the source never defines. So is a Why that none of
   them gives. A decision with no Why is fine when none of them gives a reason, as "No reason in the
   source?" in the standards' `specs.md` says, as long as it's a decision at all: see the check that
   every new item is in the right home. The author's account of
-  the change settles nothing, even when it lists the point as open. The suggested rewrite cuts
-  what wasn't settled and raises it as a question, as "What goes in your report" in SKILL.md
-  says. If you weren't given the task or the source, skip this check, and say in your report that
-  you skipped it and why.
+  the change settles nothing, even when it lists the point as open. "Not settled by the source?"
+  in the standards' `project-docs.md` says why a part nobody settled goes in no doc, and that
+  includes a vague word written in place of one the source never defines. List it as a problem in
+  this change. Its suggested rewrite cuts the part that wasn't settled, and the problem also gives
+  the question to ask, as "What goes in your report" in SKILL.md says. A question alone isn't
+  enough, since the guess would stay in the spec. If you weren't given the task or the source,
+  skip this check, and say in your report that you skipped it and why.
 - **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
   spreads further belongs in a separate change.
 - **No history got in.** The script catches fixed patterns. Look for what it can't, such as "the
