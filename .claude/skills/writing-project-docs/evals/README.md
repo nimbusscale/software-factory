@@ -14,7 +14,11 @@ check what the agent produced.
   description is for people. The runner never shows it to the judge.
 - `place-files.sh`: builds the repo the agent works in, as a git repo, from `files/`. `base/` is
   what's on main. `change/` is copied over it on a branch, and is committed for a reviewer or left
-  uncommitted for an agent checking its own change.
+  uncommitted for an agent checking its own change. It also copies the doc standards into the test
+  repo's `docs/standards/`, in its first commit. They come from `docs/standards/` in this repo's
+  folder as it is when the case runs, uncommitted changes included, whatever branch is checked
+  out. So a case tests the standards you're working on. It stops with an error if it can't find
+  them.
 - `files/`: the input files.
 - `graders/`: one check per file. Each is a statement about the result that's true or false.
   - `type: llm` means a judge model decides, from the file or message named in `focus`. Each one is
@@ -31,7 +35,10 @@ The role tag says whose work the agent checks: `write` for its own, `review` for
 that order, such as `terms-review-citations`. Some cases have a third tag, below.
 
 The "Without the skill" column says how the case did in its last run without the skill. A case
-that passes without the skill doesn't depend on it. A case whose column says 3 of 3 also has the
+that passes without the skill doesn't depend on it. Every one of those runs was made before the
+standards moved out of the skill and into each case's repo. An agent without the skill can now
+find the standards in the repo, so some cases may do better without the skill than the column
+says. The next re-baseline updates the column. A case whose column says 3 of 3 also has the
 `passes-without-skill` tag. See "With or without the skill" below.
 
 ### `review-roles`

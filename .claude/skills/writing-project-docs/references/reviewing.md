@@ -57,15 +57,16 @@ Copy this checklist into your task list and tick off each check:
 - [ ] Each scenario earns its place
 - [ ] Each requirement's Why passes both tests
 - [ ] Every new item is in the right home
-- [ ] Everything else in changing-a-doc.md holds
+- [ ] Everything else in "Adding or changing an item" holds
 ```
 
 ## Run the script
 
 From the repo root, run this skill's `scripts/check-docs.sh` with the docs folder and the branch
 the change will merge into, such as `bash <this skill's folder>/scripts/check-docs.sh docs main`.
-It checks the specs and blueprints, and the spec IDs cited anywhere in the repo. It prints one line
-per thing it flags. A `RULE` line is a broken rule, so it's always a problem. A
+It checks the specs and blueprints, and the spec IDs cited anywhere in the repo. It leaves out the
+doc standards in `<docs folder>/standards`, since their example IDs aren't the project's. If the
+standards are somewhere else, ignore each line about them. It prints one line per thing it flags. A `RULE` line is a broken rule, so it's always a problem. A
 `SIGNAL` line is only something to look at. For each `SIGNAL` line, look at the line and decide
 whether it's a real problem. It checks:
 
@@ -83,7 +84,7 @@ whether it's a real problem. It checks:
   every requirement nothing cites instead, for a look at the docs and the code as a whole. A
   citation from a Terms section doesn't count for either, since a term only explains a word. It
   doesn't look outside the repo. "A changed item keeps its ID only if its meaning stayed the same"
-  in `references/changing-a-doc.md` covers that. Also as a signal, when the change adds an item
+  in "Adding or changing an item" in SKILL.md covers that. Also as a signal, when the change adds an item
   to a section or edits one in it, it lists each citation of that section written before the
   change. The citation now covers that item. Read the citing item and decide whether its wording
   should cover the item. If it shouldn't, the citing item needs a change.
@@ -102,10 +103,10 @@ whether it's a real problem. It checks:
 ## Then check by reading
 
 - **Each item follows the rules for its kind of doc.** Each kind of doc has a file of its own
-  rules, listed in "What to read for your task" in SKILL.md, such as
-  `references/specs.md`. Read the file for each kind of doc the change touches. An item
-  written the way that file asks isn't a problem, even when a rule in SKILL.md seems to say a part
-  of it could go.
+  rules in the standards, listed in "What to read for your task" in SKILL.md, such as `specs.md`.
+  Read the file for each kind of doc the change touches. An item written the way that file asks
+  isn't a problem, even when a rule in the standards' `project-docs.md` seems to say a part of it
+  could go.
 - **Nothing was dropped.** Compare each rewritten paragraph, old against new. `git diff
   --word-diff` on the doc shows them side by side. When the source is something else, such as
   another doc, an issue or notes from a conversation, go through it the same way. Every rule,
@@ -119,17 +120,17 @@ whether it's a real problem. It checks:
   place. A fact whose home is outside the specs and blueprints isn't dropped when the change leaves
   it out of them, such as who the project is for, or how good the first version needs to be. Its
   home is somewhere else, such as a README. Decide where its home is from "Which doc a fact goes
-  in" in SKILL.md, not from the author's account. A fact whose home is a spec or a blueprint is
+  in" in the standards' `project-docs.md`, not from the author's account. A fact whose home is a spec or a blueprint is
   still dropped when it's left out.
 - **Nothing was added that the source didn't settle.** For each rule the change adds or changes,
   find what settles it: the task, the source the change was written from, or the docs already
   there. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
   source never states, or a meaning for a word the source never defines. So is a Why that none of
   them gives. A decision with no Why is fine when none of them gives a reason, as "No reason in the
-  source?" in `references/specs.md` says, as long as it's a decision at all: see the check that
+  source?" in the standards' `specs.md` says, as long as it's a decision at all: see the check that
   every new item is in the right home. The author's account of
   the change settles nothing, even when it lists the point as open. The suggested rewrite cuts
-  what wasn't settled and raises it as a question, as "Not settled by the source?" in SKILL.md
+  what wasn't settled and raises it as a question, as "What goes in your report" in SKILL.md
   says. If you weren't given the task or the source, skip this check, and say in your report that
   you skipped it and why.
 - **The rewrite stayed in scope.** It touches only the paragraphs the task needed. A rewrite that
@@ -149,7 +150,7 @@ whether it's a real problem. It checks:
   something about the same things the term does. For example, "the player may turn a tile" when
   Turn is a player's go.
 - **No term states a rule.** For each part of each definition, apply the test in "The Terms
-  section" in `references/specs.md`: if a requirement or a decision changed, would this part have
+  section" in the standards' `specs.md`: if a requirement or a decision changed, would this part have
   to change too? A part that would is a problem, such as "the one" in a term when a requirement
   allows only one. So is a part the app must do or check that no requirement holds. A term for a
   part an architecture decision created may name the part's main job. A part of it that copies
@@ -162,7 +163,7 @@ whether it's a real problem. It checks:
   citation on a term is a problem, including one of an architecture decision or of the section
   that holds them.
 - **One item for each fact.** For each pair of items that limit the same action or share a trigger,
-  apply the test in "One item for each fact" in `references/specs.md`. A pair that's one fact is a problem.
+  apply the test in "One item for each fact" in the standards' `specs.md`. A pair that's one fact is a problem.
   Apply it as well to the triggers of each requirement with more than one. Triggers that are two
   facts in one requirement are a problem. So is a list of triggers that repeats the members of a
   set another requirement defines.
@@ -170,11 +171,11 @@ whether it's a real problem. It checks:
   it alone.
 - **Each scenario earns its place:** its result comes from several requirements together, it can
   happen under the other requirements, and it holds no rule that isn't in a requirement.
-- **Each requirement's Why passes both tests** in "Lines under an item" in `references/specs.md`. A Why that
+- **Each requirement's Why passes both tests** in "Lines under an item" in the standards' `specs.md`. A Why that
   fails either test is a problem.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in
-  SKILL.md. Look twice at each decision with no Why. Ask whether anyone had another option. If the
+  the standards' `project-docs.md`. Look twice at each decision with no Why. Ask whether anyone had another option. If the
   only reason anyone could give is that the rules or the domain work that way, it isn't a
   decision, and it's a problem in the spec. Its home is the code, or a blueprint until the code
   exists, as "Is there no other option?" in question 8 says. Don't suggest a Why for it.
-- **Everything else in `references/changing-a-doc.md` holds.**
+- **Everything else in "Adding or changing an item" in SKILL.md holds.**

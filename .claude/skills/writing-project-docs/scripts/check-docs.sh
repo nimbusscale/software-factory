@@ -7,6 +7,8 @@
 # or T-SEC headings. Blueprints are the .md files in <docs folder>/blueprints. Source files are the
 # other text files in the repo that git doesn't ignore, including other docs such as CLAUDE.md and
 # the skills in .claude/skills, except this skill. Spec IDs cited in source files are checked too.
+# The doc standards in <docs folder>/standards are neither. They're full of example IDs that no
+# project defines, such as FR-41.
 #
 # The history checks look only at lines added since the base branch, uncommitted ones included.
 # A line someone kept on purpose is then never flagged again. The other checks look at every doc.
@@ -37,6 +39,7 @@ base=$(git merge-base "$2" HEAD 2>/dev/null) || usage
 docs_dir=${1%/}
 blueprints_dir=$(realpath -m "$docs_dir/blueprints")
 research_dir=$(realpath -m "$docs_dir/research")
+standards_rel=$(realpath -m --relative-to=. "$docs_dir/standards")
 self_dir=$(realpath "$(dirname "$0")/..")
 self_rel=$(realpath --relative-to=. "$self_dir")
 ids='(FR|TR|AD|TD|CS)-[0-9]+'
@@ -51,7 +54,8 @@ has_line() { [[ $'\n'$1$'\n' == *$'\n'"$2"$'\n'* ]]; }
 
 is_blueprint() { [[ $(realpath -m "$1") == "$blueprints_dir"/* ]]; }
 
-md_files=$(find "$docs_dir" -name '*.md' -type f | sed 's|^\./||' | sort)
+md_files=$(find "$docs_dir" -path "$docs_dir/standards" -prune -o -name '*.md' -type f -print |
+  sed 's|^\./||' | sort)
 fspec=$(lines "$md_files" | xargs -d '\n' -r grep -lE '^#+ F-SEC-[0-9]+')
 tspec=$(lines "$md_files" | xargs -d '\n' -r grep -lE '^#+ T-SEC-[0-9]+')
 specs=$(lines "$fspec"; lines "$tspec")
@@ -59,8 +63,8 @@ docs=$({ lines "$specs"; while read -r f; do is_blueprint "$f" && echo "$f"; don
 
 # The same rule picks the source files in the base commit, further down.
 is_src() {
-  awk -v self="$self_rel/" '/\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$/ &&
-    (!/^\.claude\// || (/^\.claude\/skills\/.*\.md$/ && index($0, self) != 1))'
+  awk -v self="$self_rel/" -v std="$standards_rel/" '/\.(ts|tsx|js|mjs|cjs|py|sh|md|txt)$/ &&
+    index($0, std) != 1 && (!/^\.claude\// || (/^\.claude\/skills\/.*\.md$/ && index($0, self) != 1))'
 }
 src=$(git ls-files --cached --others --exclude-standard | is_src |
   grep -vxFf <(lines "$docs") | while read -r f; do [[ -f $f ]] && echo "$f"; done | sort)

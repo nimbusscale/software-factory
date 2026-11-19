@@ -639,17 +639,26 @@ and tick off.**
 - Decided in: #19, in review of the first run. Built in #46.
 - Likely home: `TD`.
 
-**SKILL.md holds what every task needs. A rule used by one kind of doc goes in that doc's reference
-file. The two specs share one reference file, `references/specs.md`, which also holds the rules for
-writing their items: GEARS, the lines under an item, one item for each fact, the Terms section and
-IDs. Every reference file is linked directly from SKILL.md, with no file linking on to another.**
+**The doc standards' `project-docs.md` holds what every doc needs. A rule used by one kind of doc
+goes in that doc's file of standards. The two specs share one file, `specs.md`, which also holds the
+rules for writing their items: GEARS, the lines under an item, one item for each fact, the Terms
+section and IDs. SKILL.md names every file of standards and every reference file directly, so no
+file is reached only through another. SKILL.md holds how to add or change an item. Checking a
+change is in its own reference file, `references/reviewing.md`.**
 - Why: Anthropic and agentskills.io recommend a SKILL.md under 500 lines and 5,000 tokens. Files it
   links to cost nothing until read. An agent may only partly read a file it reaches through another
   file. The item rules apply to both specs, so they first stayed in SKILL.md as rules shared by
   more than one kind of doc. That made them over half of SKILL.md, loaded for tasks that write no
   spec item, such as a blueprint or a skill, and pushed it past 5,000 tokens. The two specs are
   usually written and checked together, so a file for each saved little: a spec writer read both.
-- Decided in: #18. The shared specs file in #19, in discussion with the owner.
+- Why the check is its own file: when Claude Code compacts a conversation, it re-attaches only
+  the first 5,000 tokens of each invoked skill's SKILL.md. Reference files the agent read aren't
+  re-attached. With the check folded in, SKILL.md would be about 5,800 tokens, so the end of the
+  checks would be cut. Joe also judged that folding it in wouldn't fix a writer's cursory
+  self-review, and a reviewer checks the change anyway. How to add or change an item is in
+  SKILL.md, since every writer and every reviewer reads it, so a separate file saved nothing.
+- Decided in: #18. The shared specs file in #19, in discussion with the owner. The check in its
+  own file, and the change procedure in SKILL.md, in #66.
 - Likely home: `CS`.
 
 **A skill gives the standard a doc must meet and trusts the model on method. The docs skill has no
@@ -878,6 +887,58 @@ a skill.**
 - Decided in: #1, reviewing Joe's interactive Dust Law session. Built in #63 and #64.
 - Likely home: `TD`.
 
+**The doc standards are kept apart from the docs skill. The standards say what the docs are and
+how they're written. The skill says how to do a task with them: change a doc, check a change, and
+what goes in the report. The skill points to the standards and doesn't repeat them. A rule about
+IDs is split the same way: that an item's ID always means the same thing is a standard, and how to
+pick a new ID, or tell whether a change keeps an item's meaning, is in the skill.**
+- Why: other skills need the standards too, such as one that writes GitHub issues or code
+  comments. While the standards live in the docs skill, other skills have to point into it or keep
+  their own copy, and changing a standard means releasing a new version of the skill. Joe: "if we
+  update the specification, then we got to update the skill. And then do we then now have to worry
+  about any kind of references between skills?" Splitting them "drives a good, clear delineation
+  between what specs and standards are versus how those specs and standards are used for a
+  specific task, where the later portion is handled by the skill." It also lets an agent that only
+  needs to know what a `TR` is read the standards without loading the skill. On IDs: a reader,
+  such as whoever writes a code comment or an issue that cites `FR-12`, relies on the ID keeping
+  its meaning. Only an agent changing a spec needs to know how. Claude proposed this split, and
+  Joe agreed.
+- Decided in: #66, while discussing #60.
+- Likely home: `AD`.
+
+**The doc standards' source is files in the factory repo, in `docs/standards/`, versioned and
+reviewed like everything else. Not a GitHub wiki.**
+- Why: agents would read a wiki through WebFetch, which treats a page as untrusted data, not
+  instructions, and returns a smaller model's summary, not the exact text. A wiki edit also isn't
+  reviewed or pinned to a version, so it would change every agent's behavior at once with no eval
+  run. Claude suggested this, and Joe agreed.
+- Decided in: #66.
+- Likely home: `AD`.
+
+**Each project that uses the factory has its own copy of the doc standards, the same way it has
+the factory's skills. Its CLAUDE.md doc map says where the copy is, and the docs skill's default
+path is `docs/standards/`. How the copy gets there, by push or pull, isn't decided.**
+- Why unknown. On how the copy gets there, Joe: that's "less interesting to me to focus on than
+  the workings of the factory itself." For the repo or two using the factory now, a script or an
+  agent can do the copy.
+- Decided in: #66.
+- Likely home: `AD`.
+
+**The templates for each kind of doc are part of the doc standards, in `templates/`, not in the
+docs skill.**
+- Why: a template is a second copy of standards, such as a spec's opening line, the technical
+  spec's fixed sections and the form a limit is written in. Kept next to the standards, the two
+  change and are reviewed together. Another skill that creates a doc can also use them. Claude
+  proposed this, and Joe agreed.
+- Decided in: #66.
+- Likely home: `TD`.
+
+**The docs skill's check script leaves out `<docs folder>/standards`.**
+- Why: the standards are full of example IDs that no project defines, such as `FR-41`. The script
+  would flag each one as a broken citation. Claude proposed this, and Joe agreed.
+- Decided in: #66.
+- Likely home: `TD`.
+
 ## Evaluations
 
 **A skill's evaluations live in an `evals/` folder inside the skill, one folder per case, and run
@@ -1041,6 +1102,12 @@ grader that passed in its old case fails in the merged case, and the merge is th
   anything already there. Then run the merged case 3 times and compare each grader with the old
   case.
 - Decided in: #58.
+- Likely home: `TD`.
+
+**Each docs eval case's setup copies the doc standards from their source in the factory repo, not
+from a copy kept in each case.**
+- Why: so the cases test the current standards.
+- Decided in: #66.
 - Likely home: `TD`.
 
 ## Issue checker

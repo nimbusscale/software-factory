@@ -1,12 +1,12 @@
-# Blueprint
+# Blueprints
 
-What a blueprint holds, and how it changes. The questions in "Which doc a fact goes in", in
-SKILL.md, decide which facts go in one.
+The standards for a blueprint: what it holds, and how it changes. The questions in "Which doc a
+fact goes in", in `project-docs.md` in this folder, decide which facts go in one.
 
 Read by the agents building the code it describes. It holds whatever is useful to build from
 before the code exists, and nothing is ruled out. It can link to other docs, but other docs don't
 link to it, since it's archived once the code is built. It's edited freely until then. It never
-names this skill, since the skill changes and is used in other projects.
+names a skill, since skills change and are used in other projects.
 
 ## Status
 
@@ -31,7 +31,7 @@ done". Progress is about the work in progress, so it goes in the commit message,
 The task that builds the code also retires the blueprint. It's retired when all of these hold:
 
 - Each item that new code elsewhere could break is in the technical spec, sorted by the questions
-  in "Which doc a fact goes in" in SKILL.md.
+  in "Which doc a fact goes in" in `project-docs.md`.
 - Each rule about one object is a code comment or a test.
 - Each rule a check can enforce is a check, such as a lint rule for imports.
 - Its data and settings, such as a list of items and their weights, are in the files the code

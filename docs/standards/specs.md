@@ -1,9 +1,9 @@
 # Specs
 
-How to write and change the functional spec and the technical spec: how to write each kind of
-item, the Terms section and IDs, then what each spec holds and keeps out. Read all of it when
-writing in either spec, creating one, or checking a change to one. The questions in "Which doc a
-fact goes in", in SKILL.md, decide which spec a fact goes in, or whether it goes in a spec at all.
+The standards for the functional spec and the technical spec: how to write each kind of item, the
+Terms section and IDs, then what each spec holds and keeps out. The questions in "Which doc a fact
+goes in", in `project-docs.md` in this folder, decide which spec a fact goes in, or whether it goes
+in a spec at all.
 
 ## Spec items
 
@@ -186,8 +186,8 @@ functional spec, since nobody could then tell what it protects without reading a
 F-SEC-4 also holds FR-22, which emails the customer when an order ships. It isn't a rule about
 whether an order is allowed, so TR-6 doesn't cover it. A citation of a section means whatever the
 section holds now, so a requirement added to F-SEC-5 later is covered if TR-6's wording fits it.
-The check script flags each older citation of a section that a change adds to or edits, so whoever
-makes the change can check that the citation still fits.
+So whoever adds a requirement to a section, or edits one in it, checks that each citation of the
+section still fits.
 
 ### The Terms section
 
@@ -250,14 +250,9 @@ whole system again anyway. "Worker. The part of the app that runs tasks (AD-2)" 
 - **Section IDs** have a different shape, so they can't be mistaken for item IDs: `F-SEC-3` in the
   functional spec and `T-SEC-3` in the technical spec. They go in the heading:
   `## T-SEC-3. Code standards`.
-- **A new ID** is one more than the highest number with that prefix in the doc:
-
-  ```bash
-  grep -oE '\bFR-[0-9]+' docs/functional-spec.md | grep -oE '[0-9]+$' | sort -n | tail -1
-  ```
-
-  An ID that was retired and deleted can come back this way. That's accepted, since a retired ID
-  shouldn't be cited anywhere. Use only the doc's current text, not its git history.
+- **An item's ID always means the same thing.** A change that keeps an item's meaning keeps its
+  ID. When the meaning changes, the item gets a new ID, and the old one is retired. So a citation
+  of an item that still exists still points to the rule it was written against.
 
 ## Functional spec
 
@@ -284,7 +279,7 @@ changed along with the code or prompt.
      advertising" names only what's ruled out. It tells a builder nothing to build, so it stays
      out of the spec. "No matchmaking. Players join a game they've been invited to" passes, since
      its second sentence says what the app does. If you'd have to choose that part yourself, the
-     source hasn't settled it. Follow "Not settled by the source?" in SKILL.md.
+     source hasn't settled it. See "Not settled by the source?" in `project-docs.md`.
   2. **Where it stops lets the builder design something simpler.** "Only one person signs in"
      means no accounts or roles to build. "Only the current version of each item" means no
      version history to store. "Email only for jobs the app runs itself" means no address books
@@ -344,8 +339,8 @@ tasks read different parts of it.
   prompts.
 - **Keeps out commands and pointers,** such as the command that says work is done, or "settings
   are in `settings.json`". A choice behind a pointer can still be a decision, such as keeping
-  settings in a config file versioned with the code. Name the commands and pointers in your report,
-  as question 2 of "Which doc a fact goes in" in SKILL.md says.
+  settings in a config file versioned with the code. Commands and pointers have their home
+  somewhere else, as question 2 of "Which doc a fact goes in" in `project-docs.md` says.
 
 ### Writing a decision
 
@@ -354,12 +349,10 @@ this option was chosen.
 
 **No reason in the source?** First check that it's a decision at all. A decision with no reason is
 often a fact with no other option, which isn't a decision: see "Is there no other option?" in
-question 8 of "Which doc a fact goes in", in SKILL.md. If it's such a fact, it goes where that
-question says, and you don't ask for a reason. If it's a decision, write it with no Why. Never
-write a reason the source doesn't give, however likely it seems. Ask for the reason in your
-report: quote the decision, and suggest a reason if you have one. If you can't tell whether
-anyone had another option, ask that too: was another way weighed, and if so, why this one? The
-check script flags the missing Why until the reason is known.
+question 8 of "Which doc a fact goes in", in `project-docs.md`. If it's such a fact, it goes where
+that question says, and it has no reason to find. If it's a decision, it's written with no Why
+until someone gives the reason. Never write a reason the source doesn't give, however likely it
+seems. A decision with no Why is one whose reason is still unknown.
 
 > **AD-1.** TypeScript for the whole app.
 >
@@ -371,8 +364,7 @@ check script flags the missing Why until the reason is known.
   the language, the frameworks and runtimes the code is built on, and the tools that build and
   test it. Use `TD` otherwise, such as which library checks outside data.
 - A line that makes two choices is two decisions. "TypeScript, with React for the UI" is two.
-- A `TD` cites the requirement it meets, an `FR` or a `TR`, in its own line or its Why. The check
-  script flags a `TD` that cites none. A `TD` that meets no requirement is a sign of a problem:
+- A `TD` cites the requirement it meets, an `FR` or a `TR`, in its own line or its Why. A `TD` that meets no requirement is a sign of a problem:
   it's an `AD` or a code standard, or a requirement is missing. An `AD` can cite a requirement,
   but it doesn't have to.
 
