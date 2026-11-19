@@ -63,23 +63,28 @@ Ask these questions in order, and stop at the first yes.
      call each other" stays in the spec even when lint enforces it, since breaking it can mean
      redesigning a change, not a quick fix.
 
-**Is its home a code comment?** These questions decide when a fact goes in a comment instead of a
-spec. The project's guidance for code comments says how to write the comment. It may also find a
-better home in the code, such as a clearer name or a type. Either way, the fact stays out of the
-specs.
+### Is its home a code comment?
 
-**Is the code not written yet?** When a fact's home is in code that doesn't exist yet, such as a
-code comment, a check, a setting or a data file the code reads, the fact goes in a blueprint until
-the code is written. The blueprint's retirement steps then move it to its home. Requirements, and
-decisions the technical spec holds, go in the specs even before any code exists.
+These questions decide when a fact goes in a comment instead of a spec. The project's guidance for
+code comments says how to write the comment. It may also find a better home in the code, such as a
+clearer name or a type. Either way, the fact stays out of the specs.
 
-**Not settled by the source?** When part of a rule would have to be chosen by whoever writes it,
-because the source leaves it open, that part goes in no doc until someone settles it. The source's
-vague wording doesn't go in either. The parts the source does settle are still written. For
-example, notes say the shop emails a customer when their order ships, "and again if it's running
-late", and never say when an order counts as late. The rule for the shipping email is written.
-When an order is late is a question for whoever owns the notes. A guess written as a rule looks
-settled to every later reader, and nothing in the doc can mark it as a guess.
+### Is the code not written yet?
+
+When a fact's home is in code that doesn't exist yet, such as a code comment, a check, a setting or
+a data file the code reads, the fact goes in a blueprint until the code is written. The blueprint's
+retirement steps then move it to its home. Requirements, and decisions the technical spec holds, go
+in the specs even before any code exists.
+
+### Not settled by the source?
+
+When part of a rule would have to be chosen by whoever writes it, because the source leaves it open,
+that part goes in no doc until someone settles it. The source's vague wording doesn't go in either.
+The parts the source does settle are still written. For example, notes say the shop emails a
+customer when their order ships, "and again if it's running late", and never say when an order
+counts as late. The rule for the shipping email is written. When an order is late is a question for
+whoever owns the notes. A guess written as a rule looks settled to every later reader, and nothing
+in the doc can mark it as a guess.
 
 Words such as "may" and "could" often leave a part open. When they say what the system might do,
 or what the people building it might choose, they name options, not a decision. Choosing among them

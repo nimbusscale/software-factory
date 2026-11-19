@@ -1,5 +1,5 @@
 scratch/
-.claude/skills/*/evals/results/
+evals/*/results/
 
 
 # Byte-compiled / optimized / DLL files

@@ -1,0 +1,3 @@
+# Paths tools/check-docs.sh leaves out. Written like a .gitignore.
+# The eval cases build test projects, and their files cite IDs that aren't this repo's.
+evals/

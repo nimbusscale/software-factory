@@ -7,8 +7,8 @@ retired:
 
 A blueprint, written to build from before the factory's functional and technical specs exist. It
 collects decisions made while building the factory, each with its reason, so the reasons aren't
-lost before the specs are written. When the specs are written, each entry is sorted into them with
-the `writing-project-docs` skill, and this file is retired.
+lost before the specs are written. When the specs are written, each entry is sorted into them
+following the doc standards in `docs/standards/`, and this file is retired.
 
 Each entry gives the rule, why, where it was decided, and a guess at its home: `FR`, `TR`, a
 decision (`AD`, `TD`) or a code standard (`CS`). The guess is only a starting point. "Why unknown" means no reason was given.
@@ -45,14 +45,13 @@ status is about the doc, never about progress through the work.**
 sets `status: retired` and fills in the date, in place of a line saying the doc isn't kept up to
 date. The check script flags a blueprint whose front matter is missing or doesn't fit.**
 - Why: Claude's choice in #62. An empty line shows the field exists to a writer who never reads
-  the skill. The check is cheap, since the front matter has only two fields.
+  the standards. The check is cheap, since the front matter has only two fields.
 - Decided in: #62.
 - Likely home: `TD` for the format; a check for the rest.
 
-**A blueprint never names the writing-project-docs skill.**
-- Why: the skill is still changing, and it will be used in other projects. The template's line
-  "see `references/blueprint.md` in the writing-project-docs skill" ended up in both of Dust
-  Law's blueprints.
+**A blueprint never names a skill.**
+- Why: a skill changes, and it's used in other projects. The template's line pointing to a file in
+  the docs skill ended up in both of Dust Law's blueprints.
 - Decided in: #62, from Joe's interactive Dust Law session (nimbusscale/dust-law#17).
 - Likely home: `FR`.
 
@@ -73,8 +72,8 @@ description or its final report, naming the item ID and the code.**
 
 **Every doc opens with one line saying what kind of doc it is. In the specs, the line also gives
 the rules a writer needs, such as GEARS and no links out.**
-- Why: an agent or a person may change a doc without the skill loaded. The line is how they learn
-  what the doc is and how it's written.
+- Why: an agent or a person may change a doc without reading the standards. The line is how they
+  learn what the doc is and how it's written.
 - Decided in: #14.
 - Likely home: `FR`.
 
@@ -129,11 +128,11 @@ as a limit decides only whether it goes in the spec, not how it's written.**
 - Decided in: #39, after a trial on a branch.
 - Likely home: `FR`.
 
-**A skill doesn't tell the agent to take outside actions, such as opening or commenting on an issue
-or a PR. It says what goes in the doc.**
-- Why: the same skill runs for a writer, a reviewer and an implementer, and in interactive sessions
-  where the owner talks through how to handle things. The factory may not let a given agent take
-  those actions. The skill still mentions PRs in places. Joe will deal with those separately.
+**The doc standards don't tell the agent to take outside actions, such as opening or commenting on
+an issue or a PR. They say what goes in the doc.**
+- Why: the same standards are used by a writer, a reviewer and an implementer, and in interactive
+  sessions where the owner talks through how to handle things. The factory may not let a given
+  agent take those actions.
 - Decided in: #39.
 - Likely home: `TD`.
 
@@ -237,9 +236,9 @@ its own, one someone could really ask for.**
 - Decided in: #40.
 - Likely home: `TD`.
 
-**A skill's examples come from a different domain than its evaluations.**
-- Why: with an organizer example in the skill, every writer copied its wording into the spec, so a
-  pass showed only that it could copy. With a borrower example, the writers' wording varied and
+**The doc standards' examples come from a different domain than their evaluations.**
+- Why: with an organizer example in the docs skill, every writer copied its wording into the spec,
+  so a pass showed only that it could copy. With a borrower example, the writers' wording varied and
   they still passed.
 - Decided in: #27.
 - Likely home: `TD`.
@@ -345,7 +344,7 @@ If each would change for a different reason, both stay, even when they limit the
 - Decided in: #17.
 - Likely home: `TD`.
 
-**The skill doesn't say technical requirements are rare.**
+**The doc standards don't say technical requirements are rare.**
 - Why: the claim rested on one rewritten passage from one project. It could push an agent to sort
   a real technical requirement, such as a backup recovery target, as something else.
 - Decided in: #18, while reviewing the split skill.
@@ -360,7 +359,7 @@ doesn't write the technical spec after the functional spec is done.**
   one after the other is the fallback. The Dust Law runs keep TILES.md as a source, since about half
   of it is rules a player sees.
 - Decided in: #19, in discussion with the owner.
-- Likely home: unclear. It may only be how the skill is tested.
+- Likely home: unclear. It may only be how the standards are tested.
 
 **A blueprint holds a fact whose home is in code that doesn't exist yet, such as a code comment, a
 check, a setting or a data file. Requirements and spec decisions go in the specs even before any
@@ -592,27 +591,79 @@ agent where to find them.**
 - Decided in: #19, in review of the first run. Built in #52. The home is decided in #53.
 - Likely home: `TD`.
 
-## Skills
+## Doc standards and skills
 
-**The docs skill covers only the functional spec, the technical spec and blueprints. Research
+**Docs work has no skill. The doc standards in `docs/standards/` hold all of it: what each doc is
+and how it's written, how to add or change an item, how to check a change, and what goes in a
+report. A project's CLAUDE.md says where the standards are, and to read their README before
+writing or reviewing a doc.**
+- Why: Joe: "my goal was to try to leverage the skill mechanics to provide progressive disclosure,
+  but I don't think we need the skills to do that anyways, as long as we provide reasonable ways
+  for the agent to find that data itself or point it to the data itself." Plain files give
+  progressive disclosure on their own, since an agent reads only the files its task needs. In early
+  eval runs without the skill, Opus found the standards in the case's repo and read the ones its
+  task needed, with no CLAUDE.md pointing to them. Joe sees a skill as more useful for handing
+  knowledge to sessions whose repo you don't control, such as end users': "I think the skill
+  becomes more important when you're trying to distribute that knowledge or details across other
+  agent sessions." The factory controls every repo it works in, and its CLAUDE.md.
+- Claude looked for other reasons to keep a skill and judged none strong enough. After compaction,
+  Claude Code re-attaches the start of each loaded SKILL.md but not files the agent read, but
+  SKILL.md had become mostly pointers to the standards. Only the roles given a skill can load it,
+  but an agent that reads a standard it doesn't need only wastes tokens. A skill's description
+  loads it in an interactive session, but a CLAUDE.md line does the same job and is always in
+  context, and no run had tested loading by description.
+- Joe raised one risk. A light mention, such as a requirement ID, might load a skill and its
+  procedure with it, while a pointer in CLAUDE.md leaves reading the standards to the model's
+  judgment. In the loop, each role's prompt is fixed and can be tested. In an interactive session
+  it isn't, so #68 checks that a doc change there gets a review by a subagent.
+- Every eval case passed without the skill, except for one miss in a case that passed its other 4
+  runs.
+- Decided in: #67, in an interactive session. It replaces #60, which was going to tune the skill's
+  description.
+- Likely home: `AD`.
+
+**The guide to which standards file a task needs is the standards' `README.md`. CLAUDE.md says
+only where the standards are, and to read the README before writing or reviewing a doc.**
+- Why: agents read a short README whole. road-trip-agent's design README was read whole in 141 of
+  146 transcripts. A table in CLAUDE.md would be copied into every project's CLAUDE.md, and each
+  copy would need fixing when the standards' files change. `project-docs.md` is about 2,000 words,
+  and agents read big docs in slices. Claude proposed this, and Joe agreed.
+- Decided in: #67.
+- Likely home: `TD`.
+
+**CLAUDE.md's doc map is the one place that says where each doc is, including the standards and the
+doc check script. The standards give no default paths and no search for a doc that isn't there. If
+a doc or a folder in the doc map doesn't exist yet, the agent creates it there, a doc from its
+template. If an agent can't find the standards, it stops and says so, a rule CLAUDE.md gives next
+to its pointer.**
+- Why: the defaults let the skill work in a project with no doc map. Without the skill, the doc map
+  is how an agent finds the standards at all. The CLAUDE.md template from #54 ships the doc map with
+  the usual paths, so a new project still starts with them. The rule for missing standards is in
+  CLAUDE.md, since an agent that can't find the standards can't read their README. The doc check
+  script is in the doc map too, since the standards give no path of their own. Claude proposed
+  naming the script there, and Joe agreed.
+- Decided in: #67.
+- Likely home: `TD`.
+
+**The doc standards cover only the functional spec, the technical spec and blueprints. Research
 docs, skills, CLAUDE.md and a README are other concerns.**
 - Why: Joe: the specs and blueprints "are effectively the code that we input into an agent to do
-  work". They're owned entirely by the agents that use the skill. CLAUDE.md is shared with other
+  work". They're owned entirely by the agents that use the standards. CLAUDE.md is shared with other
   concerns, and a README is mostly read by people. The skill has also grown large, and its
   procedure is getting heavy on steps.
 - Decided in: #19, in review of the first run. Built in #46, under #1.
 - Likely home: `TD`.
 
-**The docs skill's guidance on research docs and skills is dropped, not moved. Its guidance on
-CLAUDE.md waits in #54, including that CLAUDE.md holds a short table of where each kind of fact
-goes. The docs skill still reads CLAUDE.md's doc map to find each doc.**
+**The doc standards have no guidance on research docs or skills. Guidance on CLAUDE.md waits in
+#54, including that CLAUDE.md holds a short table of where each kind of fact goes. An agent finds
+each doc through CLAUDE.md's doc map.**
 - Why: dropping research docs and skills was Claude's proposal, since no other skill in the repo
   writes them. Joe hasn't given a reason of his own. Joe didn't want the CLAUDE.md guidance to get
   lost when it left the skill, so it went into an issue right away rather than being dropped.
 - Decided in: #46.
 - Likely home: `TD`.
 
-**The docs skill's check script checks only the specs and blueprints, and the spec IDs cited
+**The doc check script checks only the specs and blueprints, and the spec IDs cited
 anywhere in the repo. The checks it used to run on other docs, such as history in CLAUDE.md and
 links into research docs, wait in #55.**
 - Why: Joe wanted the script's scope to match the skill's. He didn't want the checks on other docs
@@ -620,15 +671,18 @@ links into research docs, wait in #55.**
 - Decided in: #46.
 - Likely home: `TD`.
 
-**The docs skill decides when a fact's home is a code comment instead of a spec. The project's
+**The doc standards decide when a fact's home is a code comment instead of a spec. The project's
 guidance for code comments, such as a code-comments skill, says how to write the comment.**
 - Why: Joe wants the docs skill linked to the code-comments skill. That skill is still a draft in
   `docs/research/docs-retro/code-comments/`, and will be made real the same way once the docs skill
   is in an acceptable place.
+- Not decided yet: whether the code-comments guidance becomes a skill or standards, now that the
+  docs guidance is standards (#67).
 - Decided in: #46.
 - Likely home: `TD`.
 
-**The docs skill's procedures say what must hold when the work is done, not how to get there. They
+**The doc standards' procedures, for changing an item and for checking a change, say what must hold
+when the work is done, not how to get there. They
 give an order only where it matters: search for a fact before writing it, and check the change
 last. Each procedure still has a checklist of those goals for the agent to copy into its task list
 and tick off.**
@@ -642,26 +696,17 @@ and tick off.**
 **The doc standards' `project-docs.md` holds what every doc needs. A rule used by one kind of doc
 goes in that doc's file of standards. The two specs share one file, `specs.md`, which also holds the
 rules for writing their items: GEARS, the lines under an item, one item for each fact, the Terms
-section and IDs. SKILL.md names every file of standards and every reference file directly, so no
-file is reached only through another. SKILL.md holds how to add or change an item. Checking a
-change is in its own reference file, `references/reviewing.md`.**
-- Why: Anthropic and agentskills.io recommend a SKILL.md under 500 lines and 5,000 tokens. Files it
-  links to cost nothing until read. An agent may only partly read a file it reaches through another
-  file. The item rules apply to both specs, so they first stayed in SKILL.md as rules shared by
-  more than one kind of doc. That made them over half of SKILL.md, loaded for tasks that write no
-  spec item, such as a blueprint or a skill, and pushed it past 5,000 tokens. The two specs are
+section and IDs. How to add or change an item, how to check a change, what goes in a report, and
+the worked examples each have a file of their own. The README names every file directly, so no
+file is reached only through another.**
+- Why: an agent may only partly read a file it reaches through another file. The two specs are
   usually written and checked together, so a file for each saved little: a spec writer read both.
-- Why the check is its own file: when Claude Code compacts a conversation, it re-attaches only
-  the first 5,000 tokens of each invoked skill's SKILL.md. Reference files the agent read aren't
-  re-attached. With the check folded in, SKILL.md would be about 5,800 tokens, so the end of the
-  checks would be cut. Joe also judged that folding it in wouldn't fix a writer's cursory
-  self-review, and a reviewer checks the change anyway. How to add or change an item is in
-  SKILL.md, since every writer and every reviewer reads it, so a separate file saved nothing.
-- Decided in: #18. The shared specs file in #19, in discussion with the owner. The check in its
-  own file, and the change procedure in SKILL.md, in #66.
+  Each task file is read only by the tasks that need it.
+- Decided in: #18. The shared specs file in #19, in discussion with the owner. The task files moved
+  out of the docs skill in #67.
 - Likely home: `CS`.
 
-**A skill gives the standard a doc must meet and trusts the model on method. The docs skill has no
+**The doc standards give the standard a doc must meet and trust the model on method. They have no
 step-by-step method for turning existing docs into specs. It only checks that nothing in the source
 was dropped, whatever the source is.**
 - Why: Anthropic's guidance says to assume Claude is capable. The Dust Law conversion went fine
@@ -671,7 +716,7 @@ was dropped, whatever the source is.**
 - Decided in: #20.
 - Likely home: `CS`.
 
-**The docs skill doesn't say what happens to source docs after they're turned into specs. The
+**The doc standards don't say what happens to source docs after they're turned into specs. The
 task's prompt says it, such as "delete the foundation docs".**
 - Why: it won't always be the same. Some projects may keep their source docs.
 - Decided in: #18, after the second Dust Law run.
@@ -707,26 +752,15 @@ removed.**
 
 **A workflow agent loads a skill with the Skill tool when its work needs it. The skill isn't joined
 into the agent's system prompt. Each role is given only the skills it uses, by name, and its prompt
-says when to load each one. An implementer loads the docs skill when it's about to change a doc,
-not when it only reads one.**
+says when to load each one.**
 - Why: Joe: "given the size and complexity of the skill I suspect that approach is not ideal". Only
   the roles that use a skill are given it, so no other role can load it by mistake. Claude added two
   points, and Joe didn't say whether they're his reasons. A joined skill loses its folder, so its
   links to its reference files and check script stop working. And an implementer on a code-only
   issue would carry doc rules it doesn't need.
-- The prompt's wording is worked out when the role prompts are written. Claude suggested tying the
-  load to an action, such as "before you create or change a file under `docs/`, or review a change
-  that touches one".
-- Decided in: #60, in an interactive session. This replaces the "Loading skills" direction in
+- Decided in: #60, in an interactive session. Since #67 the docs guidance is the doc standards,
+  not a skill. This replaces the "Loading skills" direction in
   `docs/research/agentic-development-loop-ideation.html`.
-- Likely home: `TD`.
-
-**In an interactive session, the docs skill's description decides when it loads. It loads for
-writing, changing or reviewing a spec or blueprint, including partway through a code task that
-turns out to need a doc change. It doesn't load when the agent only reads the docs, such as while
-writing code for an issue.**
-- Why unknown.
-- Decided in: #60, in an interactive session.
 - Likely home: `TD`.
 
 **A skill points to another skill's guidance by what it covers, not by the skill's name, such as
@@ -735,8 +769,9 @@ writing code for an issue.**
 - Decided in: #18.
 - Likely home: `CS`.
 
-**A skill with steps in order, or a list of checks, gives a checklist the agent copies into its
-task list. A file an agent may read on its own, such as the review file, has its own checklist.**
+**A procedure with steps in order, or a list of checks, gives a checklist the agent copies into its
+task list. Each file of the doc standards an agent may read on its own, such as the review file,
+has its own checklist.**
 - Why: a skipped step becomes visible, and an evaluation can see from the transcript which steps
   were done. The steps most likely to be skipped are searching first, following the change, and
   checking it. Within checking, the reading checks are skipped most easily, since a script can't
@@ -767,7 +802,7 @@ rest. An agent checking its own change leaves older problems alone and doesn't m
 **A reviewer reads the file for each kind of doc a change touches, such as the functional spec's
 file, as well as the review file.**
 - Why: so it knows the rules for how that kind of doc is written. Without them, it judges each item
-  only by the general rules in SKILL.md, and can flag an item that follows its doc's rules as a
+  only by the general rules, and can flag an item that follows its doc's rules as a
   problem. A reviewer suggested cutting "not later" from a limit, when the functional spec's rules
   ask every limit to say what it rules out.
 - Decided in: #35.
@@ -787,7 +822,7 @@ gives. With no task given, every cut is one.**
 - Likely home: `FR`.
 
 **A fact whose home is outside the specs and blueprints isn't dropped when it's left out of them.
-The reviewer decides that from the skill's rules, not from the author's account. The writer names
+The reviewer decides that from the doc standards, not from the author's account. The writer names
 each such fact, and where it likely belongs, in its report.**
 - Why: the specs and blueprints aren't a project's only docs. They hold the details that drive
   development. DESIGN's purpose paragraph belongs in something like a README or CLAUDE.md, and the
@@ -822,12 +857,12 @@ A reviewer that wasn't given the task or the source skips this check, and says s
 - Decided in: #37.
 - Likely home: `FR`.
 
-**A skill says what a finding contains: where it is, what's wrong, a suggested rewrite and why it
-fixes it. The task's prompt says how findings are delivered. With no instructions, they go in the
-reply.**
-- Why: the same skill runs in an interactive session, in the factory loop and in evaluations, and
-  each needs a different format. The loop will likely need JSON or a tool call. No one skill
-  defines how an agent works, since an agent loads several skills.
+**The doc standards say what a finding contains: where it is, what's wrong, a suggested rewrite and
+why it fixes it. The task's prompt says how findings are delivered. With no instructions, they go
+in the reply.**
+- Why: the same standards are used in an interactive session, in the factory loop and in
+  evaluations, and each needs a different format. The loop will likely need JSON or a tool call. No
+  one skill defines how an agent works, since an agent loads several skills.
 - Decided in: #33.
 - Likely home: `TD`.
 
@@ -839,12 +874,12 @@ supported. It writes no files.**
 - Decided in: #33.
 - Likely home: `TD`.
 
-**The docs skill is used in three ways, and it doesn't say which one it's in. The implementer and
-reviewer use it in the implementation loop, where the specs already exist and each change adds to
-them. The doc curator uses it to compare the docs and the code as a whole and raise issues for
+**The doc standards are used in three ways, and they don't say which one is in play. The implementer
+and reviewer use it in the implementation loop, where the specs already exist and each change adds
+to them. The doc curator uses it to compare the docs and the code as a whole and raise issues for
 what's out of step. A person uses it in an interactive session, which is where specs are first
 written and often refined before an issue goes into the factory. Where the three need different
-behavior, the skill sets a default and the agent's prompt says what happens next.**
+behavior, the standards set a default and the agent's prompt says what happens next.**
 - Why: Joe expects all three uses. A rule written for one can be wrong for another. The uncited-ID
   signal is noise on a first draft but useful in the loop. A vague point in the source should be
   asked about in an interactive session, but should stop an implementer that has no one to ask.
@@ -860,7 +895,7 @@ it on the base branch. With `--uncited`, it flags every requirement that nothing
 - Decided in: #43.
 - Likely home: `TD`.
 
-**The docs skill doesn't assume the agent can reach GitHub. It talks about the task and the agent's
+**The doc standards don't assume the agent can reach GitHub. It talks about the task and the agent's
 report, not a PR or issues.**
 - Why: Joe's working assumption is that the workflow brokers what each agent sees, and agents get
   different access. A reviewer in the loop gets only what the workflow gives it. The doc curator
@@ -869,8 +904,8 @@ report, not a PR or issues.**
   #46.
 - Likely home: `CS`.
 
-**The docs skill isn't changed to make the writer's check of its own work deeper. A fresh reviewer
-is the real check.**
+**The doc standards aren't changed to make the writer's check of its own work deeper. A fresh
+reviewer is the real check.**
 - Why: Joe expected the writer's own check to be thin, which is why a reviewer runs after it. In
   his interactive Dust Law session, the writer ran the check script and a few searches. It missed a
   contradiction between two requirements and four leftover uses of a word it had renamed itself.
@@ -887,11 +922,11 @@ a skill.**
 - Decided in: #1, reviewing Joe's interactive Dust Law session. Built in #63 and #64.
 - Likely home: `TD`.
 
-**The doc standards are kept apart from the docs skill. The standards say what the docs are and
-how they're written. The skill says how to do a task with them: change a doc, check a change, and
-what goes in the report. The skill points to the standards and doesn't repeat them. A rule about
-IDs is split the same way: that an item's ID always means the same thing is a standard, and how to
-pick a new ID, or tell whether a change keeps an item's meaning, is in the skill.**
+**The doc standards are plain files, apart from any skill. Within them, what the docs are and how
+they're written is kept apart from how to do a task with them: change a doc in `changing-items.md`,
+check a change in `reviewing.md`, and what goes in the report in `reports.md`. A rule about IDs is
+split the same way: that an item's ID always means the same thing is a standard, and how to pick a
+new ID, or tell whether a change keeps an item's meaning, is in `changing-items.md`.**
 - Why: other skills need the standards too, such as one that writes GitHub issues or code
   comments. While the standards live in the docs skill, other skills have to point into it or keep
   their own copy, and changing a standard means releasing a new version of the skill. Joe: "if we
@@ -903,7 +938,8 @@ pick a new ID, or tell whether a change keeps an item's meaning, is in the skill
   such as whoever writes a code comment or an issue that cites `FR-12`, relies on the ID keeping
   its meaning. Only an agent changing a spec needs to know how. Claude proposed this split, and
   Joe agreed.
-- Decided in: #66, while discussing #60.
+- Decided in: #66, while discussing #60. The task files moved out of the skill and into the
+  standards in #67.
 - Likely home: `AD`.
 
 **The doc standards' source is files in the factory repo, in `docs/standards/`, versioned and
@@ -916,16 +952,15 @@ reviewed like everything else. Not a GitHub wiki.**
 - Likely home: `AD`.
 
 **Each project that uses the factory has its own copy of the doc standards, the same way it has
-the factory's skills. Its CLAUDE.md doc map says where the copy is, and the docs skill's default
-path is `docs/standards/`. How the copy gets there, by push or pull, isn't decided.**
+the factory's skills, along with the doc check script. Its CLAUDE.md doc map says where each one
+is. How the copy gets there, by push or pull, isn't decided.**
 - Why unknown. On how the copy gets there, Joe: that's "less interesting to me to focus on than
   the workings of the factory itself." For the repo or two using the factory now, a script or an
   agent can do the copy.
 - Decided in: #66.
 - Likely home: `AD`.
 
-**The templates for each kind of doc are part of the doc standards, in `templates/`, not in the
-docs skill.**
+**The templates for each kind of doc are part of the doc standards, in `templates/`.**
 - Why: a template is a second copy of standards, such as a spec's opening line, the technical
   spec's fixed sections and the form a limit is written in. Kept next to the standards, the two
   change and are reviewed together. Another skill that creates a doc can also use them. Claude
@@ -933,20 +968,29 @@ docs skill.**
 - Decided in: #66.
 - Likely home: `TD`.
 
-**The docs skill's check script leaves out `<docs folder>/standards`.**
+**The doc check script leaves out `<docs folder>/standards`.**
 - Why: the standards are full of example IDs that no project defines, such as `FR-41`. The script
   would flag each one as a broken citation. Claude proposed this, and Joe agreed.
 - Decided in: #66.
 - Likely home: `TD`.
 
+**The doc check script also leaves out every path that `.check-docs-ignore` at the repo root
+matches, written like a `.gitignore`. A project with no such file is checked as before.**
+- Why: a project can hold files that cite IDs that aren't its own. The factory's eval cases build
+  test projects, and their files cite IDs the factory's docs don't define, so the script flagged
+  each one. The script is copied into every project, so it can't name a folder such as `evals/`
+  itself. Claude proposed this, and Joe agreed.
+- Decided in: #67.
+- Likely home: `TD`.
+
 ## Evaluations
 
-**A skill's evaluations live in an `evals/` folder inside the skill, one folder per case, and run
-with `claude plugin eval`.**
+**The doc evaluations live in `evals/docs/`, one folder per case, and run with `claude plugin
+eval`, through `evals/run-docs-evals.sh`. The script holds the flags every run uses.**
 - Why: the skill-creator skill on its own leaves the orchestration to us, including setting the
   judge model and much else we'd have to build. `claude plugin eval` has that orchestration built
-  in.
-- Decided in: #24.
+  in, and it runs a case with no plugin. Joe wanted one script to wrap the whole run.
+- Decided in: #24. Moved out of the skill, with the script, in #67.
 - Likely home: `TD`.
 
 **A grader checks that a reply has the information needed, in any words. It never checks the
@@ -956,33 +1000,17 @@ reply's headings or layout.**
 - Decided in: #33.
 - Likely home: `TD`.
 
-**Evaluations run with the skill only. A case also runs without the skill when it's new or changes
-a lot, and every case does when re-baselining.**
-- Why: an agent can't guess the project's standards, such as its IDs and prose, without the skill,
-  so running without it mostly shows that. What it does show is whether a case depends on the
-  skill.
-- Decided in: #33. Re-baselining added in #57.
-- Likely home: `TD`.
-
-**All of a skill's cases live in one `evals/` folder. A case that passes 3 of 3 without the skill
-has the `passes-without-skill` tag, and stays in full runs.**
-- Why: this replaces a second folder, `evals-no-skill/`, that kept those cases out of plain runs
-  because they show no value from the skill. With `runs: 1`, each of them costs one run, so there's
-  little reason to keep them out. A full run after a batch of skill changes ran both folders
-  anyway, and one folder makes it one command with one results folder. The cases still matter.
-  They catch a model or effort change that breaks something the agent used to do on its own, and
-  the skill making the agent worse, such as fixing things that aren't broken. The tag keeps the
-  record of which cases they are, and `--tag passes-without-skill` runs just those. The cost: a
-  group run, such as `--tag terms`, also picks up that group's no-skill cases, at their own run
-  count.
-- Decided in: #57, replacing #38's second folder.
+**The doc evaluations have no second run without a plugin, and no `passes-without-skill` tag or
+column.**
+- Why: there's no plugin to leave out, so `claude plugin eval` runs each case once, as is.
+- Decided in: #67. It replaces running a case without the skill, from #33, and the tag, from #57.
 - Likely home: `TD`.
 
 **Each case sets its own run count with `runs` in its `prompt.md`. A case that passes 3 of 3 in a
 full run gets `runs: 1`. The rest run 3 times. When a 1-run case fails, it reruns 3 times right
 away. If it passes 3 of 3, it stays at 1 run. If not, it goes back to 3. To re-baseline, such as
-when the agent's model or effort changes, every case runs 3 times with and without the skill, and
-the tags and run counts are updated.**
+when the agent's model or effort changes, every case runs 3 times, and the run counts are
+updated.**
 - Why: a full run is costly when every case runs 3 times. Joe: the work and runs for one issue took
   about 6% of his allocation. Anthropic's post "Demystifying evals for AI agents" splits evals into
   capability evals, which test what the agent can't do well yet, and regression evals, which check
@@ -999,7 +1027,7 @@ the tags and run counts are updated.**
 - Decided in: #27 and #33.
 - Likely home: `TD`.
 
-**Each rule a skill's review checks gets a reviewer case. A rule gets a writer case only when real
+**Each rule the review checks gets a reviewer case. A rule gets a writer case only when real
 runs show writers keep breaking it, or when no review check covers it. A writer case starts from
 the real input that led to the mistake, cut down, when there is one.**
 - Why: the reviewer is the last check before a problem gets through, and a writer checking its own
@@ -1008,6 +1036,10 @@ the real input that led to the mistake, cut down, when there is one.**
   costs runs, so cases are added only where they're needed. A writer case is still worth it when
   the reviewer keeps catching the same mistake, since each catch costs another round. A real
   mistake makes a better test than an invented one.
+- In #67, six writer cases whose rule a reviewer case also covers were dropped. Three stayed: the
+  two `review-roles` writer cases, which test what a writer does with its own change, and
+  `items-write-limits`, since no reviewer case covers limits. The reviewer's prompt is fixed, and
+  its review is the guard against a writer that doesn't follow the standards.
 - Decided in: #24.
 - Likely home: `TD`.
 
@@ -1021,12 +1053,10 @@ the real input that led to the mistake, cut down, when there is one.**
 - Decided in: #27.
 - Likely home: `TD`.
 
-**The evals README records how each case did in its last run without the skill, and the commit it
-ran on. It records no other results.**
-- Why: that's the baseline. It says which cases depend on the skill, which decides the
-  `passes-without-skill` tag. Other results change with every run, and they go in the PR and the
-  issue.
-- Decided in: #27. The tag replaced leaving those cases out in #57.
+**The evals README records no run results.**
+- Why: results change with every run, and they go in the PR and the issue. It used to record each
+  case's last run without the skill, as a baseline, and that baseline went with the skill.
+- Decided in: #27. The baseline column was dropped in #67.
 - Likely home: `TD`.
 
 **A case's planted problems are ones the doc check script flags.**
@@ -1041,11 +1071,11 @@ evaluation case.**
 - Likely home: `TD`.
 
 **A failing case is run on its own until it passes 3 runs out of 3. When every case in a group
-passes, the whole group runs, each case at its own run count, to catch anything a skill change
-broke. Before a 3-run
+passes, the whole group runs, each case at its own run count, to catch anything a change to the
+standards broke. Before a 3-run
 pass, each case runs once. A case whose setup was fixed runs once more, and goes into a 3-run pass
 only when its result has nothing to do with the setup. A case gets up to 3 single runs, with fixes
-to the skill, the case or its graders in between, before its 3-run pass.**
+to the standards, the case or its graders in between, before its 3-run pass.**
 - Why: a single run can pass by luck. `review-roles-review-clean` passed one run, then failed 3 out of 3. A
   case that has passed reliably runs once, since each run costs tokens. The single run catches a broken setup before the bigger run spends three times as much. If a setup
   fix doesn't work, every run in a 3-run pass is wasted, so each setup has to be right first. The 3
@@ -1062,14 +1092,14 @@ code bug that leaves the docs right.**
 - Decided in: #33.
 - Likely home: `FR`.
 
-**A gap that only shows up because of how a test run is set up isn't a skill lesson. In the Dust
-Law runs, reviewers don't see the writer's questions, on purpose.**
+**A gap that only shows up because of how a test run is set up isn't a lesson for the standards. In
+the Dust Law runs, reviewers don't see the writer's questions, on purpose.**
 - Why: the non-interactive conversions are a stress test, not a real mode. In real use, questions
   are answered live in an interactive session, or raised by the issue checker or the implementer
   in the factory. Keeping the questions from reviewers means each agent makes its own judgment,
   without being swayed. The source docs are deleted only so the check script doesn't flag copies.
 - Decided in: #19, in review of the first run.
-- Likely home: unclear. It may only be how the skill is tested.
+- Likely home: unclear. It may only be how the standards are tested.
 
 **Two eval cases can be merged into one when they share a base spec or notes and their planted
 problems don't touch each other. The merged case keeps every grader. A merge is backed out when a
@@ -1104,10 +1134,21 @@ grader that passed in its old case fails in the merged case, and the merge is th
 - Decided in: #58.
 - Likely home: `TD`.
 
-**Each docs eval case's setup copies the doc standards from their source in the factory repo, not
-from a copy kept in each case.**
+**Each docs eval case's setup copies the doc standards and the doc check script from their source
+in the factory repo, not from a copy kept in each case.**
 - Why: so the cases test the current standards.
-- Decided in: #66.
+- Decided in: #66. The script added in #67.
+- Likely home: `TD`.
+
+**Each docs eval case's repo gets the CLAUDE.md in `evals/docs/project-claude.md`. `claude plugin
+eval` loads no CLAUDE.md, so `run-docs-evals.sh` also copies the same text into each case's
+`append_system_prompt` before every run.**
+- Why: the plugin eval docs say no CLAUDE.md loads, even one a case's setup wrote, and that
+  `append_system_prompt` is how to give the agent project instructions. In a check run without it,
+  the agent found the CLAUDE.md only because it showed up in an `ls`. Joe wanted one CLAUDE.md for
+  all the cases, copied in when they run. The file isn't named `CLAUDE.md`, since Claude Code would
+  load it in sessions working on the cases.
+- Decided in: #67.
 - Likely home: `TD`.
 
 ## Issue checker
