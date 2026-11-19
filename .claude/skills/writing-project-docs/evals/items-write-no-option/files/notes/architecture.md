@@ -17,8 +17,6 @@ The code has three parts.
 
 ## The board
 
-Spaces on the board are identified by axial coordinates.
-
 A tile's sides are numbered 0 to 5 clockwise, starting with the top side as it lies on the board.
 A tile's side n faces side (n + 3) mod 6 of the tile next to it across that side, so two rivers
 join where they reach a pair of facing sides.
