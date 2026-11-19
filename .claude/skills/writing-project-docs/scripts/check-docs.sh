@@ -310,6 +310,31 @@ while read -r f; do
   ' "$f"
 done < <(lines "$specs")
 
+# --- Blueprint status --------------------------------------------------------------------------
+
+# A blueprint opens with front matter: a status, active or retired, and a retired date that's
+# empty while it's active.
+while read -r f; do
+  is_blueprint "$f" || continue
+  awk -v f="$f" '
+    NR == 1 && $0 != "---" { print "RULE " f ":1 has no front matter with its status"; bad = 1; exit }
+    NR > 1 && $0 == "---" { closed = 1; exit }
+    NR > 1 && /^status:/ { status = $0; sub(/^status:[ \t]*/, "", status); sub(/[ \t]+$/, "", status); status_line = NR }
+    NR > 1 && /^retired:/ { has_retired = 1; date = $0; sub(/^retired:[ \t]*/, "", date); sub(/[ \t]+$/, "", date); date_line = NR }
+    END {
+      if (bad) exit
+      if (!closed) { print "RULE " f ":1 has front matter that isn'\''t closed with ---"; exit }
+      if (status !~ /^(active|retired)$/)
+        print "RULE " f ":" (status_line ? status_line : 1) " has status \"" status "\", not active or retired"
+      if (!has_retired) print "RULE " f ":1 has no retired line in its front matter"
+      else if (status == "active" && date != "")
+        print "RULE " f ":" date_line " is active but has a retired date"
+      else if (status == "retired" && date !~ /^20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/)
+        print "RULE " f ":" date_line " is retired but its retired date isn'\''t a date like 2026-11-18"
+    }
+  ' "$f"
+done < <(lines "$docs")
+
 # --- Copies ------------------------------------------------------------------------------------
 
 # Every run of eight words, with the file and line it starts on. Research docs in

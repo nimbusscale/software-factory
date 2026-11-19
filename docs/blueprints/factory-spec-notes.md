@@ -1,3 +1,8 @@
+---
+status: active
+retired:
+---
+
 # Factory spec notes
 
 A blueprint, written to build from before the factory's functional and technical specs exist. It
@@ -34,6 +39,21 @@ status is about the doc, never about progress through the work.**
   too. Why the doc and not only GitHub is unknown. The status stays about the doc because the
   status of work goes in commit messages, never a doc.
 - Decided in: #1, reviewing Joe's interactive Dust Law session. Built in #62.
+- Likely home: `FR`.
+
+**The blueprint template keeps an empty `retired:` line while the blueprint is active. Retiring
+sets `status: retired` and fills in the date, in place of a line saying the doc isn't kept up to
+date. The check script flags a blueprint whose front matter is missing or doesn't fit.**
+- Why: Claude's choice in #62. An empty line shows the field exists to a writer who never reads
+  the skill. The check is cheap, since the front matter has only two fields.
+- Decided in: #62.
+- Likely home: `TD` for the format; a check for the rest.
+
+**A blueprint never names the writing-project-docs skill.**
+- Why: the skill is still changing, and it will be used in other projects. The template's line
+  "see `references/blueprint.md` in the writing-project-docs skill" ended up in both of Dust
+  Law's blueprints.
+- Decided in: #62, from Joe's interactive Dust Law session (nimbusscale/dust-law#17).
 - Likely home: `FR`.
 
 **A build plan blueprint retires once the GitHub issues for its phases are created.**

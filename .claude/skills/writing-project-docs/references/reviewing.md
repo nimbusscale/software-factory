@@ -90,6 +90,9 @@ whether it's a real problem. It checks:
 - **Item shape:** each requirement follows GEARS, with one "shall", and has an ID. Each paragraph
   under a requirement starts with a label, such as `*Why:*`, or is a table the requirement's text
   points to. Each decision has a Why line right after it.
+- **Blueprint status:** each blueprint opens with front matter whose `status` is `active` or
+  `retired`. Its `retired` date is empty while it's active, and a date such as `2026-11-18` once
+  it's retired.
 - **Copies,** as a signal: runs of eight or more words that a spec or a blueprint shares with
   another one, or with any other text file, such as a prompt or a README. Research docs are left
   out.
