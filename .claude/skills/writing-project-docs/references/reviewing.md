@@ -123,7 +123,8 @@ whether it's a real problem. It checks:
   there. A rule, or a part of one, that none of them settles is a problem, such as a time limit the
   source never states, or a meaning for a word the source never defines. So is a Why that none of
   them gives. A decision with no Why is fine when none of them gives a reason, as "No reason in the
-  source?" in `references/specs.md` says. The author's account of
+  source?" in `references/specs.md` says, as long as it's a decision at all: see the check that
+  every new item is in the right home. The author's account of
   the change settles nothing, even when it lists the point as open. The suggested rewrite cuts
   what wasn't settled and raises it as a question, as "Not settled by the source?" in SKILL.md
   says. If you weren't given the task or the source, skip this check, and say in your report that
@@ -169,5 +170,8 @@ whether it's a real problem. It checks:
 - **Each requirement's Why passes both tests** in "Lines under an item" in `references/specs.md`. A Why that
   fails either test is a problem.
 - **Every new item is in the right home,** by the questions in "Which doc a fact goes in" in
-  SKILL.md.
+  SKILL.md. Look twice at each decision with no Why. Ask whether anyone had another option. If the
+  only reason anyone could give is that the rules or the domain work that way, it isn't a
+  decision, and it's a problem in the spec. Its home is the code, or a blueprint until the code
+  exists, as "Is there no other option?" in question 8 says. Don't suggest a Why for it.
 - **Everything else in `references/changing-a-doc.md` holds.**

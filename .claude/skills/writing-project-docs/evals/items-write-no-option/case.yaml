@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: items-write-no-option
+expected_outcome: |
+  The notes give two facts about the board with no reason. Spaces are identified by axial
+  coordinates: that's a real choice, since offset or cube coordinates would also work, so it's a
+  decision with no Why, and the report asks for its reason. A tile's side n faces side (n + 3) mod
+  6 of the tile next to it: that follows from how the notes number the sides, and nobody could have
+  chosen otherwise, so it isn't a decision. Its home is the code that finds the side two tiles
+  share, and until that code exists, a blueprint. The writer creates docs/technical-spec.md with no
+  item or term that says which sides face each other, puts that fact in a blueprint or names its
+  home in the code, and doesn't ask for its reason. A term that numbers the sides is fine.
+context:
+  scaffold_script: place-files.sh

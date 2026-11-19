@@ -352,10 +352,14 @@ tasks read different parts of it.
 A decision is a one-line statement of the choice, in prose, and always has a Why. The Why says why
 this option was chosen.
 
-**No reason in the source?** When the source gives no reason for a decision, write the decision
-with no Why. Never write a reason the source doesn't give, however likely it seems. Ask for the
-reason in your report: quote the decision, and suggest a reason if you have one. The check script
-flags the missing Why until the reason is known.
+**No reason in the source?** First check that it's a decision at all. A decision with no reason is
+often a fact with no other option, which isn't a decision: see "Is there no other option?" in
+question 8 of "Which doc a fact goes in", in SKILL.md. If it's such a fact, it goes where that
+question says, and you don't ask for a reason. If it's a decision, write it with no Why. Never
+write a reason the source doesn't give, however likely it seems. Ask for the reason in your
+report: quote the decision, and suggest a reason if you have one. If you can't tell whether
+anyone had another option, ask that too: was another way weighed, and if so, why this one? The
+check script flags the missing Why until the reason is known.
 
 > **AD-1.** TypeScript for the whole app.
 >

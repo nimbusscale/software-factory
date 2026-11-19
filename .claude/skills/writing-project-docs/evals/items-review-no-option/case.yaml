@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: items-review-no-option
+expected_outcome: |
+  The change adds the Tile side term, which numbers a tile's six sides 0 to 5 clockwise from the
+  top, and two design decisions with no Why. TD-1 says spaces are identified by axial coordinates.
+  That's a real choice, since offset or cube coordinates would also work, so asking for its reason
+  is right. TD-2 says a tile's side n faces side (n + 3) mod 6 of the tile next to it. That follows
+  from how the Tile side term numbers the sides, and nobody could have chosen otherwise, so it
+  isn't a decision. Its home is the code that finds the side two tiles share, or a blueprint until
+  that code exists. The reviewer edits nothing, lists TD-2 as a problem in this change because it
+  isn't a decision, and suggests taking it out of the spec's decisions rather than adding a Why. It
+  doesn't say TD-1 isn't a decision.
+context:
+  scaffold_script: place-files.sh

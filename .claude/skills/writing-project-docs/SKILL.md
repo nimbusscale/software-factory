@@ -91,6 +91,14 @@ Ask these questions in order, and stop at the first yes.
 8. **Otherwise it's a decision about how the system is built:** an architecture decision, a design
    decision or a code standard. "Kinds of item" in [references/specs.md](references/specs.md) says
    which. Then:
+   - **Is there no other option?** A decision picks one way out of several. If the only reason
+     anyone can give for it is that the rules or the domain work that way, nobody chose it, so
+     it isn't a decision. Two kinds come up most. One says what a type holds, when the rules
+     leave it nothing else to hold, such as a playing card that has a suit and a rank. The other
+     follows from how a term or a rule defines something, such as that e4 and f5 lie on one
+     diagonal, when a chess board's squares are named by a column letter and a row number.
+     Its home is the code: the type, or the function that works it out. Until that code
+     exists, it goes in a blueprint.
    - **Not made yet?** It goes in no doc. Name it in your report as a decision still to make, such
      as one that needs a spike to settle. **Rejected?** It goes nowhere. Name it in a code comment
      only if an agent would likely change the code back to it.

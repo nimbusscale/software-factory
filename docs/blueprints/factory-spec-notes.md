@@ -374,6 +374,20 @@ up.**
 - Decided in: #1, reviewing that session (nimbusscale/dust-law#17). Built in #61.
 - Likely home: `TD`.
 
+**A fact with no other option isn't a decision. If the only reason anyone can give for it is that
+the rules or the domain work that way, its home is the code: the type that holds it, or the
+function that works it out. Until that code exists, a blueprint holds it. The writer checks this
+before asking the owner for a missing reason, and asks whether another way was weighed when it
+can't tell. The reviewer looks twice at each decision with no Why, and doesn't suggest a Why for
+one that isn't a decision.**
+- Why: asked for the reasons behind TD-3 and TD-4, Joe's only answer was "that's the way the game
+  works." TD-3 is what the tile type looks like in code, and TD-4 follows from how the Border
+  position term names the eight positions. Each has one place in the code, so by question 8 that
+  place is its home. Dust Law's shape-catalog blueprint already held the rotation table, the same
+  kind of fact, so the two moved there.
+- Decided in: #61.
+- Likely home: `TD`.
+
 **A user uses the app through its own screens, as it's meant to be used. What stops someone who
 tampers with the app is a technical requirement. When it protects a rule a user sees, it cites
 each functional requirement it protects instead of repeating it.**
