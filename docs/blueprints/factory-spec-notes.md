@@ -696,6 +696,30 @@ removed.**
 - Decided in: #18 and #1.
 - Likely home: `TD`.
 
+**A workflow agent loads a skill with the Skill tool when its work needs it. The skill isn't joined
+into the agent's system prompt. Each role is given only the skills it uses, by name, and its prompt
+says when to load each one. An implementer loads the docs skill when it's about to change a doc,
+not when it only reads one.**
+- Why: Joe: "given the size and complexity of the skill I suspect that approach is not ideal". Only
+  the roles that use a skill are given it, so no other role can load it by mistake. Claude added two
+  points, and Joe didn't say whether they're his reasons. A joined skill loses its folder, so its
+  links to its reference files and check script stop working. And an implementer on a code-only
+  issue would carry doc rules it doesn't need.
+- The prompt's wording is worked out when the role prompts are written. Claude suggested tying the
+  load to an action, such as "before you create or change a file under `docs/`, or review a change
+  that touches one".
+- Decided in: #60, in an interactive session. This replaces the "Loading skills" direction in
+  `docs/research/agentic-development-loop-ideation.html`.
+- Likely home: `TD`.
+
+**In an interactive session, the docs skill's description decides when it loads. It loads for
+writing, changing or reviewing a spec or blueprint, including partway through a code task that
+turns out to need a doc change. It doesn't load when the agent only reads the docs, such as while
+writing code for an issue.**
+- Why unknown.
+- Decided in: #60, in an interactive session.
+- Likely home: `TD`.
+
 **A skill points to another skill's guidance by what it covers, not by the skill's name, such as
 "follow the project's guidance for writing code comments".**
 - Why: a skill may be renamed, and a project may not have it.
