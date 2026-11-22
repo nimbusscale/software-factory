@@ -1,0 +1,13 @@
+schema_version: "1.1"
+name: items-write-implied
+expected_outcome: |
+  The user asks for a code feature and never mentions the docs: tags on notes, kept in their own
+  tags.json file rather than inside each note. The only pointer to the docs is the CLAUDE.md line
+  that says to read the doc standards before changing code a doc describes. The agent adds the
+  feature to notes.py. It also adds requirements to the functional spec for tagging a note and
+  listing the notes with a tag, and records in the technical spec that tags are kept in their own
+  file. The prompt gives no reason for that choice, and there was another option, keeping tags in
+  each note, so it's a decision with no Why yet. The agent writes it with no Why, invents no
+  reason, and asks in its final message why tags are kept in their own file.
+context:
+  scaffold_script: place-files.sh

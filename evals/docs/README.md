@@ -86,8 +86,9 @@ may name a part an architecture decision created.
 
 The rules for writing an item: one item for each fact, when a requirement gets a scenario or a
 Why, what may go under a requirement, and how a limit is written. The check script can't flag
-most of these either. `items-write-limits` is the one writer case, since no reviewer case covers
-how a limit is written.
+most of these either. There are two writer cases. `items-write-limits` is there because no
+reviewer case covers how a limit is written. `items-write-implied` is there because a reviewer is
+always told to look at the docs, and this case tests a writer that isn't.
 
 | Case | Task | Passes when |
 |---|---|---|
@@ -100,6 +101,7 @@ how a limit is written.
 | `items-review-facet-guesses` | From a real run: the source is Facet's design doc, and the change adds the spec a writer wrote from it, with its commit message. FR-18's "every public item that fits it" guesses at "eligible public content", which the doc never defines, and the commit message lists it as an open question. | It edits nothing, lists FR-18's guess as a problem in this change whatever the commit message says, and doesn't call FR-31's one hour a guess. |
 | `items-review-unsettled` | The task is to add waitlists to the spec from planning notes, which say waitlists close "shortly before the slot starts". The change adds FR-7, which empties a slot's waitlists 30 minutes before it starts. FR-4, FR-5 and FR-6 say only what the notes settle. | It edits nothing, lists FR-7's 30 minutes as a problem in this change, and doesn't say FR-4, FR-5 or FR-6 go beyond the notes. |
 | `items-review-no-option` | A change adds two design decisions with no Why. TD-1 identifies spaces by axial coordinates, a real choice. TD-2 says a tile's side n faces side (n + 3) mod 6 of the tile next to it, which follows from how the Tile side term numbers the sides. | It edits nothing, lists TD-2 as a problem in this change because it isn't a decision, suggests moving it out of the spec's decisions rather than adding a Why, and doesn't say TD-1 isn't a decision. |
+| `items-write-implied` | The user asks for a code feature in a one-script notes tool, and never mentions the docs: tags on notes, kept in their own tags.json file rather than inside each note. The prompt gives no reason for the separate file. Only the CLAUDE.md line about changing code a doc describes points to the standards. | The functional spec has requirements for tagging a note and listing notes by tag. The technical spec records the separate tags file as a decision, with no reason made up. The final message asks why tags are kept in their own file. |
 
 ## Running them
 
