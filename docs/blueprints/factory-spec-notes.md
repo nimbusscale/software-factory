@@ -615,12 +615,25 @@ writing or reviewing a doc.**
 - Joe raised one risk. A light mention, such as a requirement ID, might load a skill and its
   procedure with it, while a pointer in CLAUDE.md leaves reading the standards to the model's
   judgment. In the loop, each role's prompt is fixed and can be tested. In an interactive session
-  it isn't, so #68 checks that a doc change there gets a review by a subagent.
+  it isn't. The `items-write-implied` eval case covers part of this risk. It asks only for a code
+  feature, never mentions the docs, and passes when the agent updates both specs and asks for the
+  reason behind a technical choice.
 - Every eval case passed without the skill, except for one miss in a case that passed its other 4
   runs.
 - Decided in: #67, in an interactive session. It replaces #60, which was going to tune the skill's
   description.
 - Likely home: `AD`.
+
+**Nothing checks that a doc change in an interactive session gets a review by a subagent. Docs work
+moves on to getting the factory running, and the factory improves its docs work from there.**
+- Why: Joe: "we spent a long time trying to perfect or get the doc reviewing and writing sorted
+  out, and I just want to move on. I think we're in a good place here." The review of Dust Law's
+  specs against the standards (nimbusscale/dust-law#17) found real problems, such as a dropped
+  rule that let any bounty be claimed. Joe: "while I'm sure there's ways to improve it, I'd rather
+  get us to the point where we're actually have the factory running and we could do potential
+  self-improvements that way."
+- Decided in: #68, closed as won't do, in an interactive session.
+- Likely home: none. It's a choice about the order of work, not about the factory.
 
 **The guide to which standards file a task needs is the standards' `README.md`. CLAUDE.md says
 only where the standards are, and to read the README before writing or reviewing a doc.**
