@@ -928,11 +928,13 @@ reviewer is the real check.**
 
 **A milestone in a project's life, such as starting a project, is a slash command or a script, not
 a skill that loads on its own. Work that can come up in any session, such as creating an issue, is
-a skill.**
+a file of standards that CLAUDE.md points to, as the doc standards are.**
 - Why: Joe: for starting a project, a script is probably fine and a skill isn't needed. Interactive
   sessions after a project starts need to know how to create issues and what the statuses mean,
-  and a command only runs when someone types it.
-- Decided in: #1, reviewing Joe's interactive Dust Law session. Built in #63 and #64.
+  and a command only runs when someone types it. That work was first going to be a skill. When the
+  docs skill was replaced by the doc standards (#67), Joe decided the same holds for GitHub work.
+- Decided in: #1, reviewing Joe's interactive Dust Law session, and changed in #64. Built in #63
+  and #64.
 - Likely home: `TD`.
 
 **The doc standards are plain files, apart from any skill. Within them, what the docs are and how
