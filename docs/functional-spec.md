@@ -24,14 +24,6 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 **FR-1.** When the implementation loop's command is called with a project's repo and an issue
 number, the implementation loop shall start a run on that issue.
 
-**FR-2.** The implementation loop shall start a run only when its command is called, not on its
-own, such as when an issue moves on the board.
-
-**FR-4.** When a run starts, the implementation loop shall take the issue's body as it's written,
-with no check of its sections.
-
-*Why:* the sections an issue's body has are expected to change as the process is refined.
-
 **FR-5.** When a run starts, the implementation loop shall do the work the issue asks for.
 
 ## F-SEC-3. How a run goes
@@ -76,10 +68,6 @@ the issue that gives the reason.
 **FR-21.** When a run ends on an open question, the implementation loop shall post each question as
 its own comment on the issue, with the text it's about, what's unclear and a suggested answer.
 
-**FR-14.** The implementation loop shall change an issue only by moving its status on the board
-and posting comments on it, not by editing its body or its labels.
-
-*Why:* the issue's body is the task, and it stays fixed once work starts.
 
 ## F-SEC-5. The PR
 
@@ -106,5 +94,3 @@ has one.
 
 *Why:* the decision is made and only its reason is missing, so the run goes on to a PR instead of
 ending as it does on an open question.
-
-**FR-20.** The implementation loop shall take each run only as far as an open PR, not to a merge.
