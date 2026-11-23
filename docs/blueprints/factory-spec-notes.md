@@ -62,8 +62,9 @@ date. The check script flags a blueprint whose front matter is missing or doesn'
 - Likely home: `FR`.
 
 **When a doc and the code disagree, the doc wins, unless CLAUDE.md says otherwise. If the agent
-can't fix the code within its task, it leaves both and reports the disagreement in the PR
-description or its final report, naming the item ID and the code.**
+can't fix the code within its task, it leaves both and reports the disagreement in its final
+report, naming the item ID and the code. In the implementation loop, the report reaches the PR's
+description (FR-19).**
 - Why: the docs say what the system should do. An agent with no default does whatever it thinks
   best. A headless agent can't ask the user, and opening issues is outside writing docs, so the
   report goes in output the agent already produces.
@@ -323,9 +324,8 @@ requirement's text. The example itself can be cut without a mention in the PR.**
 - Likely home: `TD`.
 
 **Tests trace to functional requirements, not to scenarios. Every functional requirement has at
-least one test, and counts as met when its tests pass. An issue's acceptance criteria name the
-requirements the issue must meet, which tells the workflow which tests must pass. They don't define
-the tests. A test an issue needs may not exist yet, and then it's written as part of the work.**
+least one test, and counts as met when its tests pass. The requirements an issue's acceptance
+criteria name (FR-3) tell the workflow which tests must pass. They don't define the tests. A test an issue needs may not exist yet, and then it's written as part of the work.**
 - Why: each requirement should be testable, or easy to see how to test, from its own text. If it
   isn't, the requirement needs refining. Tracing tests to scenarios made scenarios carry rules and
   hide vague requirements. An earlier idea, in the docs retro findings, was that scenarios become
@@ -763,19 +763,6 @@ removed.**
 - Decided in: #18 and #1.
 - Likely home: `TD`.
 
-**A workflow agent loads a skill with the Skill tool when its work needs it. The skill isn't joined
-into the agent's system prompt. Each role is given only the skills it uses, by name, and its prompt
-says when to load each one.**
-- Why: Joe: "given the size and complexity of the skill I suspect that approach is not ideal". Only
-  the roles that use a skill are given it, so no other role can load it by mistake. Claude added two
-  points, and Joe didn't say whether they're his reasons. A joined skill loses its folder, so its
-  links to its reference files and check script stop working. And an implementer on a code-only
-  issue would carry doc rules it doesn't need.
-- Decided in: #60, in an interactive session. Since #67 the docs guidance is the doc standards,
-  not a skill. This replaces the "Loading skills" direction in
-  `docs/research/agentic-development-loop-ideation.html`.
-- Likely home: `TD`.
-
 **A skill points to another skill's guidance by what it covers, not by the skill's name, such as
 "follow the project's guidance for writing code comments".**
 - Why: a skill may be renamed, and a project may not have it.
@@ -794,9 +781,9 @@ has its own checklist.**
 
 **An agent checking its own change fixes what it finds. A reviewer checking someone else's change
 edits nothing and reports what it finds.**
-- Why: in the factory, the implementer reviews its own work so it can fix problems before the work
-  goes to a reviewer. The reviewer's findings go back to the implementer, who makes the fixes. So a
-  reviewer never changes code or docs.
+- Why: the two cases match the implementation loop's roles. The implementer checks its own work
+  and fixes what it finds (TR-6). The quality reviewer changes nothing, and its findings go back to
+  the implementer (TR-5, TR-7).
 - Decided in: #33.
 - Likely home: `FR`.
 
@@ -847,8 +834,8 @@ each such fact, and where it likely belongs, in its report.**
 **When the source leaves part of a rule open, the writer writes no rule for that part, and doesn't
 copy the vague wording either. It raises a question in its report: the source text, what's
 unclear, and a suggested answer. It still writes the parts the source settles. The agent's prompt
-says what happens to the question: in an interactive session it's asked, an implementer stops and
-the issue goes to Needs attention, and a test run puts it in the report.**
+says what happens to the question: in an interactive session it's asked, the implementation loop
+ends the run (FR-8), and a test run puts it in the report.**
 - Why: a reader of the doc alone can't tell a guess from a settled rule, and open items never go
   in a doc, so a guess can't be marked as one. In the Facet run, the writer turned the undefined
   "eligible public content" into "every public item that fits it", and listed it as open only in
@@ -910,9 +897,9 @@ it on the base branch. With `--uncited`, it flags every requirement that nothing
 
 **The doc standards don't assume the agent can reach GitHub. It talks about the task and the agent's
 report, not a PR or issues.**
-- Why: Joe's working assumption is that the workflow brokers what each agent sees, and agents get
-  different access. A reviewer in the loop gets only what the workflow gives it. The doc curator
-  may be allowed to read PRs, to see what changed since its last run.
+- Why: agents get different access. In the implementation loop only the workflow has access to
+  GitHub (AD-5), and the quality reviewer gets only what TR-4 allows. The doc curator may be
+  allowed to read PRs, to see what changed since its last run.
 - Decided in: #18, while planning #36. The last wording that sent facts to issues was removed in
   #46.
 - Likely home: `CS`.
@@ -1170,9 +1157,10 @@ eval` loads no CLAUDE.md, so `run-docs-evals.sh` also copies the same text into 
 
 **The issue checker checks that each requirement the issue asks for is clear enough to write as a
 rule a test could check. If one isn't, its questions go in the issue and the issue goes to Needs
-attention. An implementer that finds a vague point while writing a spec stops the same way.**
+attention.**
 - Why: clear requirements matter most for the work to come out as wanted. Catching a vague point
   before the implementer starts saves a wasted attempt. Some vague points only show up while
-  writing, such as an edge case the issue never mentions, so the implementer still needs to stop.
+  writing, such as an edge case the issue never mentions, so the implementation loop still ends a
+  run on an open question (FR-8).
 - Decided in: #18, while planning #37. It goes into whichever issue builds the issue checker.
 - Likely home: `FR`.
