@@ -11,11 +11,11 @@ the code are comments there instead.
 - **Result schema.** The shape of a role's result.
 - **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-2,
   TR-3).
-- **Role.** The implementer or the quality reviewer.
+- **Role.** An agent that the workflow starts to do one task in a run.
 - **Run branch.** The git branch that holds a run's work.
 - **Session.** One agent's conversation in the Claude Agent SDK, with the context it has built up.
 - **Workflow.** The code that carries out the implementation loop.
-- **Working copy.** The clone of the project's repo that a run works in.
+- **Working copy.** The checkout of the project's repo that a run works in.
 
 ## T-SEC-2. Architecture decisions
 
@@ -24,22 +24,24 @@ the code are comments there instead.
 *Why:* rounds and checked results are too much logic for shell commands around `claude -p`, the
 way a shell pipeline grows into a real program.
 
-**AD-11.** The workflow is a plain process that any machine can host, such as the owner's computer
-or a cloud VM, and it doesn't depend on GitHub Actions to operate.
+**AD-4.** A run is a series of steps written in the workflow's code. Each step is either the
+workflow's own code or a role. A role does its one task on its own and hands back its result, and
+the workflow's code picks the next step from that result.
 
-*Why:* a local process is quicker to change and try again than a workflow in GitHub Actions.
+*Why:* an agent may skip a step, do one out of order or stop early, and code can't. Keeping
+judgment inside a role's task leaves the models doing the work they're good at, and keeps the rest
+of the run predictable.
 
-**AD-3.** The workflow starts every role itself, as its own Agent SDK call, never as another
-agent's subagent.
+**AD-3.** A role starts no other agent.
 
 *Why:* an agent can skip a review it's told to start, and the workflow's code can't. An implementer
 that briefs its own quality reviewer also tends to explain what it did and why, so the review isn't
 fresh.
 
-**AD-4.** The workflow chooses each next step of a run from the roles' results, among paths written
-in its code.
+**AD-11.** The workflow is a plain process that any machine can host, such as the owner's computer
+or a cloud VM.
 
-*Why:* a model can skip a step or stop early, so the steps and the round count belong in code.
+*Why:* a local process is quicker to change and try again than a workflow in GitHub Actions.
 
 **AD-5.** Only the workflow has access to GitHub.
 
@@ -73,8 +75,8 @@ workflow shall end the run.
 **TD-7.** Each role hands back its result as the Agent SDK's structured output, with the role's
 result schema as its schema. This meets TR-1.
 
-*Why:* a finish tool and a Stop hook are needed only to get a structured result back from a
-subagent, and the workflow starts no subagents (AD-3).
+*Why:* a finish tool and a Stop hook are needed only when an agent starts another agent, and only
+the workflow starts roles (AD-4).
 
 **TR-2.** While a run is in its first round, the review diff shall be everything the run has
 changed.
@@ -108,8 +110,7 @@ the findings the workflow gives it, and the web through web search and web fetch
 it needs has to be written where every agent can read it, not in Claude Code's memory.
 
 **TR-8.** When the implementer finishes the work the issue asks for, or its changes in answer to a
-round's findings, the implementer shall check its own change, including the doc standards' checks
-on each doc it changed.
+round's findings, the implementer shall check its own change.
 
 **TR-9.** When the implementer's own check finds a problem its change caused, the implementer shall
 fix it before it hands back its result, unless the doc standards say the problem isn't the
@@ -135,8 +136,7 @@ call for, which the workflow puts in the PR's description.
 **TD-8.** The workflow commits the implementer's changes to the run branch in the working copy.
 This meets FR-15.
 
-*Why:* the workflow does the steps that need no judgment, and the roles do only the work that does.
-An agent may skip a step or do one out of order, and the workflow's code can't.
+*Why:* a commit needs no judgment, so it's a step for the workflow's code (AD-4).
 
 **TD-9.** The message of each commit TD-8 makes is the one the implementer's result holds. This
 meets FR-15.
