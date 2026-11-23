@@ -32,7 +32,7 @@ the workflow's code picks the next step from that result.
 judgment inside a role's task leaves the models doing the work they're good at, and keeps the rest
 of the run predictable.
 
-**AD-3.** A role starts no other agent.
+**AD-3.** The workflow starts every agent in a run, and each one is a role.
 
 *Why:* an agent can skip a review it's told to start, and the workflow's code can't. An implementer
 that briefs its own quality reviewer also tends to explain what it did and why, so the review isn't
@@ -75,8 +75,8 @@ workflow shall end the run.
 **TD-7.** Each role hands back its result as the Agent SDK's structured output, with the role's
 result schema as its schema. This meets TR-1.
 
-*Why:* a finish tool and a Stop hook are needed only when an agent starts another agent, and only
-the workflow starts roles (AD-4).
+*Why:* structured output is the Agent SDK's own way to get a result in a set shape, so the workflow
+builds nothing of its own to get one.
 
 **TR-2.** While a run is in its first round, the review diff shall be everything the run has
 changed.
