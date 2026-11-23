@@ -78,13 +78,14 @@ result schema as its schema. This meets TR-1.
 *Why:* structured output is the Agent SDK's own way to get a result in a set shape, so the workflow
 builds nothing of its own to get one.
 
-**TR-2.** While a run is in its first round, the review diff shall be everything the run has
-changed.
+**TR-2.** While a run is in its first round, the review diff shall be the work the implementer did
+before that round.
 
-**TR-3.** While a run is in a round after its first, the review diff shall be only what changed
-since the previous round's review.
+**TR-3.** While a run is in a round after its first, the review diff shall be the changes in the
+implementer's answer to the previous round's findings.
 
-*Why:* it keeps a fix from pulling more of the code base into review.
+*Why:* the first round reviews all the work, so what it doesn't flag needs no more review. A later
+round only has to check the changes made in answer to the previous round's findings.
 
 **TR-14.** The quality reviewer shall start each round in a new session.
 
@@ -137,6 +138,11 @@ call for, which the workflow puts in the PR's description.
 This meets FR-15.
 
 *Why:* a commit needs no judgment, so it's a step for the workflow's code (AD-4).
+
+**TD-10.** The workflow makes the commits TD-8 calls for each time the implementer hands back its
+result. This meets TR-2 and TR-3.
+
+*Why:* each review diff is then the difference between two commits.
 
 **TD-9.** The message of each commit TD-8 makes is the one the implementer's result holds. This
 meets FR-15.
