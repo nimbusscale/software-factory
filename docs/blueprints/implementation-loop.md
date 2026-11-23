@@ -136,10 +136,12 @@ project's board:
 | A run ends without a PR | Needs attention | FR-13 |
 
 Each requirement's wording picks out one status, so the code holds this table as it is, in one
-place. The code names each status by its key in `docs/standards/board-statuses.yaml` and reads
-the status's name from there. That file is the one place the statuses are defined, since the
-GitHub standards and the board's setup need them too, and a project's repo doesn't hold the
-workflow's code for an agent there to read.
+place. Each status's name and description go in the factory's own config, with its default
+settings (see "Settings" below). A status's description says what the requirement in its row calls
+for the board to show. That config is the one place the statuses are defined. The code names each
+status by its key there, and a board's statuses are set from it, descriptions included. Agents in
+a project read the statuses from the board, since the project's repo doesn't hold the factory's
+config.
 
 ## Settings
 

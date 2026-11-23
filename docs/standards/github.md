@@ -19,8 +19,8 @@ sections, in this order, each under a `##` heading of that name:
 
 ## The board's statuses
 
-The statuses the factory uses, and what each one means, are in `board-statuses.yaml` in this
-folder. That file is the one place they're defined. Don't list them anywhere else.
+The statuses the factory uses are on the project's board, and each status's description says what
+it means. Read them there, and don't list them anywhere else.
 
 ## Updating an issue
 

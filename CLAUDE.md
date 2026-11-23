@@ -10,7 +10,6 @@
 | Blueprints | `docs/blueprints/` |
 | Doc check script | `tools/check-docs.sh` |
 | GitHub standards | `docs/standards/github.md` |
-| GitHub board statuses | `docs/standards/board-statuses.yaml` |
 
 Before you write, change or review a doc, or code that a doc describes, read
 `docs/standards/README.md`. If you can't find the standards, stop and say so in your report.

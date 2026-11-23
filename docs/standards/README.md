@@ -4,8 +4,8 @@ The functional spec, the technical spec and blueprints are the input an agent tu
 These files say what each doc is, how it's written, how to change it, and how to check a change.
 CLAUDE.md's doc map says where each doc is.
 
-Two files here are about GitHub work, not docs: `github.md` and `board-statuses.yaml`. CLAUDE.md
-points to them on their own, and the list below leaves them out.
+One file here is about GitHub work, not docs: `github.md`. CLAUDE.md points to it on its own, and
+the list below leaves it out.
 
 ## What to read for your task
 
