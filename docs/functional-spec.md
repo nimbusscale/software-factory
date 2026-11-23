@@ -48,11 +48,7 @@ decline it with a reason.
 can question a choice the implementer made on purpose, and then the implementer declines it.
 
 **FR-7.** When a round ends and the run has rounds left, the implementation loop shall start the
-next round, even when the quality reviewer found nothing.
-
-*Why:* Claude Code's stock code review almost always returns findings, since it aims for at least
-five. A stop when a review finds nothing would rarely happen, and a fixed number of rounds is the
-simplest rule.
+next round.
 
 ## F-SEC-4. Statuses and comments
 
