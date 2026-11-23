@@ -1,6 +1,6 @@
 # Paths tools/check-docs.sh leaves out. Written like a .gitignore.
 # The eval cases build test projects, and their files cite IDs that aren't this repo's.
 evals/
-# Research docs are frozen records of a point in time, not read again once done. Their example IDs
-# come from other projects, so they aren't checked as citations of this repo's specs.
+# Research docs are frozen records of a point in time, not read again once done, so they aren't
+# checked.
 docs/research/

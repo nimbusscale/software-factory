@@ -5,10 +5,10 @@ retired:
 
 # Factory spec notes
 
-A blueprint, written to build from before the factory's functional and technical specs exist. It
-collects decisions made while building the factory, each with its reason, so the reasons aren't
-lost before the specs are written. When the specs are written, each entry is sorted into them
-following the doc standards in `docs/standards/`, and this file is retired.
+A blueprint that collects decisions made while building the factory, each with its reason, until
+the specs cover them. When a part of the factory gets its sections of the functional and technical
+specs, the entries about that part are sorted into them following the doc standards in
+`docs/standards/`. Once every entry is sorted, this file is retired.
 
 Each entry gives the rule, why, where it was decided, and a guess at its home: `FR`, `TR`, a
 decision (`AD`, `TD`) or a code standard (`CS`). The guess is only a starting point. "Why unknown" means no reason was given.
@@ -26,8 +26,8 @@ retired ID is a best effort, not a guarantee.**
 - Decided in: #14.
 - Likely home: `FR` that IDs aren't reused as a best effort; `TD` for how a new ID is found.
 
-**Item IDs only need to be unique. Their order in a doc doesn't matter, so TR-4 can sit after
-TR-12, and a spec is never renumbered to put them back in order.**
+**Item IDs only need to be unique. Their order in a doc doesn't matter, so a higher ID can sit
+before a lower one, and a spec is never renumbered to put them back in order.**
 - Why: Joe: IDs are labels. They count up only because that's easy, and they could as well be
   UUIDs.
 - Decided in: #1, reviewing Joe's interactive Dust Law session (nimbusscale/dust-law#17).
@@ -171,8 +171,9 @@ isn't a reason to cite it.**
 
 **A term never states a rule a decision holds, as well as a requirement. The test asks whether a
 change to either would force a change to the term.**
-- Why: in the first Dust Law technical spec run, the Engine term copied AD-3's "holds the game
-  rules and game state". The skill's test only asked about requirements, so it didn't cover that.
+- Why: in the first Dust Law technical spec run, the Engine term copied the words of the
+  architecture decision that created the engine, "holds the game rules and game state". The skill's
+  test only asked about requirements, so it didn't cover that.
 - Decided in: #51.
 - Likely home: `TD`.
 
@@ -180,7 +181,8 @@ change to either would force a change to the term.**
 - Why: the same reason a technical requirement can name a part an architecture decision created
   without citing it. Changing an architecture decision means looking at the whole system again
   anyway, so the citation adds nothing. In the first Dust Law technical spec run, the writer cited
-  AD-3 on Engine and AD-6 on Server because the skill only talked about requirements. Both
+  the architecture decisions that created the engine and the server on those two terms, because the
+  skill only talked about requirements. Both
   reviewers flagged the citations.
 - Decided in: #51.
 - Likely home: `TD`.
@@ -325,7 +327,8 @@ requirement's text. The example itself can be cut without a mention in the PR.**
 
 **Tests trace to functional requirements, not to scenarios. Every functional requirement has at
 least one test, and counts as met when its tests pass. The requirements an issue's acceptance
-criteria name tell the workflow which tests must pass. They don't define the tests. A test an issue needs may not exist yet, and then it's written as part of the work.**
+criteria name tell the workflow which tests must pass. They don't define the tests. A test an issue
+needs may not exist yet, and then it's written as part of the work.**
 - Why: each requirement should be testable, or easy to see how to test, from its own text. If it
   isn't, the requirement needs refining. Tracing tests to scenarios made scenarios carry rules and
   hide vague requirements. An earlier idea, in the docs retro findings, was that scenarios become
@@ -387,8 +390,8 @@ script keeps flagging the missing Why until the reason is known.**
 **A decision with no Why is also a sign the item may not be a decision at all. There's no way to
 mark a decision as having no reason. One is added only if a real decision with no reason turns
 up.**
-- Why: in Joe's interactive Dust Law session, the two decisions with no reason, TD-3 and TD-4,
-  turned out to be facts with no other option: the tile type's shape, and how border positions face
+- Why: in Joe's interactive Dust Law session, the two decisions with no reason turned out to
+  be facts with no other option: the tile type's shape, and how border positions face
   each other. Joe: "maybe this is a smell, right? It's a signal."
 - Decided in: #1, reviewing that session (nimbusscale/dust-law#17). Built in #61.
 - Likely home: `TD`.
@@ -399,11 +402,11 @@ function that works it out. Until that code exists, a blueprint holds it. The wr
 before asking the owner for a missing reason, and asks whether another way was weighed when it
 can't tell. The reviewer looks twice at each decision with no Why, and doesn't suggest a Why for
 one that isn't a decision.**
-- Why: asked for the reasons behind TD-3 and TD-4, Joe's only answer was "that's the way the game
-  works." TD-3 is what the tile type looks like in code, and TD-4 follows from how the Border
-  position term names the eight positions. Each has one place in the code, so by question 8 that
-  place is its home. Dust Law's shape-catalog blueprint already held the rotation table, the same
-  kind of fact, so the two moved there.
+- Why: asked for the reasons behind those two decisions, Joe's only answer was "that's the way the
+  game works." The first is what the tile type looks like in code, and the second follows from how
+  the Border position term names the eight positions. Each has one place in the code, so by question
+  8 that place is its home. Dust Law's shape-catalog blueprint already held the rotation table, the
+  same kind of fact, so the two moved there.
 - Decided in: #61.
 - Likely home: `TD`.
 
@@ -475,7 +478,8 @@ requirement.**
   a cheater could break to the decision that created the server. It can also be the
   architect's alone, such as "the user IDs the app stores are its own and never change", whatever
   the sign-in service an architecture decision picked gives. The skill had requirements first, so
-  a reviewer said TR-5 shouldn't name the engine, though DESIGN gives the engine that job.
+  a reviewer said a technical requirement shouldn't name the engine, though DESIGN gives the
+  engine that job.
 - Decided in: #19, in review of the first run, and #48.
 - Likely home: `TD`.
 
@@ -488,11 +492,11 @@ decision.**
 
 **A requirement leaves the how open: several ways of building it could each meet it. A decision
 picks one of those ways. This test replaces imagining a redesign.**
-- Why: imagining any redesign flagged TR-5 for naming the engine. Imagining only redesigns that
-  keep the architecture decisions still failed: a design that keeps the sign-in service could use
-  that service's user IDs, so "the app's user IDs are its own" would count as a decision, though
-  it's a requirement the architect set. Joe: it's the better test "as long as it's relatively easy
-  to apply and understand the outcome".
+- Why: imagining any redesign flagged the technical requirement that named the engine. Imagining
+  only redesigns that keep the architecture decisions still failed: a design that keeps the sign-in
+  service could use that service's user IDs, so "the app's user IDs are its own" would count as a
+  decision, though it's a requirement the architect set. Joe: it's the better test "as long as it's
+  relatively easy to apply and understand the outcome".
 - Decided in: #48.
 - Likely home: `TD`.
 
@@ -508,9 +512,9 @@ runtimes the code is built on, and the tools that build and test it.**
 line or its Why. The check script flags one that cites none. One that meets no requirement is
 either an architecture decision or a code standard, or a requirement is missing.**
 - Why: in the first technical spec run, once the tech stack picks became architecture decisions,
-  every design decision outside the code standards could be traced to a requirement. Two looked
-  like they couldn't. TD-4, the shape catalog as data, held a technical requirement: the weights
-  can change without touching the game logic. TD-10, tiles drawn in code, meets FR-81. A script
+  every design decision outside the code standards could be traced to a requirement. Two looked like
+  they couldn't. The shape catalog as data held a technical requirement: the weights can change
+  without touching the game logic. Drawing tiles in code meets a functional requirement. A script
   check is free, so no reviewer case tests for a missing citation. A citation to a requirement the
   decision doesn't really meet isn't tested until a run shows reviewers miss it.
 - Decided in: #48.
@@ -552,11 +556,12 @@ rules in those sections it covers. It never cites the whole functional spec.**
 - Why: citations are there so a change's effects can be traced. Citing the whole functional spec
   loses that, since no one can tell what the technical requirement covers without reading all of
   it. Listing every ID adds little. With sections and IDs, a miss can be seen and discussed, as when
-  a reviewer asked why TR-1 left out FR-4 and FR-46. Requiring a cited section to hold only
-  protected rules would mean listing about 40 IDs for TR-1, or laying out the functional spec
-  around what the server checks. Dust Law's TR-1 already shows the wording doing the work: it
-  covers what's "allowed by the rules in" its sections, so a setup rule like "lay a start tile"
-  in F-SEC-3 isn't covered.
+  a reviewer asked why Dust Law's technical requirement on what the server accepts left out two
+  functional requirements. Requiring a cited section to hold only protected rules would mean
+  listing about 40 IDs in that requirement, or laying out the functional spec around what the
+  server checks. That requirement already shows the wording doing the work: it covers what's
+  "allowed by the rules in" its sections, so a setup rule like "lay a start tile" in the section on
+  setting up a game isn't covered.
 - Decided in: #19, in review of the first run, and #49.
 - Likely home: `TD`.
 
@@ -574,8 +579,9 @@ flagged. No step was added to the procedure for this.**
 
 **A term in the technical spec never states a decision's choice. It cites a decision only when the
 citation passes the cover test.**
-- Why: "Engine. The part of the code that holds the game rules and game state (AD-3)" repeats
-  AD-3's choice, so changing AD-3 would mean changing the term too: one fact in two places. That
+- Why: "Engine. The part of the code that holds the game rules and game state", citing the
+  decision that created the engine, repeats that decision's choice. Changing the decision would
+  mean changing the term too: one fact in two places. That
   was a reviewer's reasoning, and Joe agreed with it.
 - Decided in: #19, in review of the first run. Built in #51.
 - Likely home: `TD`.
@@ -781,9 +787,9 @@ has its own checklist.**
 
 **An agent checking its own change fixes what it finds. A reviewer checking someone else's change
 edits nothing and reports what it finds.**
-- Why: the two cases match the implementation loop's roles. The implementer checks its own work
-  and fixes what it finds (TR-8, TR-9). The quality reviewer changes nothing, and its findings go back to
-  the implementer (TR-5, TR-7).
+- Why: the two cases match the implementation loop's roles. The implementer checks its own work so
+  it can fix problems before the work goes to the quality reviewer (TR-8, TR-9). The quality
+  reviewer changes nothing, and its findings go back to the implementer (TR-5, TR-7).
 - Decided in: #33.
 - Likely home: `FR`.
 
@@ -861,8 +867,9 @@ A reviewer that wasn't given the task or the source skips this check, and says s
 why it fixes it. The task's prompt says how findings are delivered. With no instructions, they go
 in the reply.**
 - Why: the same standards are used in an interactive session, in the factory loop and in
-  evaluations, and each needs a different format. In the implementation loop, a role hands back its result as structured output (TD-7). No
-  one skill defines how an agent works, since an agent loads several skills.
+  evaluations, and each needs a different format. In the implementation loop, a role hands back its
+  result as structured output (TD-7). No one skill defines how an agent works, since an agent loads
+  several skills.
 - Decided in: #33.
 - Likely home: `TD`.
 
@@ -929,17 +936,16 @@ they're written is kept apart from how to do a task with them: change a doc in `
 check a change in `reviewing.md`, and what goes in the report in `reports.md`. A rule about IDs is
 split the same way: that an item's ID always means the same thing is a standard, and how to pick a
 new ID, or tell whether a change keeps an item's meaning, is in `changing-items.md`.**
-- Why: other skills need the standards too, such as one that writes GitHub issues or code
-  comments. While the standards live in the docs skill, other skills have to point into it or keep
-  their own copy, and changing a standard means releasing a new version of the skill. Joe: "if we
-  update the specification, then we got to update the skill. And then do we then now have to worry
-  about any kind of references between skills?" Splitting them "drives a good, clear delineation
-  between what specs and standards are versus how those specs and standards are used for a
-  specific task, where the later portion is handled by the skill." It also lets an agent that only
-  needs to know what a `TR` is read the standards without loading the skill. On IDs: a reader,
-  such as whoever writes a code comment or an issue that cites `FR-12`, relies on the ID keeping
-  its meaning. Only an agent changing a spec needs to know how. Claude proposed this split, and
-  Joe agreed.
+- Why: other skills need the standards too, such as one that writes GitHub issues or code comments.
+  While the standards live in the docs skill, other skills have to point into it or keep their own
+  copy, and changing a standard means releasing a new version of the skill. Joe: "if we update the
+  specification, then we got to update the skill. And then do we then now have to worry about any
+  kind of references between skills?" Splitting them "drives a good, clear delineation between what
+  specs and standards are versus how those specs and standards are used for a specific task, where
+  the later portion is handled by the skill." It also lets an agent that only needs to know what a
+  `TR` is read the standards without loading the skill. On IDs: a reader, such as whoever writes a
+  code comment or an issue that cites a requirement's ID, relies on the ID keeping its meaning. Only
+  an agent changing a spec needs to know how. Claude proposed this split, and Joe agreed.
 - Decided in: #66, while discussing #60. The task files moved out of the skill and into the
   standards in #67.
 - Likely home: `AD`.

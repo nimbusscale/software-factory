@@ -74,11 +74,14 @@ isn't clear from it.
 **TR-1.** The workflow shall act on a role's result only after checking it against that role's
 result schema.
 
+**TR-13.** When a role hands back no result, or a result that doesn't fit its result schema, the
+workflow shall end the run.
+
 **TD-7.** Each role hands back its result as the Agent SDK's structured output, with the role's
 result schema as its schema. This meets TR-1.
 
-*Why:* the SDK checks the answer against the schema and has the agent try again when it doesn't
-fit, so a tool and hook of the factory's own would add parts for little gain.
+*Why:* a finish tool and a Stop hook are needed only to get a structured result back from a
+subagent, and the workflow starts no subagents (AD-3).
 
 **TR-2.** While a run is in its first round, the review diff shall be everything the run has
 changed.
@@ -88,9 +91,10 @@ since the previous round's review.
 
 *Why:* it keeps a fix from pulling more of the code base into review.
 
-**TR-4.** The quality reviewer shall start each round fresh, with access only to the body of the
-run's issue, the docs and code in the working copy, the round's review diff, and the findings from
-the run's earlier rounds.
+**TR-14.** The quality reviewer shall start each round in a new session.
+
+**TR-4.** The quality reviewer shall have access only to the body of the run's issue, the docs and
+code in the working copy, the round's review diff, and the findings from the run's earlier rounds.
 
 *Why:* the author's reasons sway a review, such as in commit messages, the PR's description or the
 implementer's account of its work. A reviewer that reads them may accept a choice because it's
@@ -114,8 +118,9 @@ it needs has to be written where every agent can read it, not in Claude Code's m
 round's findings, the implementer shall check its own change, including the doc standards' checks
 on each doc it changed.
 
-**TR-9.** When the implementer's own check finds a problem, the implementer shall fix it before it
-hands back its result.
+**TR-9.** When the implementer's own check finds a problem its change caused, the implementer shall
+fix it before it hands back its result, unless the doc standards say the problem isn't the
+implementer's to fix.
 
 **TR-7.** When the implementer gets a round's findings, the implementer shall either fix each
 finding or decline it with a reason.
@@ -140,5 +145,11 @@ workflow puts in the PR's description.
 
 *Why:* the workflow already has the issue number.
 
-**TD-8.** The workflow commits the implementer's changes to the run branch in the working copy, with
-the commit message the implementer's result holds. This meets FR-15.
+**TD-8.** The workflow commits the implementer's changes to the run branch in the working copy.
+This meets FR-15.
+
+**TD-9.** The message of each commit TD-8 makes is the one the implementer's result holds. This
+meets FR-15.
+
+*Why:* the doc standards put a change's history in its commit message, and only the implementer
+knows that history.
