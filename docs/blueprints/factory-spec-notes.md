@@ -188,7 +188,8 @@ change to either would force a change to the term.**
 - Likely home: `TD`.
 
 **A term may cite a design decision its meaning depends on, the same way it cites a requirement.
-For example, "Failed task. A task that still fails after its last try (TD-2)."**
+For example, "Failed task. A task that still fails after its last try," citing the decision that
+sets how many tries a task gets.**
 - Why: a design decision can change on its own, like a requirement. Without the citation, the term
   either leaves the reader unable to tell what it means, or copies the decision's rule, which then
   goes stale when the decision changes.
@@ -440,12 +441,12 @@ so the writer asks about it. The part the source settles is still written. A "ma
 a person is allowed to do is a rule, and a "such as" that gives an example of a rule is an
 example.**
 - Why: in the first technical spec run, DESIGN said the client "may use" the engine to show legal
-  moves, and the writer wrote TD-1 as the client using the engine. The choice may be right, but it
-  wasn't the writer's to make. Joe: words that aren't definite "should not be looked at as
-  decisions. They should be looked at options that a decision has to be made about." The two
-  limits keep the writer from dropping settled text. "A member may cancel a booking" is a rule
-  the app has to follow. The same DESIGN passage uses "such as highlighting where a tile fits" as
-  an example of a settled rule.
+  moves, and the writer wrote a design decision that had the client use the engine. The choice may
+  be right, but it wasn't the writer's to make. Joe: words that aren't definite "should not be
+  looked at as decisions. They should be looked at options that a decision has to be made about."
+  The two limits keep the writer from dropping settled text. "A member may cancel a booking" is a
+  rule the app has to follow. The same DESIGN passage uses "such as highlighting where a tile fits"
+  as an example of a settled rule.
 - Decided in: #19, in review of the first run. Built in #47.
 - Likely home: `FR`.
 
@@ -833,7 +834,7 @@ each such fact, and where it likely belongs, in its report.**
 copy the vague wording either. It raises a question in its report: the source text, what's
 unclear, and a suggested answer. It still writes the parts the source settles. The agent's prompt
 says what happens to the question: in an interactive session it's asked, the implementation loop
-lists it in the PR's description (FR-26), and a test run puts it in the report.**
+lists it in the PR's description (FR-20), and a test run puts it in the report.**
 - Why: a reader of the doc alone can't tell a guess from a settled rule, and open items never go
   in a doc, so a guess can't be marked as one. In the Facet run, the writer turned the undefined
   "eligible public content" into "every public item that fits it", and listed it as open only in
@@ -848,9 +849,9 @@ lists it in the PR's description (FR-26), and a test run puts it in the report.*
 change was written from, or the docs already there. The author's account doesn't settle anything.
 A reviewer that wasn't given the task or the source skips this check, and says so in its report.**
 - Why: writers keep writing guesses as rules, and a reviewer comparing the change to its source is
-  the last place to catch one. In the loop, the implementer lists
-  the choices it made on open points in the PR (FR-26), so the reviewer may also see a guess there. Without the source there's nothing to
-  compare against: judging from the spec alone can't tell a guess from a choice the owner made.
+  the last place to catch one. In the loop, the implementer lists the choices it made on open points
+  in the PR (FR-20), so the reviewer may also see a guess there. Without the source there's nothing
+  to compare against: judging from the spec alone can't tell a guess from a choice the owner made.
   Saying the check was skipped keeps a clean report from looking like a pass.
 - Decided in: #37.
 - Likely home: `FR`.
@@ -860,7 +861,7 @@ why it fixes it. The task's prompt says how findings are delivered. With no inst
 in the reply.**
 - Why: the same standards are used in an interactive session, in the factory loop and in
   evaluations, and each needs a different format. In the implementation loop, a role hands back its
-  result as structured output (TD-7). No one skill defines how an agent works, since an agent loads
+  result as structured output (TD-1). No one skill defines how an agent works, since an agent loads
   several skills.
 - Decided in: #33.
 - Likely home: `TD`.
@@ -898,7 +899,7 @@ it on the base branch. With `--uncited`, it flags every requirement that nothing
 **The doc standards don't assume the agent can reach GitHub. It talks about the task and the agent's
 report, not a PR or issues.**
 - Why: agents get different access. In the implementation loop only the workflow has access to
-  GitHub (AD-5), and the quality reviewer gets only what TR-4 allows. The doc curator may be
+  GitHub (AD-7), and the quality reviewer gets only what TR-7 allows. The doc curator may be
   allowed to read PRs, to see what changed since its last run.
 - Decided in: #18, while planning #36. The last wording that sent facts to issues was removed in
   #46.
@@ -1160,6 +1161,6 @@ attention.**
 - Why: clear requirements matter most for the work to come out as wanted. Catching a vague point
   before the implementer starts saves a wasted attempt. Some vague points only show up while
   writing, such as an edge case the issue never mentions, so the implementation loop still lists
-  its choices on open points in the PR's description (FR-26).
+  its choices on open points in the PR's description (FR-20).
 - Decided in: #18, while planning #37. It goes into whichever issue builds the issue checker.
 - Likely home: `FR`.
