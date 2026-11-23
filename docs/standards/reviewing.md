@@ -57,6 +57,7 @@ Copy this checklist into your task list and tick off each check:
 - [ ] Each scenario earns its place
 - [ ] Each requirement's Why passes both tests
 - [ ] Every new item is in the right home
+- [ ] Code comments pass their own checks
 - [ ] Everything else in changing-items.md holds
 ```
 
@@ -185,4 +186,6 @@ whether it's a real problem. It checks:
   only reason anyone could give is that the rules or the domain work that way, it isn't a
   decision, and it's a problem in the spec. Its home is the code, or a blueprint until the code
   exists, as "Is there no other option?" in question 8 says. Don't suggest a Why for it.
+- **Code comments pass their own checks.** When the change adds, changes or deletes code comments,
+  or moves code that has them, do the checks in "Checking comments" in `code-comments.md`.
 - **Everything else in `changing-items.md` holds.**

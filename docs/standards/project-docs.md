@@ -65,9 +65,15 @@ Ask these questions in order, and stop at the first yes.
 
 ### Is its home a code comment?
 
-These questions decide when a fact goes in a comment instead of a spec. The project's guidance for
-code comments says how to write the comment. It may also find a better home in the code, such as a
-clearer name or a type. Either way, the fact stays out of the specs.
+These questions decide when a fact goes in a comment instead of a spec. `code-comments.md` in this
+folder says whether a comment is needed and how to write it. It may also find a better home in the
+code, such as a clearer name or a type. Either way, the fact stays out of the specs.
+
+A decision sent to a comment needs its reason as much as one in the technical spec, since the reason
+is what the comment holds. The code shows the choice, but not why it was made. So the reason goes
+with the decision, into the comment, or into a blueprint until the code exists. When the source
+gives no reason, ask for it, as `reports.md` says. A fact with no other option has no reason to ask
+for.
 
 ### Is the code not written yet?
 

@@ -2,7 +2,8 @@
 
 The functional spec, the technical spec and blueprints are the input an agent turns into code.
 These files say what each doc is, how it's written, how to change it, and how to check a change.
-CLAUDE.md's doc map says where each doc is.
+`code-comments.md` does the same for code comments, which hold the facts one place in the code
+owns. CLAUDE.md's doc map says where each doc is.
 
 One file here is about GitHub work, not docs: `github.md`. CLAUDE.md points to it on its own, and
 the list below leaves it out.
@@ -21,6 +22,8 @@ Read every file that applies to your task. Most tasks need more than one.
 - **Adding, changing, replacing or deleting an item or a section,** in a doc or a code comment,
   or changing code that a doc describes: `changing-items.md`. It says what must hold when you're
   done.
+- **Adding, changing or deleting a code comment,** moving code that has comments, or checking a
+  change that does: `code-comments.md`. It says when a comment is needed and how it's written.
 - **Checking a change,** your own before you count the work as done, or someone else's:
   `reviewing.md`. Do every check in it.
 - **Sorting a long passage that mixes several kinds of text:** `worked-examples.md`. It sorts real
