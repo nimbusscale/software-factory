@@ -123,6 +123,11 @@ finding questions. Without them, a fix can undo a decision.
 **TD-4.** The implementer's result holds the text that FR-17, FR-18 and FR-19 call for, which the
 workflow puts in the PR's description.
 
+*Why:* only the implementer knows what it changed and why it declined each finding.
+
 **TD-6.** The workflow writes the line of the PR's description that FR-16 calls for.
 
-**TD-5.** The implementer commits its work to the run branch in the working copy. This meets FR-15.
+*Why:* the workflow already has the issue number.
+
+**TD-8.** The workflow commits the implementer's changes to the run branch in the working copy, with
+the commit message the implementer's result holds. This meets FR-15.
