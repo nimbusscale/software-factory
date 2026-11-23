@@ -9,6 +9,7 @@ the code are comments there instead.
 
 - **Doc standards.** The rules a project's docs are written and checked by.
 - **Result schema.** The shape of a role's result.
+- **Review copy.** The copy of the run's work that the quality reviewer works in.
 - **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-2,
   TR-3).
 - **Role.** An agent that the workflow starts to do one task in a run.
@@ -37,6 +38,11 @@ of the run predictable.
 *Why:* an agent can skip a review it's told to start, and the workflow's code can't. An implementer
 that briefs its own quality reviewer also tends to explain what it did and why, so the review isn't
 fresh.
+
+**AD-13.** The workflow is written in Python.
+
+*Why:* the workflow has no client to share code with, and building it in Python shows the owner
+how such a workflow looks in that language.
 
 **AD-11.** The workflow is a plain process that any machine can host, such as the owner's computer
 or a cloud VM.
@@ -99,12 +105,20 @@ This meets FR-23.
 project, not one tuned to each project.
 
 **TR-4.** The quality reviewer shall have access only to the body of the run's issue, the docs and
-code in the working copy, the round's review diff, and the findings from the run's earlier rounds.
+code as they stand when the round starts, the round's review diff, and the findings from the run's
+earlier rounds.
 
 *Why:* the author's reasons sway a review, such as in commit messages, the PR's description or the
 implementer's account of its work. A reviewer that reads them may accept a choice because it's
 explained, or look only where the author points. A fresh reviewer that couldn't see them has found
 bugs the author missed.
+
+**TD-13.** The review copy is a git repo with one commit, which holds the docs and code as they
+stood before the round's review diff, and the review diff on top as changes not yet committed.
+This meets TR-4.
+
+*Why:* the quality reviewer can run the tests in it, and the implementer's commit messages aren't
+in it.
 
 **TR-12.** The findings from earlier rounds that the quality reviewer gets shall mark each declined
 finding as declined, with no reason.

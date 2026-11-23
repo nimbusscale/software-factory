@@ -52,16 +52,21 @@ flowchart TD
       here (TR-16). In the first round, it's
       everything from where the run branch started to the latest commit (TR-2). In a later round,
       it's from the commit the previous round reviewed to the latest commit (TR-3).
-   2. **Review.** The workflow starts the quality reviewer in a new session (TR-14). It gives the
+   2. **Review copy.** The workflow builds the round's review copy (TD-13) in a new folder. It
+      copies in the files as they stood at the commit the review diff starts from, commits them
+      with a plain message such as "base", and then copies in the files at the latest commit
+      without committing them.
+   3. **Review.** The workflow starts the quality reviewer in a new session, in the review copy
+      (TR-14). It gives the
       reviewer the issue's body, the review diff, and the findings from earlier rounds, with each
       declined finding marked as declined and no reason (TR-4, TR-12). The reviewer runs Claude
       Code's stock code review on the review diff (TD-11), changes nothing (TR-5), and hands back
       its findings.
-   3. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
-   4. **Answer.** The workflow resumes the implementer's session (TD-3), and gives it the round's
+   4. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
+   5. **Answer.** The workflow resumes the implementer's session (TD-3), and gives it the round's
       findings. The implementer fixes each finding or declines it with a reason (FR-24), checks its
       change (TR-8, TR-9), and hands back its result.
-   5. **Commit.** As in step 5.
+   6. **Commit.** As in step 5.
 7. **The PR.** When the last round ends, the workflow pushes the run branch and opens the PR
    (FR-15). The PR's description holds `Closes #<number>`, which the workflow writes (FR-16,
    TD-6), the text from the implementer's last result (TD-4), and the declined findings the
@@ -80,7 +85,7 @@ structured output. A run that ends without a PR moves the issue to Needs attenti
 |---|---|---|
 | Session | One for the whole run, resumed each round (TD-3) | A new one each round (TR-14) |
 | Gets | The issue's body, then each round's findings | The issue's body, the review diff, earlier findings |
-| Can use | The working copy, web search and web fetch (TR-11) | The docs and code in the working copy (TR-4) |
+| Can use | The working copy, web search and web fetch (TR-11) | The review copy (TD-13) |
 | Changes | The working copy, the only role that does (TR-5) | Nothing |
 | Hands back | The text for the PR's description and a commit message | The round's findings |
 
@@ -115,6 +120,11 @@ Each role is its own agent, so the workflow sets its tools and permissions when 
   rule on a command's name, such as by calling `gh` through another program. Shutting that off
   fully waits for the work on containers (#10).
 
+## Code checks
+
+The workflow's code is checked with mypy in strict mode (`mypy --strict`) as well as its tests. The
+setting goes in the project's Python config once the code exists, and the check then documents it.
+
 ## Settings
 
 The factory has a default for every setting: the number of rounds is 3 (FR-6), and each role has a
@@ -123,6 +133,9 @@ setting in it, is missing, the workflow uses the default.
 
 ## The Agent SDK
 
+- **Check the stock code review first.** The review copy (TD-13) holds the review diff as
+  changes not yet committed, because Claude Code's stock code review should review those when it's
+  given no target. Confirm that in a spike before building the review copy.
 - **Structured output on a resumed session works.** A spike with `claude-agent-sdk` 0.2.187 for
   Python resumed a session with a new schema, the same schema, and none. The session ID stayed
   the same, and the agent kept its context. The SDK's docs don't say this, so check it again on a
