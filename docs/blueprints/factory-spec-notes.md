@@ -861,7 +861,7 @@ A reviewer that wasn't given the task or the source skips this check, and says s
 why it fixes it. The task's prompt says how findings are delivered. With no instructions, they go
 in the reply.**
 - Why: the same standards are used in an interactive session, in the factory loop and in
-  evaluations, and each needs a different format. In the implementation loop, a role hands back its result through a finish tool (TD-1). No
+  evaluations, and each needs a different format. In the implementation loop, a role hands back its result as structured output (TD-7). No
   one skill defines how an agent works, since an agent loads several skills.
 - Decided in: #33.
 - Likely home: `TD`.
