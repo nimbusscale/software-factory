@@ -53,11 +53,11 @@ the role has to follow.
 
 *Why:* the implementation loop is made to work before it's made cheaper.
 
-**AD-12.** A role gets its guidance from the project's docs, which its prompt or the project's
-CLAUDE.md points it to.
+**AD-12.** A role learns the project's rules from the project's docs, which its prompt or the
+project's CLAUDE.md points it to.
 
-*Why:* one agent works in one repo, so a skill adds complexity and little else. Pointing the agent
-at the docs does the same job.
+*Why:* one agent works in one repo, so a skill of the project's own adds complexity and little
+else. Pointing the agent at the docs does the same job.
 
 ## T-SEC-3. Code standards
 
@@ -87,7 +87,16 @@ implementer's answer to the previous round's findings.
 *Why:* the first round reviews all the work, so what it doesn't flag needs no more review. A later
 round only has to check the changes made in answer to the previous round's findings.
 
+**TR-16.** When a round's review diff is empty, the workflow shall end the round without starting
+the quality reviewer or the implementer.
+
 **TR-14.** The quality reviewer shall start each round in a new session.
+
+**TD-11.** The quality reviewer runs Claude Code's stock code review on the round's review diff.
+This meets FR-23.
+
+*Why:* the factory uses stock parts where it can, and one review process that works for any
+project, not one tuned to each project.
 
 **TR-4.** The quality reviewer shall have access only to the body of the run's issue, the docs and
 code in the working copy, the round's review diff, and the findings from the run's earlier rounds.
@@ -103,6 +112,8 @@ finding as declined, with no reason.
 *Why:* without the mark, the quality reviewer raises a declined finding again in every round.
 
 **TR-5.** The implementer shall be the only role that changes the working copy.
+
+**TR-15.** The workflow shall deny every role the shell commands `gh`, `git push` and `git commit`.
 
 **TR-11.** The implementer shall have access only to the body of the run's issue, the working copy,
 the findings the workflow gives it, and the web through web search and web fetch.
@@ -125,10 +136,16 @@ finding questions. Without them, a fix can undo a decision.
 
 ## T-SEC-5. GitHub and the PR
 
-**TD-4.** The implementer's result holds the text that FR-17, FR-18, FR-19, FR-22 and FR-26
-call for, which the workflow puts in the PR's description.
+**TD-4.** The implementer's last result holds the text that FR-17, FR-19, FR-22 and FR-26 call
+for, which the workflow puts in the PR's description.
 
-*Why:* only the implementer knows what it changed and why it declined each finding.
+*Why:* only the implementer knows what it changed.
+
+**TD-12.** The workflow keeps each declined finding and its reason from every one of the
+implementer's results, and lists them in the PR's description. This meets FR-18.
+
+*Why:* a finding declined in an early round isn't in the implementer's last result, and the
+workflow keeps the declined findings anyway, for the quality reviewer's list (TR-12).
 
 **TD-6.** The workflow writes the line of the PR's description that FR-16 calls for.
 

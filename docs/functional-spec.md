@@ -20,6 +20,8 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Round.** One review of a run's work by the quality reviewer, then the implementer's answer to
   its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
+- **Turn cap.** The most turns an agent may take each time the implementation loop starts or
+  resumes it.
 
 ## F-SEC-2. Starting a run
 
@@ -37,6 +39,12 @@ check is what lets the owner trust work no person watched.
 
 **FR-6.** The implementation loop shall give a run the number of rounds its command sets, else the
 number the project sets, else 3.
+
+**FR-27.** The implementation loop shall give the implementer and the quality reviewer each the turn
+cap the project sets for it, else the factory's default for it.
+
+**FR-28.** When the implementer or the quality reviewer reaches its turn cap, the implementation
+loop shall end the run.
 
 **FR-23.** When the implementer finishes the work the issue asks for, the implementation loop shall
 start the run's first round.
