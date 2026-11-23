@@ -925,6 +925,15 @@ a file of standards that CLAUDE.md points to, as the doc standards are.**
   and #64.
 - Likely home: `TD`.
 
+**The GitHub standards are `github.md` in the doc standards' folder, with the board's statuses in
+`board-statuses.yaml` beside it. CLAUDE.md's doc map lists both, with a line saying to read
+`github.md` before writing an issue or the summary in a PR's description, or updating an issue.
+How the workflow uses the statuses file is in the implementation loop blueprint.**
+- Why: next to the doc standards, the GitHub standards are copied into each project along with
+  them. Claude proposed this, and Joe agreed.
+- Decided in: #71.
+- Likely home: `TD`.
+
 **The doc standards are plain files, apart from any skill. Within them, what the docs are and how
 they're written is kept apart from how to do a task with them: change a doc in `changing-items.md`,
 check a change in `reviewing.md`, and what goes in the report in `reports.md`. A rule about IDs is

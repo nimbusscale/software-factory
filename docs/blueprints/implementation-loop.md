@@ -135,8 +135,11 @@ project's board:
 | A run opens its PR | In review | FR-12 |
 | A run ends without a PR | Needs attention | FR-13 |
 
-The statuses and what each means are set up with the board, under #71. Each requirement's wording
-picks out one status, so the code holds this table as it is, in one place.
+Each requirement's wording picks out one status, so the code holds this table as it is, in one
+place. The code names each status by its key in `docs/standards/board-statuses.yaml` and reads
+the status's name from there. That file is the one place the statuses are defined, since the
+GitHub standards and the board's setup need them too, and a project's repo doesn't hold the
+workflow's code for an agent there to read.
 
 ## Settings
 
