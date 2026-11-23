@@ -6,17 +6,18 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 ## F-SEC-1. Terms
 
 - **Board.** A project's GitHub project board.
-- **Declined finding.** A finding that a run chose not to fix.
+- **Declined finding.** A finding that the implementer chose not to fix.
 - **Factory.** The app this spec describes, which does a project's work from its issues and docs.
-- **Finding.** A problem that a review reports in a run's work.
-- **Implementation loop.** The part of the factory that does the work an issue asks for.
+- **Finding.** A problem that the quality reviewer reports in a run's work.
+- **Implementation loop.** The part of the factory that makes the changes an issue asks for and
+  reviews them.
+- **Implementer.** The agent that makes a run's changes and handles the findings.
 - **Issue.** A GitHub issue in a project's repo.
-- **Open question.** A part of a rule that the issue and the docs leave open, so the work would
-  have to choose it.
 - **Owner.** The person the factory does a project's work for.
 - **PR.** A GitHub pull request in a project's repo.
 - **Project.** A piece of software the factory builds, with its own GitHub repo and board.
-- **Round.** One review of a run's work, then the changes made in answer to its findings.
+- **Quality reviewer.** The agent that reviews a run's work.
+- **Round.** One review of a run's work, then the implementer's answer to its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
 
 ## F-SEC-2. Starting a run
@@ -24,25 +25,32 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 **FR-1.** When the implementation loop's command is called with a project's repo and an issue
 number, the implementation loop shall start a run on that issue.
 
-**FR-5.** When a run starts, the implementation loop shall do the work the issue asks for.
+**FR-5.** When a run starts, the implementer shall do the work the issue asks for.
 
 ## F-SEC-3. How a run goes
+
+**FR-25.** The quality reviewer shall be a different agent from the implementer.
+
+*Why:* an author's own check of its work is thin, so a separate reviewer is the real check. That
+check is what lets the owner trust work no person watched.
 
 **FR-6.** The implementation loop shall give a run the number of rounds its command sets, else the
 number the project sets, else 3.
 
-**FR-7.** While a run hasn't found an open question, the implementation loop shall go through every
-one of the run's rounds, even when a review finds nothing.
+**FR-23.** When a round starts, the quality reviewer shall review the run's work.
+
+**FR-24.** When the implementer gets a round's findings, the implementer shall fix each finding or
+decline it with a reason.
+
+*Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, or
+can question a choice the implementer made on purpose, and then the implementer declines it.
+
+**FR-7.** The implementation loop shall go through every one of the run's rounds, even when the
+quality reviewer finds nothing.
 
 *Why:* Claude Code's stock code review almost always returns findings, since it aims for at least
 five. A stop when a review finds nothing would rarely happen, and a fixed number of rounds is the
 simplest rule.
-
-**FR-8.** When a run finds an open question, the implementation loop shall end the run without
-opening a PR.
-
-*Why:* the run has no one to ask, and a guess written as a rule looks settled to every later
-reader.
 
 ## F-SEC-4. Statuses and comments
 
@@ -65,10 +73,6 @@ starts each run by hand, so they see when one stops.
 **FR-12.** When a run ends without opening a PR, the implementation loop shall post a comment on
 the issue that gives the reason.
 
-**FR-21.** When a run ends on an open question, the implementation loop shall post each question as
-its own comment on the issue, with the text it's about, what's unclear and a suggested answer.
-
-
 ## F-SEC-5. The PR
 
 **FR-15.** When a run's last round ends, the implementation loop shall open a PR for the run's
@@ -88,9 +92,12 @@ declined.
 **FR-19.** The description of a run's PR shall name each disagreement between a doc and the code
 that the run left in place, by the doc item's ID and the code.
 
-**FR-22.** The description of a run's PR shall list each decision the run wrote into a spec with no
-reason, as a question for the owner that quotes the decision and suggests a reason where the run
-has one.
+**FR-26.** The description of a run's PR shall list each choice the implementer made on a point the
+issue and the docs left open, with the text it's about, what was unclear and what it chose.
 
-*Why:* the decision is made and only its reason is missing, so the run goes on to a PR instead of
-ending as it does on an open question.
+*Why:* the implementer has no one to ask during a run, so the owner checks each such choice at the
+PR.
+
+**FR-22.** The description of a run's PR shall list each decision the implementer wrote into a spec
+with no reason, as a question for the owner that quotes the decision and suggests a reason where
+the implementer has one.

@@ -789,7 +789,7 @@ has its own checklist.**
 edits nothing and reports what it finds.**
 - Why: the two cases match the implementation loop's roles. The implementer checks its own work so
   it can fix problems before the work goes to the quality reviewer (TR-8, TR-9). The quality
-  reviewer changes nothing, and its findings go back to the implementer (TR-5, TR-7).
+  reviewer changes nothing, and its findings go back to the implementer (TR-5, FR-24).
 - Decided in: #33.
 - Likely home: `FR`.
 
@@ -841,7 +841,7 @@ each such fact, and where it likely belongs, in its report.**
 copy the vague wording either. It raises a question in its report: the source text, what's
 unclear, and a suggested answer. It still writes the parts the source settles. The agent's prompt
 says what happens to the question: in an interactive session it's asked, the implementation loop
-ends the run (FR-8), and a test run puts it in the report.**
+lists it in the PR's description (FR-26), and a test run puts it in the report.**
 - Why: a reader of the doc alone can't tell a guess from a settled rule, and open items never go
   in a doc, so a guess can't be marked as one. In the Facet run, the writer turned the undefined
   "eligible public content" into "every public item that fits it", and listed it as open only in
@@ -1166,7 +1166,7 @@ rule a test could check. If one isn't, its questions go in the issue and the iss
 attention.**
 - Why: clear requirements matter most for the work to come out as wanted. Catching a vague point
   before the implementer starts saves a wasted attempt. Some vague points only show up while
-  writing, such as an edge case the issue never mentions, so the implementation loop still ends a
-  run on an open question (FR-8).
+  writing, such as an edge case the issue never mentions, so the implementation loop still lists
+  its choices on open points in the PR's description (FR-26).
 - Decided in: #18, while planning #37. It goes into whichever issue builds the issue checker.
 - Likely home: `FR`.

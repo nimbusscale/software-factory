@@ -8,8 +8,6 @@ the code are comments there instead.
 ## T-SEC-1. Terms
 
 - **Doc standards.** The rules a project's docs are written and checked by.
-- **Implementer.** The role that does a run's work and handles the findings.
-- **Quality reviewer.** The role that reviews the quality of a run's work.
 - **Result schema.** The shape of a role's result.
 - **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-2,
   TR-3).
@@ -30,11 +28,6 @@ way a shell pipeline grows into a real program.
 or a cloud VM, and it doesn't depend on GitHub Actions to operate.
 
 *Why:* a local process is quicker to change and try again than a workflow in GitHub Actions.
-
-**AD-10.** A run's work is done by the implementer and reviewed by a separate quality reviewer, in
-rounds.
-
-*Why:* an author's own check of its work is thin, so a separate reviewer is the real check.
 
 **AD-3.** The workflow starts every role itself, as its own Agent SDK call, never as another
 agent's subagent.
@@ -122,22 +115,16 @@ on each doc it changed.
 fix it before it hands back its result, unless the doc standards say the problem isn't the
 implementer's to fix.
 
-**TR-7.** When the implementer gets a round's findings, the implementer shall either fix each
-finding or decline it with a reason.
-
-*Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, or
-can question a choice the implementer made on purpose, and then the implementer declines it.
-
 **TD-3.** The implementer keeps one session for the whole run, and resumes it in each round. This
-meets TR-7.
+meets FR-24.
 
 *Why:* handling a finding needs the implementer's own reasons, such as why it made a choice the
 finding questions. Without them, a fix can undo a decision.
 
 ## T-SEC-5. GitHub and the PR
 
-**TD-4.** The implementer's result holds the text that FR-17, FR-18, FR-19 and FR-22 call for,
-which the workflow puts in the PR's description.
+**TD-4.** The implementer's result holds the text that FR-17, FR-18, FR-19, FR-22 and FR-26
+call for, which the workflow puts in the PR's description.
 
 *Why:* only the implementer knows what it changed and why it declined each finding.
 
