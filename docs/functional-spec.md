@@ -39,6 +39,8 @@ own, such as when an issue moves on the board.
 **FR-4.** When a run starts, the implementation loop shall take the issue as it's written, with no
 check that it's a task issue.
 
+*Why:* the sections of a task issue are expected to change as the process is refined.
+
 **FR-5.** When a run starts, the implementation loop shall do the work the issue asks for, meeting
 each functional requirement its Acceptance criteria name.
 
@@ -68,6 +70,10 @@ reader.
 
 **FR-11.** When a run ends without opening a PR, the implementation loop shall move the issue to
 Needs attention.
+
+*Accepted gap:* when the implementation loop itself stops partway, such as when its machine shuts
+down, nothing moves the issue, and it stays In development. This is accepted because the owner
+starts each run by hand, so they see when one stops.
 
 **FR-12.** When a run ends without opening a PR, the implementation loop shall post a comment on
 the issue that gives the reason.

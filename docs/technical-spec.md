@@ -97,7 +97,18 @@ implementer's account of its work. A reviewer that reads them may accept a choic
 explained, or look only where the author points. A fresh reviewer that couldn't see them has found
 bugs the author missed.
 
+**TR-12.** The findings from earlier rounds that the quality reviewer gets shall mark each declined
+finding as declined, with no reason.
+
+*Why:* without the mark, the quality reviewer raises a declined finding again in every round.
+
 **TR-5.** The implementer shall be the only role that changes the working copy.
+
+**TR-11.** The implementer shall have access only to the body of the run's issue, the working copy
+and the findings the workflow gives it.
+
+*Why:* an agent in the implementation loop is short-lived and may work on any machine, so anything
+it needs has to be written where every agent can read it, not in Claude Code's memory.
 
 **TR-8.** When the implementer finishes the work the issue asks for, or its changes in answer to a
 round's findings, the implementer shall check its own change, including the doc standards' checks
@@ -109,8 +120,8 @@ hands back its result.
 **TR-7.** When the implementer gets a round's findings, the implementer shall either fix each
 finding or decline it with a reason.
 
-*Why:* not every finding holds up. In one project's reviews, about 10% of findings were wrong, and
-23% were design choices.
+*Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, or
+can question a choice the implementer made on purpose, and then the implementer declines it.
 
 **TD-3.** The implementer keeps one session for the whole run, and resumes it in each round. This
 meets TR-7.
