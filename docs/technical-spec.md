@@ -33,21 +33,23 @@ the workflow's code picks the next step from that result.
 judgment inside a role's task leaves the models doing the work they're good at, and keeps the rest
 of the run predictable.
 
-**AD-3.** The workflow starts every agent in a run, and each one is a role.
+**AD-3.** The workflow starts every role. A role may start agents for its own task, but never one
+that does another role's task.
 
 *Why:* an agent can skip a review it's told to start, and the workflow's code can't. An implementer
 that briefs its own quality reviewer also tends to explain what it did and why, so the review isn't
 fresh.
 
-**AD-13.** The workflow is written in Python.
+**AD-13.** The workflow is written in Python, with strict type checking.
 
 *Why:* the workflow has no client to share code with, and building it in Python shows the owner
-how such a workflow looks in that language.
+how such a workflow looks in that language. Static typing was what drew the owner to TypeScript,
+and strict type checking brings it to Python.
 
-**AD-14.** The workflow's code is type-checked with mypy in strict mode.
+**AD-15.** The quality reviewer runs Claude Code's stock code review.
 
-*Why:* static typing was what drew the owner to TypeScript, and mypy's strict mode brings it to
-Python.
+*Why:* the factory uses stock parts where it can, and one review process that works for any
+project, not one tuned to each project.
 
 **AD-11.** The workflow is a plain process that any machine can host, such as the owner's computer
 or a cloud VM.
@@ -59,6 +61,10 @@ or a cloud VM.
 *Why:* the workflow then decides what each role sees. Keeping text from a role, such as the
 author's account from the quality reviewer, is a choice of what the workflow passes in, not a rule
 the role has to follow.
+
+*Accepted gap:* a role's shell can still reach GitHub through a login stored on the machine, such
+as the GitHub CLI's own, until roles run in their own containers. This is accepted while the owner
+starts each run by hand.
 
 **AD-6.** Every role uses Opus.
 
@@ -74,6 +80,8 @@ else. Pointing the agent at the docs does the same job.
 
 How all code is written, with examples where they help. A standard gets a Why only when its reason
 isn't clear from it.
+
+**CS-1.** All Python code is checked with mypy in strict mode.
 
 ## T-SEC-4. A run's rounds and roles
 
@@ -102,12 +110,6 @@ make that round the run's last.
 
 **TR-14.** The quality reviewer shall start each round in a new session.
 
-**TD-11.** The quality reviewer runs Claude Code's stock code review on the round's review diff.
-This meets FR-23.
-
-*Why:* the factory uses stock parts where it can, and one review process that works for any
-project, not one tuned to each project.
-
 **TR-4.** The quality reviewer shall have access only to the body of the run's issue, the docs and
 code as they stand when the round starts, the round's review diff, and the findings from the run's
 earlier rounds.
@@ -124,12 +126,15 @@ This meets TR-4.
 *Why:* the quality reviewer can run the tests in it, and the implementer's commit messages aren't
 in it.
 
+**TR-17.** When a run ends, the workflow shall remove the run's working copy.
+
+**TR-18.** When a run starts and the run branch of an earlier run on the same issue exists, the
+workflow shall delete that branch before it sets up this run.
+
 **TR-12.** The findings from earlier rounds that the quality reviewer gets shall mark each declined
 finding as declined, with no reason.
 
 *Why:* without the mark, the quality reviewer raises a declined finding again in every round.
-
-**TR-5.** The implementer shall be the only role that changes the working copy.
 
 **TR-11.** The implementer shall have access only to the body of the run's issue, the working copy,
 the findings the workflow gives it, and the web through web search and web fetch.

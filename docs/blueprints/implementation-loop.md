@@ -14,7 +14,7 @@ items it carries out. Where this blueprint and a spec disagree, the spec wins.
 
 ## A run, step by step
 
-A step below is code or a role (AD-4). The workflow starts every agent (AD-3), and is the only
+A step below is code or a role (AD-4). The workflow starts every role (AD-3), and is the only
 part that reads or writes GitHub (AD-5).
 
 ```mermaid
@@ -60,8 +60,9 @@ flowchart TD
       (TR-14). It gives the
       reviewer the issue's body, the review diff, and the findings from earlier rounds, with each
       declined finding marked as declined and no reason (TR-4, TR-12). Its prompt tells it to
-      run Claude Code's stock code review on the changes not yet committed (TD-11), then hand back
-      the findings in its result schema. It changes nothing (TR-5).
+      run Claude Code's stock code review on the changes not yet committed (AD-15), then hand back
+      the findings in its result schema. When the review is done, the workflow removes the review
+      copy.
    4. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
    5. **Answer.** The workflow resumes the implementer's session (TD-3), and gives it the round's
       findings. The implementer fixes each finding or declines it with a reason (FR-24), checks its
@@ -69,9 +70,9 @@ flowchart TD
       is the run's last (TR-16).
    6. **Commit.** As in step 5.
 7. **The PR.** When the last round ends, the workflow pushes the run branch and opens the PR
-   (FR-15). The PR's title is the issue's title. Its description holds `Closes #<number>`, which the workflow writes (FR-16,
-   TD-6), the text from the implementer's last result (TD-4), and the declined findings the
-   workflow kept from every round (TD-12). The workflow moves the issue to In
+   (FR-15). The PR's title is the issue's title. Its description holds `Closes #<number>`, which the
+   workflow writes (FR-16, TD-6), the text from the implementer's last result (TD-4), and the
+   declined findings the workflow kept from every round (TD-12). The workflow moves the issue to In
    review (FR-10).
 
 **When a step fails.** When a role hands back no result, or one that doesn't fit its schema, the
@@ -87,7 +88,7 @@ structured output. A run that ends without a PR moves the issue to Needs attenti
 | Session | One for the whole run, resumed each round (TD-3) | A new one each round (TR-14) |
 | Gets | The issue's body, then each round's findings | The issue's body, the review diff, earlier findings |
 | Can use | The working copy, web search and web fetch (TR-11) | The review copy (TD-13) |
-| Changes | The working copy, the only role that does (TR-5) | Nothing |
+| Changes | The working copy | Nothing |
 | Hands back | The text for the PR's description and a commit message | The round's findings |
 
 The implementer's result holds:
@@ -114,26 +115,31 @@ Each role is its own agent, so the workflow sets its tools and permissions when 
 
 - **The implementer** gets the tools to read, search, edit and run commands, plus web search and
   web fetch (TR-11).
-- **The quality reviewer** gets the tools to read, search and run commands, and no tool that edits
-  (TR-5).
+- **The quality reviewer** gets the tools to read, search and run commands, and no tool that edits.
 - **Every role** is denied the shell commands `gh` and `git push` by its permission rules (AD-5),
-  and `git commit` too (TD-8). It gets no tool that starts another agent (AD-3). A shell can still get around a
-  rule on a command's name, such as by calling `gh` through another program. Shutting that off
-  fully waits for the work on containers (#10).
+  and `git commit` too (TD-8). It starts with no GitHub token in its environment. A shell can still
+  get around these, as AD-5's accepted gap says, until roles run in containers (#10).
+- **Setup and cleanup.** When a run starts, the workflow deletes the run branch an earlier run on
+  the issue left (TR-18). When a run ends, it removes the run's worktree (TR-17). The branch stays
+  in the clone until the next run on the issue, so the owner can look at the work of a run that
+  ended without a PR.
 
 ## Settings
 
 The factory has a default for every setting: the number of rounds is 3 (FR-6), and each role has a
-turn cap (FR-27). A project can set any of them in a config file in its repo. When the file, or a
-setting in it, is missing, the workflow uses the default.
+turn cap (FR-27), 100 turns for each role to start with. A turn cap counts each time a role is
+started or resumed, as the Agent SDK's `max_turns` option does. The command refuses a number of
+rounds below 1 (FR-29). A project can set any of them in a config file in its repo. When the file,
+or a setting in it, is missing, the workflow uses the default.
 
 ## The Agent SDK
 
 - **Check the stock code review first.** Before building the review copy (TD-13), confirm in a
   spike that, run by a role started from the Agent SDK, Claude Code's stock code review:
   - reviews the changes not yet committed when it's given no target
-  - starts no agent of its own at the level the role uses (AD-3)
   - leaves the role able to hand back its findings as structured output (TD-7)
+- **Tests in a review copy.** Until roles run in containers that bundle a project's dependencies
+  (#10), a review copy starts with none installed.
 - **Structured output on a resumed session works.** A spike with `claude-agent-sdk` 0.2.187 for
   Python resumed a session with a new schema, the same schema, and none. The session ID stayed
   the same, and the agent kept its context. The SDK's docs don't say this, so check it again on a
@@ -152,7 +158,7 @@ setting in it, is missing, the workflow uses the default.
   this version leaves out.
 - **road-trip-agent's code review,** in its `design/code-review.md`. Its reviewer hands back
   findings as JSON checked against a schema, and code posts them. Its reviewer was its own,
-  tuned for that project, where the factory's is stock (TD-11). It gets a list of its earlier
+  tuned for that project, where the factory's is stock (AD-15). It gets a list of its earlier
   findings, and doesn't raise one twice. When every finding was fixed, one PR went seven rounds,
   since each fix gave the next review new lines to find things in. Its fixer confirms a finding
   against the code before fixing it, and checks a suggested fix before applying it.

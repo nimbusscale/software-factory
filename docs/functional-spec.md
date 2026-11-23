@@ -39,8 +39,12 @@ check is what lets the owner trust work no person watched.
 **FR-6.** The implementation loop shall give a run the number of rounds its command sets, else the
 number the project sets, else 3.
 
+**FR-29.** When the command or the project sets fewer than 1 round, the implementation loop shall
+refuse to start the run, and say why.
+
 **FR-27.** The implementation loop shall give the implementer and the quality reviewer each the turn
-cap the project sets for it, else the factory's default for it.
+cap the project sets for it, else the factory's default for it, each time it starts or resumes
+that agent.
 
 **FR-28.** When the implementer or the quality reviewer reaches its turn cap, the implementation
 loop shall end the run.
