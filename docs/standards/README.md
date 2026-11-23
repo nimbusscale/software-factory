@@ -4,6 +4,9 @@ The functional spec, the technical spec and blueprints are the input an agent tu
 These files say what each doc is, how it's written, how to change it, and how to check a change.
 CLAUDE.md's doc map says where each doc is.
 
+One file here is about GitHub work, not docs: `github.md`. CLAUDE.md points to it on its own, and
+the list below leaves it out.
+
 ## What to read for your task
 
 Read every file that applies to your task. Most tasks need more than one.

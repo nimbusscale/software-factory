@@ -135,8 +135,13 @@ project's board:
 | A run opens its PR | In review | FR-12 |
 | A run ends without a PR | Needs attention | FR-13 |
 
-The statuses and what each means are set up with the board, under #71. Each requirement's wording
-picks out one status, so the code holds this table as it is, in one place.
+Each requirement's wording picks out one status, so the code holds this table as it is, in one
+place. Each status's name and description go in the factory's own config, with its default
+settings (see "Settings" below). A status's description says what the requirement in its row calls
+for the board to show. That config is the one place the statuses are defined. The code names each
+status by its key there, and a board's statuses are set from it, descriptions included. Agents in
+a project read the statuses from the board, since the project's repo doesn't hold the factory's
+config.
 
 ## Settings
 
