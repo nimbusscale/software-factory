@@ -17,7 +17,8 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **PR.** A GitHub pull request in a project's repo.
 - **Project.** A piece of software the factory builds, with its own GitHub repo and board.
 - **Quality reviewer.** The agent that reviews a run's work.
-- **Round.** One review of a run's work, then the implementer's answer to its findings.
+- **Round.** One review of a run's work by the quality reviewer, then the implementer's answer to
+  its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
 
 ## F-SEC-2. Starting a run
@@ -37,7 +38,8 @@ check is what lets the owner trust work no person watched.
 **FR-6.** The implementation loop shall give a run the number of rounds its command sets, else the
 number the project sets, else 3.
 
-**FR-23.** When a round starts, the quality reviewer shall review the run's work.
+**FR-23.** When the implementer finishes the work the issue asks for, the implementation loop shall
+start the run's first round.
 
 **FR-24.** When the implementer gets a round's findings, the implementer shall fix each finding or
 decline it with a reason.
@@ -45,8 +47,8 @@ decline it with a reason.
 *Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, or
 can question a choice the implementer made on purpose, and then the implementer declines it.
 
-**FR-7.** The implementation loop shall go through every one of the run's rounds, even when the
-quality reviewer finds nothing.
+**FR-7.** When a round ends and the run has rounds left, the implementation loop shall start the
+next round, even when the quality reviewer found nothing.
 
 *Why:* Claude Code's stock code review almost always returns findings, since it aims for at least
 five. A stop when a review finds nothing would rarely happen, and a fixed number of rounds is the
@@ -78,8 +80,10 @@ the issue that gives the reason.
 **FR-15.** When a run's last round ends, the implementation loop shall open a PR for the run's
 work.
 
-*Scenario:* Given a run with 3 rounds, when the changes in answer to the third review are made,
-then the PR opens with no review of those changes.
+*Scenario:* Given a run with 2 rounds, when the run starts, then the implementer does the work,
+the quality reviewer reviews it, the implementer answers the findings, the quality reviewer
+reviews those changes, the implementer answers again, and the PR opens with no review of that
+last answer.
 
 **FR-16.** The description of a run's PR shall hold `Closes #<number>`, with the number of the
 run's issue.
