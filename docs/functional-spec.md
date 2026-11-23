@@ -20,8 +20,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Round.** One review of a run's work by the quality reviewer, then the implementer's answer to
   its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
-- **Turn cap.** The most turns an agent may take each time the implementation loop starts or
-  resumes it.
+- **Turn cap.** The most turns an agent may take.
 
 ## F-SEC-2. Starting a run
 
@@ -55,7 +54,7 @@ decline it with a reason.
 *Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, or
 can question a choice the implementer made on purpose, and then the implementer declines it.
 
-**FR-7.** When a round ends and the run has rounds left, the implementation loop shall start the
+**FR-7.** While the run has rounds left, when a round ends, the implementation loop shall start the
 next round.
 
 ## F-SEC-4. Statuses and comments

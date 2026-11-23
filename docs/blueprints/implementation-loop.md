@@ -23,7 +23,7 @@ flowchart TD
     B --> C[Code: set up the working copy and the run branch]
     C --> D[Implementer, new session: do the work, check it]
     D --> E[Code: check the result, commit]
-    E --> F{Rounds left?}
+    E --> F{Rounds left, and the last answer changed something?}
     F -- yes --> G[Code: build the review diff]
     G --> H[Quality reviewer, new session: review the diff]
     H --> I[Code: check the result]
@@ -34,7 +34,8 @@ flowchart TD
 ```
 
 1. **Start.** The owner calls the command with a project's repo and an issue number (FR-1). The
-   workflow reads the project's settings (FR-6, FR-27), as "Settings" below says.
+   workflow reads the project's settings after setup, from the run branch (FR-6, FR-27), as
+   "Settings" below says.
 2. **Read the issue.** The workflow reads the issue's body from GitHub, and moves the issue to In
    development on the board (FR-9).
 3. **Set up.** The workflow keeps one clone of each project's repo on the machine it runs on, and
@@ -48,8 +49,7 @@ flowchart TD
    commits, with the message from the result (TD-8, TD-9, TD-10).
 6. **The rounds.** The first round starts when the work is committed (FR-23). Each round has
    these steps, and the next round starts when one ends and rounds are left (FR-7):
-   1. **Review diff.** The workflow builds the round's review diff. When it's empty, the round ends
-      here (TR-16). In the first round, it's
+   1. **Review diff.** The workflow builds the round's review diff. In the first round, it's
       everything from where the run branch started to the latest commit (TR-2). In a later round,
       it's from the commit the previous round reviewed to the latest commit (TR-3).
    2. **Review copy.** The workflow builds the round's review copy (TD-13) in a new folder. It
@@ -59,16 +59,17 @@ flowchart TD
    3. **Review.** The workflow starts the quality reviewer in a new session, in the review copy
       (TR-14). It gives the
       reviewer the issue's body, the review diff, and the findings from earlier rounds, with each
-      declined finding marked as declined and no reason (TR-4, TR-12). The reviewer runs Claude
-      Code's stock code review on the review diff (TD-11), changes nothing (TR-5), and hands back
-      its findings.
+      declined finding marked as declined and no reason (TR-4, TR-12). Its prompt tells it to
+      run Claude Code's stock code review on the changes not yet committed (TD-11), then hand back
+      the findings in its result schema. It changes nothing (TR-5).
    4. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
    5. **Answer.** The workflow resumes the implementer's session (TD-3), and gives it the round's
       findings. The implementer fixes each finding or declines it with a reason (FR-24), checks its
-      change (TR-8, TR-9), and hands back its result.
+      change (TR-8, TR-9), and hands back its result. When its answer changes nothing, this round
+      is the run's last (TR-16).
    6. **Commit.** As in step 5.
 7. **The PR.** When the last round ends, the workflow pushes the run branch and opens the PR
-   (FR-15). The PR's description holds `Closes #<number>`, which the workflow writes (FR-16,
+   (FR-15). The PR's title is the issue's title. Its description holds `Closes #<number>`, which the workflow writes (FR-16,
    TD-6), the text from the implementer's last result (TD-4), and the declined findings the
    workflow kept from every round (TD-12). The workflow moves the issue to In
    review (FR-10).
@@ -115,15 +116,10 @@ Each role is its own agent, so the workflow sets its tools and permissions when 
   web fetch (TR-11).
 - **The quality reviewer** gets the tools to read, search and run commands, and no tool that edits
   (TR-5).
-- **Every role** is denied the shell commands `gh`, `git push` and `git commit` by its permission
-  rules (TR-15), and gets no tool that starts another agent (AD-3). A shell can still get around a
+- **Every role** is denied the shell commands `gh` and `git push` by its permission rules (AD-5),
+  and `git commit` too (TD-8). It gets no tool that starts another agent (AD-3). A shell can still get around a
   rule on a command's name, such as by calling `gh` through another program. Shutting that off
   fully waits for the work on containers (#10).
-
-## Code checks
-
-The workflow's code is checked with mypy in strict mode (`mypy --strict`) as well as its tests. The
-setting goes in the project's Python config once the code exists, and the check then documents it.
 
 ## Settings
 
@@ -133,9 +129,11 @@ setting in it, is missing, the workflow uses the default.
 
 ## The Agent SDK
 
-- **Check the stock code review first.** The review copy (TD-13) holds the review diff as
-  changes not yet committed, because Claude Code's stock code review should review those when it's
-  given no target. Confirm that in a spike before building the review copy.
+- **Check the stock code review first.** Before building the review copy (TD-13), confirm in a
+  spike that, run by a role started from the Agent SDK, Claude Code's stock code review:
+  - reviews the changes not yet committed when it's given no target
+  - starts no agent of its own at the level the role uses (AD-3)
+  - leaves the role able to hand back its findings as structured output (TD-7)
 - **Structured output on a resumed session works.** A spike with `claude-agent-sdk` 0.2.187 for
   Python resumed a session with a new schema, the same schema, and none. The session ID stayed
   the same, and the agent kept its context. The SDK's docs don't say this, so check it again on a

@@ -14,7 +14,7 @@ the code are comments there instead.
   TR-3).
 - **Role.** An agent that the workflow starts to do one task in a run.
 - **Run branch.** The git branch that holds a run's work.
-- **Session.** One agent's conversation in the Claude Agent SDK, with the context it has built up.
+- **Session.** One agent's conversation, with the context it has built up.
 - **Workflow.** The code that carries out the implementation loop.
 - **Working copy.** The checkout of the project's repo that a run works in.
 
@@ -43,6 +43,11 @@ fresh.
 
 *Why:* the workflow has no client to share code with, and building it in Python shows the owner
 how such a workflow looks in that language.
+
+**AD-14.** The workflow's code is type-checked with mypy in strict mode.
+
+*Why:* static typing was what drew the owner to TypeScript, and mypy's strict mode brings it to
+Python.
 
 **AD-11.** The workflow is a plain process that any machine can host, such as the owner's computer
 or a cloud VM.
@@ -90,11 +95,10 @@ before that round.
 **TR-3.** While a run is in a round after its first, the review diff shall be the changes in the
 implementer's answer to the previous round's findings.
 
-*Why:* the first round reviews all the work, so what it doesn't flag needs no more review. A later
-round only has to check the changes made in answer to the previous round's findings.
+*Why:* the first round reviews all the work, so what it doesn't flag needs no more review.
 
-**TR-16.** When a round's review diff is empty, the workflow shall end the round without starting
-the quality reviewer or the implementer.
+**TR-16.** When the implementer's answer to a round's findings changes nothing, the workflow shall
+make that round the run's last.
 
 **TR-14.** The quality reviewer shall start each round in a new session.
 
@@ -127,8 +131,6 @@ finding as declined, with no reason.
 
 **TR-5.** The implementer shall be the only role that changes the working copy.
 
-**TR-15.** The workflow shall deny every role the shell commands `gh`, `git push` and `git commit`.
-
 **TR-11.** The implementer shall have access only to the body of the run's issue, the working copy,
 the findings the workflow gives it, and the web through web search and web fetch.
 
@@ -158,8 +160,7 @@ for, which the workflow puts in the PR's description.
 **TD-12.** The workflow keeps each declined finding and its reason from every one of the
 implementer's results, and lists them in the PR's description. This meets FR-18.
 
-*Why:* a finding declined in an early round isn't in the implementer's last result, and the
-workflow keeps the declined findings anyway, for the quality reviewer's list (TR-12).
+*Why:* a finding declined in an early round isn't in the implementer's last result.
 
 **TD-6.** The workflow writes the line of the PR's description that FR-16 calls for.
 

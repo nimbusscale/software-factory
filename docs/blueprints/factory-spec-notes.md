@@ -785,14 +785,6 @@ has its own checklist.**
 - Decided in: #18 and #22.
 - Likely home: `CS`.
 
-**An agent checking its own change fixes what it finds. A reviewer checking someone else's change
-edits nothing and reports what it finds.**
-- Why: the two cases match the implementation loop's roles. The implementer checks its own work so
-  it can fix problems before the work goes to the quality reviewer (TR-8, TR-9). The quality
-  reviewer changes nothing, and its findings go back to the implementer (TR-5, FR-24).
-- Decided in: #33.
-- Likely home: `FR`.
-
 **A review covers only problems the change caused. A problem is older than the change if the same
 problem is on the branch the change merges into. A reviewer lists older problems apart from the
 rest. An agent checking its own change leaves older problems alone and doesn't mention them.**
@@ -856,8 +848,8 @@ lists it in the PR's description (FR-26), and a test run puts it in the report.*
 change was written from, or the docs already there. The author's account doesn't settle anything.
 A reviewer that wasn't given the task or the source skips this check, and says so in its report.**
 - Why: writers keep writing guesses as rules, and a reviewer comparing the change to its source is
-  the last place to catch one. The reviewer only sees a change where the writer wrote a rule, since
-  an implementer that raises a question stops before review. Without the source there's nothing to
+  the last place to catch one. In the loop, the implementer lists
+  the choices it made on open points in the PR (FR-26), so the reviewer may also see a guess there. Without the source there's nothing to
   compare against: judging from the spec alone can't tell a guess from a choice the owner made.
   Saying the check was skipped keeps a clean report from looking like a pass.
 - Decided in: #37.
@@ -889,7 +881,8 @@ written and often refined before an issue goes into the factory. Where the three
 behavior, the standards set a default and the agent's prompt says what happens next.**
 - Why: Joe expects all three uses. A rule written for one can be wrong for another. The uncited-ID
   signal is noise on a first draft but useful in the loop. A vague point in the source should be
-  asked about in an interactive session, but should stop an implementer that has no one to ask.
+  asked about in an interactive session, but in the loop the implementer decides it and lists it in
+  the PR.
 - Decided in: #18, while planning #36, #37 and #43.
 - Likely home: `CS`.
 
