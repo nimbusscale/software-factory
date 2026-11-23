@@ -104,8 +104,8 @@ finding as declined, with no reason.
 
 **TR-5.** The implementer shall be the only role that changes the working copy.
 
-**TR-11.** The implementer shall have access only to the body of the run's issue, the working copy
-and the findings the workflow gives it.
+**TR-11.** The implementer shall have access only to the body of the run's issue, the working copy,
+the findings the workflow gives it, and the web through web search and web fetch.
 
 *Why:* an agent in the implementation loop is short-lived and may work on any machine, so anything
 it needs has to be written where every agent can read it, not in Claude Code's memory.
