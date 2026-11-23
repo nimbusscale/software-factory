@@ -89,8 +89,8 @@ since the previous round's review.
 *Why:* it keeps a fix from pulling more of the code base into review.
 
 **TR-4.** The quality reviewer shall start each round fresh, with access only to the body of the
-run's issue, the docs and code in the working copy, the round's review diff, and the findings from the run's
-earlier rounds.
+run's issue, the docs and code in the working copy, the round's review diff, and the findings from
+the run's earlier rounds.
 
 *Why:* the author's reasons sway a review, such as in commit messages, the PR's description or the
 implementer's account of its work. A reviewer that reads them may accept a choice because it's
