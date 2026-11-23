@@ -325,7 +325,7 @@ requirement's text. The example itself can be cut without a mention in the PR.**
 
 **Tests trace to functional requirements, not to scenarios. Every functional requirement has at
 least one test, and counts as met when its tests pass. The requirements an issue's acceptance
-criteria name (FR-3) tell the workflow which tests must pass. They don't define the tests. A test an issue needs may not exist yet, and then it's written as part of the work.**
+criteria name tell the workflow which tests must pass. They don't define the tests. A test an issue needs may not exist yet, and then it's written as part of the work.**
 - Why: each requirement should be testable, or easy to see how to test, from its own text. If it
   isn't, the requirement needs refining. Tracing tests to scenarios made scenarios carry rules and
   hide vague requirements. An earlier idea, in the docs retro findings, was that scenarios become
@@ -782,7 +782,7 @@ has its own checklist.**
 **An agent checking its own change fixes what it finds. A reviewer checking someone else's change
 edits nothing and reports what it finds.**
 - Why: the two cases match the implementation loop's roles. The implementer checks its own work
-  and fixes what it finds (TR-6). The quality reviewer changes nothing, and its findings go back to
+  and fixes what it finds (TR-8, TR-9). The quality reviewer changes nothing, and its findings go back to
   the implementer (TR-5, TR-7).
 - Decided in: #33.
 - Likely home: `FR`.
@@ -861,7 +861,7 @@ A reviewer that wasn't given the task or the source skips this check, and says s
 why it fixes it. The task's prompt says how findings are delivered. With no instructions, they go
 in the reply.**
 - Why: the same standards are used in an interactive session, in the factory loop and in
-  evaluations, and each needs a different format. The loop will likely need JSON or a tool call. No
+  evaluations, and each needs a different format. In the implementation loop, a role hands back its result through a finish tool (TD-1). No
   one skill defines how an agent works, since an agent loads several skills.
 - Decided in: #33.
 - Likely home: `TD`.

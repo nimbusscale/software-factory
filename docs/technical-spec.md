@@ -28,7 +28,10 @@ way a shell pipeline grows into a real program.
 
 **AD-2.** The workflow is a process on the owner's machine.
 
-*Why:* a loop in GitHub Actions was slow to change and try again, and wasn't stable.
+**AD-10.** A run's work is done by the implementer and reviewed by a separate quality reviewer, in
+rounds.
+
+*Why:* an author's own check of its work is thin, so a separate reviewer is the real check.
 
 **AD-3.** The workflow starts every role itself, as its own Agent SDK call, never as another
 agent's subagent.
@@ -76,7 +79,10 @@ result schema.
 **TD-1.** A role hands back its result by calling its finish tool, whose input is checked against
 the role's result schema. This meets TR-1.
 
-**TD-2.** A Stop hook keeps a role from ending until it has called its finish tool. This meets TR-1.
+**TR-10.** The workflow shall let a role end only after the role has handed back its result.
+
+**TD-2.** A Stop hook keeps a role from ending until it has called its finish tool. This meets
+TR-10.
 
 **TR-2.** While a run is in its first round, the review diff shall be everything the run has
 changed.
@@ -86,9 +92,9 @@ since the previous round's review.
 
 *Why:* it keeps a fix from pulling more of the code base into review.
 
-**TR-4.** The quality reviewer shall have access in each round only to the body of the run's issue,
-the project's docs and code, the round's review diff, and the findings from the run's earlier
-rounds.
+**TR-4.** The quality reviewer shall start each round fresh, with access only to the body of the
+run's issue, the project's docs and code, the round's review diff, and the findings from the run's
+earlier rounds.
 
 *Why:* the author's reasons sway a review, such as in commit messages, the PR's description or the
 implementer's account of its work. A reviewer that reads them may accept a choice because it's
@@ -97,9 +103,12 @@ bugs the author missed.
 
 **TR-5.** The implementer shall be the only role that changes the project's repo.
 
-**TR-6.** When the implementer finishes a piece of work, the implementer shall check its own
-change, including the doc standards' checks on each doc it changed, and fix what it finds before it
-hands the work back.
+**TR-8.** When the implementer finishes the work the issue asks for, or its changes in answer to a
+round's findings, the implementer shall check its own change, including the doc standards' checks
+on each doc it changed.
+
+**TR-9.** When the implementer's own check finds a problem, the implementer shall fix it before it
+hands back its result.
 
 **TR-7.** When the implementer gets a round's findings, the implementer shall either fix each
 finding or decline it with a reason.
@@ -116,6 +125,8 @@ finding questions. Without them, a fix can undo a decision.
 ## T-SEC-5. GitHub and the PR
 
 **TD-4.** The implementer writes the parts of the PR's description that FR-17, FR-18 and FR-19 call
-for, and the workflow adds the line FR-16 calls for.
+for.
+
+**TD-6.** The workflow writes the line of the PR's description that FR-16 calls for.
 
 **TD-5.** The implementer commits its work to the run branch. This meets FR-15.

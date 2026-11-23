@@ -11,7 +11,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Finding.** A problem that a review reports in a run's work.
 - **Implementation loop.** The part of the factory that does the work an issue asks for.
 - **In development.** The issue status of an issue that a run is working on.
-- **In review.** The issue status of an issue whose PR is open and waiting on the owner.
+- **In review.** The issue status of an issue whose PR is open.
 - **Issue.** A GitHub issue in a project's repo.
 - **Issue status.** An issue's column on the board.
 - **Needs attention.** The issue status of an issue that waits on the owner before work on it can
@@ -23,7 +23,10 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Project.** A piece of software the factory builds, with its own GitHub repo and board.
 - **Round.** One review of a run's work, then the changes made in answer to its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
-- **Task issue.** An issue written for a run to work on.
+- **Task issue.** An issue whose body has four sections: Why, what the work is for, in a few
+  sentences; Design, pointers to the spec items and sections the work follows, by their IDs; Do,
+  what to change, specific to this issue; and Acceptance criteria, the functional requirements the
+  work must meet, by their IDs.
 
 ## F-SEC-2. Starting a run
 
@@ -33,17 +36,8 @@ number, the implementation loop shall start a run on that issue.
 **FR-2.** The implementation loop shall start a run only when its command is called, not on its
 own, such as when an issue moves on the board.
 
-**FR-3.** The body of a task issue shall have the sections this table shows.
-
-| Section | What it holds |
-|---|---|
-| Why | What the work is for, in a few sentences. |
-| Design | Pointers to the spec items and sections the work follows, by their IDs. |
-| Do | What to change, specific to this issue. |
-| Acceptance criteria | The functional requirements the work must meet, by their IDs. |
-
 **FR-4.** When a run starts, the implementation loop shall take the issue as it's written, with no
-check that it has the sections FR-3 lists.
+check that it's a task issue.
 
 **FR-5.** When a run starts, the implementation loop shall do the work the issue asks for, meeting
 each functional requirement its Acceptance criteria name.
@@ -53,8 +47,8 @@ each functional requirement its Acceptance criteria name.
 **FR-6.** The implementation loop shall give a run the number of rounds its command sets, else the
 number the project sets, else 3.
 
-**FR-7.** The implementation loop shall go through every one of a run's rounds, even when a review
-finds nothing.
+**FR-7.** While a run hasn't found an open question, the implementation loop shall go through every
+one of the run's rounds, even when a review finds nothing.
 
 *Why:* Claude Code's stock code review almost always returns findings, since it aims for at least
 five. A stop when a review finds nothing would rarely happen, and a fixed number of rounds is the
@@ -63,8 +57,8 @@ simplest rule.
 **FR-8.** When a run finds an open question, the implementation loop shall end the run without
 opening a PR.
 
-*Why:* a guess written as a rule looks settled to every later reader, and nothing in a doc can
-mark it as a guess.
+*Why:* the run has no one to ask, and a guess written as a rule looks settled to every later
+reader.
 
 ## F-SEC-4. Issue statuses and comments
 
@@ -78,11 +72,13 @@ Needs attention.
 **FR-12.** When a run ends without opening a PR, the implementation loop shall post a comment on
 the issue that gives the reason.
 
-**FR-13.** When a run ends on an open question, the implementation loop shall give each question in
-the comment FR-12 posts, with the text it's about, what's unclear and a suggested answer.
+**FR-21.** When a run ends on an open question, the implementation loop shall post each question as
+its own comment on the issue, with the text it's about, what's unclear and a suggested answer.
 
 **FR-14.** The implementation loop shall change an issue only by moving its issue status and
 posting comments on it, not by editing its body or its labels.
+
+*Why:* the issue's body is the task, and it stays fixed once work starts.
 
 ## F-SEC-5. The PR
 
