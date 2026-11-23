@@ -61,22 +61,19 @@ can question a choice the implementer made on purpose, and then the implementer 
 **FR-7.** While the run has rounds left, when a round ends, the implementation loop shall start the
 next round.
 
-## F-SEC-4. Statuses and comments
+## F-SEC-4. The board and the issue's comments
 
-**FR-9.** When a run starts, the implementation loop shall move the issue to In development
-on the board.
+**FR-9.** When a run starts, the implementation loop shall show on the board that the issue is
+being worked on.
 
-**FR-10.** When a run opens its PR, the implementation loop shall move the issue to In review on
-the board.
+**FR-10.** When a run opens its PR, the implementation loop shall show on the board that the
+issue's PR is ready for the owner.
 
-**FR-11.** When a run ends without opening a PR, the implementation loop shall move the issue to
-Needs attention on the board.
-
-*Why:* Needs attention is the status of an issue that waits on the owner before work on it can go
-on.
+**FR-11.** When a run ends without opening a PR, the implementation loop shall show on the board
+that the issue needs the owner before work on it can go on.
 
 *Accepted gap:* when the implementation loop itself stops partway, such as when its machine shuts
-down, nothing moves the issue, and it stays In development. This is accepted because the owner
+down, the board still shows the issue as being worked on. This is accepted because the owner
 starts each run by hand, so they see when one stops.
 
 **FR-12.** When a run ends without opening a PR, the implementation loop shall post a comment on

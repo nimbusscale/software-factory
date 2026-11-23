@@ -37,7 +37,7 @@ flowchart TD
    workflow reads the project's settings after setup, from the run branch (FR-6, FR-27), as
    "Settings" below says.
 2. **Read the issue.** The workflow reads the issue's body from GitHub, and moves the issue to In
-   development on the board (FR-9).
+   development, as "The board" below says.
 3. **Set up.** The workflow keeps one clone of each project's repo on the machine it runs on, and
    makes it on the project's first run. For each run, it adds a new git worktree from that clone,
    as the working copy. The run branch starts from the project's default branch, and is named
@@ -73,13 +73,13 @@ flowchart TD
    (FR-15). The PR's title is the issue's title. Its description holds `Closes #<number>`, which the
    workflow writes (FR-16, TD-6), the text from the implementer's last result (TD-4), and the
    declined findings the workflow kept from every round (TD-12). The workflow moves the issue to In
-   review (FR-10).
+   review.
 
 **When a step fails.** When a role hands back no result, or one that doesn't fit its schema, the
 workflow ends the run (TR-13). So does a role that reaches its turn cap (FR-28). The Agent SDK's
 `max_turns` option sets the cap, and a role that reaches it ends with an error result and no
-structured output. A run that ends without a PR moves the issue to Needs attention
-(FR-11), with a comment that gives the reason (FR-12).
+structured output. A run that ends without a PR moves the issue to Needs attention, with
+a comment that gives the reason (FR-12).
 
 ## What each role gets and hands back
 
@@ -123,6 +123,20 @@ Each role is its own agent, so the workflow sets its tools and permissions when 
   the issue left (TR-18). When a run ends, it removes the run's worktree (TR-17). The branch stays
   in the clone until the next run on the issue, so the owner can look at the work of a run that
   ended without a PR.
+
+## The board
+
+The workflow shows what FR-9, FR-10 and FR-11 call for by moving the issue to a status on the
+project's board:
+
+| When | Status | Meets |
+|---|---|---|
+| A run starts | In development | FR-9 |
+| A run opens its PR | In review | FR-10 |
+| A run ends without a PR | Needs attention | FR-11 |
+
+The statuses and what each means are set up with the board, under #71. Each requirement's wording
+picks out one status, so the code holds this table as it is, in one place.
 
 ## Settings
 
