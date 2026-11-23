@@ -105,4 +105,11 @@ declined.
 **FR-19.** The description of a run's PR shall name each disagreement between a doc and the code
 that the run left in place, by the doc item's ID and the code.
 
+**FR-22.** The description of a run's PR shall list each decision the run wrote into a spec with no
+reason, as a question for the owner that quotes the decision and suggests a reason where the run
+has one.
+
+*Why:* the decision is made and only its reason is missing, so the run goes on to a PR instead of
+ending as it does on an open question.
+
 **FR-20.** The implementation loop shall take each run only as far as an open PR, not to a merge.

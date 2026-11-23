@@ -136,8 +136,8 @@ finding questions. Without them, a fix can undo a decision.
 
 ## T-SEC-5. GitHub and the PR
 
-**TD-4.** The implementer's result holds the text that FR-17, FR-18 and FR-19 call for, which the
-workflow puts in the PR's description.
+**TD-4.** The implementer's result holds the text that FR-17, FR-18, FR-19 and FR-22 call for,
+which the workflow puts in the PR's description.
 
 *Why:* only the implementer knows what it changed and why it declined each finding.
 
@@ -147,6 +147,9 @@ workflow puts in the PR's description.
 
 **TD-8.** The workflow commits the implementer's changes to the run branch in the working copy.
 This meets FR-15.
+
+*Why:* the workflow does the steps that need no judgment, and the roles do only the work that does.
+An agent may skip a step or do one out of order, and the workflow's code can't.
 
 **TD-9.** The message of each commit TD-8 makes is the one the implementer's result holds. This
 meets FR-15.
