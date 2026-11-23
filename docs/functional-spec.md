@@ -10,12 +10,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Factory.** The app this spec describes, which does a project's work from its issues and docs.
 - **Finding.** A problem that a review reports in a run's work.
 - **Implementation loop.** The part of the factory that does the work an issue asks for.
-- **In development.** The issue status of an issue that a run is working on.
-- **In review.** The issue status of an issue whose PR is open.
 - **Issue.** A GitHub issue in a project's repo.
-- **Issue status.** An issue's column on the board.
-- **Needs attention.** The issue status of an issue that waits on the owner before work on it can
-  go on.
 - **Open question.** A part of a rule that the issue and the docs leave open, so the work would
   have to choose it.
 - **Owner.** The person the factory does a project's work for.
@@ -23,10 +18,6 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Project.** A piece of software the factory builds, with its own GitHub repo and board.
 - **Round.** One review of a run's work, then the changes made in answer to its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
-- **Task issue.** An issue whose body has four sections: Why, what the work is for, in a few
-  sentences; Design, pointers to the spec items and sections the work follows, by their IDs; Do,
-  what to change, specific to this issue; and Acceptance criteria, the functional requirements the
-  work must meet, by their IDs.
 
 ## F-SEC-2. Starting a run
 
@@ -36,13 +27,12 @@ number, the implementation loop shall start a run on that issue.
 **FR-2.** The implementation loop shall start a run only when its command is called, not on its
 own, such as when an issue moves on the board.
 
-**FR-4.** When a run starts, the implementation loop shall take the issue as it's written, with no
-check that it's a task issue.
+**FR-4.** When a run starts, the implementation loop shall take the issue's body as it's written,
+with no check of its sections.
 
-*Why:* the sections of a task issue are expected to change as the process is refined.
+*Why:* the sections an issue's body has are expected to change as the process is refined.
 
-**FR-5.** When a run starts, the implementation loop shall do the work the issue asks for, meeting
-each functional requirement its Acceptance criteria name.
+**FR-5.** When a run starts, the implementation loop shall do the work the issue asks for.
 
 ## F-SEC-3. How a run goes
 
@@ -62,14 +52,19 @@ opening a PR.
 *Why:* the run has no one to ask, and a guess written as a rule looks settled to every later
 reader.
 
-## F-SEC-4. Issue statuses and comments
+## F-SEC-4. Statuses and comments
 
-**FR-9.** When a run starts, the implementation loop shall move the issue to In development.
+**FR-9.** When a run starts, the implementation loop shall move the issue to In development
+on the board.
 
-**FR-10.** When a run opens its PR, the implementation loop shall move the issue to In review.
+**FR-10.** When a run opens its PR, the implementation loop shall move the issue to In review on
+the board.
 
 **FR-11.** When a run ends without opening a PR, the implementation loop shall move the issue to
-Needs attention.
+Needs attention on the board.
+
+*Why:* Needs attention is the status of an issue that waits on the owner before work on it can go
+on.
 
 *Accepted gap:* when the implementation loop itself stops partway, such as when its machine shuts
 down, nothing moves the issue, and it stays In development. This is accepted because the owner
@@ -81,8 +76,8 @@ the issue that gives the reason.
 **FR-21.** When a run ends on an open question, the implementation loop shall post each question as
 its own comment on the issue, with the text it's about, what's unclear and a suggested answer.
 
-**FR-14.** The implementation loop shall change an issue only by moving its issue status and
-posting comments on it, not by editing its body or its labels.
+**FR-14.** The implementation loop shall change an issue only by moving its status on the board
+and posting comments on it, not by editing its body or its labels.
 
 *Why:* the issue's body is the task, and it stays fixed once work starts.
 
