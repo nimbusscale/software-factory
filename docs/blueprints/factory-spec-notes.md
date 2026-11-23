@@ -691,14 +691,20 @@ links into research docs, wait in #55.**
 - Decided in: #46.
 - Likely home: `TD`.
 
-**The doc standards decide when a fact's home is a code comment instead of a spec. The project's
-guidance for code comments, such as a code-comments skill, says how to write the comment.**
-- Why: Joe wants the docs skill linked to the code-comments skill. That skill is still a draft in
-  `docs/research/docs-retro/code-comments/`, and will be made real the same way once the docs skill
-  is in an acceptable place.
-- Not decided yet: whether the code-comments guidance becomes a skill or standards, now that the
-  docs guidance is standards (#67).
-- Decided in: #46.
+**The doc standards decide when a fact's home is a code comment instead of a spec. The code comment
+standards, `code-comments.md` in the doc standards' folder, say whether a comment is needed and how
+to write it. They're a plain file, not a skill, and hold a few short examples, with no examples
+file of their own. A decision sent to a comment, or to a blueprint until the code exists, carries
+its reason, and an agent asks for a missing one the same way as for a spec decision.**
+- Why: Joe wants the doc guidance linked to the code-comment guidance. The guidance is a file of
+  standards because the doc guidance became one (#66, #67). Claude proposed it, and Joe agreed. On
+  examples, Joe: "I was thinking that this wouldn't be that complicated, that we would need 417
+  lines of examples. It seems like a lot." On the reason: a comment's job is the reason, and the
+  docs side picks the comment as the home while it still has the source, often before the code
+  exists. That's the best time to ask for a missing reason.
+- Not decided yet: whether code comments get eval cases. Joe wants to see how the standards work
+  first.
+- Decided in: #46. Made a file of standards, with the hand-off for reasons, in #65.
 - Likely home: `TD`.
 
 **The doc standards' procedures, for changing an item and for checking a change, say what must hold
