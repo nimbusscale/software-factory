@@ -77,8 +77,8 @@ result schema.
 **TD-7.** Each role hands back its result as the Agent SDK's structured output, with the role's
 result schema as its schema. This meets TR-1.
 
-*Why:* the SDK makes the agent's answer fit the schema, asking it to try again when it doesn't, so
-the factory needs no tool or hook of its own for this.
+*Why:* the SDK checks the answer against the schema and has the agent try again when it doesn't
+fit, so a tool and hook of the factory's own would add parts for little gain.
 
 **TR-2.** While a run is in its first round, the review diff shall be everything the run has
 changed.
