@@ -1,9 +1,6 @@
 # The board statuses the factory uses, and what each one means. This file is the one place they're
 # defined. The GitHub standards point here, the factory's code reads each status's name by its key,
 # and a board's status options are set from it, with the meaning as each option's description.
-#
-# A board can have other statuses, such as GitHub's defaults: Todo, In Progress and Done. The
-# factory doesn't use them.
 
 in_development:
   name: In development
