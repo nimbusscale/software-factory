@@ -59,11 +59,11 @@ flowchart TD
       with a plain message such as "base", and then copies in the files at the latest commit
       without committing them.
    3. **Review.** The workflow starts the quality reviewer in a new session, in the review copy
-      (TR-6). It gives the
-      reviewer the issue's body, the review diff, and the findings from earlier rounds, with each
-      declined finding marked as declined and no reason (TR-7, TR-10). Its prompt, which "The
-      quality reviewer's prompt" below describes, has it review the changes not yet committed,
-      then hand back the findings in its result schema. When the review is done, the workflow
+      (TR-6). It gives the reviewer the issue's body, the review diff, and the findings from
+      earlier rounds, with each declined finding marked as declined and no reason (TR-7, TR-10).
+      It names the changes not yet committed as the review target in the reviewer's prompt,
+      which "The quality reviewer's prompt" below describes. The reviewer reviews them, then
+      hands back the findings in its result schema. When the review is done, the workflow
       removes the review copy.
    4. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
       When the result has no important finding, this round is the run's last, and it ends here
@@ -168,9 +168,11 @@ findings for what it cost. The prompt changes the stock one in these ways:
   review of a change with fewer real problems fills the rest with pre-existing findings and nits.
 - **No cap on the number of findings.** The stock prompt keeps only the 10 most severe. A finding
   cut by the cap isn't listed anywhere, so nobody knows it existed.
-- **It reviews the changes not yet committed in the review copy (TD-2),** in place of the stock
-  prompt's steps for finding the diff. Those start with `git diff origin/HEAD...HEAD`, which fails
-  in a review copy, since it has no remote.
+- **It reviews the target its caller names,** on a line at the top of the prompt, in place of the
+  stock prompt's steps for finding the diff. The workflow names the changes not yet committed in
+  the review copy (TD-2). The stock steps start with `git diff origin/HEAD...HEAD`, which fails in
+  a review copy, since it has no remote. Run by hand, the same prompt can review another target,
+  such as a branch against `main`.
 - **No conventions angle.** The stock prompt checks the change against each CLAUDE.md that
   applies to it. The quality reviewer looks only for problems in how the code works, so that each
   reviewer stays on its own area, and a broken project rule isn't one of those.
