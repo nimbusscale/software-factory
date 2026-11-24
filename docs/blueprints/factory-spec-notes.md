@@ -1187,3 +1187,12 @@ attention.**
   its choices on open points in the PR's description (FR-20).
 - Decided in: #18, while planning #37. It goes into whichever issue builds the issue checker.
 - Likely home: `FR`.
+
+**The issue checker compares each spec item quoted in an issue with the item in the spec as it
+stands. When one differs, or the item is gone, it flags it, since the spec may have changed after
+the issue was written.**
+- Why: a task issue quotes each spec item it cites, as it stood when the issue was written
+  (`docs/standards/github.md`). A difference shows the work may no longer match what the issue
+  asked for.
+- Decided in: the interactive session that answered #85, #86 and #87.
+- Likely home: `FR`.

@@ -81,10 +81,10 @@ flowchart TD
    the issue to In review.
 
 **When a step fails.** When a role hands back no result, or one that doesn't fit its schema, the
-workflow ends the run (TR-2). So does a role that reaches its turn cap (FR-7). The Agent SDK's
-`max_turns` option sets the cap, and a role that reaches it ends with an error result and no
-structured output. A run that ends without a PR moves the issue to Needs attention, with
-a comment that gives the reason (FR-14).
+workflow ends the run (TR-2). So does a role that reaches its turn cap (FR-7), and a reply from
+GitHub that doesn't fit its schema (TR-15). The Agent SDK's `max_turns` option sets the cap, and a
+role that reaches it ends with an error result and no structured output. A run that ends without a
+PR moves the issue to Needs attention, with a comment that gives the reason (FR-14).
 
 ## What each role gets and hands back
 
@@ -154,8 +154,9 @@ config.
 The factory has a default for every setting: the number of rounds is 3 (FR-4), and each role has a
 turn cap (FR-6), 100 turns for each role to start with. A turn cap counts each time a role is
 started or resumed, as the Agent SDK's `max_turns` option does. The command refuses a number of
-rounds below 1 (FR-5). A project can set any of them in a config file in its repo. When the file,
-or a setting in it, is missing, the workflow uses the default.
+rounds below 1 (FR-5), and any setting that isn't valid (FR-26). A project can set any of them in a
+config file in its repo. When the file, or a setting in it, is missing, the workflow uses the
+default.
 
 ## The quality reviewer's prompt
 

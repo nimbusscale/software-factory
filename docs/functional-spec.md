@@ -48,6 +48,9 @@ number the project sets, else 3.
 **FR-5.** When the command or the project sets fewer than 1 round, the implementation loop shall
 refuse to start the run, and say why.
 
+**FR-26.** When a setting the project sets isn't valid, such as a number of rounds that isn't a
+whole number, the implementation loop shall refuse to start the run, and say why.
+
 **FR-6.** The implementation loop shall give the implementer and the quality reviewer each the turn
 cap the project sets for it, else the factory's default for it, each time it starts or resumes
 that agent.

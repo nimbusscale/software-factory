@@ -10,12 +10,28 @@ A task issue is the kind of issue the factory's implementation loop takes. Its b
 sections, in this order, each under a `##` heading of that name:
 
 - **Why:** what the work is for, in a few sentences.
-- **Design:** pointers to the spec items and sections the work follows, by their IDs. Pointers
-  only, with no copy of what the items say.
+- **Design:** the spec items the work follows, and pointers to the blueprint sections it follows,
+  by file and heading.
 - **Do:** what to change, specific to this issue.
-- **Acceptance criteria:** the functional requirements the work must meet, by their IDs. A
-  requirement counts as met when its tests pass. A test the work needs that doesn't exist yet is
-  written as part of the work.
+- **Acceptance criteria:** the functional and technical requirements the work must meet. List each
+  functional requirement the work meets in full. List a technical requirement when the work meets
+  it, such as work that builds one part of the system, which meets no functional requirement on its
+  own. A requirement counts as met when its tests pass. A test the work needs that doesn't exist
+  yet is written as part of the work.
+
+Each spec item in Design or Acceptance criteria is listed by its ID and its text as it stood when
+the issue was written, with nothing under it, such as its Why:
+
+```markdown
+- **FR-22.** The quality reviewer shall mark each finding as an important finding, a pre-existing
+  finding or a nit.
+```
+
+List each item on its own, not a whole section by its section ID, so each one can be quoted.
+
+*Why:* the owner reads issues on GitHub, often on a phone, where an ID alone doesn't say what the
+item is. The text also shows what the item said when the issue was written. If the spec changed
+before the work starts, the two differ, and the spec wins.
 
 ## A question issue
 

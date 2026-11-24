@@ -108,6 +108,13 @@ diff.
 
 *Why:* a reader finds the code that carries out a spec item by searching for the item's terms.
 
+**CS-6.** Each role has a view file in the repo that shows the role's model, effort, prompt,
+tools, permission rules, turn cap and result schema, and a test fails when the file doesn't match
+the code.
+
+*Why:* a change to what a role is given then shows in the PR's diff as text a reviewer can read.
+In the code, such a change is easy to miss.
+
 ## T-SEC-4. A run's rounds and roles
 
 **TR-1.** The workflow shall act on a role's result only after checking it against that role's
@@ -211,3 +218,21 @@ meets FR-15.
 
 *Why:* the doc standards put a change's history in its commit message, and only the implementer
 knows that history.
+
+## T-SEC-6. Outside data
+
+**TR-14.** When the workflow reads outside data other than a role's result, such as a reply from
+GitHub or a project's settings, the workflow shall check it against a schema for that data before
+acting on it.
+
+**TR-15.** When a reply from GitHub doesn't fit its schema, the workflow shall end the run.
+
+**TD-10.** The schemas that TR-1 and TR-14 call for are Pydantic models.
+
+*Why:* one definition gives both the check and the type the code uses, so strict type checking
+(AD-4) knows every field of the data.
+
+**TD-11.** Each role's result schema, as the structured output in TD-1 takes it, is the JSON Schema
+generated from the role's Pydantic model. This meets TR-1.
+
+*Why:* the schema the Agent SDK gets and the check the workflow runs then can't drift apart.
