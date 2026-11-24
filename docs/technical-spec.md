@@ -81,7 +81,28 @@ else. Pointing the agent at the docs does the same job.
 How all code is written, with examples where they help. A standard gets a Why only when its reason
 isn't clear from it.
 
-**CS-1.** All Python code is checked with mypy in strict mode.
+**CS-2.** When code goes over a size limit that a check sets, it's split into smaller parts, and
+the limit stays the same.
+
+*Why:* the limits keep the code modular. Raising one to fit the code takes that pressure away.
+
+*Examples:*
+
+- A function with too many branches becomes two functions with clear names.
+- A file over the line limit becomes two modules, each with one job.
+
+**CS-3.** A fix for a bug comes with a test that fails without the fix and passes with it.
+
+**CS-4.** A test calls an outside service, such as Claude or GitHub, only when it's kept apart
+from the tests that run on every commit. The others replace each outside service with a fake.
+
+*Why:* a test that calls Claude costs tokens every time it runs, and its result can change from
+one run to the next.
+
+**CS-5.** Names in code use the specs' terms, such as `ReviewDiff` or `review_diff` for a review
+diff.
+
+*Why:* a reader finds the code that carries out a spec item by searching for the item's terms.
 
 ## T-SEC-4. A run's rounds and roles
 

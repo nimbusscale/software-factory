@@ -1,0 +1,45 @@
+# Claude Code asks the owner before each edit to this file, so an agent can't weaken a check to
+# make it pass. Don't raise a limit to fit the code (CS-2).
+
+[lint]
+# Every rule, the strictest set. A ruff upgrade can turn on new rules, so uv.lock pins its
+# version.
+select = ["ALL"]
+ignore = [
+    # A docstring on every function goes against the code comment standards, which allow a
+    # comment only where the next reader would get something wrong without it.
+    "D",
+    # Ruff warns that this rule conflicts with its formatter, which adds trailing commas itself.
+    "COM812",
+    # The copyright notice is in LICENSE, which covers every file.
+    "CPY001",
+]
+# PLR1702 is still a preview rule. This turns on only the preview rules named in `select` or
+# `extend-select`, not every preview rule in ALL.
+preview = true
+explicit-preview-rules = true
+extend-select = ["PLR1702"]
+
+[lint.mccabe]
+max-complexity = 10
+
+[lint.pylint]
+# Ruff doesn't count `self`.
+max-args = 4
+# Ruff has no limit on a function's lines, so this caps its statements instead.
+max-statements = 50
+max-nested-blocks = 3
+
+[lint.flake8-tidy-imports.banned-api]
+"typing.cast".msg = "Check the value's type instead, such as with isinstance()."
+"typing.no_type_check".msg = "Fix the type error instead of turning off type checking."
+
+[lint.per-file-ignores]
+"src/**/test_*.py" = [
+    # pytest checks results with assert.
+    "S101",
+    # A test compares results with the values it expects.
+    "PLR2004",
+    # A test can be a long list of steps and checks.
+    "PLR0915",
+]

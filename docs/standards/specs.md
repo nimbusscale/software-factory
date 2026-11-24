@@ -21,7 +21,7 @@ The kinds come in this order. Each one after the first can build on the ones bef
 
 - **A functional requirement** says what the app does, in the user's terms. The business side
   writes it.
-- **An architecture decision** shapes the whole system, or picks part of the tech stack. The
+- **An architecture decision** shapes the whole system, such as the language or the database. The
   technical architect makes it, from the functional spec, their experience and any standards.
   An architecture decision needs no requirement behind it.
 - **A technical requirement** says what the system must achieve that a user wouldn't see, so that
@@ -360,9 +360,10 @@ seems. A decision with no Why is one whose reason is still unknown.
 > field change would be made twice.
 
 - Use `AD` when the decision shapes the whole system, so a change would touch most of it, such as
-  the database or the parts the code is split into. Use it too for each pick in the tech stack:
-  the language, the frameworks and runtimes the code is built on, and the tools that build and
-  test it. Use `TD` otherwise, such as which library checks outside data.
+  the language, a framework the code is built on, the database or the parts the code is split
+  into. A tool that could be swapped while the app stays much the same, such as a linter or a
+  package manager, isn't a spec item. Its config file is its record, with any reason in a comment
+  there. Use `TD` otherwise, such as which library checks outside data.
 - A line that makes two choices is two decisions. "TypeScript, with React for the UI" is two.
 - A `TD` cites the requirement it meets, an `FR` or a `TR`, in its own line or its Why. A `TD` that meets no requirement is a sign of a problem:
   it's an `AD` or a code standard, or a requirement is missing. An `AD` can cite a requirement,
