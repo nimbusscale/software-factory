@@ -160,7 +160,8 @@ or a setting in it, is missing, the workflow uses the default.
 ## The quality reviewer's prompt
 
 The prompt starts from the stock code review's prompt at its `high` level (AD-10), as Claude Code
-2.1.331 gives it. Road-trip-agent's evaluation of the stock review found that `high` gave the best
+2.1.331 gives it. A copy is in `docs/research/code-review-spike/stock-prompt-high-2.1.331.md`.
+Road-trip-agent's evaluation of the stock review found that `high` gave the best
 findings for what it cost. The prompt changes the stock one in these ways:
 
 - **No floor on the number of findings.** The stock prompt asks for at least 5. With a floor, a
