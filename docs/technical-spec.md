@@ -93,6 +93,17 @@ the limit stays the same.
 
 **CS-3.** A fix for a bug comes with a test that fails without the fix and passes with it.
 
+**CS-4.** A test calls an outside service, such as Claude or GitHub, only when it's kept apart
+from the tests that run on every commit. The others replace each outside service with a fake.
+
+*Why:* a test that calls Claude costs tokens every time it runs, and its result can change from
+one run to the next.
+
+**CS-5.** Names in code use the specs' terms, such as `ReviewDiff` or `review_diff` for a review
+diff.
+
+*Why:* a reader finds the code that carries out a spec item by searching for the item's terms.
+
 ## T-SEC-4. A run's rounds and roles
 
 **TR-1.** The workflow shall act on a role's result only after checking it against that role's
