@@ -1,0 +1,140 @@
+{
+  "case": "pr35-ours",
+  "target": "520127f..94e8306",
+  "sdk": "0.2.188",
+  "model": "claude-opus-5-5",
+  "cli_version": "2.1.331",
+  "subtype": "success",
+  "is_error": false,
+  "num_turns": 8,
+  "cost_usd": 0.6952461999999999,
+  "usage": {
+    "input_tokens": 16,
+    "cache_creation_input_tokens": 54984,
+    "cache_read_input_tokens": 323389,
+    "output_tokens": 9517,
+    "output_tokens_details": {
+      "thinking_tokens": 6507
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 54984,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 4348,
+        "cache_read_input_tokens": 62289,
+        "cache_creation_input_tokens": 1486,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 1486
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "result_text": "I found 5 issues in `520127f..94e8306`. As requested, nothing was verified: these are candidates after dedup only. One is `important`; the other four are `nit`s that change only the warning text.\n\n```json\n[\n  {\n    \"id\": \"F1\",\n    \"file\": \"src/domain/stop-checks.ts\",\n    \"line\": 152,\n    \"summary\": \"A stop the party reaches very late gets no late warning at all. `lateResult` returns null when the schedule entry's `startTime` is null, and `scheduleTimeAt` (day-timeline.ts) leaves that empty for any arrival from minute 2880 on, which is past the end of the next day. Fix: work out the arrival from the timeline's own `startMinute` rather than the clipped `ScheduleTime`, or treat an empty arrival behind a set time as late.\",\n    \"failure_scenario\": \"A day with a set-time stop at 11:00 p.m. has earlier stops with long visit times, pushing the arrival past the end of the next day. `scheduleOf()` gives `startTime` null, so `lateResult` returns null and no lateForSetTime warning appears for the worst lateness. `openingHoursResult` is skipped the same way through `visitOf`.\",\n    \"severity\": \"important\"\n  },\n  {\n    \"id\": \"F2\",\n    \"file\": \"src/domain/open-minutes.ts\",\n    \"line\": 935,\n    \"summary\": \"The opening-hours warning can name the wrong opening or closing time when a place's hours come as periods that meet. `openingChangeWithin` lists every span boundary, including a close at minute X followed by an open at the same minute X, and reports the earliest. So a seamless midnight changeover shows up as a closing. Fix: merge spans that touch or overlap before collecting changes, or drop a close and open that fall on the same minute.\",\n    \"failure_scenario\": \"Periods are Mon 18:00\u2013Tue 00:00 and Tue 00:00\u201302:00. A visit runs Mon 23:30 to Tue 02:30, so it's open 150 of 180 minutes. The text says \\\"X closes at 12:00 a.m. the next day\\\" when the place really closes at 2:00 a.m.\",\n    \"severity\": \"nit\"\n  },\n  {\n    \"id\": \"F3\",\n    \"file\": \"src/domain/day-checks.ts\",\n    \"line\": 210,\n    \"summary\": \"The check texts get units and plurals wrong. The driving warning says \\\"You agreed to 5.\\\" with no unit, and \\\"Comfortable driving is 1 hours a day\\\" when the brief says 1 hour. The stop-order note can say \\\"saves about 1 minutes\\\", since the minimum is clamped to 1 (line 95). Fix: write \\\"You agreed to N hours\\\" and make \\\"hour(s)\\\" and \\\"minute(s)\\\" plural only when needed.\",\n    \"failure_scenario\": \"comfortableDrivingInHours = 1 and a day drives 2 h. The warning reads \\\"Comfortable driving is 1 hours a day.\\\" With stopOrderMinimumSavingMinutes = 0 and a 1-minute saving, the note reads \\\"saves about 1 minutes\\\".\",\n    \"severity\": \"nit\"\n  },\n  {\n    \"id\": \"F4\",\n    \"file\": \"src/domain/check-text.ts\",\n    \"line\": 124,\n    \"summary\": \"`clockText` adds \\\" the next day\\\" for any minute from 1440 on. It doesn't check that the minute is under 2880, and a negative minute gives a broken time. Callers can only pass schedule minutes today, so nothing breaks yet. Fix: limit it to [0, 2880) or say which day it is.\",\n    \"failure_scenario\": \"clockText(3000) gives \\\"2:00 a.m. the next day\\\" when the time is two days later. clockText(-30) gives \\\"0:-30 a.m.\\\"\",\n    \"severity\": \"nit\"\n  },\n  {\n    \"id\": \"F5\",\n    \"file\": \"src/domain/stop-checks.ts\",\n    \"line\": 1218,\n    \"summary\": \"The text \\\"X is open for only N of the visit.\\\" is only used when `open > 0` and `openingChangeWithin` finds nothing. That means the place is open only part of the visit with no opening or closing inside it, which shouldn't happen. If it does (for example with overlapping periods), the opening-hours text quietly falls back to a vaguer sentence. Fix: check whether this branch can be reached, and remove it or test it.\",\n    \"failure_scenario\": \"Overlapping or odd Google periods make `openMinutesWithin` add up to less than the visit, while no boundary falls strictly inside it. The warning then reads \\\"X is open for only 50 m of the visit.\\\", a shape no test covers.\",\n    \"severity\": \"nit\"\n  }\n]\n```",
+  "seconds": 109,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git diff 520127f..94e8306 --stat && git diff 520127f..94e8306",
+        "description": "Show diff of review range"
+      }
+    },
+    {
+      "name": "Read",
+      "input": {
+        "file_path": "/home/jjk3/.claude/projects/-tmp-claude-1000--home-jjk3-PycharmProjects-personal-software-factory-b56c13c1-0568-413d-a4d6-21fa7014a571-scratchpad-qr-check-clones-pr35-ours/346b95ab-4f8b-4216-8f85-3e54c5e4b148/tool-results/bdicgtbdl.txt",
+        "allow_large": true
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cd /tmp/claude-1000/-home-jjk3-PycharmProjects-personal-software-factory-b56c13c1-0568-413d-a4d6-21fa7014a571/scratchpad/qr-check/clones/pr35-ours && git checkout -q 94e8306 2>&1; grep -rn \"\\.write(\" src --include=*.ts | grep -v test | head; grep -rn \"openMinutesWithin\\|minuteOfScheduleTime\\|stopsInBestOrder\\|timeSavedInMinutes\" src --include=*.ts | grep -v test | head -30; cat src/domain/check-result.ts | head -80",
+        "description": "Find callers and related symbols"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "pwd; git log --oneline -1; git status | head -3; sed -n 130,200p src/domain/calendar.ts; sed -n 200,260p src/domain/legs-service.ts",
+        "description": "Check cwd and read calendar/legs code"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"compareTo\" -A8 src/domain/calendar-date.ts | head -20; grep -n \"tierSetForNightCount\\|setTier\" -A4 src/domain/stay.ts | head -30; grep -n \"setTime\" src/domain/stop.ts | head; grep -n \"export function minuteOfScheduleTime\" -A10 src/domain/day-timeline.ts; grep -n \"FORECAST_DAYS\" -B2 -A2 src/domain/stays-service.ts | head",
+        "description": "Inspect helper types and functions"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rn \"started\\|isStarted\\|lock\" src/persistence/trip-store.ts src/persistence/*.ts 2>/dev/null | grep -v test | head -20; ls src/persistence",
+        "description": "Find lock logic in persistence"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 115,145p src/persistence/trip-writer.ts; grep -n \"selectedPlace\\|setTime\\|startMinute\" src/domain/day-timeline.ts | head -30; grep -n \"stops\\b\\|stops:\" src/domain/legs-service.ts | head -20",
+        "description": "Read writer body, timeline and route stops"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "file": "src/domain/stop-checks.ts",
+      "line": 152,
+      "summary": "A stop the party reaches very late gets no late warning at all. `lateResult` returns null when the schedule entry's `startTime` is null, and `scheduleTimeAt` (day-timeline.ts) leaves that empty for any arrival from minute 2880 on, which is past the end of the next day. Fix: work out the arrival from the timeline's own `startMinute` rather than the clipped `ScheduleTime`, or treat an empty arrival behind a set time as late.",
+      "failure_scenario": "A day with a set-time stop at 11:00 p.m. has earlier stops with long visit times, pushing the arrival past the end of the next day. `scheduleOf()` gives `startTime` null, so `lateResult` returns null and no lateForSetTime warning appears for the worst lateness. `openingHoursResult` is skipped the same way through `visitOf`.",
+      "severity": "important"
+    },
+    {
+      "id": "F2",
+      "file": "src/domain/open-minutes.ts",
+      "line": 935,
+      "summary": "The opening-hours warning can name the wrong opening or closing time when a place's hours come as periods that meet. `openingChangeWithin` lists every span boundary, including a close at minute X followed by an open at the same minute X, and reports the earliest. So a seamless midnight changeover shows up as a closing. Fix: merge spans that touch or overlap before collecting changes, or drop a close and open that fall on the same minute.",
+      "failure_scenario": "Periods are Mon 18:00\u2013Tue 00:00 and Tue 00:00\u201302:00. A visit runs Mon 23:30 to Tue 02:30, so it's open 150 of 180 minutes. The text says \"X closes at 12:00 a.m. the next day\" when the place really closes at 2:00 a.m.",
+      "severity": "nit"
+    },
+    {
+      "id": "F3",
+      "file": "src/domain/day-checks.ts",
+      "line": 210,
+      "summary": "The check texts get units and plurals wrong. The driving warning says \"You agreed to 5.\" with no unit, and \"Comfortable driving is 1 hours a day\" when the brief says 1 hour. The stop-order note can say \"saves about 1 minutes\", since the minimum is clamped to 1 (line 95). Fix: write \"You agreed to N hours\" and make \"hour(s)\" and \"minute(s)\" plural only when needed.",
+      "failure_scenario": "comfortableDrivingInHours = 1 and a day drives 2 h. The warning reads \"Comfortable driving is 1 hours a day.\" With stopOrderMinimumSavingMinutes = 0 and a 1-minute saving, the note reads \"saves about 1 minutes\".",
+      "severity": "nit"
+    },
+    {
+      "id": "F4",
+      "file": "src/domain/check-text.ts",
+      "line": 124,
+      "summary": "`clockText` adds \" the next day\" for any minute from 1440 on. It doesn't check that the minute is under 2880, and a negative minute gives a broken time. Callers can only pass schedule minutes today, so nothing breaks yet. Fix: limit it to [0, 2880) or say which day it is.",
+      "failure_scenario": "clockText(3000) gives \"2:00 a.m. the next day\" when the time is two days later. clockText(-30) gives \"0:-30 a.m.\"",
+      "severity": "nit"
+    },
+    {
+      "id": "F5",
+      "file": "src/domain/stop-checks.ts",
+      "line": 1218,
+      "summary": "The text \"X is open for only N of the visit.\" is only used when `open > 0` and `openingChangeWithin` finds nothing. That means the place is open only part of the visit with no opening or closing inside it, which shouldn't happen. If it does (for example with overlapping periods), the opening-hours text quietly falls back to a vaguer sentence. Fix: check whether this branch can be reached, and remove it or test it.",
+      "failure_scenario": "Overlapping or odd Google periods make `openMinutesWithin` add up to less than the visit, while no boundary falls strictly inside it. The warning then reads \"X is open for only 50 m of the visit.\", a shape no test covers.",
+      "severity": "nit"
+    }
+  ]
+}

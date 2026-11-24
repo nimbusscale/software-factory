@@ -30,8 +30,8 @@ Each spec item in Design or Acceptance criteria is listed by its ID and its text
 the issue was written, with nothing under it, such as its Why:
 
 ```markdown
-- **FR-22.** The quality reviewer shall mark each finding as an important finding, a pre-existing
-  finding or a nit.
+- **FR-27.** The quality reviewer shall mark each finding as an important finding, a pre-existing
+  finding, a nit or a finding to check.
 ```
 
 List each item on its own, not a whole section by its section ID, so each one can be quoted.
