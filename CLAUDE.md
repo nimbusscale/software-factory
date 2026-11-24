@@ -11,6 +11,7 @@
 | Doc check script | `tools/check-docs.sh` |
 | Code check script | `tools/check-code.sh` |
 | GitHub standards | `docs/standards/github.md` |
+| Review rubric | `docs/standards/review-rubric.md` |
 | Code comment standards | `docs/standards/code-comments.md` |
 
 Before you write, change or review a doc, or code that a doc describes, read

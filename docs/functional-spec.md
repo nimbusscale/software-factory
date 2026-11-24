@@ -7,16 +7,20 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 
 - **Board.** A project's GitHub project board.
 - **Declined finding.** A finding that the implementer chose not to fix.
+- **Dropped candidate.** A possible problem that the quality reviewer looked into and didn't report
+  as a finding, such as one whose claim turned out to be false.
 - **Factory.** The app this spec describes, which does a project's work from its issues and docs.
 - **Finding.** A problem that the quality reviewer reports in a round.
+- **Finding to check.** A finding that the quality reviewer can't mark until someone checks a fact
+  from outside the project's repo, such as how an outside service answers a request.
 - **Implementation loop.** The part of the factory that makes the changes an issue asks for and
   reviews them.
 - **Implementer.** The agent that makes a run's changes and handles the findings.
-- **Important finding.** A finding about a problem that the run's work adds, makes worse or
-  exposes again.
+- **Important finding.** A finding about a problem, not a minor one, that the run's work adds,
+  makes worse or exposes again.
 - **Issue.** A GitHub issue in a project's repo.
-- **Nit.** A finding about a minor problem that the run's work adds and that harms nobody, such as
-  a misleading log line.
+- **Nit.** A finding about a minor problem that the run's work adds, such as code that could be
+  cleaner, or a crash that only an unlikely input causes.
 - **Owner.** The person the factory does a project's work for.
 - **PR.** A GitHub pull request in a project's repo.
 - **Pre-existing finding.** A finding about a problem that was there before the run's work, and
@@ -61,8 +65,8 @@ loop shall end the run.
 **FR-8.** When the implementer finishes the work the issue asks for, the implementation loop shall
 start the run's first round.
 
-**FR-22.** The quality reviewer shall mark each finding as an important finding, a pre-existing
-finding or a nit.
+**FR-27.** The quality reviewer shall mark each finding as an important finding, a pre-existing
+finding, a nit or a finding to check.
 
 **FR-23.** When a round's review reports an important finding, the implementation loop shall give
 the implementer only the round's important findings and nits, not its pre-existing findings.
@@ -88,8 +92,12 @@ next round.
 **FR-11.** When a run starts, the implementation loop shall show on the board that the issue is
 being worked on.
 
-**FR-12.** When a run opens its PR, the implementation loop shall show on the board that the
-issue's PR is ready for the owner.
+**FR-28.** While no review in a run has reported a finding to check, when the run opens its PR, the
+implementation loop shall show on the board that the issue's PR is ready for the owner.
+
+**FR-29.** While a review in a run has reported a finding to check, when the run opens its PR, the
+implementation loop shall show on the board that the issue needs the owner before work on it can
+go on.
 
 **FR-13.** When a run ends without opening a PR, the implementation loop shall show on the board
 that the issue needs the owner before work on it can go on.
@@ -134,3 +142,13 @@ the implementer has one.
 
 **FR-25.** When a run opens its PR, the implementation loop shall post a comment on the PR that
 lists each nit and pre-existing finding the implementer didn't get.
+
+**FR-30.** When a run opens its PR, the implementation loop shall post a comment on the PR that
+lists each finding to check from the run's reviews, with what to check.
+
+**FR-31.** When a run opens its PR, the implementation loop shall post a comment on the PR that
+lists each dropped candidate from the run's reviews, with the reason the quality reviewer dropped
+it.
+
+*Why:* a candidate dropped by mistake is a real problem that nobody else sees. The list lets the
+owner check each call.

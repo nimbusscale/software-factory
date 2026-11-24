@@ -32,7 +32,7 @@ flowchart TD
     M -- no --> L
     J --> K[Code: check the result, commit]
     K --> F
-    F -- no --> L[Code: push, open the PR, post the comment, move the issue to In review]
+    F -- no --> L[Code: push, open the PR, post the comment, move the issue on the board]
 ```
 
 1. **Start.** The owner calls the command with a project's repo and an issue number (FR-1). The
@@ -63,11 +63,12 @@ flowchart TD
       earlier rounds, with each declined finding marked as declined and no reason (TR-7, TR-10).
       It names the changes not yet committed as the review target in the reviewer's prompt,
       which "The quality reviewer's prompt" below describes. The reviewer reviews them, then
-      hands back the findings in its result schema. When the review is done, the workflow
+      hands back the findings and the dropped candidates in its result schema. When the review is done, the workflow
       removes the review copy.
    4. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
-      When the result has no important finding, this round is the run's last, and it ends here
-      (FR-24).
+      When the reviewer stopped because it couldn't get the review diff, the workflow ends the
+      run, as for a result that doesn't fit its schema. When the result has no important finding,
+      this round is the run's last, and it ends here (FR-24).
    5. **Answer.** The workflow resumes the implementer's session (TD-3), and gives it the round's
       important findings and nits (FR-23). The implementer fixes each one or declines it with a
       reason (FR-9), checks its change (TR-12, TR-13), and hands back its result. When its answer
@@ -76,9 +77,10 @@ flowchart TD
 7. **The PR.** When the last round ends, the workflow pushes the run branch and opens the PR
    (FR-15). The PR's title is the issue's title. Its description holds `Closes #<number>`, which the
    workflow writes (FR-16, TD-6), the text from the implementer's last result (TD-4), and the
-   declined findings the workflow kept from every round (TD-5). The workflow posts a comment on the
-   PR that lists the nits and pre-existing findings the implementer didn't get (FR-25), and moves
-   the issue to In review.
+   declined findings the workflow kept from every round (TD-5). The workflow posts one comment on
+   the PR, with a part for each of these lists from every round: the nits and pre-existing
+   findings the implementer didn't get (FR-25), the findings to check (FR-30), and the dropped
+   candidates (FR-31). It then moves the issue on the board, as "The board" below says.
 
 **When a step fails.** When a role hands back no result, or one that doesn't fit its schema, the
 workflow ends the run (TR-2). So does a role that reaches its turn cap (FR-7), and a reply from
@@ -94,7 +96,7 @@ PR moves the issue to Needs attention, with a comment that gives the reason (FR-
 | Gets | The issue's body, then each round's important findings and nits | The issue's body, the review diff, earlier findings |
 | Can use | The working copy, web search and web fetch (TR-11) | The review copy (TD-2) |
 | Changes | The working copy | Nothing |
-| Hands back | The text for the PR's description and a commit message | The round's findings |
+| Hands back | The text for the PR's description and a commit message | The round's findings and dropped candidates |
 
 The implementer's result holds:
 
@@ -105,13 +107,23 @@ The implementer's result holds:
 - decisions with no reason (FR-21)
 - the commit message (TD-9)
 
-Each finding in the quality reviewer's result holds:
+The quality reviewer's result holds:
+
+- whether it reviewed the diff or stopped, with a sentence on why
+- its findings
+- its dropped candidates, a list the schema requires even when it's empty
+
+Each finding holds:
 
 - an ID, so the implementer's result can name the findings it declined
 - the file and line
-- the problem
+- the problem, and for a finding to check, what to check and how
 - a concrete case where it goes wrong
-- the mark FR-22 gives it
+- its label from the review rubric, and why that label fits
+- the mark FR-27 gives it
+
+Each dropped candidate holds its file and line, what it claimed, its label, and the reason it was
+dropped.
 
 Both roles use Opus (AD-8), and learn the project's rules from its docs (AD-9).
 
@@ -132,14 +144,18 @@ Each role is its own agent, so the workflow sets its tools and permissions when 
 
 ## The board
 
-The workflow shows what FR-11, FR-12 and FR-13 call for by moving the issue to a status on the
-project's board:
+The workflow shows what FR-11, FR-28, FR-29 and FR-13 call for by moving the issue to a status on
+the project's board:
 
 | When | Status | Meets |
 |---|---|---|
 | A run starts | In development | FR-11 |
-| A run opens its PR | In review | FR-12 |
+| A run opens its PR, and no review reported a finding to check | In review | FR-28 |
+| A run opens its PR, and a review reported a finding to check | Needs attention | FR-29 |
 | A run ends without a PR | Needs attention | FR-13 |
+
+When an issue is in Needs attention with its PR open, the owner checks each finding to check in an
+interactive session, makes any changes it calls for, and moves the issue to In review.
 
 Each requirement's wording picks out one status, so the code holds this table as it is, in one
 place. Each status's name and description go in the factory's own config, with its default
@@ -160,26 +176,29 @@ default.
 
 ## The quality reviewer's prompt
 
-The prompt starts from the stock code review's prompt at its `high` level (AD-10), as Claude Code
-2.1.331 gives it. A copy is in `docs/research/code-review-spike/stock-prompt-high-2.1.331.md`.
-Road-trip-agent's evaluation of the stock review found that `high` gave the best
-findings for what it cost. The prompt changes the stock one in these ways:
+The prompt is in `src/software_factory/prompts/quality-reviewer.md`. It starts from road-trip-agent's
+reviewer (AD-11), the `review-pr` skill in that repo's `.claude/skills/review-pr/SKILL.md`. It labels
+each finding with the review rubric in `docs/standards/review-rubric.md`, which starts from
+road-trip-agent's `design/review-rubric.md`. It keeps the skill's angles A to C, and its step that
+checks each candidate against the code, then labels it. It changes the skill in these ways:
 
-- **No floor on the number of findings.** The stock prompt asks for at least 5. With a floor, a
-  review of a change with fewer real problems fills the rest with pre-existing findings and nits.
-- **No cap on the number of findings.** The stock prompt keeps only the 10 most severe. A finding
-  cut by the cap isn't listed anywhere, so nobody knows it existed.
+- **It checks fit for use only:** whether the code works. It leaves out the skill's angle D and its
+  reading of the task and the design docs. Whether the work meets its acceptance criteria and
+  follows the project's design is the purpose reviewer's check, and whether the code does what the
+  docs say is the doc reviewer's. The rubric says which facts it still reads the docs for.
+- **Its result lists every dropped candidate,** with the reason, in a field the result schema
+  requires, even when the list is empty. Road-trip-agent's reviewer dropped candidates it judged
+  false without returning them, though its skill said to, so nobody could check those calls.
 - **It reviews the target its caller names,** on a line at the top of the prompt, in place of the
-  stock prompt's steps for finding the diff. The workflow names the changes not yet committed in
-  the review copy (TD-2). The stock steps start with `git diff origin/HEAD...HEAD`, which fails in
-  a review copy, since it has no remote. Run by hand, the same prompt can review another target,
-  such as a branch against `main`.
-- **No conventions angle.** The stock prompt checks the change against each CLAUDE.md that
-  applies to it. The quality reviewer looks only for problems in how the code works, so that each
-  reviewer stays on its own area, and a broken project rule isn't one of those.
-- **Each finding comes back in the quality reviewer's result schema.** The stock prompt's
-  `important`, `pre_existing` and `nit` match the important finding, pre-existing finding and nit
-  terms, except that a stock nit also covers a broken CLAUDE.md rule.
+  skill's steps for reading the PR. The workflow names the changes not yet committed in the review
+  copy (TD-2). Run by hand, the same prompt can review another target, such as a branch against
+  `main`.
+- **It doesn't read GitHub** (AD-7). The workflow gives it the issue's body and the earlier
+  findings, with each declined finding marked (TR-7, TR-10), in place of the skill's script that
+  reads them from the PR. So the rubric has no label for work handed to another issue, since the
+  reviewer can't read that issue.
+- **Its rubric works for any project.** The labels that hang on one project, such as the threat
+  model, point to the project's own docs.
 
 ## The Agent SDK
 
@@ -203,8 +222,8 @@ findings for what it cost. The prompt changes the stock one in these ways:
   this version leaves out.
 - **road-trip-agent's code review,** in its `design/code-review.md`. Its reviewer hands back
   findings as JSON checked against a schema, and code posts them. Its reviewer was its own
-  prompt, built from the stock prompt at `high` and tuned for that project. The factory's starts
-  from the stock prompt too, but isn't tuned to one project (AD-10). It gets a list of its earlier
+  prompt, built from the stock prompt at `high` and tuned for that project, with a rubric of its
+  own. The factory's starts from that reviewer and rubric, made to work for any project (AD-11). It gets a list of its earlier
   findings, and doesn't raise one twice. When every finding was fixed, one PR went seven rounds,
   since each fix gave the next review new lines to find things in. Its fixer confirms a finding
   against the code before fixing it, and checks a suggested fix before applying it.

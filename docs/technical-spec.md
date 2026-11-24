@@ -46,14 +46,15 @@ fresh.
 how such a workflow looks in that language. Static typing was what drew the owner to TypeScript,
 and strict type checking brings it to Python.
 
-**AD-10.** The quality reviewer's prompt is the factory's own, started from the prompt of Claude
-Code's stock code review.
+**AD-11.** The quality reviewer's prompt is the factory's own, started from road-trip-agent's
+reviewer, which labels each finding with a rubric that gives a rule for each label.
 
-*Why:* the stock review's prompt changes from one version of Claude Code to the next, such as how
-many angles it reviews from and whether a finding has a severity, so a review that runs it changes
-with no change to the factory. Starting from it reuses a review that's already been tuned, rather
-than building and evaluating one from scratch. It also keeps one review process that works for any
-project, not one tuned to each project.
+*Why:* a reviewer with a rule for each label marks findings more consistently than one that only
+picks among the marks. Road-trip-agent's reviewer also checks each candidate against the code
+before it labels it, running code where that settles the claim, so it confirms real findings and
+rules out claims that can't happen. Owning the prompt, rather than running Claude Code's stock
+code review, keeps a new version of Claude Code from changing the review. The prompt and its rubric
+work for any project, so the factory keeps one review process, not one tuned to each project.
 
 **AD-6.** The workflow is a plain process that any machine can host, such as the owner's computer
 or a cloud VM.

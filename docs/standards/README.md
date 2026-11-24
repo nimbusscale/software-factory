@@ -5,8 +5,9 @@ These files say what each doc is, how it's written, how to change it, and how to
 `code-comments.md` does the same for code comments, which hold the facts one place in the code
 owns. CLAUDE.md's doc map says where each doc is.
 
-One file here is about GitHub work, not docs: `github.md`. CLAUDE.md points to it on its own, and
-the list below leaves it out.
+Two files here aren't about docs, and the list below leaves them out. `github.md` is about GitHub
+work, and CLAUDE.md points to it on its own. `review-rubric.md` is the rubric the quality reviewer
+labels its findings with, and the quality reviewer's prompt points to it.
 
 ## What to read for your task
 

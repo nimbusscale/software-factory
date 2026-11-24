@@ -1,0 +1,184 @@
+{
+  "case": "pr35-ours",
+  "target": "520127f..94e8306",
+  "sdk": "0.2.188",
+  "model": "claude-opus-5-5",
+  "cli_version": "2.1.331",
+  "subtype": "success",
+  "is_error": false,
+  "num_turns": 12,
+  "cost_usd": 0.7335778,
+  "usage": {
+    "input_tokens": 24,
+    "cache_creation_input_tokens": 57358,
+    "cache_read_input_tokens": 419449,
+    "output_tokens": 9522,
+    "output_tokens_details": {
+      "thinking_tokens": 4700
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 57358,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2220,
+        "cache_read_input_tokens": 54921,
+        "cache_creation_input_tokens": 2437,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 2437
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "result_text": "I found 7 bugs in `520127f..94e8306`: 2 rated important and 5 nits. All 3 angles ran; as asked, nothing was put through a separate verify pass and no tests were run.\n\n```json\n[\n  {\n    \"id\": \"F1\",\n    \"file\": \"src/domain/day-checks.ts\",\n    \"line\": 74,\n    \"summary\": \"The stop-order note can name stops that were deleted, or show up when the order hasn't changed. `stopOrderResult` compares the leg's `stopsInBestOrder` with the day's current stops by object identity. But `LegsService.isRoutedFor` only re-routes a leg when the place IDs change. Fix: match stops by ID, or re-route when the stops themselves change, not just their places.\",\n    \"failure_scenario\": \"A day has stops A (place P1) and B (place P2). The coordinator removes B and adds a new stop B' with the same place P2 in the same spot. Nothing re-routes, because the place IDs are the same, so `stopsInBestOrder` still holds the old B. `best[1] === own[1]` is false, so the note fires as if the order differed, and its text lists the removed stop B's purpose.\",\n    \"severity\": \"important\"\n  },\n  {\n    \"id\": \"F2\",\n    \"file\": \"src/domain/stop-checks.ts\",\n    \"line\": 87,\n    \"summary\": \"A stop whose visit runs past midnight of the next day gets no opening-hours warning, even when the place is closed. The visit times come from `scheduleOf()`, which leaves any time of 2880 minutes or more empty (`scheduleTimeAt`), so `visitOf` returns null and the check returns null. `openTimeInMinutesOf` works from the raw timeline minutes, so the open time and the approval check still have values. Fix: work out the visit from the timeline's raw minutes, the same ones `openTimeInMinutesOf` uses.\",\n    \"failure_scenario\": \"A late-night stop on a day packed with long visits starts at 11:30 p.m. the next day (minute 2850) and ends at minute 2910. Its end is null in the schedule, so `visit` is null and the bar that's closed then gets no warning.\",\n    \"severity\": \"important\"\n  },\n  {\n    \"id\": \"F3\",\n    \"file\": \"src/domain/day-checks.ts\",\n    \"line\": 54,\n    \"summary\": \"The daily driving warning's text says \\\"You agreed to 6.\\\" with no unit, while the version without an approval says \\\"Comfortable driving is 4 hours a day.\\\" It's built in `drivingResult`'s `limit` string. Fix: write `You agreed to ${approved} hours.`, and add \\\"days\\\" in the same way to the trip-length text, \\\"the brief asks for 5.\\\" (`stay-checks.ts:33`).\",\n    \"failure_scenario\": \"A day holding a 6-hour approval now drives 7 h. The text reads \\\"Day 4 needs about 7 h of driving. You agreed to 6.\\\", which the coordinator passes on as it is.\",\n    \"severity\": \"nit\"\n  },\n  {\n    \"id\": \"F4\",\n    \"file\": \"src/domain/open-minutes.ts\",\n    \"line\": 59,\n    \"summary\": \"With back-to-back opening periods, the warning can name a closing time when the place doesn't really close then. `openingChangeWithin` treats each period's open and close as a separate event, so a close at minute M followed by a reopen at the same M still counts as \\\"closes\\\". Fix: merge spans that touch or overlap before listing the changes, or drop a close that has an open at the same minute.\",\n    \"failure_scenario\": \"Google's periods are Mon 8:00 a.m.\u2013Tue 12:00 a.m. and Tue 12:00 a.m.\u20132:00 a.m. A visit from Mon 11 p.m. to Tue 3 a.m. is open 3 h of 4. The warning says \\\"closes at 12:00 a.m. the next day\\\", but the place really closes at 2 a.m.\",\n    \"severity\": \"nit\"\n  },\n  {\n    \"id\": \"F5\",\n    \"file\": \"src/domain/stop-checks.ts\",\n    \"line\": 108,\n    \"summary\": \"A partly open visit can produce \\\"X is open for only N of the visit.\\\" with no opening or closing time, though the spec says the warning gives one. This fallback runs whenever `openingChangeWithin` returns null while `open` is above 0. Fix: check that this fallback can actually happen with the spans as built, or give the arrival and the boundary another way.\",\n    \"failure_scenario\": \"Two spans from `WEEKS_AROUND` share an endpoint exactly at the visit's start, and the visit's only change is filtered out by the strict `>`/`<` bounds. The text then has no time in it.\",\n    \"severity\": \"nit\"\n  },\n  {\n    \"id\": \"F6\",\n    \"file\": \"src/domain/feasibility-checker.ts\",\n    \"line\": 89,\n    \"summary\": \"`isApplying` for a route type approval returns true only when the day holds one. The design table says a route type approval applies \\\"Always\\\". The two can be read together, since it's also false when there's none, but the comment and the table disagree on what callers should expect. Fix: say in the docs that route type applies whenever it's present, or make the code match the table.\",\n    \"failure_scenario\": \"`read_itinerary` asks `isApplying(itinerary, stayDay, 'routeType')` for a day with no approval and gets false. That matches \\\"false when it has none\\\", but a caller who reads the table expects true.\",\n    \"severity\": \"nit\"\n  },\n  {\n    \"id\": \"F7\",\n    \"file\": \"src/domain/stay-checks.ts\",\n    \"line\": 80,\n    \"summary\": \"The tier note can fire after a stay's nights change even when nobody chose its tier for those nights. `tierSetForNightCount` starts as the night count at creation, and only `setTier` updates it. Fix: check that a stay created with a default tier should really raise this note when its nights change.\",\n    \"failure_scenario\": \"A stay is created with 1 night and the default tier, with no rule applied yet. Changing it to 2 nights gives \\\"Its tier was set for 1\\\", though no tier was ever chosen.\",\n    \"severity\": \"nit\"\n  }\n]\n```",
+  "seconds": 131,
+  "tool_uses": [
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git diff --stat 520127f..94e8306 && git diff 520127f..94e8306",
+        "description": "Show diff of review range"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git diff 520127f..94e8306 -- src/domain/open-minutes.ts src/persistence/trip-writer.ts src/domain/feasibility-checker.ts src/domain/check-context.ts src/domain/check-text.ts design plan src/domain/moab-example.fake.ts",
+        "description": "Show diff of core source files"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat src/domain/day-checks.ts src/domain/stay-checks.ts src/domain/stop-checks.ts",
+        "description": "Read new check modules"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat src/domain/check-result.ts; grep -n \"compareTo\" -A10 src/domain/calendar-date.ts | head -30; grep -n \"tierSetForNightCount\\|nightCount\" src/domain/stay.ts; grep -n \"stopsInBestOrder\\|timeSavedInMinutes\" -r src/domain/*.ts | grep -v test | head; grep -n \"FORECAST_DAYS\" -r src | head; grep -n \"WRITE_BYS\\|\\.write(\" -r src | grep -v \"\\.test\\.\" | head -20",
+        "description": "Inspect related domain types and callers"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rn \"writer.write\\|\\.write(\\s*$\\|TripWriter\" src --include=*.ts | grep -v \"^src/persistence/trip-writer.ts\" | head -20; sed -n 100,140p src/persistence/trip-writer.ts; grep -n \"stopsInBestOrder\\|timeSaved\" -B3 -A20 src/domain/legs-service.ts | sed -n 1,80p",
+        "description": "Find TripWriter callers and leg routing code"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 70,210p src/domain/legs-service.ts; sed -n 1,30p src/domain/trip-services.ts; ls design; grep -rn \"You agreed\\|agreed to\\|comfortable driving\" design spec* docs 2>/dev/null | head",
+        "description": "Read leg routing and spec wording"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 270,330p design/technical-spec.md",
+        "description": "Read tech spec section 8 checks"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 20,35p src/domain/stay.ts; sed -n 140,160p src/domain/stay.ts; grep -n \"kind\\|purpose\" src/domain/stop.ts | head -20; grep -n \"openTimeInMinutesOf\" -A30 src/domain/calendar.ts | head -45",
+        "description": "Inspect stay tier, stop kind, open time"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat src/domain/stop-kind.ts; grep -n \"minuteOfScheduleTime\" -A12 src/domain/day-timeline.ts | head -20; grep -n \"startMinute\\|endMinute\\|startTime\\|endTime\" src/domain/schedule-entry.ts",
+        "description": "Inspect stop kinds and schedule times"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"class \" src/domain/day.ts src/domain/stay-day.ts src/domain/*day*.ts 2>/dev/null | head; grep -n \"scheduleOf\" -A30 src/domain/calendar.ts | head -40",
+        "description": "Check Day class hierarchy and scheduleOf"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rln \"checkResults\\|check_results\" src | head; git diff 520127f..94e8306 -- src/persistence/trip-writer-legs.test.ts src/persistence/trip-writer.test.ts | head -80",
+        "description": "Check persistence of check results and test diffs"
+      }
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1",
+      "file": "src/domain/day-checks.ts",
+      "line": 74,
+      "summary": "The stop-order note can name stops that were deleted, or show up when the order hasn't changed. `stopOrderResult` compares the leg's `stopsInBestOrder` with the day's current stops by object identity. But `LegsService.isRoutedFor` only re-routes a leg when the place IDs change. Fix: match stops by ID, or re-route when the stops themselves change, not just their places.",
+      "failure_scenario": "A day has stops A (place P1) and B (place P2). The coordinator removes B and adds a new stop B' with the same place P2 in the same spot. Nothing re-routes, because the place IDs are the same, so `stopsInBestOrder` still holds the old B. `best[1] === own[1]` is false, so the note fires as if the order differed, and its text lists the removed stop B's purpose.",
+      "severity": "important"
+    },
+    {
+      "id": "F2",
+      "file": "src/domain/stop-checks.ts",
+      "line": 87,
+      "summary": "A stop whose visit runs past midnight of the next day gets no opening-hours warning, even when the place is closed. The visit times come from `scheduleOf()`, which leaves any time of 2880 minutes or more empty (`scheduleTimeAt`), so `visitOf` returns null and the check returns null. `openTimeInMinutesOf` works from the raw timeline minutes, so the open time and the approval check still have values. Fix: work out the visit from the timeline's raw minutes, the same ones `openTimeInMinutesOf` uses.",
+      "failure_scenario": "A late-night stop on a day packed with long visits starts at 11:30 p.m. the next day (minute 2850) and ends at minute 2910. Its end is null in the schedule, so `visit` is null and the bar that's closed then gets no warning.",
+      "severity": "important"
+    },
+    {
+      "id": "F3",
+      "file": "src/domain/day-checks.ts",
+      "line": 54,
+      "summary": "The daily driving warning's text says \"You agreed to 6.\" with no unit, while the version without an approval says \"Comfortable driving is 4 hours a day.\" It's built in `drivingResult`'s `limit` string. Fix: write `You agreed to ${approved} hours.`, and add \"days\" in the same way to the trip-length text, \"the brief asks for 5.\" (`stay-checks.ts:33`).",
+      "failure_scenario": "A day holding a 6-hour approval now drives 7 h. The text reads \"Day 4 needs about 7 h of driving. You agreed to 6.\", which the coordinator passes on as it is.",
+      "severity": "nit"
+    },
+    {
+      "id": "F4",
+      "file": "src/domain/open-minutes.ts",
+      "line": 59,
+      "summary": "With back-to-back opening periods, the warning can name a closing time when the place doesn't really close then. `openingChangeWithin` treats each period's open and close as a separate event, so a close at minute M followed by a reopen at the same M still counts as \"closes\". Fix: merge spans that touch or overlap before listing the changes, or drop a close that has an open at the same minute.",
+      "failure_scenario": "Google's periods are Mon 8:00 a.m.\u2013Tue 12:00 a.m. and Tue 12:00 a.m.\u20132:00 a.m. A visit from Mon 11 p.m. to Tue 3 a.m. is open 3 h of 4. The warning says \"closes at 12:00 a.m. the next day\", but the place really closes at 2 a.m.",
+      "severity": "nit"
+    },
+    {
+      "id": "F5",
+      "file": "src/domain/stop-checks.ts",
+      "line": 108,
+      "summary": "A partly open visit can produce \"X is open for only N of the visit.\" with no opening or closing time, though the spec says the warning gives one. This fallback runs whenever `openingChangeWithin` returns null while `open` is above 0. Fix: check that this fallback can actually happen with the spans as built, or give the arrival and the boundary another way.",
+      "failure_scenario": "Two spans from `WEEKS_AROUND` share an endpoint exactly at the visit's start, and the visit's only change is filtered out by the strict `>`/`<` bounds. The text then has no time in it.",
+      "severity": "nit"
+    },
+    {
+      "id": "F6",
+      "file": "src/domain/feasibility-checker.ts",
+      "line": 89,
+      "summary": "`isApplying` for a route type approval returns true only when the day holds one. The design table says a route type approval applies \"Always\". The two can be read together, since it's also false when there's none, but the comment and the table disagree on what callers should expect. Fix: say in the docs that route type applies whenever it's present, or make the code match the table.",
+      "failure_scenario": "`read_itinerary` asks `isApplying(itinerary, stayDay, 'routeType')` for a day with no approval and gets false. That matches \"false when it has none\", but a caller who reads the table expects true.",
+      "severity": "nit"
+    },
+    {
+      "id": "F7",
+      "file": "src/domain/stay-checks.ts",
+      "line": 80,
+      "summary": "The tier note can fire after a stay's nights change even when nobody chose its tier for those nights. `tierSetForNightCount` starts as the night count at creation, and only `setTier` updates it. Fix: check that a stay created with a default tier should really raise this note when its nights change.",
+      "failure_scenario": "A stay is created with 1 night and the default tier, with no rule applied yet. Changing it to 2 nights gives \"Its tier was set for 1\", though no tier was ever chosen.",
+      "severity": "nit"
+    }
+  ]
+}
