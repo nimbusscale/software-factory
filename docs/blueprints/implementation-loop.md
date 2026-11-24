@@ -183,6 +183,11 @@ Its first line is `Review target: {{review_target}}`, and the caller puts the ta
   `important`, `pre_existing` and `nit` match the important finding, pre-existing finding and nit
   terms, except that a stock nit also covers a broken CLAUDE.md rule.
 
+Like the stock prompt, it doesn't check each finding against the code. A wrong finding reaches the
+implementer, who declines it with a reason (FR-9), and the PR lists it (FR-18). Those reasons show
+how often the quality reviewer is wrong, and so whether a step that checks each finding is worth
+adding.
+
 ## The Agent SDK
 
 - **Tests in a review copy.** Until roles run in containers that bundle a project's dependencies
