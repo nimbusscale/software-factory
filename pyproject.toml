@@ -2,7 +2,18 @@
 name = "software-factory"
 version = "0.1.0"
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [
+    "claude-agent-sdk>=0.2.188",
+    "pydantic>=2.14.4",
+]
+
+[project.scripts]
+write-role-views = "software_factory.roles.views:main"
+
+[tool.pytest.ini_options]
+markers = ["claude: calls Claude, so it runs only when asked for with -m claude"]
+# Meets CS-4.
+addopts = "-m 'not claude'"
 
 [build-system]
 requires = ["uv_build>=0.9.21,<0.10.0"]
