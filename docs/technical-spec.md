@@ -76,20 +76,10 @@ project's CLAUDE.md points it to.
 *Why:* one agent works in one repo, so a skill of the project's own adds complexity and little
 else. Pointing the agent at the docs does the same job.
 
-**AD-10.** uv manages the workflow's Python version, its dependencies and its virtual environment.
-
-**AD-11.** Ruff formats and lints all Python code.
-
-*Why:* one tool does both jobs, in place of several older tools, such as Black, isort and Flake8.
-
-**AD-12.** pytest runs the tests.
-
 ## T-SEC-3. Code standards
 
 How all code is written, with examples where they help. A standard gets a Why only when its reason
 isn't clear from it.
-
-**CS-1.** All Python code is checked with mypy in strict mode.
 
 **CS-2.** When code goes over a size limit that a check sets, it's split into smaller parts, and
 the limit stays the same.
