@@ -162,12 +162,15 @@ or a setting in it, is missing, the workflow uses the default.
 The prompt starts from the stock code review's prompt at its `high` level (AD-10), as Claude Code
 2.1.331 gives it. A copy is in `docs/research/code-review-spike/stock-prompt-high-2.1.331.md`.
 Road-trip-agent's evaluation of the stock review found that `high` gave the best
-findings for what it cost. The prompt changes the stock one in these ways:
+findings for what it cost. The prompt is in `src/software_factory/prompts/quality-reviewer.md`.
+Its first line is `Review target: {{review_target}}`, and the caller puts the target in place of
+`{{review_target}}`. The prompt changes the stock one in these ways:
 
 - **No floor on the number of findings.** The stock prompt asks for at least 5. With a floor, a
   review of a change with fewer real problems fills the rest with pre-existing findings and nits.
-- **No cap on the number of findings.** The stock prompt keeps only the 10 most severe. A finding
-  cut by the cap isn't listed anywhere, so nobody knows it existed.
+- **No cap on the number of findings.** The stock prompt keeps only the 10 most severe, and lets
+  each angle bring up at most 6 candidates. A finding cut by either cap isn't listed anywhere, so
+  nobody knows it existed.
 - **It reviews the target its caller names,** on a line at the top of the prompt, in place of the
   stock prompt's steps for finding the diff. The workflow names the changes not yet committed in
   the review copy (TD-2). The stock steps start with `git diff origin/HEAD...HEAD`, which fails in
