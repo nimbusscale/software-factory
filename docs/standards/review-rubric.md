@@ -64,6 +64,15 @@ candidates, with the reason, so the owner can check the call.
   A claim that's true only for an unlikely input, such as a setting no one would choose, isn't
   false, and gets an NF label. Neither is one that only code not yet written would prevent.
 
+  **D1 needs proof.** The proof is a check in the code that refuses the failure case, such as a
+  guard, a type or a schema, or a run of the code on the failure case that shows it doesn't fail.
+  An argument about how values relate, such as "this time is always later than that one", isn't
+  proof on its own. When the claim depends on values like that, run the code to settle it. A doc
+  isn't proof either. When a doc puts the case outside the app's use, the case is not normal use,
+  and gets an NF label. When a doc asks for the behavior the finding faults, the finding keeps its
+  label, and the implementer can decline it. When you can't prove the claim false, it isn't D1, and it gets the next
+  label that fits.
+
 Two kinds of finding the reviewer can't settle get their usual label, and the implementer can
 decline them. One is about work that a code comment puts off to another issue. The reviewer can't
 read other issues, so it can't check that one holds the work. The other is about code that does
@@ -159,4 +168,5 @@ unchanged line that the change only fails to fix was there before the change.
 | V1 | Finding to check | Finding to check |
 
 A note about a problem that was there before is dropped, with "a note about older code" as its
-reason.
+reason. A note about a problem the change caused is always a nit, however small or unlikely it is.
+Only D1 and a note about older code drop a candidate.

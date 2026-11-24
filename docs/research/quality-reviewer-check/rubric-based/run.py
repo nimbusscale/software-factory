@@ -48,11 +48,12 @@ FINDING = {
 DROPPED = {
     "type": "object",
     "additionalProperties": False,
-    "required": ["file", "line", "problem", "label", "reason"],
+    "required": ["file", "line", "problem", "label", "dropped_as", "reason"],
     "properties": {
         **PLACE,
         "problem": {"type": "string"},
         "label": {"type": "string"},
+        "dropped_as": {"enum": ["false_claim", "older_note"]},
         "reason": {"type": "string"},
     },
 }

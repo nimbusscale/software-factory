@@ -1,0 +1,350 @@
+{
+  "case": "pr35",
+  "target": "520127f..94e8306",
+  "sdk": "0.2.188",
+  "model": "claude-opus-5-5",
+  "cli_version": "2.1.331",
+  "subtype": "success",
+  "is_error": false,
+  "num_turns": 23,
+  "cost_usd": 0.8852949,
+  "usage": {
+    "input_tokens": 42,
+    "cache_creation_input_tokens": 57797,
+    "cache_read_input_tokens": 969751,
+    "output_tokens": 11415,
+    "output_tokens_details": {
+      "thinking_tokens": 5669
+    },
+    "server_tool_use": {
+      "web_search_requests": 0,
+      "web_fetch_requests": 0
+    },
+    "service_tier": "standard",
+    "cache_creation": {
+      "ephemeral_1h_input_tokens": 57797,
+      "ephemeral_5m_input_tokens": 0
+    },
+    "inference_geo": "global",
+    "iterations": [
+      {
+        "input_tokens": 2,
+        "output_tokens": 2343,
+        "cache_read_input_tokens": 66164,
+        "cache_creation_input_tokens": 906,
+        "cache_creation": {
+          "ephemeral_5m_input_tokens": 0,
+          "ephemeral_1h_input_tokens": 906
+        },
+        "type": "message"
+      }
+    ],
+    "speed": "standard",
+    "fallback_credit": null
+  },
+  "result_text": "{\"status\":\"done\",\"reason\":\"I kept 4 findings: 3 important, all untested new behavior, and 1 nit. I dropped 4 candidates.\",\"findings\":[{\"id\":\"F1\",\"file\":\"src/domain/open-minutes.ts\",\"line\":51,\"label\":\"F6\",\"mark\":\"important\",\"problem\":\"The new openingChangeWithin() gives either an \\\"opens\\\" or a \\\"closes\\\" change, and the warning text quotes it. No test checks the \\\"opens\\\" case. No test calls openingChangeWithin() directly. No test checks a change after midnight, which clockText() writes as \\\"the next day\\\". The only test that covers this text is Milt's \\\"closes at 12:30 p.m.\\\".\",\"failure_case\":\"Say a bug drops the \\\"opens\\\" entries, or always reports \\\"closes\\\". Then a museum that opens at 11:00 a.m., visited from 10:00 a.m., would get the wrong opening time in its warning. Every test would still pass, because Milt's only closes during its visit.\",\"label_reason\":\"This change adds the opening/closing text, and no test would fail if the \\\"opens\\\" path were removed or wrong. So it's F6. It's not F1, because a run shows the code gives the right answer: { change: 'opens', minute: 1020 } for a 4 p.m. visit to a bar that opens at 5 p.m.\"},{\"id\":\"F2\",\"file\":\"src/domain/day-checks.ts\",\"line\":50,\"label\":\"F6\",\"mark\":\"important\",\"problem\":\"drivingResult() warns when a day drives more than the hours its approval gives, even when that's within the comfortable hours. That's the `!isOver && approved !== null && !isApproved` path. Every driving test uses a day that's over the comfortable hours. So nothing checks this path.\",\"failure_case\":\"Say the condition were simplified to `if (!isOver) return null`. Then a day approved for 3 hours that drives 3 h 30 m, with 4 comfortable hours, would give no warning. Every test would still pass.\",\"label_reason\":\"This change adds the rule, and deleting it breaks no test, so it's F6. The code itself does what its comment says, so none of the labels above F6 fit.\"},{\"id\":\"F3\",\"file\":\"src/domain/stop-checks.ts\",\"line\":202,\"label\":\"F6\",\"mark\":\"important\",\"problem\":\"misfitOf() has a branch that warns about a nearEndPlace stop on a day that's not the last day. The search area test covers only a stop near a stay and a stop near the start place. No test checks the end-place branch or its text, \\\"the end place, but it's no longer on the last day\\\".\",\"failure_case\":\"Say the `day !== itinerary.lastDay` branch were deleted or inverted. Then a pie stop near Mike's house, moved to Day 2 of 5, would give no warning. No test would fail.\",\"label_reason\":\"This change adds the check, and no test would catch it being removed, so it's F6. I found no wrong behavior in the branch, so the labels above F6 don't fit.\"},{\"id\":\"F4\",\"file\":\"src/domain/stop-checks.ts\",\"line\":112,\"label\":\"N1\",\"mark\":\"nit\",\"problem\":\"openingHoursText() falls back to \\\"is open for only X of the visit\\\" when openingChangeWithin() returns null. That can't happen. This text is used only when the open minutes are more than 0 and fewer than the visit's length. In that case some opening or closing always falls strictly inside the visit. So the fallback is code that never runs.\",\"failure_case\":\"No input reaches the fallback text. A visit that's partly open always has a boundary inside it, so `change` is never null when `open > 0`.\",\"label_reason\":\"This is code that never runs, which the rubric lists under N1. The change added it, so it's a nit.\"}],\"dropped\":[{\"file\":\"src/domain/day-checks.ts\",\"line\":55,\"problem\":\"The driving text \\\"You agreed to 5.\\\" gives the approved hours without a unit, which could be unclear to the coordinator.\",\"label\":\"D1\",\"reason\":\"Domain model section 4.8 gives this exact text, \\\"Day 4 needs about 5 h 20 m of driving. You agreed to 5.\\\". The code matches it, and the sentence before it gives the unit (h/m). So the text isn't false, and an agent wouldn't misread it.\"},{\"file\":\"src/domain/day-checks.ts\",\"line\":73,\"problem\":\"stopOrderResult() builds the day's own order from all stops that have a place. If Google's best order left some of those stops out, the two lists would differ, and a false stop-order note would follow.\",\"label\":\"D1\",\"reason\":\"LegsService.#stopOrderOf builds stopsInBestOrder from route.stops, which holds the same stops that have a place. Waypoints are kept apart. And when Google's order is the same as the day's, timeSavedInMinutes is 0, so the `Math.max(1, ...)` guard refuses the note anyway.\"},{\"file\":\"src/domain/stop-checks.ts\",\"line\":52,\"problem\":\"isOpeningHoursApprovalApplying() reads only stop.approvals[0]. A stop with more than one opening-hours approval could be judged on an old one.\",\"label\":\"D1\",\"reason\":\"withApproval() in approval.ts replaces any approval of the same kind, and checkedApprovals() refuses two of a kind. A stop holds only opening-hours approvals, so there's at most one.\"},{\"file\":\"src/domain/open-minutes.ts\",\"line\":51,\"problem\":\"openingChangeWithin() could get the weekday wrong for an overnight visit or a period that runs across the week's end.\",\"label\":\"D1\",\"reason\":\"A run of the code shows it works. A Monday 5 p.m. to 2 a.m. bar, visited from 11 p.m. to 3 a.m., gives closes at minute 1560, which reads \\\"2:00 a.m. the next day\\\", with 180 open minutes. A Saturday visit against a Sunday-only period gives 0 open minutes and no change.\"}]}",
+  "result": {
+    "status": "done",
+    "reason": "I kept 4 findings: 3 important, all untested new behavior, and 1 nit. I dropped 4 candidates.",
+    "findings": [
+      {
+        "id": "F1",
+        "file": "src/domain/open-minutes.ts",
+        "line": 51,
+        "label": "F6",
+        "mark": "important",
+        "problem": "The new openingChangeWithin() gives either an \"opens\" or a \"closes\" change, and the warning text quotes it. No test checks the \"opens\" case. No test calls openingChangeWithin() directly. No test checks a change after midnight, which clockText() writes as \"the next day\". The only test that covers this text is Milt's \"closes at 12:30 p.m.\".",
+        "failure_case": "Say a bug drops the \"opens\" entries, or always reports \"closes\". Then a museum that opens at 11:00 a.m., visited from 10:00 a.m., would get the wrong opening time in its warning. Every test would still pass, because Milt's only closes during its visit.",
+        "label_reason": "This change adds the opening/closing text, and no test would fail if the \"opens\" path were removed or wrong. So it's F6. It's not F1, because a run shows the code gives the right answer: { change: 'opens', minute: 1020 } for a 4 p.m. visit to a bar that opens at 5 p.m."
+      },
+      {
+        "id": "F2",
+        "file": "src/domain/day-checks.ts",
+        "line": 50,
+        "label": "F6",
+        "mark": "important",
+        "problem": "drivingResult() warns when a day drives more than the hours its approval gives, even when that's within the comfortable hours. That's the `!isOver && approved !== null && !isApproved` path. Every driving test uses a day that's over the comfortable hours. So nothing checks this path.",
+        "failure_case": "Say the condition were simplified to `if (!isOver) return null`. Then a day approved for 3 hours that drives 3 h 30 m, with 4 comfortable hours, would give no warning. Every test would still pass.",
+        "label_reason": "This change adds the rule, and deleting it breaks no test, so it's F6. The code itself does what its comment says, so none of the labels above F6 fit."
+      },
+      {
+        "id": "F3",
+        "file": "src/domain/stop-checks.ts",
+        "line": 202,
+        "label": "F6",
+        "mark": "important",
+        "problem": "misfitOf() has a branch that warns about a nearEndPlace stop on a day that's not the last day. The search area test covers only a stop near a stay and a stop near the start place. No test checks the end-place branch or its text, \"the end place, but it's no longer on the last day\".",
+        "failure_case": "Say the `day !== itinerary.lastDay` branch were deleted or inverted. Then a pie stop near Mike's house, moved to Day 2 of 5, would give no warning. No test would fail.",
+        "label_reason": "This change adds the check, and no test would catch it being removed, so it's F6. I found no wrong behavior in the branch, so the labels above F6 don't fit."
+      },
+      {
+        "id": "F4",
+        "file": "src/domain/stop-checks.ts",
+        "line": 112,
+        "label": "N1",
+        "mark": "nit",
+        "problem": "openingHoursText() falls back to \"is open for only X of the visit\" when openingChangeWithin() returns null. That can't happen. This text is used only when the open minutes are more than 0 and fewer than the visit's length. In that case some opening or closing always falls strictly inside the visit. So the fallback is code that never runs.",
+        "failure_case": "No input reaches the fallback text. A visit that's partly open always has a boundary inside it, so `change` is never null when `open > 0`.",
+        "label_reason": "This is code that never runs, which the rubric lists under N1. The change added it, so it's a nit."
+      }
+    ],
+    "dropped": [
+      {
+        "file": "src/domain/day-checks.ts",
+        "line": 55,
+        "problem": "The driving text \"You agreed to 5.\" gives the approved hours without a unit, which could be unclear to the coordinator.",
+        "label": "D1",
+        "reason": "Domain model section 4.8 gives this exact text, \"Day 4 needs about 5 h 20 m of driving. You agreed to 5.\". The code matches it, and the sentence before it gives the unit (h/m). So the text isn't false, and an agent wouldn't misread it."
+      },
+      {
+        "file": "src/domain/day-checks.ts",
+        "line": 73,
+        "problem": "stopOrderResult() builds the day's own order from all stops that have a place. If Google's best order left some of those stops out, the two lists would differ, and a false stop-order note would follow.",
+        "label": "D1",
+        "reason": "LegsService.#stopOrderOf builds stopsInBestOrder from route.stops, which holds the same stops that have a place. Waypoints are kept apart. And when Google's order is the same as the day's, timeSavedInMinutes is 0, so the `Math.max(1, ...)` guard refuses the note anyway."
+      },
+      {
+        "file": "src/domain/stop-checks.ts",
+        "line": 52,
+        "problem": "isOpeningHoursApprovalApplying() reads only stop.approvals[0]. A stop with more than one opening-hours approval could be judged on an old one.",
+        "label": "D1",
+        "reason": "withApproval() in approval.ts replaces any approval of the same kind, and checkedApprovals() refuses two of a kind. A stop holds only opening-hours approvals, so there's at most one."
+      },
+      {
+        "file": "src/domain/open-minutes.ts",
+        "line": 51,
+        "problem": "openingChangeWithin() could get the weekday wrong for an overnight visit or a period that runs across the week's end.",
+        "label": "D1",
+        "reason": "A run of the code shows it works. A Monday 5 p.m. to 2 a.m. bar, visited from 11 p.m. to 3 a.m., gives closes at minute 1560, which reads \"2:00 a.m. the next day\", with 180 open minutes. A Saturday visit against a Sunday-only period gives 0 open minutes and no change."
+      }
+    ]
+  },
+  "seconds": 134,
+  "tool_uses": [
+    {
+      "name": "Read",
+      "input": {
+        "file_path": "/tmp/claude-1000/-home-jjk3-PycharmProjects-personal-software-factory/ea86f892-e3d9-433a-9dcf-9c96f04ffb6d/scratchpad/qr91/clones/pr35/docs/standards/review-rubric.md"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git diff 520127f..94e8306 --stat; git diff 520127f..94e8306",
+        "description": "Show diff of review target"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git diff 520127f..94e8306 -- src/domain/open-minutes.ts src/domain/check-context.ts src/domain/check-text.ts src/domain/day-checks.ts src/domain/feasibility-checker.ts src/persistence/trip-writer.ts src/domain/moab-example.fake.ts design plan",
+        "description": "Show diff of core source files"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "cat -n src/domain/stop-checks.ts src/domain/stay-checks.ts; cat CLAUDE.md | head -80",
+        "description": "Read stop and stay check files and CLAUDE.md"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"tierSetForNightCount\\|stopsInBestOrder\\|timeSavedInMinutes\" -r src --include=*.ts | grep -v test | head -30; grep -n \"isWeatherOutOfDate\\|openTimeInMinutesOf\\|orderOf\\|datesOf\\|today(\" src/domain/calendar.ts",
+        "description": "Find relevant field definitions"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 195,260p src/domain/legs-service.ts; sed -n 60,200p src/domain/calendar.ts",
+        "description": "Read legs best order and calendar code"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rn \"\\.write(\" src --include=*.ts | grep -v \"\\.test\\.ts\" | head; grep -rn \"writer.write\\|\\.write(\" src --include=*.ts | wc -l; grep -n \"approvedDrivingInHours\\|You agreed\" -r src | head",
+        "description": "Find write callers and agreed text"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rn \"agreed to\\|closes at\\|faster order\" design docs spec* 2>/dev/null | head",
+        "description": "Search spec for check result text"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"compareTo\\|daysUntil\\|daysBetween\" -A8 src/domain/calendar-date.ts | head -40; grep -n \"FORECAST_DAYS\" -B2 -A10 src/domain/stays-service.ts | head -50",
+        "description": "Check CalendarDate.compareTo semantics"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 114,145p src/persistence/trip-writer.ts; git diff 520127f..94e8306 -- src/persistence/trip-writer-checks.test.ts src/domain/feasibility-checker.test.ts | head -230",
+        "description": "Read writer body and new tests"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"it(\\|describe(\" src/domain/feasibility-checks.test.ts; grep -n \"goneResults\\|isApplying\\|routeType\\|searchArea\\|forecast\\|weather\\|stayTier\\|lateFor\\|opens at\\|next day\" src/domain/feasibility-checks.test.ts src/domain/feasibility-checker.test.ts src/domain/*open-minutes*.test.ts | head -40",
+        "description": "List tests covering checks"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "ls src/domain | grep -i open; grep -rn \"openingChangeWithin\\|opens at\" src --include=*.test.ts | head",
+        "description": "Look for tests of openingChangeWithin"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 1,30p src/domain/opening-period.ts; node --import tsx --input-type=module -e \"\nimport { openingChangeWithin, openMinutesWithin } from './src/domain/open-minutes.ts';\nimport { clockText } from './src/domain/check-text.ts';\nconst p=[{openDay:'monday',openTime:{hour:17,minute:0},closeDay:'tuesday',closeTime:{hour:2,minute:0}}];\nconsole.log(openingChangeWithin(p,'monday',{startMinute:1380,endMinute:1620}), openMinutesWithin(p,'monday',{startMinute:1380,endMinute:1620}));\nconsole.log(openingChangeWithin(p,'monday',{startMinute:960,endMinute:1080}), clockText(1560));\n\" 2>&1 | tail -5",
+        "description": "Run opening change on overnight cases"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"class TimeOfDay\\|constructor\\|readonly\" src/domain/time-of-day.ts | head; grep -n \"weekMinuteOf\" -A5 src/domain/open-minutes.ts | tail -6",
+        "description": "Check TimeOfDay shape"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "node --import tsx --input-type=module -e \"\nimport { openingChangeWithin, openMinutesWithin } from './src/domain/open-minutes.ts';\nimport { TimeOfDay } from './src/domain/time-of-day.ts';\nconst p=[{openDay:'monday',openTime:new TimeOfDay(17,0),closeDay:'tuesday',closeTime:new TimeOfDay(2,0)}];\nconsole.log(openingChangeWithin(p,'monday',{startMinute:1380,endMinute:1620}), openMinutesWithin(p,'monday',{startMinute:1380,endMinute:1620}));\nconsole.log(openingChangeWithin(p,'monday',{startMinute:960,endMinute:1080}));\nconst s=[{openDay:'sunday',openTime:new TimeOfDay(20,0),closeDay:'monday',closeTime:new TimeOfDay(2,0)}];\nconsole.log(openingChangeWithin(s,'saturday',{startMinute:1380,endMinute:1500}), openMinutesWithin(s,'saturday',{startMinute:1380,endMinute:1500}));\n\" 2>&1 | tail -5; grep -n \"WEEKDAYS =\" -A3 src/domain/weekday.ts",
+        "description": "Run opening change with real TimeOfDay"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"stops:\\|stopPlaces\\|waypoints\" src/domain/legs-service.ts | head -20; grep -n \"function dayRouteOf\\|routeOf\" -A25 src/domain/legs-service.ts | grep -n \"filter\\|stops\" | head",
+        "description": "Check which stops DayRoute includes"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rn \"approvals\" src/domain/*.ts | grep -v test | grep -v \"fake\" | head -20",
+        "description": "See how approvals are stored and added"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -n \"approve\\|Approval\" src/domain/stop.ts src/domain/stops-service.ts | head -20",
+        "description": "Check how stop approvals are set"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "git diff 520127f..94e8306 -- src/persistence/trip-writer.test.ts src/persistence/trip-writer-legs.test.ts | grep \"^[-+]\" | head -80",
+        "description": "Show writer test diff lines"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "sed -n 40,80p src/domain/feasibility-checks.test.ts; sed -n 219,256p src/domain/feasibility-checks.test.ts",
+        "description": "Read driving and isApplying tests"
+      }
+    },
+    {
+      "name": "Bash",
+      "input": {
+        "command": "grep -rn \"end place\\|nearEndPlace\\|next day\\|is open for only\\|agreed to\" src --include=*.test.ts | grep -v \"trip-writer\\b\" | head",
+        "description": "Check test coverage of end-place and other texts"
+      }
+    },
+    {
+      "name": "StructuredOutput",
+      "input": {
+        "status": "done",
+        "reason": "I kept 4 findings: 3 important, all untested new behavior, and 1 nit. I dropped 4 candidates.",
+        "findings": [
+          {
+            "id": "F1",
+            "file": "src/domain/open-minutes.ts",
+            "line": 51,
+            "label": "F6",
+            "mark": "important",
+            "problem": "The new openingChangeWithin() gives either an \"opens\" or a \"closes\" change, and the warning text quotes it. No test checks the \"opens\" case. No test calls openingChangeWithin() directly. No test checks a change after midnight, which clockText() writes as \"the next day\". The only test that covers this text is Milt's \"closes at 12:30 p.m.\".",
+            "failure_case": "Say a bug drops the \"opens\" entries, or always reports \"closes\". Then a museum that opens at 11:00 a.m., visited from 10:00 a.m., would get the wrong opening time in its warning. Every test would still pass, because Milt's only closes during its visit.",
+            "label_reason": "This change adds the opening/closing text, and no test would fail if the \"opens\" path were removed or wrong. So it's F6. It's not F1, because a run shows the code gives the right answer: { change: 'opens', minute: 1020 } for a 4 p.m. visit to a bar that opens at 5 p.m."
+          },
+          {
+            "id": "F2",
+            "file": "src/domain/day-checks.ts",
+            "line": 50,
+            "label": "F6",
+            "mark": "important",
+            "problem": "drivingResult() warns when a day drives more than the hours its approval gives, even when that's within the comfortable hours. That's the `!isOver && approved !== null && !isApproved` path. Every driving test uses a day that's over the comfortable hours. So nothing checks this path.",
+            "failure_case": "Say the condition were simplified to `if (!isOver) return null`. Then a day approved for 3 hours that drives 3 h 30 m, with 4 comfortable hours, would give no warning. Every test would still pass.",
+            "label_reason": "This change adds the rule, and deleting it breaks no test, so it's F6. The code itself does what its comment says, so none of the labels above F6 fit."
+          },
+          {
+            "id": "F3",
+            "file": "src/domain/stop-checks.ts",
+            "line": 202,
+            "label": "F6",
+            "mark": "important",
+            "problem": "misfitOf() has a branch that warns about a nearEndPlace stop on a day that's not the last day. The search area test covers only a stop near a stay and a stop near the start place. No test checks the end-place branch or its text, \"the end place, but it's no longer on the last day\".",
+            "failure_case": "Say the `day !== itinerary.lastDay` branch were deleted or inverted. Then a pie stop near Mike's house, moved to Day 2 of 5, would give no warning. No test would fail.",
+            "label_reason": "This change adds the check, and no test would catch it being removed, so it's F6. I found no wrong behavior in the branch, so the labels above F6 don't fit."
+          },
+          {
+            "id": "F4",
+            "file": "src/domain/stop-checks.ts",
+            "line": 112,
+            "label": "N1",
+            "mark": "nit",
+            "problem": "openingHoursText() falls back to \"is open for only X of the visit\" when openingChangeWithin() returns null. That can't happen. This text is used only when the open minutes are more than 0 and fewer than the visit's length. In that case some opening or closing always falls strictly inside the visit. So the fallback is code that never runs.",
+            "failure_case": "No input reaches the fallback text. A visit that's partly open always has a boundary inside it, so `change` is never null when `open > 0`.",
+            "label_reason": "This is code that never runs, which the rubric lists under N1. The change added it, so it's a nit."
+          }
+        ],
+        "dropped": [
+          {
+            "file": "src/domain/day-checks.ts",
+            "line": 55,
+            "problem": "The driving text \"You agreed to 5.\" gives the approved hours without a unit, which could be unclear to the coordinator.",
+            "label": "D1",
+            "reason": "Domain model section 4.8 gives this exact text, \"Day 4 needs about 5 h 20 m of driving. You agreed to 5.\". The code matches it, and the sentence before it gives the unit (h/m). So the text isn't false, and an agent wouldn't misread it."
+          },
+          {
+            "file": "src/domain/day-checks.ts",
+            "line": 73,
+            "problem": "stopOrderResult() builds the day's own order from all stops that have a place. If Google's best order left some of those stops out, the two lists would differ, and a false stop-order note would follow.",
+            "label": "D1",
+            "reason": "LegsService.#stopOrderOf builds stopsInBestOrder from route.stops, which holds the same stops that have a place. Waypoints are kept apart. And when Google's order is the same as the day's, timeSavedInMinutes is 0, so the `Math.max(1, ...)` guard refuses the note anyway."
+          },
+          {
+            "file": "src/domain/stop-checks.ts",
+            "line": 52,
+            "problem": "isOpeningHoursApprovalApplying() reads only stop.approvals[0]. A stop with more than one opening-hours approval could be judged on an old one.",
+            "label": "D1",
+            "reason": "withApproval() in approval.ts replaces any approval of the same kind, and checkedApprovals() refuses two of a kind. A stop holds only opening-hours approvals, so there's at most one."
+          },
+          {
+            "file": "src/domain/open-minutes.ts",
+            "line": 51,
+            "problem": "openingChangeWithin() could get the weekday wrong for an overnight visit or a period that runs across the week's end.",
+            "label": "D1",
+            "reason": "A run of the code shows it works. A Monday 5 p.m. to 2 a.m. bar, visited from 11 p.m. to 3 a.m., gives closes at minute 1560, which reads \"2:00 a.m. the next day\", with 180 open minutes. A Saturday visit against a Sunday-only period gives 0 open minutes and no change."
+          }
+        ]
+      }
+    }
+  ]
+}

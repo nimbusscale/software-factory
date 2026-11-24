@@ -122,8 +122,8 @@ Each finding holds:
 - its label from the review rubric, and why that label fits
 - the mark FR-27 gives it
 
-Each dropped candidate holds its file and line, what it claimed, its label, and the reason it was
-dropped.
+Each dropped candidate holds its file and line, what it claimed, its label, which of the review
+rubric's two reasons for dropping it applies, and why.
 
 Both roles use Opus (AD-8), and learn the project's rules from its docs (AD-9).
 

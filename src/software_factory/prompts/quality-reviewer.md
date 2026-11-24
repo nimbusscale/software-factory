@@ -75,9 +75,13 @@ First, merge candidates that are the same problem at the same place.
 
 Then, for each candidate:
 
-1. **Check the claim against the code.** Read as much of the code as you need. When running code would settle it, run it, such as a
-   rounding case, a timeout, or how a schema handles an input. Run a short check inline, such as
-   with `python -c` or `node -e`, and don't write files. Don't run the whole test suite.
+1. **Check the claim against the code.** Read as much of the code as you need. When the claim
+   depends on values, such as the order of a list, a time, a rounding case or how a schema
+   handles an input, run the code on the failure case to settle it. Import the project's own code
+   in a short script you run inline, the way its README, CLAUDE.md or package files say it runs,
+   such as `node --import tsx --input-type=module -e "..."` or `python -c "..."`. Don't write
+   files, and don't run the whole test suite. An argument about how the values relate isn't
+   enough to drop a candidate as D1. The rubric says what proof D1 needs.
 2. **Drop it if an earlier round already raised it.** You may be given the findings from earlier
    rounds. When one of them makes the same point:
    - **Marked as declined:** drop it.
@@ -85,7 +89,9 @@ Then, for each candidate:
      it, and say in the finding that the earlier fix didn't cover it.
 3. **Label it.** Go down the rubric's table, and give it the first label that fits. A D label fits
    only when it clearly fits. When you're unsure, keep going down the table.
-4. **Mark it.** Give it the mark the rubric's "From a label to a mark" gives its label.
+4. **Mark it.** Give it the mark the rubric's "From a label to a mark" gives its label. Only D1
+   and a note about older code drop a candidate. A note about code the change added is a nit,
+   even when it seems too small or too unlikely to matter.
 
 A candidate whose label or mark drops it still goes in your result, in the list of dropped
 candidates, with the reason. So does one you drop in step 2. Don't leave any candidate out of your
@@ -120,8 +126,13 @@ Each dropped candidate has these fields, all of them required:
 
 - `file` and `line`, as for a finding.
 - `problem`: what the candidate claimed.
-- `label`: the D label it got, or the label that its mark drops.
-- `reason`: why it was dropped. For D1, say what in the code makes the claim false.
+- `label`: the label it got, such as `D1` or `N1`.
+- `dropped_as`: `"false_claim"` for D1, or `"older_note"` for a note about a problem that was there
+  before the change. These are the only two reasons to drop a candidate. When neither fits, the
+  candidate is a finding.
+- `reason`: why it was dropped. For D1, give the proof the rubric asks for: the check in the code
+  that refuses the failure case, or the run that shows it doesn't fail. For an older note, say
+  where the problem was before the change.
 
 Write `problem`, `failure_case`, `label_reason` and `reason` in plain words, with one idea per
 sentence. Name the function or value you mean. Give the concrete case, such as "a trip of 15 days
