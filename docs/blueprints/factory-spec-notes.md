@@ -985,6 +985,22 @@ is. How the copy gets there, by push or pull, isn't decided.**
 - Decided in: #66.
 - Likely home: `AD`.
 
+**When the factory runs, its roles follow the factory's own version of the doc standards, not the
+copy in the project's repo. The project's copy is for interactive sessions, which work outside the
+factory, so they work to the same standards and know how to hand the factory its issues. How the
+factory makes sure its roles get its own version isn't decided. Until it is, standards the roles
+follow, such as the quality reviewer's rubric, still go in `docs/standards/`.**
+- Why: the standards drive how the factory's agents behave, the same way code does. Joe: "If we
+  look at these doc standards like code, which they are effectively, they're code inputted or used
+  to drive behavior of the agent, then we can't just rely on each repo copy of the code." A change
+  to one project's copy, such as to how GitHub work is done, would change what the factory's roles
+  do in that project, with no review or eval run in the factory. A project could also tune the
+  factory's review to itself, when the factory means to keep one review process for any project.
+  Claude raised the tuning, and Joe widened it to every standard.
+- Decided in: an interactive session while planning #91, which puts the quality reviewer's rubric
+  in `docs/standards/`.
+- Likely home: `AD`.
+
 **The templates for each kind of doc are part of the doc standards, in `templates/`.**
 - Why: a template is a second copy of standards, such as a spec's opening line, the technical
   spec's fixed sections and the form a limit is written in. Kept next to the standards, the two
