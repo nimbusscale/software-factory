@@ -153,10 +153,16 @@ or a setting in it, is missing, the workflow uses the default.
 
 ## The Agent SDK
 
-- **Check the stock code review first.** Before building the review copy (TD-2), confirm in a
-  spike that, run by a role started from the Agent SDK, Claude Code's stock code review:
-  - reviews the changes not yet committed when it's given no target
-  - leaves the role able to hand back its findings as structured output (TD-1)
+- **The stock code review works from a role.** A role started from the Agent SDK, told to run
+  Claude Code's stock code review with no target, reviews the changes not yet committed. The
+  review runs in a fork and gives the role its findings as JSON. The role then copies them into
+  its result schema and hands them back as structured output (TD-1). A spike with
+  `claude-agent-sdk` 0.2.188 for Python (Claude Code CLI 2.1.331), on Opus, showed this in three
+  runs out of three, in a repo shaped like a review copy. Check it again on a later SDK version.
+- **The quality reviewer's prompt asks for the review in words.** A prompt that is only
+  `/code-review` runs the same review, but the role never hands back structured output. It ends
+  with the result that "The SDK can report success with no result" below describes. Its home is a
+  comment on the quality reviewer's prompt.
 - **Tests in a review copy.** Until roles run in containers that bundle a project's dependencies
   (#10), a review copy starts with none installed.
 - **Structured output on a resumed session works.** A spike with `claude-agent-sdk` 0.2.187 for
