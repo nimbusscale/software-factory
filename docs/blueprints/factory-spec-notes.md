@@ -501,17 +501,20 @@ picks one of those ways. This test replaces imagining a redesign.**
 - Decided in: #48.
 - Likely home: `TD`.
 
-**A pick in the tech stack is an architecture decision when swapping it would change most of the
-app: the language, and the frameworks and runtimes the code is built on. A tool that could be
-swapped while the app stays much the same, such as a linter, a formatter, a test runner or a
-package manager, isn't a spec item. Its config file records it, with any reason in a comment
-there.**
-- Why: changing part of the tech stack is a wide change. Dust Law's DESIGN lists TypeScript,
+**A pick in the tech stack gets the same test as any other architecture decision: would changing
+it touch most of the system? The language and a framework the code is built on pass it, and are
+named as examples. A tool that could be swapped while the app stays much the same, such as a
+linter or a package manager, isn't a spec item. Its config file records it, with any reason in a
+comment there.**
+- Why: changing most of the tech stack is a wide change. Dust Law's DESIGN lists TypeScript,
   React, Vite and Node together, and the writer made TypeScript an architecture decision and the
-  other three design decisions. Joe, on the tools: "some are architecture and some are not. We
+  other three design decisions. Naming a framework in the examples keeps a writer from filing one
+  like React as a design decision. Joe, on the tools: "some are architecture and some are not. We
   could change ruff or uv for some other tool and generally keep the app the same. We can not do
-  that for python." They "are not as fundamental as the coding language."
-- Decided in: #48. Narrowed to leave out swappable tools in #76.
+  that for python." They "are not as fundamental as the coding language." A runtime isn't named,
+  since one such as Node can often be swapped for another with few changes, so it depends on the
+  app.
+- Decided in: #48. Narrowed to one test for every architecture decision in #76.
 - Likely home: `TD`.
 
 **A design decision cites the requirement it meets, a functional or a technical one, in its own
