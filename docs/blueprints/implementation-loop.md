@@ -42,8 +42,9 @@ flowchart TD
    development, as "The board" below says.
 3. **Set up.** The workflow keeps one clone of each project's repo on the machine it runs on, and
    makes it on the project's first run. For each run, it adds a new git worktree from that clone,
-   as the working copy. The run branch starts from the project's default branch, and is named
-   `factory/issue-<number>`.
+   as the working copy, on a new run branch (TR-16). The run branch starts from the project's
+   default branch, and is named `factory/issue-<number>-<time the run started>`, with the time in
+   UTC, such as `factory/issue-79-20261124-213000`.
 4. **The work.** The workflow starts the implementer in a new session, with the issue's body
    (FR-2, TR-11). The implementer does the work, checks its own change, and fixes the problems its
    change caused (TR-12, TR-13). It hands back its result as structured output (TD-1).
@@ -83,8 +84,8 @@ flowchart TD
    candidates (FR-31). It then moves the issue on the board, as "The board" below says.
 
 **When a step fails.** When a role hands back no result, or one that doesn't fit its schema, the
-workflow ends the run (TR-2). So does a role that reaches its turn cap (FR-7), and a reply from
-GitHub that doesn't fit its schema (TR-15). The Agent SDK's `max_turns` option sets the cap, and a
+workflow ends the run (TR-2). So does a role that reaches its turn cap (FR-7), a reply from
+GitHub that doesn't fit its schema (TR-15), and a git command that fails (TR-18). The Agent SDK's `max_turns` option sets the cap, and a
 role that reaches it ends with an error result and no structured output. A run that ends without a
 PR moves the issue to Needs attention, with a comment that gives the reason (FR-14).
 
@@ -137,10 +138,10 @@ Each role is its own agent, so the workflow sets its tools and permissions when 
 - **Every role** is denied the shell commands `gh` and `git push` by its permission rules (AD-7),
   and `git commit` too (TD-7). It starts with no GitHub token in its environment. A shell can still
   get around these, as AD-7's accepted gap says, until roles run in containers (#10).
-- **Setup and cleanup.** When a run starts, the workflow deletes the run branch an earlier run on
-  the issue left (TR-9). When a run ends, it removes the run's worktree (TR-8). The branch stays
-  in the clone until the next run on the issue, so the owner can look at the work of a run that
-  ended without a PR.
+- **Setup and cleanup.** Each run makes a new run branch, and leaves the branches of earlier runs
+  on the issue as they are (TR-16). When a run ends, the workflow removes the run's worktree
+  (TR-8). The branch stays in the clone, so the owner can look at the work of a run that ended
+  without a PR, until it's older than the run branch age limit (TR-17).
 
 ## The board
 

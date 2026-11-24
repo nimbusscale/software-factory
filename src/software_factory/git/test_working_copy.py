@@ -1,5 +1,5 @@
 import asyncio
-import shutil
+from datetime import UTC, datetime, timedelta, timezone
 from typing import TYPE_CHECKING
 
 import pytest
@@ -12,6 +12,7 @@ from software_factory.git.working_copy import (
     commit,
     open_clone,
     push,
+    run_branch_name,
     working_copy,
 )
 
@@ -19,6 +20,8 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 ISSUE = 7
+STARTED = datetime(2026, 11, 24, 21, 30, 0, tzinfo=UTC)
+RUN_BRANCH = "factory/issue-7-20261124-213000"
 
 
 def clone_of(remote: Path) -> Clone:
@@ -30,7 +33,7 @@ def tip(repo: Path, ref: str) -> CommitId:
 
 
 async def start_and_end_run(clone: Clone, path: Path) -> WorkingCopy:
-    async with working_copy(clone, ISSUE, path) as copy:
+    async with working_copy(clone, ISSUE, STARTED, path) as copy:
         return copy
 
 
@@ -57,7 +60,7 @@ def test_run_branch_starts_from_the_default_branch(
 
     copy = asyncio.run(start_and_end_run(clone, tmp_path / "work"))
 
-    assert copy.run_branch == "factory/issue-7"
+    assert copy.run_branch == RUN_BRANCH
     assert copy.start == tip(author, "HEAD")
     assert tip(clone.path, copy.run_branch) == copy.start
 
@@ -76,40 +79,34 @@ def test_run_branch_follows_a_change_of_default_branch(
     assert copy.start == trunk
 
 
-def test_earlier_run_branch_is_deleted(remote: Path, tmp_path: Path) -> None:
+def test_run_branch_name_holds_the_start_time_in_utc() -> None:
+    eastern = timezone(timedelta(hours=-5))
+
+    name = run_branch_name(ISSUE, datetime(2026, 11, 24, 16, 30, 0, tzinfo=eastern))
+
+    assert name == RUN_BRANCH
+
+
+def test_earlier_run_branch_is_kept(remote: Path, tmp_path: Path) -> None:
     clone = clone_of(remote)
 
-    async def earlier_run() -> None:
-        async with working_copy(clone, ISSUE, tmp_path / "earlier") as copy:
+    async def earlier_run() -> CommitId | None:
+        async with working_copy(clone, ISSUE, STARTED, tmp_path / "earlier") as copy:
             (copy.path / "TILES.md").write_text("Tiles\n")
-            await commit(copy, "Add the tiles")
+            return await commit(copy, "Add the tiles")
 
-    asyncio.run(earlier_run())
-    copy = asyncio.run(start_and_end_run(clone, tmp_path / "work"))
+    earlier_commit = asyncio.run(earlier_run())
 
+    async def later_run() -> WorkingCopy:
+        later = STARTED + timedelta(minutes=5)
+        async with working_copy(clone, ISSUE, later, tmp_path / "later") as copy:
+            return copy
+
+    copy = asyncio.run(later_run())
+
+    assert copy.run_branch == "factory/issue-7-20261124-213500"
     assert tip(clone.path, copy.run_branch) == copy.start
-
-
-def test_earlier_run_branch_is_deleted_after_a_killed_run(
-    remote: Path, tmp_path: Path
-) -> None:
-    clone = clone_of(remote)
-    earlier = tmp_path / "earlier"
-    run_git(
-        "worktree",
-        "add",
-        "--quiet",
-        "-b",
-        "factory/issue-7",
-        str(earlier),
-        cwd=clone.path,
-    )
-    commit_file(earlier, "TILES.md", "Tiles\n")
-    shutil.rmtree(earlier)
-
-    copy = asyncio.run(start_and_end_run(clone, tmp_path / "work"))
-
-    assert tip(clone.path, copy.run_branch) == copy.start
+    assert tip(clone.path, RUN_BRANCH) == earlier_commit
 
 
 class RunFailedError(Exception):
@@ -123,7 +120,7 @@ def test_run_end_removes_the_working_copy_and_keeps_the_branch(
     committed: list[CommitId | None] = []
 
     async def run_that_fails() -> None:
-        async with working_copy(clone, ISSUE, tmp_path / "work") as copy:
+        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
             (copy.path / "TILES.md").write_text("Tiles\n")
             committed.append(await commit(copy, "Add the tiles"))
             (copy.path / "RULES.md").write_text("Not committed\n")
@@ -133,7 +130,7 @@ def test_run_end_removes_the_working_copy_and_keeps_the_branch(
         asyncio.run(run_that_fails())
 
     assert not (tmp_path / "work").exists()
-    assert committed == [tip(clone.path, "factory/issue-7")]
+    assert committed == [tip(clone.path, RUN_BRANCH)]
 
 
 def test_commit_holds_every_change_with_the_given_message(
@@ -142,7 +139,7 @@ def test_commit_holds_every_change_with_the_given_message(
     clone = clone_of(remote)
 
     async def run() -> tuple[WorkingCopy, CommitId | None]:
-        async with working_copy(clone, ISSUE, tmp_path / "work") as copy:
+        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
             (copy.path / "README.md").unlink()
             (copy.path / "rules").mkdir()
             (copy.path / "rules" / "RULES.md").write_text("Rules\n")
@@ -161,7 +158,7 @@ def test_commit_with_no_changes_hands_back_none(remote: Path, tmp_path: Path) ->
     clone = clone_of(remote)
 
     async def run() -> CommitId | None:
-        async with working_copy(clone, ISSUE, tmp_path / "work") as copy:
+        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
             return await commit(copy, "Nothing")
 
     assert asyncio.run(run()) is None
@@ -171,7 +168,7 @@ def test_push_puts_the_run_branch_on_the_remote(remote: Path, tmp_path: Path) ->
     clone = clone_of(remote)
 
     async def run() -> CommitId | None:
-        async with working_copy(clone, ISSUE, tmp_path / "work") as copy:
+        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
             (copy.path / "TILES.md").write_text("Tiles\n")
             committed = await commit(copy, "Add the tiles")
             await push(copy)
@@ -179,4 +176,4 @@ def test_push_puts_the_run_branch_on_the_remote(remote: Path, tmp_path: Path) ->
 
     committed = asyncio.run(run())
 
-    assert tip(remote, "factory/issue-7") == committed
+    assert tip(remote, RUN_BRANCH) == committed

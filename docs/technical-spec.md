@@ -161,8 +161,15 @@ in it.
 
 **TR-8.** When a run ends, the workflow shall remove the run's working copy.
 
-**TR-9.** When a run starts and the run branch of an earlier run on the same issue exists, the
-workflow shall delete that branch before it sets up this run.
+**TR-16.** When a run starts, the workflow shall put the run's work on a new run branch, not on
+one an earlier run made.
+
+*Why:* a run then never has to delete or overwrite an earlier run's branch, which might still be
+needed.
+
+**TR-17.** When a run branch is older than the run branch age limit, the workflow shall delete it.
+
+**TR-18.** When a git command the workflow runs fails, the workflow shall end the run.
 
 **TR-10.** The findings from earlier rounds that the quality reviewer gets shall mark each declined
 finding as declined, with no reason.

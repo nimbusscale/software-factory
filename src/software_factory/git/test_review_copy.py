@@ -1,4 +1,5 @@
 import asyncio
+from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from software_factory.git.command import git
@@ -9,6 +10,8 @@ from software_factory.git.working_copy import (
     open_clone,
     working_copy,
 )
+
+STARTED = datetime(2026, 11, 24, 21, 30, 0, tzinfo=UTC)
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -37,7 +40,7 @@ def test_review_diffs_cover_the_work_then_each_answer(
 ) -> None:
     async def run() -> None:
         clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, tmp_path / "work") as copy:
+        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
             work_commit = await committed(copy, {"TILES.md": "Tiles\n"})
             first = await review_diff(copy, None)
             answer_commit = await committed(copy, {"TILES.md": "Fixed tiles\n"})
@@ -54,7 +57,7 @@ def test_review_copy_holds_the_review_diff_as_changes_not_yet_committed(
 ) -> None:
     async def run() -> None:
         clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, tmp_path / "work") as copy:
+        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
             await committed(copy, {"TILES.md": "Tiles\n", "RULES.md": "Rules\n"})
             first = await review_diff(copy, None)
             await committed(
@@ -87,7 +90,7 @@ def test_review_copy_holds_files_marked_export_ignore(
 ) -> None:
     async def run() -> None:
         clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, tmp_path / "work") as copy:
+        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
             files: dict[str, str | None] = {
                 ".gitattributes": "TILES.md export-ignore\n",
                 "TILES.md": "Tiles\n",

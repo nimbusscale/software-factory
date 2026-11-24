@@ -1,12 +1,14 @@
 import asyncio
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
+from datetime import UTC
 from typing import TYPE_CHECKING
 
 from software_factory.git.command import CommitId, git
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
+    from datetime import datetime
     from pathlib import Path
 
 
@@ -25,8 +27,9 @@ class WorkingCopy:
     start: CommitId
 
 
-def run_branch_name(issue_number: int) -> str:
-    return f"factory/issue-{issue_number}"
+def run_branch_name(issue_number: int, started_at: datetime) -> str:
+    """Meets TR-16, since each run starts at a time of its own."""
+    return f"factory/issue-{issue_number}-{started_at.astimezone(UTC):%Y%m%d-%H%M%S}"
 
 
 async def open_clone(remote_url: str, path: Path) -> Clone:
@@ -45,11 +48,10 @@ async def open_clone(remote_url: str, path: Path) -> Clone:
 
 @asynccontextmanager
 async def working_copy(
-    clone: Clone, issue_number: int, path: Path
+    clone: Clone, issue_number: int, started_at: datetime, path: Path
 ) -> AsyncIterator[WorkingCopy]:
     """Adds a worktree at `path`, on a new run branch, and removes it at the end."""
-    run_branch = run_branch_name(issue_number)
-    await delete_earlier_run_branch(clone, run_branch)
+    run_branch = run_branch_name(issue_number, started_at)
     start = CommitId(await git("rev-parse", "origin/HEAD^{commit}", cwd=clone.path))
     await git(
         *("worktree", "add", "--quiet", "-b", run_branch, str(path), start),
@@ -62,15 +64,6 @@ async def working_copy(
         # work of a run that ended without a PR. A run that ends early can leave
         # changes not yet committed, and git won't remove those without --force.
         await git("worktree", "remove", "--force", str(path), cwd=clone.path)
-
-
-async def delete_earlier_run_branch(clone: Clone, run_branch: str) -> None:
-    """Meets TR-9."""
-    # A run that was killed before it removed its working copy can leave the worktree's
-    # entry behind, with its folder gone. Git won't delete a branch such an entry holds.
-    await git("worktree", "prune", cwd=clone.path)
-    if await git("branch", "--list", run_branch, cwd=clone.path):
-        await git("branch", "--delete", "--force", run_branch, cwd=clone.path)
 
 
 async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:
