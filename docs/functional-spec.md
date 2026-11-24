@@ -78,8 +78,10 @@ things the issue never asked for.
 **FR-9.** When the implementer gets findings from a round, the implementer shall fix each one or
 decline it with a reason.
 
-*Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, or
-can question a choice the implementer made on purpose, and then the implementer declines it.
+*Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, and
+then the implementer declines it. A finding against a choice the implementer made on purpose
+isn't wrong for that reason alone, so the implementer keeps the choice only if its reasons
+outweigh the finding.
 
 **FR-24.** When a round's review reports no important finding, the implementation loop shall make
 that round the run's last.
