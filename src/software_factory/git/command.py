@@ -35,6 +35,12 @@ REPO_ENV_VARS = frozenset(
 )
 
 
+# Over HTTPS, git waits with no limit for a server that accepted the connection and
+# then went silent. With these, it gives up once a transfer stays under 1000 bytes a
+# second for 60 seconds. A slow clone that's still moving never trips them.
+STALL_CHECK = (*("-c", "http.lowSpeedLimit=1000", "-c", "http.lowSpeedTime=60"),)
+
+
 class GitError(Exception):
     pass
 
@@ -53,6 +59,7 @@ async def git(*args: str, cwd: Path, extra_env: Mapping[str, str] | None = None)
         raise GitError(message)
     process = await asyncio.create_subprocess_exec(
         executable,
+        *STALL_CHECK,
         *args,
         cwd=cwd,
         env=env,

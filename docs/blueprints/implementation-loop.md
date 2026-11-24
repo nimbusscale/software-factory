@@ -141,7 +141,7 @@ Each role is its own agent, so the workflow sets its tools and permissions when 
 - **Setup and cleanup.** Each run makes a new run branch, and leaves the branches of earlier runs
   on the issue as they are (TR-16). When a run ends, the workflow removes the run's worktree
   (TR-8). The branch stays in the clone, so the owner can look at the work of a run that ended
-  without a PR, until it's older than the run branch age limit (TR-17).
+  without a PR, until the issue is closed (TR-19).
 
 ## The board
 

@@ -29,6 +29,8 @@ class WorkingCopy:
 
 def run_branch_name(issue_number: int, started_at: datetime) -> str:
     """Meets TR-16, since each run starts at a time of its own."""
+    # A time, not a count of earlier runs, so naming a branch needs no lookup of the
+    # branches already there.
     return f"factory/issue-{issue_number}-{started_at.astimezone(UTC):%Y%m%d-%H%M%S}"
 
 

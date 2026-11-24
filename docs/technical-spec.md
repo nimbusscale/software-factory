@@ -167,7 +167,11 @@ one an earlier run made.
 *Why:* a run then never has to delete or overwrite an earlier run's branch, which might still be
 needed.
 
-**TR-17.** When a run branch is older than the run branch age limit, the workflow shall delete it.
+**TR-19.** When an issue is closed, the workflow shall delete each run branch of the issue's runs,
+both on GitHub and on the machine the workflow runs on.
+
+*Why:* the owner closes an issue on purpose. A status can change by mistake, such as an issue
+moved out of its status and back, and a branch deleted on that could still be needed.
 
 **TR-18.** When a git command the workflow runs fails, the workflow shall end the run.
 
