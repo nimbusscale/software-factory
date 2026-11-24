@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
-from software_factory.git.command import CommitId
+from software_factory.git.command import CommitId, git
 from software_factory.git.conftest import commit_file, run_git
 from software_factory.git.working_copy import (
     Clone,
@@ -160,6 +160,26 @@ def test_commit_with_no_changes_hands_back_none(remote: Path, tmp_path: Path) ->
     async def run() -> CommitId | None:
         async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
             return await commit(copy, "Nothing")
+
+    assert asyncio.run(run()) is None
+
+
+def test_commit_with_changes_only_inside_a_submodule_hands_back_none(
+    remote: Path, tmp_path: Path
+) -> None:
+    library = tmp_path / "library"
+    library.mkdir()
+    run_git("init", "--quiet", cwd=library)
+    commit_file(library, "tiles.py", "TILES = []\n")
+    clone = clone_of(remote)
+
+    async def run() -> CommitId | None:
+        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
+            add = ("-c", "protocol.file.allow=always", "submodule", "add", "--quiet")
+            await git(*add, str(library), "lib", cwd=copy.path)
+            await commit(copy, "Add the library")
+            (copy.path / "lib" / "tiles.py").write_text("TILES = [1]\n")
+            return await commit(copy, "Change the library")
 
     assert asyncio.run(run()) is None
 

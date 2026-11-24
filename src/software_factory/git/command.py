@@ -44,6 +44,8 @@ async def git(*args: str, cwd: Path, extra_env: Mapping[str, str] | None = None)
     env = {
         name: value for name, value in os.environ.items() if name not in REPO_ENV_VARS
     }
+    # A run has no one at the terminal, so git fails rather than wait for a username.
+    env["GIT_TERMINAL_PROMPT"] = "0"
     env.update(extra_env or {})
     executable = shutil.which("git")
     if executable is None:
@@ -54,6 +56,7 @@ async def git(*args: str, cwd: Path, extra_env: Mapping[str, str] | None = None)
         *args,
         cwd=cwd,
         env=env,
+        stdin=asyncio.subprocess.DEVNULL,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )

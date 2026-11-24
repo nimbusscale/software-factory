@@ -101,3 +101,45 @@ def test_review_copy_holds_files_marked_export_ignore(
                 assert (path / "TILES.md").read_text() == "Tiles\n"
 
     asyncio.run(run())
+
+
+def test_review_copy_holds_tracked_files_the_project_ignores(
+    remote: Path, tmp_path: Path
+) -> None:
+    async def run() -> None:
+        clone = await open_clone(str(remote), tmp_path / "clone")
+        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+            work(copy.path, {".gitignore": "*.env\n", "example.env": "A=1\n"})
+            await git("add", "--force", "example.env", cwd=copy.path)
+            await commit(copy, "Add an example env file")
+            first = await review_diff(copy, None)
+            await committed(copy, {"example.env": "A=2\n"})
+            second = await review_diff(copy, first)
+            async with review_copy(copy, second) as path:
+                changes = await git("diff", "HEAD", "--name-status", cwd=path)
+                assert changes == "M\texample.env"
+
+    asyncio.run(run())
+
+
+def test_base_commit_skips_the_machines_signing_and_hooks(
+    remote: Path, tmp_path: Path
+) -> None:
+    hooks = tmp_path / "hooks"
+    hooks.mkdir()
+    for hook in ("pre-commit", "prepare-commit-msg", "post-commit"):
+        (hooks / hook).write_text("#!/bin/sh\nexit 1\n")
+        (hooks / hook).chmod(0o755)
+
+    async def run() -> None:
+        clone = await open_clone(str(remote), tmp_path / "clone")
+        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+            await committed(copy, {"TILES.md": "Tiles\n"})
+            diff = await review_diff(copy, None)
+            for setting in ("commit.gpgsign=true", "gpg.program=false"):
+                await git("config", "--global", *setting.split("="), cwd=copy.path)
+            await git("config", "--global", "core.hooksPath", str(hooks), cwd=copy.path)
+            async with review_copy(copy, diff) as path:
+                assert await git("log", "--format=%s", cwd=path) == "base"
+
+    asyncio.run(run())

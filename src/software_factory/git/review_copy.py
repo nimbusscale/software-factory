@@ -14,8 +14,8 @@ if TYPE_CHECKING:
     from collections.abc import AsyncIterator
 
 # The base commit is only there so the review diff shows as changes not yet committed.
-# So it has a fixed author, and turns off signing and hooks, which have nothing to check
-# here. It then works on a machine with no git identity or signing key, and the
+# So it has a fixed author, and turns off signing and every hook, which have nothing to
+# check here. It then works on a machine with no git identity or signing key, and the
 # machine's git identity stays out of the review copy (TR-7). The author is set through
 # these variables, since they win over git config, and git sets them for its hooks.
 BASE_COMMIT_AUTHOR = {
@@ -25,9 +25,13 @@ BASE_COMMIT_AUTHOR = {
     "GIT_COMMITTER_EMAIL": "factory@localhost",
 }
 BASE_COMMIT = (
-    *("-c", "commit.gpgsign=false"),
-    *("commit", "--quiet", "--no-verify", "--allow-empty", "--message", "base"),
+    *("-c", "commit.gpgsign=false", "-c", f"core.hooksPath={os.devnull}"),
+    *("commit", "--quiet", "--allow-empty", "--message", "base"),
 )
+
+# --force, since a project can track a file that its .gitignore matches, and a plain
+# add leaves such a file out. Every file in the review copy is one the project tracks.
+ADD_EVERY_FILE = ("add", "--all", "--force")
 
 
 @dataclass(frozen=True)
@@ -56,13 +60,13 @@ async def review_copy(
     try:
         await git("init", "--quiet", cwd=path)
         await write_files(working_copy, diff.start, path)
-        await git("add", "--all", cwd=path)
+        await git(*ADD_EVERY_FILE, cwd=path)
         await git(*BASE_COMMIT, cwd=path, extra_env=BASE_COMMIT_AUTHOR)
         await asyncio.to_thread(clear, path)
         await write_files(working_copy, diff.end, path)
         # Staged, so `git diff HEAD` shows the files the review diff adds. Left
         # unstaged, they'd be untracked, and missing from it.
-        await git("add", "--all", cwd=path)
+        await git(*ADD_EVERY_FILE, cwd=path)
         yield path
     finally:
         await asyncio.to_thread(shutil.rmtree, path)

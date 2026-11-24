@@ -69,7 +69,9 @@ async def working_copy(
 async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:
     """Commits every change in the working copy. Hands back None when there's none."""
     await git("add", "--all", cwd=working_copy.path)
-    if not await git("status", "--porcelain", cwd=working_copy.path):
+    # Not git status, which also lists changes inside a submodule that add doesn't
+    # stage, so commit would then fail with nothing to commit.
+    if not await git("diff", "--cached", "--name-only", cwd=working_copy.path):
         return None
     await git("commit", "--quiet", "--message", message, cwd=working_copy.path)
     return await head(working_copy)
