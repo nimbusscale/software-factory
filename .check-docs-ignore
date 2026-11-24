@@ -7,3 +7,6 @@ docs/research/
 # The factory spec notes quote other projects' IDs as evidence, so they aren't checked as citations
 # of this repo's specs.
 docs/blueprints/factory-spec-notes.md
+# A role's view file is made from the code, and copies the role's prompt. The prompt's own file is
+# checked.
+src/**/*.view.md

@@ -67,6 +67,7 @@ flowchart TD
       hands back the findings and the dropped candidates in its result schema. When the review is done, the workflow
       removes the review copy.
    4. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
+      It gives each finding an ID with the round in it, such as `R2-F3` (TD-12).
       When the reviewer stopped because it couldn't get the review diff, the workflow ends the
       run, as for a result that doesn't fit its schema. When the result has no important finding,
       this round is the run's last, and it ends here (FR-24).
@@ -82,6 +83,10 @@ flowchart TD
    the PR, with a part for each of these lists from every round: the nits and pre-existing
    findings the implementer didn't get (FR-25), the findings to check (FR-30), and the dropped
    candidates (FR-31). It then moves the issue on the board, as "The board" below says.
+
+**After the PR.** When the PR's description lists missing reasons (FR-21), the owner gives each
+reason in an interactive session while reviewing the PR. That session adds each Why to the spec on
+the run branch, so the reasons merge with the PR.
 
 **When a step fails.** When a role hands back no result, or one that doesn't fit its schema, the
 workflow ends the run (TR-2). So does a role that reaches its turn cap (FR-7), a reply from
@@ -104,8 +109,9 @@ The implementer's result holds:
 - a summary of the changes (FR-17)
 - the findings it declined this time, and their reasons (FR-18, TD-5)
 - doc and code disagreements (FR-19)
-- choices on open points (FR-20)
-- decisions with no reason (FR-21)
+- decisions on open points (FR-20)
+- missing reasons: decisions from the issue or the docs that it wrote into a spec with no reason
+  (FR-21)
 - the commit message (TD-9)
 
 The quality reviewer's result holds:
@@ -116,7 +122,6 @@ The quality reviewer's result holds:
 
 Each finding holds:
 
-- an ID, so the implementer's result can name the findings it declined
 - the file and line
 - the problem, and for a finding to check, what to check and how
 - a concrete case where it goes wrong

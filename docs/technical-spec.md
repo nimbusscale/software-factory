@@ -180,6 +180,13 @@ finding as declined, with no reason.
 
 *Why:* without the mark, the quality reviewer raises a declined finding again in every round.
 
+**TD-12.** The workflow gives each finding an ID made of its round and its place in the round's
+list, such as `R2-F3` for the third finding of round 2. This meets FR-18.
+
+*Why:* a reviewer that numbers its own findings starts from `F1` again each round, so the same ID
+names different findings in the earlier findings the reviewer gets and in the PR's list of
+declined findings. The workflow knows the round, so no agent has to keep count.
+
 **TR-11.** The implementer shall have access only to the body of the run's issue, the working copy,
 the findings the workflow gives it, and the web through web search and web fetch.
 
@@ -202,9 +209,11 @@ finding questions. Without them, a fix can undo a decision.
 ## T-SEC-5. GitHub and the PR
 
 **TD-4.** The implementer's last result holds the text that FR-17, FR-19, FR-21 and FR-20 call
-for, which the workflow puts in the PR's description.
+for, which the workflow puts in the PR's description. So each of the implementer's results holds
+that text for its whole change so far, not just for its latest round.
 
-*Why:* only the implementer knows what it changed.
+*Why:* only the implementer knows what it changed. A later round can undo an earlier decision or
+settle a disagreement, and only the implementer knows when it has.
 
 **TD-5.** The workflow keeps each declined finding and its reason from every one of the
 implementer's results, and lists them in the PR's description. This meets FR-18.
