@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "ask": [
+      "Edit(/ruff.toml)",
+      "Edit(/mypy.ini)",
+      "Edit(/lefthook.yml)",
+      "Edit(/tools/check-code.sh)",
+      "Edit(/.claude/settings.json)",
+      "Edit(/.claude/hooks/**)"
+    ]
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/.claude/hooks/check-edited-file.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
