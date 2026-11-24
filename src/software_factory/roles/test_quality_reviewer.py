@@ -11,7 +11,6 @@ from software_factory.roles.quality_reviewer import (
 )
 
 FINDING = {
-    "id": "F1",
     "file": "src/trip.py",
     "line": 12,
     "label": "F1",

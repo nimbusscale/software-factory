@@ -79,8 +79,8 @@ things the issue never asked for.
 decline it with a reason.
 
 *Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, and
-then the implementer declines it. A finding against a choice the implementer made on purpose
-isn't wrong for that reason alone, so the implementer keeps the choice only if its reasons
+then the implementer declines it. A finding against a decision the implementer made on purpose
+isn't wrong for that reason alone, so the implementer keeps the decision only if its reasons
 outweigh the finding.
 
 **FR-24.** When a round's review reports no important finding, the implementation loop shall make
@@ -132,15 +132,15 @@ declined.
 **FR-19.** The description of a run's PR shall name each disagreement between a doc and the code
 that the run left in place, by the doc item's ID and the code.
 
-**FR-20.** The description of a run's PR shall list each choice the implementer made on a point the
-issue and the docs left open, with the text it's about, what was unclear and what it chose.
+**FR-20.** The description of a run's PR shall list each decision the implementer made on a point
+the issue and the docs left open, with the text it's about, what was unclear and the decision.
 
-*Why:* the implementer has no one to ask during a run, so the owner checks each such choice at the
-PR.
+*Why:* the implementer has no one to ask during a run, so the owner checks each such decision at
+the PR.
 
-**FR-21.** The description of a run's PR shall list each decision the implementer wrote into a spec
-with no reason, as a question for the owner that quotes the decision and suggests a reason where
-the implementer has one.
+**FR-21.** The description of a run's PR shall list each decision from the issue or the docs that
+the implementer wrote into a spec with no reason, as a question for the owner that quotes the
+decision and suggests a reason where the implementer has one.
 
 **FR-25.** When a run opens its PR, the implementation loop shall post a comment on the PR that
 lists each nit and pre-existing finding the implementer didn't get.

@@ -110,7 +110,6 @@ Your result has these fields, all of them always filled in:
 
 Each finding has these fields, all of them required:
 
-- `id`: `F1`, `F2` and so on, in the order you list them.
 - `file`: the file's path from the repo root.
 - `line`: a line number in the file as it stands in the review target. Take it from the file
   itself, with Read or `grep -n`, not from the diff. When the problem is a removed line, use the

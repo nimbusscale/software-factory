@@ -17,7 +17,6 @@ UNCOMMITTED_CHANGES = "the changes not yet committed"
 
 
 class Finding(ResultModel):
-    id: str
     file: str
     line: int
     label: str

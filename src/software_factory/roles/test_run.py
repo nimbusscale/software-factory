@@ -32,8 +32,8 @@ IMPLEMENTER_RESULT: dict[str, JsonValue] = {
     "summary": "Adds the trip length check.",
     "declined": [],
     "disagreements": [],
-    "choices": [],
-    "decisions_with_no_reason": [],
+    "decisions": [],
+    "missing_reasons": [],
     "commit_message": "Check the trip length",
 }
 
@@ -66,7 +66,7 @@ def test_turn_cap_reached_ends_the_run() -> None:
 
 
 def test_result_that_doesnt_fit_its_schema_ends_the_run() -> None:
-    result: JsonValue = {**IMPLEMENTER_RESULT, "declined": [{"finding_id": "F1"}]}
+    result: JsonValue = {**IMPLEMENTER_RESULT, "declined": [{"finding_id": "R1-F1"}]}
 
     with pytest.raises(RoleFailedError, match="doesn't fit its result schema"):
         start(IMPLEMENTER, [result_message(structured_output=result)])
