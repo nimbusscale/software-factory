@@ -8,17 +8,23 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Board.** A project's GitHub project board.
 - **Declined finding.** A finding that the implementer chose not to fix.
 - **Factory.** The app this spec describes, which does a project's work from its issues and docs.
-- **Finding.** A problem that the quality reviewer reports in a run's work.
+- **Finding.** A problem that the quality reviewer reports in a round.
 - **Implementation loop.** The part of the factory that makes the changes an issue asks for and
   reviews them.
 - **Implementer.** The agent that makes a run's changes and handles the findings.
+- **Important finding.** A finding about a problem that the run's work adds, makes worse or
+  exposes again.
 - **Issue.** A GitHub issue in a project's repo.
+- **Nit.** A finding about a minor problem that the run's work adds and that harms nobody, such as
+  a misleading log line.
 - **Owner.** The person the factory does a project's work for.
 - **PR.** A GitHub pull request in a project's repo.
+- **Pre-existing finding.** A finding about a problem that was there before the run's work, and
+  that the work doesn't make worse or expose again.
 - **Project.** A piece of software the factory builds, with its own GitHub repo and board.
 - **Quality reviewer.** The agent that reviews a run's work.
-- **Round.** One review of a run's work by the quality reviewer, then the implementer's answer to
-  its findings.
+- **Round.** One review of a run's work by the quality reviewer, and any answer the implementer
+  gives to its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
 - **Turn cap.** The most turns an agent may take.
 
@@ -52,11 +58,24 @@ loop shall end the run.
 **FR-8.** When the implementer finishes the work the issue asks for, the implementation loop shall
 start the run's first round.
 
-**FR-9.** When the implementer gets a round's findings, the implementer shall fix each finding or
+**FR-22.** The quality reviewer shall mark each finding as an important finding, a pre-existing
+finding or a nit.
+
+**FR-23.** When a round's review reports an important finding, the implementation loop shall give
+the implementer only the round's important findings and nits, not its pre-existing findings.
+
+*Why:* a pre-existing finding is about code the issue didn't ask to change. Each fix of one widens
+the change and gives the next round more code to find problems in, so the rounds go on fixing
+things the issue never asked for.
+
+**FR-9.** When the implementer gets findings from a round, the implementer shall fix each one or
 decline it with a reason.
 
 *Why:* the implementer owns the work, and a review is feedback to it. A finding can be wrong, or
 can question a choice the implementer made on purpose, and then the implementer declines it.
+
+**FR-24.** When a round's review reports no important finding, the implementation loop shall make
+that round the run's last.
 
 **FR-10.** While the run has rounds left, when a round ends, the implementation loop shall start the
 next round.
@@ -84,10 +103,10 @@ the issue that gives the reason.
 **FR-15.** When a run's last round ends, the implementation loop shall open a PR for the run's
 work.
 
-*Scenario:* Given a run with 2 rounds, when the run starts, then the implementer does the work,
-the quality reviewer reviews it, the implementer answers the findings, the quality reviewer
-reviews those changes, the implementer answers again, and the PR opens with no review of that
-last answer.
+*Scenario:* Given a run with 2 rounds, where each review reports an important finding, when the
+run starts, then the implementer does the work, the quality reviewer reviews it, the implementer
+answers the findings, the quality reviewer reviews those changes, the implementer answers again,
+and the PR opens with no review of that last answer.
 
 **FR-16.** The description of a run's PR shall hold `Closes #<number>`, with the number of the
 run's issue.
@@ -109,3 +128,6 @@ PR.
 **FR-21.** The description of a run's PR shall list each decision the implementer wrote into a spec
 with no reason, as a question for the owner that quotes the decision and suggests a reason where
 the implementer has one.
+
+**FR-25.** When a run opens its PR, the implementation loop shall post a comment on the PR that
+lists each nit and pre-existing finding the implementer didn't get.

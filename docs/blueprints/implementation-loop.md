@@ -27,10 +27,12 @@ flowchart TD
     F -- yes --> G[Code: build the review diff]
     G --> H[Quality reviewer, new session: review the diff]
     H --> I[Code: check the result]
-    I --> J[Implementer, same session: answer the findings, check it]
+    I --> M{Any important finding?}
+    M -- yes --> J[Implementer, same session: answer the findings, check it]
+    M -- no --> L
     J --> K[Code: check the result, commit]
     K --> F
-    F -- no --> L[Code: push, open the PR, move the issue to In review]
+    F -- no --> L[Code: push, open the PR, post the comment, move the issue to In review]
 ```
 
 1. **Start.** The owner calls the command with a project's repo and an issue number (FR-1). The
@@ -59,21 +61,24 @@ flowchart TD
    3. **Review.** The workflow starts the quality reviewer in a new session, in the review copy
       (TR-6). It gives the
       reviewer the issue's body, the review diff, and the findings from earlier rounds, with each
-      declined finding marked as declined and no reason (TR-7, TR-10). Its prompt tells it to
-      run Claude Code's stock code review on the changes not yet committed (AD-5), then hand back
-      the findings in its result schema. When the review is done, the workflow removes the review
-      copy.
+      declined finding marked as declined and no reason (TR-7, TR-10). Its prompt, which "The
+      quality reviewer's prompt" below describes, has it review the changes not yet committed,
+      then hand back the findings in its result schema. When the review is done, the workflow
+      removes the review copy.
    4. **Check.** The workflow checks the reviewer's result against its result schema (TR-1).
+      When the result has no important finding, this round is the run's last, and it ends here
+      (FR-24).
    5. **Answer.** The workflow resumes the implementer's session (TD-3), and gives it the round's
-      findings. The implementer fixes each finding or declines it with a reason (FR-9), checks its
-      change (TR-12, TR-13), and hands back its result. When its answer changes nothing, this round
-      is the run's last (TR-5).
+      important findings and nits (FR-23). The implementer fixes each one or declines it with a
+      reason (FR-9), checks its change (TR-12, TR-13), and hands back its result. When its answer
+      changes nothing, this round is the run's last (TR-5).
    6. **Commit.** As in step 5.
 7. **The PR.** When the last round ends, the workflow pushes the run branch and opens the PR
    (FR-15). The PR's title is the issue's title. Its description holds `Closes #<number>`, which the
    workflow writes (FR-16, TD-6), the text from the implementer's last result (TD-4), and the
-   declined findings the workflow kept from every round (TD-5). The workflow moves the issue to In
-   review.
+   declined findings the workflow kept from every round (TD-5). The workflow posts a comment on the
+   PR that lists the nits and pre-existing findings the implementer didn't get (FR-25), and moves
+   the issue to In review.
 
 **When a step fails.** When a role hands back no result, or one that doesn't fit its schema, the
 workflow ends the run (TR-2). So does a role that reaches its turn cap (FR-7). The Agent SDK's
@@ -86,7 +91,7 @@ a comment that gives the reason (FR-14).
 | | Implementer | Quality reviewer |
 |---|---|---|
 | Session | One for the whole run, resumed each round (TD-3) | A new one each round (TR-6) |
-| Gets | The issue's body, then each round's findings | The issue's body, the review diff, earlier findings |
+| Gets | The issue's body, then each round's important findings and nits | The issue's body, the review diff, earlier findings |
 | Can use | The working copy, web search and web fetch (TR-11) | The review copy (TD-2) |
 | Changes | The working copy | Nothing |
 | Hands back | The text for the PR's description and a commit message | The round's findings |
@@ -106,6 +111,7 @@ Each finding in the quality reviewer's result holds:
 - the file and line
 - the problem
 - a concrete case where it goes wrong
+- the mark FR-22 gives it
 
 Both roles use Opus (AD-8), and learn the project's rules from its docs (AD-9).
 
@@ -151,12 +157,29 @@ started or resumed, as the Agent SDK's `max_turns` option does. The command refu
 rounds below 1 (FR-5). A project can set any of them in a config file in its repo. When the file,
 or a setting in it, is missing, the workflow uses the default.
 
+## The quality reviewer's prompt
+
+The prompt starts from the stock code review's prompt at its `high` level (AD-10), as Claude Code
+2.1.331 gives it. A copy is in `docs/research/code-review-spike/stock-prompt-high-2.1.331.md`.
+Road-trip-agent's evaluation of the stock review found that `high` gave the best
+findings for what it cost. The prompt changes the stock one in these ways:
+
+- **No floor on the number of findings.** The stock prompt asks for at least 5. With a floor, a
+  review of a change with fewer real problems fills the rest with pre-existing findings and nits.
+- **No cap on the number of findings.** The stock prompt keeps only the 10 most severe. A finding
+  cut by the cap isn't listed anywhere, so nobody knows it existed.
+- **It reviews the changes not yet committed in the review copy (TD-2),** in place of the stock
+  prompt's steps for finding the diff. Those start with `git diff origin/HEAD...HEAD`, which fails
+  in a review copy, since it has no remote.
+- **No conventions angle.** The stock prompt checks the change against each CLAUDE.md that
+  applies to it. The quality reviewer looks only for problems in how the code works, so that each
+  reviewer stays on its own area, and a broken project rule isn't one of those.
+- **Each finding comes back in the quality reviewer's result schema.** The stock prompt's
+  `important`, `pre_existing` and `nit` match the important finding, pre-existing finding and nit
+  terms, except that a stock nit also covers a broken CLAUDE.md rule.
+
 ## The Agent SDK
 
-- **Check the stock code review first.** Before building the review copy (TD-2), confirm in a
-  spike that, run by a role started from the Agent SDK, Claude Code's stock code review:
-  - reviews the changes not yet committed when it's given no target
-  - leaves the role able to hand back its findings as structured output (TD-1)
 - **Tests in a review copy.** Until roles run in containers that bundle a project's dependencies
   (#10), a review copy starts with none installed.
 - **Structured output on a resumed session works.** A spike with `claude-agent-sdk` 0.2.187 for
@@ -176,8 +199,9 @@ or a setting in it, is missing, the workflow uses the default.
   judges it, and the two repeat. Its "Who does what" and "When things go wrong" cover the parts
   this version leaves out.
 - **road-trip-agent's code review,** in its `design/code-review.md`. Its reviewer hands back
-  findings as JSON checked against a schema, and code posts them. Its reviewer was its own,
-  tuned for that project, where the factory's is stock (AD-5). It gets a list of its earlier
+  findings as JSON checked against a schema, and code posts them. Its reviewer was its own
+  prompt, built from the stock prompt at `high` and tuned for that project. The factory's starts
+  from the stock prompt too, but isn't tuned to one project (AD-10). It gets a list of its earlier
   findings, and doesn't raise one twice. When every finding was fixed, one PR went seven rounds,
   since each fix gave the next review new lines to find things in. Its fixer confirms a finding
   against the code before fixing it, and checks a suggested fix before applying it.
