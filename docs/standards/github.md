@@ -10,14 +10,21 @@ A task issue is the kind of issue the factory's implementation loop takes. Its b
 sections, in this order, each under a `##` heading of that name:
 
 - **Why:** what the work is for, in a few sentences.
-- **Design:** the spec items the work follows, and pointers to the blueprint sections it follows,
-  by file and heading.
+- **Design:** what the work has to follow, other than the requirements it meets. That's the
+  decisions and code standards it follows, the requirements it has to fit that other work meets,
+  and pointers to the blueprint sections it follows, by file and heading.
 - **Do:** what to change, specific to this issue.
 - **Acceptance criteria:** the functional and technical requirements the work must meet. List each
   functional requirement the work meets in full. List a technical requirement when the work meets
   it, such as work that builds one part of the system, which meets no functional requirement on its
   own. A requirement counts as met when its tests pass. A test the work needs that doesn't exist
   yet is written as part of the work.
+
+An item goes in one of the two sections, never both. A requirement the work meets goes in
+Acceptance criteria, which already tells whoever does the work to build to it. A requirement the
+work only has to fit goes in Design. For example, the work that writes an agent's prompt has to
+fit a requirement for how that agent handles its input, when other work hands it the input and
+the tests for the requirement run there.
 
 Each spec item in Design or Acceptance criteria is listed by its ID and its text as it stood when
 the issue was written, with nothing under it, such as its Why:
