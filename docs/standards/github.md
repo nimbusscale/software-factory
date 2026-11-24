@@ -1,8 +1,8 @@
 # GitHub work
 
 The standards for working with a project's GitHub issues, its board and its PRs: what a task
-issue holds, what the board's statuses mean, how an issue is updated, and how the summary in a PR's
-description is written.
+issue and a question issue hold, what the board's statuses mean, how an issue is updated, and how
+the summary in a PR's description is written.
 
 ## A task issue
 
@@ -16,6 +16,23 @@ sections, in this order, each under a `##` heading of that name:
 - **Acceptance criteria:** the functional requirements the work must meet, by their IDs. A
   requirement counts as met when its tests pass. A test the work needs that doesn't exist yet is
   written as part of the work.
+
+## A question issue
+
+A question issue holds a question that has to be settled before some work can start. It generates
+no code. It has the `question` label, so questions can be told apart from work at a glance. Its body
+has these three sections, in this order, each under a `##` heading of that name:
+
+- **Question:** the question, in a sentence or two.
+- **Context:** what's known so far, and which issues the answer changes.
+- **Options:** the answers weighed so far, or "None yet."
+
+Each issue that waits on the answer is marked on GitHub as blocked by the question issue. When the
+question is answered, the answer is written where it belongs, such as in a spec or in these
+standards, and the question issue is closed.
+
+*Why:* a question written only in a comment or a conversation is easy to miss. The agent that
+picks up the waiting work may never see it, and nothing shows the owner what's waiting on it.
 
 ## The board's statuses
 
