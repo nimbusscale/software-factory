@@ -51,7 +51,10 @@ def stopped_reason(result: QualityReviewerResult) -> str | None:
 
 
 def quality_reviewer_prompt(review_target: str) -> str:
-    template = read_prompt("quality-reviewer.md")
+    return fill_review_target(read_prompt("quality-reviewer.md"), review_target)
+
+
+def fill_review_target(template: str, review_target: str) -> str:
     if template.count(REVIEW_TARGET_PLACEHOLDER) != 1:
         message = (
             f"The quality reviewer's prompt needs {REVIEW_TARGET_PLACEHOLDER} once."

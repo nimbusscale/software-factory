@@ -6,6 +6,7 @@ from software_factory.roles.quality_reviewer import (
     REVIEW_TARGET_PLACEHOLDER,
     UNCOMMITTED_CHANGES,
     QualityReviewerResult,
+    fill_review_target,
     quality_reviewer,
 )
 
@@ -79,3 +80,12 @@ def test_dropped_candidate_takes_only_the_two_reasons() -> None:
 
     dropped_as = schema["$defs"]["DroppedCandidate"]["properties"]["dropped_as"]
     assert dropped_as["enum"] == ["false_claim", "older_note"]
+
+
+@pytest.mark.parametrize(
+    "template",
+    ["Review target:\n", "Review target: {{review_target}} {{review_target}}"],
+)
+def test_refuses_a_prompt_without_one_review_target_placeholder(template: str) -> None:
+    with pytest.raises(ValueError, match="once"):
+        fill_review_target(template, UNCOMMITTED_CHANGES)

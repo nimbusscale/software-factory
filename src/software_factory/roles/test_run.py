@@ -4,11 +4,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
+from claude_agent_sdk import ClaudeAgentOptions, Message, query
 
 from software_factory.roles.definition import ResultModel, RoleDefinition
 from software_factory.roles.fake_agent_sdk import (
     FakeQuery,
     RawMessage,
+    ReplayTransport,
     result_message,
     saved_response,
 )
@@ -20,6 +22,8 @@ from software_factory.roles.quality_reviewer import (
 from software_factory.roles.run import RoleFailedError, RoleOutcome, RoleRunner
 
 if TYPE_CHECKING:
+    from collections.abc import AsyncIterator
+
     from pydantic import JsonValue
 
 WORKING_COPY = Path("/work/copy")
@@ -150,3 +154,36 @@ def test_gives_the_role_its_result_schema() -> None:
         "type": "json_schema",
         "schema": ImplementerResult.model_json_schema(),
     }
+
+
+def test_api_failure_gives_the_text_claude_code_sent() -> None:
+    failure = result_message(
+        is_error=True, errors=[], result="API Error: 529 Overloaded"
+    )
+
+    with pytest.raises(RoleFailedError, match="API Error: 529 Overloaded"):
+        start(IMPLEMENTER, [failure])
+
+
+def test_sdk_error_after_a_success_result_ends_the_run() -> None:
+    def crashing_query(
+        *, prompt: str, options: ClaudeAgentOptions
+    ) -> AsyncIterator[Message]:
+        success = result_message(structured_output=IMPLEMENTER_RESULT)
+        transport = ReplayTransport([success], exit_code=2)
+        return query(prompt=prompt, options=options, transport=transport)
+
+    runner = RoleRunner(crashing_query)
+
+    with pytest.raises(RoleFailedError, match="exit code 2"):
+        asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
+
+
+def test_refuses_a_folder_whose_path_has_a_glob_character() -> None:
+    with pytest.raises(ValueError, match="glob character"):
+        start_in(Path("/home/u/My Projects (old)/repo"))
+
+
+def start_in(folder: Path) -> None:
+    runner = RoleRunner(FakeQuery([[]]))
+    asyncio.run(runner.start(IMPLEMENTER, "Do the work.", folder))

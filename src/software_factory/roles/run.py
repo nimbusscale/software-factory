@@ -91,8 +91,7 @@ def read_result[ResultT: ResultModel](
         message = f"The {name} reached its turn cap of {definition.turn_cap} turns."
         raise RoleFailedError(message)
     if result_message.is_error or result_message.subtype != "success":
-        errors = "; ".join(result_message.errors or [result_message.subtype])
-        message = f"The {name} stopped with an error: {errors}"
+        message = f"The {name} stopped with an error: {error_text(result_message)}"
         raise RoleFailedError(message)
     # The SDK reports success with no structured output when the role ends without
     # ever making a valid structured-output call. It nudges the role once to make
@@ -111,3 +110,13 @@ def read_result[ResultT: ResultModel](
     if reason is not None:
         raise RoleFailedError(reason)
     return result
+
+
+def error_text(result_message: ResultMessage) -> str:
+    if result_message.errors:
+        return "; ".join(result_message.errors)
+    # An API failure arrives with the subtype "success", no errors, and the text in
+    # the result.
+    if result_message.result and result_message.result.strip():
+        return result_message.result.strip()
+    return result_message.subtype

@@ -12,6 +12,8 @@ if TYPE_CHECKING:
 
 OPUS = "claude-opus-5-5"
 
+GLOB_CHARACTERS = frozenset("*?[]{}()!+@")
+
 DEFAULT_TURN_CAP = 100
 
 # Meets AD-7 for the shell, and TD-7 for commits.
@@ -64,6 +66,10 @@ def role_options[ResultT: ResultModel](
     session_id: str | None,
 ) -> ClaudeAgentOptions:
     """The options a role starts with, or resumes with when `session_id` is given."""
+    if GLOB_CHARACTERS & set(str(cwd)):
+        # The folder goes into a glob in claudeMdExcludes below, unescaped.
+        message = f"A role can't run in {cwd}, since its path has a glob character."
+        raise ValueError(message)
     return ClaudeAgentOptions(
         model=definition.model,
         effort=definition.effort,

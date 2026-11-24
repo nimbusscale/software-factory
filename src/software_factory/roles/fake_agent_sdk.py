@@ -45,8 +45,9 @@ def result_message(**fields: JsonValue) -> RawMessage:
 
 
 class ReplayTransport(Transport):
-    def __init__(self, messages: list[RawMessage]) -> None:
+    def __init__(self, messages: list[RawMessage], exit_code: int = 0) -> None:
         self._messages = messages
+        self._exit_code = exit_code
         self._send, self._receive = anyio.create_memory_object_stream[RawMessage](100)
 
     async def connect(self) -> None:
@@ -73,10 +74,11 @@ class ReplayTransport(Transport):
         async for message in self._receive:
             yield message
         last = self._messages[-1] if self._messages else {}
-        if last.get("is_error") is True:
-            # Claude Code exits with 1 after an error result.
-            error = "Command failed with exit code 1"
-            raise ProcessError(error, exit_code=1)
+        # Claude Code exits with 1 after an error result.
+        exit_code = 1 if last.get("is_error") is True else self._exit_code
+        if exit_code != 0:
+            error = f"Command failed with exit code {exit_code}"
+            raise ProcessError(error, exit_code=exit_code)
 
     async def close(self) -> None:
         await self._send.aclose()

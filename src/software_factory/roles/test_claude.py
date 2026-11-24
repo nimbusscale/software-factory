@@ -4,7 +4,7 @@ It checks what the fake Agent SDK takes for granted, on Haiku to keep it cheap.
 """
 
 import asyncio
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 import pytest
 from claude_agent_sdk import query
@@ -16,9 +16,15 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 
+class CodeWord(ResultModel):
+    found_in: Literal["project", "parent folder"]
+    code_word: str
+
+
+# A list of a nested model, as the roles' results have, so the schema has $defs and
+# $ref.
 class CodeWords(ResultModel):
-    project_code_word: str
-    parent_code_word: str
+    code_words: list[CodeWord]
 
 
 ROLE = RoleDefinition(
@@ -32,9 +38,8 @@ ROLE = RoleDefinition(
 )
 
 ASK = (
-    "What code words does your context give, from each CLAUDE.md you were given?"
-    " Put the project's in project_code_word, and the parent folder's in"
-    " parent_code_word. Use NONE for one that isn't there."
+    "List each code word your context gives, from each CLAUDE.md you were given,"
+    " and say whether it came from the project or its parent folder."
 )
 
 
@@ -49,7 +54,7 @@ def test_role_starts_and_resumes_with_a_result(tmp_path: Path) -> None:
     async def start_and_resume() -> tuple[str, str]:
         started = await runner.start(ROLE, ASK, repo)
         assert started.result == CodeWords(
-            project_code_word="PELICAN", parent_code_word="NONE"
+            code_words=[CodeWord(found_in="project", code_word="PELICAN")]
         )
         resumed = await runner.resume(
             started, ROLE, "Hand back the same answer again.", repo
