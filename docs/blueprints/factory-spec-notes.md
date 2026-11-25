@@ -335,7 +335,12 @@ needs may not exist yet, and then it's written as part of the work.**
   hide vague requirements. An earlier idea, in the docs retro findings, was that scenarios become
   evaluation cases. This replaces it.
 - Decided in: #12, in discussion with the owner.
-- Open: how a missing test gets written, and by whom, when an issue needs it.
+- Who writes them: an issue's acceptance tests are written in the planning session, before the
+  run, and the run takes them from a branch. The implementer writes the other tests, and each one
+  names the spec item or the bug it checks. `docs/blueprints/testing-a-run.md` has the plan.
+- Why: Joe chose the planning session. A test written first has to call something, so whoever
+  writes it settles the interface. In the planning session, the owner sees that choice.
+- Decided in: #101.
 - Likely home: `FR` that every requirement has a test; the rest with the workflow's acceptance
   checks.
 
