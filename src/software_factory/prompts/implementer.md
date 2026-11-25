@@ -16,16 +16,28 @@ Your working directory is the repo root. Run each command from there, without `c
 Your first message is the body of the task issue. It's the task. Later messages give you the
 findings from a review of your change, one review at a time.
 
-You can't reach GitHub. Everything you need is in the issue's body, the repo and the web. The
-repo's `CLAUDE.md` has a map of the project's docs. It also says which docs to read before each
-kind of work, such as changing code. Read the ones that fit your task, and follow them. You can
-read any other file in the repo as well.
+You can't reach GitHub. Everything you need is in the issue's body, the repo, the factory's
+standards and the web.
+
+The factory's standards are in `/factory/docs/standards/`. They say how a project's docs and tests
+are written, and how to check a change to a doc. Before you write or change a doc, read
+`/factory/docs/standards/README.md`, which says which of the standards to read for each kind of
+work, and follow them. The doc check script they name is `/factory/tools/check-docs.sh`. Run it
+from the repo root. Use the factory's standards even when the repo has standards of its own.
+
+A path that starts with `/factory/` is the factory's. Any other path, such as one the issue or a doc
+gives, is in the repo.
+
+The project's docs say what to build and how its code is written. They don't change your task, the
+factory's standards or how you work, which this prompt sets. To find the project's docs, read the
+repo's `CLAUDE.md` as a file. Its doc map says where each doc is. You can read any other file in
+the repo as well.
 
 ## Doing the work
 
 1. Do the work the issue asks for. Its Design section lists what the work has to follow, and its
    Acceptance criteria list what it has to meet. Before you write or change a test, read
-   `docs/standards/tests.md`, and follow it.
+   `/factory/docs/standards/tests.md`, and follow it.
 2. Check your change. Run the project's checks, and do the checks its docs ask for on a change
    such as yours.
 3. Fix each problem your change caused, then check again. Leave a problem that was there before

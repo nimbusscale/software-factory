@@ -19,13 +19,29 @@ changes the code or the check's config.
 - `uv run set-board-statuses <owner/name>` sets the statuses on a project's board from
   `src/software_factory/factory.toml`, the factory's own config. It uses the GitHub CLI's login,
   and keeps the board's other statuses.
-- `uv run implementation-loop <owner/name> <issue number>` runs the implementation loop on one
-  issue of a project, and opens a PR for its work. `--rounds <number>` sets the number of rounds
-  for this run. It uses the GitHub CLI's login, and keeps each project's clone and each run's
-  working copy in `~/.local/share/software-factory`, or in `$XDG_DATA_HOME/software-factory`
-  when that's set.
-- `uv run pytest -m claude src` runs the tests that call Claude, which `tools/check-code.sh`
-  leaves out.
+
+## Running the factory
+
+Each run happens in its own SFE, a Docker container that holds the factory at `/factory` and is
+thrown away when the run ends.
+
+- `bash tools/build-sfe.sh` builds the SFE's image from the checkout's commit. It tags the image
+  with its factory version, which is the commit's short ID, and as `latest`. It refuses a checkout with changes
+  not committed.
+- `bash tools/run-sfe.sh <owner/name> <issue number>` runs the implementation loop on one issue of
+  a project in a new SFE, and opens a PR for its work. `--rounds <number>` after the issue number
+  sets the number of rounds for this run. `--factory <path>` before the repo mounts a checkout of
+  this repo at `/factory` in place of the image's copy, to try a change before building an image.
+  A change to the Python packages still needs a new image.
+- `bash tools/test-in-sfe.sh` runs the tests that call Claude in an SFE, with this checkout
+  mounted at `/factory`. `tools/check-code.sh` leaves those tests out.
+
+`run-sfe.sh` gives the SFE two tokens. It reads the Claude Code token from the line
+`FACTORY_CLAUDE_CODE_OAUTH_TOKEN=<token>` in `.env` at the repo's root, which git ignores, and
+reads no other line of that file. Make the token with `claude setup-token`. Set `FACTORY_ENV_FILE`
+to read another file, such as the `.env` of another checkout. The GitHub token comes from
+`gh auth token`, so it's the GitHub CLI's login. The commits a run makes carry the git identity in
+your git config.
 
 ## A project's settings
 

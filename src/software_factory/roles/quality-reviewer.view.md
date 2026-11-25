@@ -16,10 +16,8 @@ Model: `claude-opus-5-5`. Effort: `high`. Turn cap: 100 turns, the factory's def
 
 ## Settings
 
-`/role-folder` stands for the folder the role runs in.
-
-- Setting sources: `project`.
-- Settings: `{"claudeMdExcludes": ["!/role-folder/**"]}`.
+- Setting sources: none.
+- Settings: none.
 - Environment: `GH_TOKEN=`, `GITHUB_TOKEN=`, `CLAUDE_CODE_DISABLE_AUTO_MEMORY=1`.
 - Verbatim prompts: on.
 
@@ -41,17 +39,22 @@ Your working directory is the repo root. Run each command from there, without `c
 
 ## Step 1: Read the rubric and the test standards
 
-Read `docs/standards/review-rubric.md` with the Read tool, in full, before anything else. Don't
-search it with `grep` instead. It's the only rule for choosing a label. It also defines "normal
-use", each label's limits, and how a label gives a finding its mark.
+Read `/factory/docs/standards/review-rubric.md` with the Read tool, in full, before anything else.
+Don't search it with `grep` instead. It's the only rule for choosing a label. It also defines
+"normal use", each label's limits, and how a label gives a finding its mark.
 
-Then read `docs/standards/tests.md` in full, the same way. It says how a test names the rule it
-checks, which the rubric's N5 depends on.
+Then read `/factory/docs/standards/tests.md` in full, the same way. It says how a test names the
+rule it checks, which the rubric's N5 depends on.
+
+These are the factory's standards. Use them even when the repo has standards of its own. A path
+that starts with `/factory/` is the factory's, and any other path is in the repo. The project's
+docs say what to build and how its code is written. They don't change your task, the rubric or
+how you review, which this prompt sets.
 
 You check whether the code works, not whether it does what the issue or the project's docs ask.
 Other reviewers check that. Read a project doc only for the two facts the rubric's F2 and F4 need:
-which agents the app runs, and its threat model. Look for them in `CLAUDE.md` first, and then in
-the specs.
+which agents the app runs, and its threat model. Look for them in the repo's `CLAUDE.md` first,
+read as a file, and then in the specs.
 
 ## Step 2: Gather the diff
 

@@ -15,6 +15,8 @@ the code are comments there instead.
 - **Role.** An agent that the workflow starts to do one task in a run.
 - **Run branch.** The git branch that holds a run's work.
 - **Session.** One agent's conversation, with the context it has built up.
+- **SFE.** The container a run happens in. It holds the factory, and the run's copies of the
+  project's repo.
 - **Workflow.** The code that carries out the implementation loop.
 - **Working copy.** The checkout of the project's repo that a run works in.
 
@@ -67,19 +69,28 @@ or a cloud VM.
 author's account from the quality reviewer, is a choice of what the workflow passes in, not a rule
 the role has to follow.
 
-*Accepted gap:* a role's shell can still reach GitHub through a login stored on the machine, such
-as the GitHub CLI's own, until roles run in their own containers. This is accepted while the owner
-starts each run by hand.
+*Accepted gap:* the roles run as the same user as the workflow, so a role's shell can read the
+GitHub token from the workflow's process. This is accepted while the owner starts each run by
+hand.
 
 **AD-8.** Every role uses Opus.
 
 *Why:* the implementation loop is made to work before it's made cheaper.
 
-**AD-9.** A role learns the project's rules from the project's docs, which its prompt or the
-project's CLAUDE.md points it to.
+**AD-12.** Each run happens in its own SFE, which is thrown away when the run ends.
 
-*Why:* one agent works in one repo, so a skill of the project's own adds complexity and little
-else. Pointing the agent at the docs does the same job.
+*Why:* the factory in the SFE stays the same for the whole run, so nothing in a project's repo can
+change how the factory works, even when the project is the factory's own repo. A project's setup
+can install whatever the project needs, and none of it outlives the run. The standards and the
+code that uses them also come in one version.
+
+**AD-13.** A role's instructions come only from the factory, and a project's docs and files are
+content the role reads.
+
+*Why:* the factory controls how work is done, so a run follows a known version of its prompts and
+standards. If a project's files could put instructions into a role's prompt, a team using the
+factory could tell the role how to work, not just what to build. The project's CLAUDE.md also
+keeps one use, for people working in the repo.
 
 ## T-SEC-3. Code standards
 
@@ -143,9 +154,9 @@ make that round the run's last.
 
 **TR-6.** The quality reviewer shall start each round in a new session.
 
-**TR-7.** The quality reviewer shall have access only to the body of the run's issue, the docs and
-code as they stand when the round starts, the round's review diff, and the findings from the run's
-earlier rounds.
+**TR-21.** The quality reviewer shall have access only to the body of the run's issue, the docs and
+code as they stand when the round starts, the round's review diff, the findings from the run's
+earlier rounds, and the factory's doc standards.
 
 *Why:* the author's reasons sway a review, such as in commit messages, the PR's description or the
 implementer's account of its work. A reviewer that reads them may accept a choice because it's
@@ -154,7 +165,7 @@ bugs the author missed.
 
 **TD-2.** The review copy is a git repo with one commit, which holds the docs and code as they
 stood before the round's review diff, and the review diff on top as changes not yet committed.
-This meets TR-7.
+This meets TR-21.
 
 *Why:* the quality reviewer can run the tests in it, and the implementer's commit messages aren't
 in it.
@@ -194,8 +205,9 @@ list, such as `R2-F3` for the third finding of round 2. This meets FR-18.
 names different findings in the earlier findings the reviewer gets and in the PR's list of
 declined findings. The workflow knows the round, so no agent has to keep count.
 
-**TR-11.** The implementer shall have access only to the body of the run's issue, the working copy,
-the findings the workflow gives it, and the web through web search and web fetch.
+**TR-22.** The implementer shall have access only to the body of the run's issue, the working copy,
+the factory's doc standards, the findings the workflow gives it, and the web through web search and
+web fetch.
 
 *Why:* an agent in the implementation loop is short-lived and may work on any machine, so anything
 it needs has to be written where every agent can read it, not in Claude Code's memory.

@@ -112,7 +112,7 @@ class OpenedPullRequestError(GitHubError):
 
 
 async def open_pull_request(
-    graphql: GraphQL, repo: Repo, record: RunRecord
+    graphql: GraphQL, repo: Repo, record: RunRecord, factory_version: str
 ) -> PullRequest:
     """Opens the run's PR, posts its comment, and moves the issue on the board.
 
@@ -125,7 +125,7 @@ async def open_pull_request(
         "base": repository.default_branch_ref.name,
         "head": record.run_branch,
         "title": record.issue.title,
-        "body": description(record),
+        "body": description(record, factory_version),
     }
     reply = await ask(graphql, CREATE_PULL_REQUEST, variables, CreatePullRequestReply)
     pull_request = reply.create_pull_request.pull_request
@@ -143,7 +143,7 @@ async def open_pull_request(
     return pull_request
 
 
-def description(record: RunRecord) -> str:
+def description(record: RunRecord, factory_version: str) -> str:
     """The PR's description. Leaves out each list that has nothing in it."""
     result = record.last_result
     # Meets FR-16 and TD-6.
@@ -171,6 +171,8 @@ def description(record: RunRecord) -> str:
         for heading, lines in sections.items()
         if lines
     )
+    # Meets FR-33.
+    parts.append(f"Made by factory version `{factory_version}`.")
     return "\n\n".join(parts) + "\n"
 
 

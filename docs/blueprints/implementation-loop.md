@@ -46,7 +46,7 @@ flowchart TD
    default branch, and is named `factory/issue-<number>-<time the run started>`, with the time in
    UTC, such as `factory/issue-79-20261124-213000`.
 4. **The work.** The workflow starts the implementer in a new session, with the issue's body
-   (FR-2, TR-11). The implementer does the work, checks its own change, and fixes the problems its
+   (FR-2, TR-22). The implementer does the work, checks its own change, and fixes the problems its
    change caused (TR-12, TR-13). It hands back its result as structured output (TD-1).
 5. **Commit.** The workflow checks the result against the implementer's result schema (TR-1). It
    commits, with the message from the result (TD-7, TD-9, TD-8).
@@ -61,7 +61,7 @@ flowchart TD
       without committing them.
    3. **Review.** The workflow starts the quality reviewer in a new session, in the review copy
       (TR-6). It gives the reviewer the issue's body, the review diff, and the findings from
-      earlier rounds, with each declined finding marked as declined and no reason (TR-7, TR-10).
+      earlier rounds, with each declined finding marked as declined and no reason (TR-21, TR-10).
       It names the changes not yet committed as the review target in the reviewer's prompt,
       which "The quality reviewer's prompt" below describes. The reviewer reviews them, then
       hands back the findings and the dropped candidates in its result schema. When the review is done, the workflow
@@ -100,7 +100,7 @@ PR moves the issue to Needs attention, with a comment that gives the reason (FR-
 |---|---|---|
 | Session | One for the whole run, resumed each round (TD-3) | A new one each round (TR-6) |
 | Gets | The issue's body, then each round's important findings and nits | The issue's body, the review diff, earlier findings |
-| Can use | The working copy, web search and web fetch (TR-11) | The review copy (TD-2) |
+| Can use | The working copy, web search and web fetch (TR-22) | The review copy (TD-2) |
 | Changes | The working copy | Nothing |
 | Hands back | The text for the PR's description and a commit message | The round's findings and dropped candidates |
 
@@ -131,14 +131,14 @@ Each finding holds:
 Each dropped candidate holds its file and line, what it claimed, its label, which of the review
 rubric's two reasons for dropping it applies, and why.
 
-Both roles use Opus (AD-8), and learn the project's rules from its docs (AD-9).
+Both roles use Opus (AD-8), and learn the project's rules from its docs (AD-13).
 
 ## What a role is allowed to do
 
 Each role is its own agent, so the workflow sets its tools and permissions when it starts it.
 
 - **The implementer** gets the tools to read, search, edit and run commands, plus web search and
-  web fetch (TR-11).
+  web fetch (TR-22).
 - **The quality reviewer** gets the tools to read, search and run commands, and no tool that edits.
 - **Every role** is denied the shell commands `gh` and `git push` by its permission rules (AD-7),
   and `git commit` too (TD-7). It starts with no GitHub token in its environment. A shell can still
@@ -200,7 +200,7 @@ checks each candidate against the code, then labels it. It changes the skill in 
   copy (TD-2). Run by hand, the same prompt can review another target, such as a branch against
   `main`.
 - **It doesn't read GitHub** (AD-7). The workflow gives it the issue's body and the earlier
-  findings, with each declined finding marked (TR-7, TR-10), in place of the skill's script that
+  findings, with each declined finding marked (TR-21, TR-10), in place of the skill's script that
   reads them from the PR. So the rubric has no label for work handed to another issue, since the
   reviewer can't read that issue.
 - **Its rubric works for any project.** The labels that hang on one project, such as the threat

@@ -5,6 +5,7 @@ from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
 from software_factory.conftest import commit_file, run_git
+from software_factory.git.working_copy import Remote
 from software_factory.github.fake_github import REPO, FakeGitHub, FakeIssue
 from software_factory.loop.run import RunRequest, Services, run
 from software_factory.roles.fake_agent_sdk import ScriptedQuery, result_message
@@ -24,6 +25,7 @@ ISSUE_BODY = "## Why\n\nThe game needs tiles.\n"
 STARTED = datetime(2026, 11, 24, 21, 30, 0, tzinfo=UTC)
 RUN_BRANCH = "factory/issue-7-20261124-213000"
 IMPLEMENTER_SESSION = "implementer-session"
+FACTORY_VERSION = "0123456789ab"
 
 
 def fake_github() -> FakeGitHub:
@@ -110,13 +112,17 @@ def push_settings(author: Path, text: str) -> None:
 
 
 def services(
-    github: FakeGitHub, roles: ScriptedQuery, remote: Path, home: Path
+    github: FakeGitHub,
+    roles: ScriptedQuery,
+    remote: Path,
+    home: Path,
 ) -> Services:
     return Services(
         graphql=github,
         runner=RoleRunner(roles),
         home=home,
-        remote_url=lambda repo: str(remote) if repo == REPO else "",
+        remote=lambda repo: Remote(str(remote) if repo == REPO else ""),
+        factory_version=FACTORY_VERSION,
     )
 
 

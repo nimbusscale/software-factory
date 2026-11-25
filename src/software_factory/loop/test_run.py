@@ -89,7 +89,7 @@ def test_run_with_an_important_finding_each_round(remote: Path, tmp_path: Path) 
     assert "R1-F2" in implementer_prompts[1]
     assert "R1-F3" not in implementer_prompts[1]
     assert "R2-F1, an important finding" in implementer_prompts[2]
-    # TR-7 and TR-10.
+    # TR-21 and TR-10.
     assert ISSUE_BODY.strip() in reviewer_prompts[0]
     assert "<earlier_findings>\nNone.\n</earlier_findings>" in reviewer_prompts[0]
     assert "R1-F1, an important finding\n" in reviewer_prompts[1]
@@ -100,6 +100,8 @@ def test_run_with_an_important_finding_each_round(remote: Path, tmp_path: Path) 
         "R1-F3, a pre-existing finding, not given to the implementer"
         in reviewer_prompts[1]
     )
+    # FR-33.
+    assert "factory version `0123456789ab`" in opened.body
     # TD-5 and FR-18.
     assert "Closes #7" in opened.body
     assert "**R1-F2**" in opened.body

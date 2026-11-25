@@ -16,7 +16,7 @@ if TYPE_CHECKING:
 # The base commit is only there so the review diff shows as changes not yet committed.
 # So it has a fixed author, and turns off signing and every hook, which have nothing to
 # check here. It then works on a machine with no git identity or signing key, and the
-# machine's git identity stays out of the review copy (TR-7). The author is set through
+# machine's git identity stays out of the review copy (TR-21). The author is set through
 # these variables, since they win over git config, and git sets them for its hooks.
 BASE_COMMIT_AUTHOR = {
     "GIT_AUTHOR_NAME": "Software factory",

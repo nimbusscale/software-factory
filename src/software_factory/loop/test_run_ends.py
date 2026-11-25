@@ -1,14 +1,17 @@
 import os
 import shutil
+from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
 
 from software_factory.conftest import run_git
+from software_factory.git.working_copy import Remote
 from software_factory.github.pull_request import OpenedPullRequestError
 from software_factory.loop.conftest import (
     ISSUE_NUMBER,
+    RUN_BRANCH,
     board_status,
     fake_github,
     finding,
@@ -88,6 +91,66 @@ def test_failed_git_command_ends_the_run(remote: Path, tmp_path: Path) -> None:
         start_run(services(github, roles, remote, tmp_path / "home"))
 
     assert_ended_without_pr(github, "git push")
+    # FR-34.
+    assert_ended_without_pr(github, "The run branch couldn't be put on GitHub: git")
+
+
+def test_run_that_ends_without_a_pr_leaves_its_work_on_github(
+    remote: Path, tmp_path: Path
+) -> None:
+    def reviewer_with_no_findings_field(_: Path) -> list[RawMessage]:
+        return [result_message(structured_output={"status": "done", "reason": "."})]
+
+    roles = ScriptedQuery(
+        [
+            implementer_turn({"TILES.md": "Tiles\n"}, "Add the tiles"),
+            reviewer_with_no_findings_field,
+        ]
+    )
+    github = fake_github()
+
+    with pytest.raises(RunEndedError):
+        start_run(services(github, roles, remote, tmp_path / "home"))
+
+    # FR-34.
+    assert run_git("log", "--format=%s", "-1", RUN_BRANCH, cwd=remote) == (
+        "Add the tiles"
+    )
+    assert_ended_without_pr(github, f"The run's work is on the branch `{RUN_BRANCH}`.")
+
+
+def test_no_role_can_read_the_github_token(remote: Path, tmp_path: Path) -> None:
+    login = "login-for-github"
+    found: list[str] = []
+
+    def files_with_token(cwd: Path) -> list[str]:
+        return [
+            str(path)
+            for path in cwd.rglob("*")
+            if path.is_file() and login.encode() in path.read_bytes()
+        ]
+
+    def implementer(cwd: Path) -> list[RawMessage]:
+        found.extend(files_with_token(cwd))
+        return implementer_turn({"TILES.md": "Tiles\n"}, "Add the tiles")(cwd)
+
+    def reviewer(cwd: Path) -> list[RawMessage]:
+        found.extend(files_with_token(cwd))
+        return reviewer_turn([])(cwd)
+
+    roles = ScriptedQuery([implementer, reviewer])
+    github = fake_github()
+
+    with_login = replace(
+        services(github, roles, remote, tmp_path / "home"),
+        remote=lambda _: Remote(str(remote), login),
+    )
+    start_run(with_login)
+
+    # AD-7.
+    assert len(github.pull_requests) == 1
+    assert found == []
+    assert all(login not in str(options.env) for options in roles.options)
 
 
 def test_work_that_changes_nothing_ends_the_run(remote: Path, tmp_path: Path) -> None:

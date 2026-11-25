@@ -179,11 +179,19 @@ def test_sdk_error_after_a_success_result_ends_the_run() -> None:
         asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
 
 
-def test_refuses_a_folder_whose_path_has_a_glob_character() -> None:
-    with pytest.raises(ValueError, match="glob character"):
-        start_in(Path("/home/u/My Projects (old)/repo"))
+@pytest.mark.parametrize(
+    "definition", [IMPLEMENTER, quality_reviewer(UNCOMMITTED_CHANGES)]
+)
+def test_role_loads_no_settings_and_gets_no_github_token(
+    definition: RoleDefinition[ResultModel],
+) -> None:
+    fake = FakeQuery([[]])
 
+    with pytest.raises(RoleFailedError):
+        asyncio.run(RoleRunner(fake).start(definition, "Do the work.", WORKING_COPY))
 
-def start_in(folder: Path) -> None:
-    runner = RoleRunner(FakeQuery([[]]))
-    asyncio.run(runner.start(IMPLEMENTER, "Do the work.", folder))
+    [options] = fake.options
+    # AD-13.
+    assert options.setting_sources == []
+    # AD-7.
+    assert options.env["GH_TOKEN"] == options.env["GITHUB_TOKEN"] == ""

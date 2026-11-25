@@ -5,18 +5,23 @@ from typing import TYPE_CHECKING
 from software_factory.git.command import git
 from software_factory.git.review_copy import ReviewDiff, review_copy, review_diff
 from software_factory.git.working_copy import (
+    Remote,
     WorkingCopy,
     commit,
-    open_clone,
     working_copy,
 )
 
 STARTED = datetime(2026, 11, 24, 21, 30, 0, tzinfo=UTC)
 
 if TYPE_CHECKING:
+    from contextlib import AbstractAsyncContextManager
     from pathlib import Path
 
     from software_factory.git.command import CommitId
+
+
+def started(remote: Path, tmp_path: Path) -> AbstractAsyncContextManager[WorkingCopy]:
+    return working_copy(Remote(str(remote)), 7, STARTED, tmp_path / "work")
 
 
 def work(path: Path, files: dict[str, str | None]) -> None:
@@ -39,8 +44,7 @@ def test_review_diffs_cover_the_work_then_each_answer(
     remote: Path, tmp_path: Path
 ) -> None:
     async def run() -> None:
-        clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path) as copy:
             work_commit = await committed(copy, {"TILES.md": "Tiles\n"})
             first = await review_diff(copy, None)
             answer_commit = await committed(copy, {"TILES.md": "Fixed tiles\n"})
@@ -56,8 +60,7 @@ def test_review_copy_holds_the_review_diff_as_changes_not_yet_committed(
     remote: Path, tmp_path: Path
 ) -> None:
     async def run() -> None:
-        clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path) as copy:
             await committed(copy, {"TILES.md": "Tiles\n", "RULES.md": "Rules\n"})
             first = await review_diff(copy, None)
             await committed(
@@ -89,8 +92,7 @@ def test_review_copy_holds_files_marked_export_ignore(
     remote: Path, tmp_path: Path
 ) -> None:
     async def run() -> None:
-        clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path) as copy:
             files: dict[str, str | None] = {
                 ".gitattributes": "TILES.md export-ignore\n",
                 "TILES.md": "Tiles\n",
@@ -107,8 +109,7 @@ def test_review_copy_holds_tracked_files_the_project_ignores(
     remote: Path, tmp_path: Path
 ) -> None:
     async def run() -> None:
-        clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path) as copy:
             work(copy.path, {".gitignore": "*.env\n", "example.env": "A=1\n"})
             await git("add", "--force", "example.env", cwd=copy.path)
             await commit(copy, "Add an example env file")
@@ -132,8 +133,7 @@ def test_base_commit_skips_the_machines_signing_and_hooks(
         (hooks / hook).chmod(0o755)
 
     async def run() -> None:
-        clone = await open_clone(str(remote), tmp_path / "clone")
-        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path) as copy:
             await committed(copy, {"TILES.md": "Tiles\n"})
             diff = await review_diff(copy, None)
             for setting in ("commit.gpgsign=true", "gpg.program=false"):
