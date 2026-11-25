@@ -156,8 +156,10 @@ the implementer failures it didn't cause. What the board shows for a refused run
 blueprint.
 
 **The make targets** run the project's own commands, so they get neither the GitHub token nor the
-Claude Code token in their environment. Each one runs with a time limit, and a target that runs
-past it counts as failed.
+Claude Code token in their environment. Each one runs with a time limit of 10 minutes, the same for
+every project, and a target that runs past it counts as failed. *Why:* every run pays for both
+targets before any work starts, so a slow setup or check slows every issue. A project whose targets
+need more than a few minutes needs a faster setup or check, not a longer limit.
 
 **The review copy.** Before each round's review, the workflow runs `make setup` in the review copy,
 so the quality reviewer can run the project's code there to check a candidate. The run ends, and
