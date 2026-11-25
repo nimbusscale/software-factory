@@ -23,7 +23,7 @@ description = "The issue waits on the owner before work on it can go on."
 # The factory's default for each setting. A project's settings file can set any of them.
 
 [settings]
-rounds = 3
+rounds = 2
 
 # The most turns each role may take each time the workflow starts or resumes it.
 [settings.turn_caps]

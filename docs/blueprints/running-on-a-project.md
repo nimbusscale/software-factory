@@ -79,7 +79,7 @@ owner mounts a checkout of the factory's repo at `/factory`, in place of the ima
 
 - the project's repo, as `owner/name`
 - the issue's number
-- the number of rounds, when the command sets one (FR-4)
+- the number of rounds, when the command sets one (FR-32)
 - a Claude Code OAuth token, in an environment variable
 - a GitHub token, in an environment variable
 
@@ -143,7 +143,7 @@ among the files that aren't about docs.
 
 The contract holds:
 
-- **A doc map in `software-factory.toml`,** the settings file at the repo's root that FR-4 and
+- **A doc map in `software-factory.toml`,** the settings file at the repo's root that FR-32 and
   FR-26 already read. The doc map gives the path of the functional spec, the technical spec and the
   blueprints folder:
 

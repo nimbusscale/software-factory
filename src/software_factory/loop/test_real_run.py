@@ -17,7 +17,10 @@ from software_factory.loop.conftest import STARTED
 from software_factory.loop.run import RunRequest, Services, run
 from software_factory.roles.run import RoleRunner
 
-RUBRIC = Path(__file__).parents[3] / "docs" / "standards" / "review-rubric.md"
+STANDARDS = Path(__file__).parents[3] / "docs" / "standards"
+
+# The standards the roles' prompts tell them to read.
+ROLE_STANDARDS = ("review-rubric.md", "tests.md")
 
 ISSUE_BODY = """## Why
 
@@ -39,7 +42,8 @@ None.
 
 def set_up_project(author: Path) -> None:
     (author / "docs" / "standards").mkdir(parents=True)
-    shutil.copy(RUBRIC, author / "docs" / "standards" / "review-rubric.md")
+    for name in ROLE_STANDARDS:
+        shutil.copy(STANDARDS / name, author / "docs" / "standards" / name)
     (author / "CLAUDE.md").write_text(
         "# A card game\n\nThe repo holds the game's rules, and no code.\n"
     )

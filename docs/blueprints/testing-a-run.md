@@ -61,9 +61,13 @@ a rule.
 Then:
 
 - **The implementer's prompt** points to `tests.md` in its steps for doing the work.
-- **The review rubric's F6** narrows to behavior that a spec item or a bug fix calls for, and that
-  no test checks. Behavior no spec item holds gets no finding for its missing test.
-- **The quality reviewer's prompt,** where it says to look at the tests, matches the new F6.
+- **The review rubric's F6 and N2,** the labels for a missing test, are removed. Whether each spec
+  item and bug fix the work calls for has a test is the purpose reviewer's check, since it's part
+  of whether the work meets the issue. The quality reviewer doesn't read the specs to know which
+  items apply. A new note label, N5, is for a test the change adds or changes that names no rule.
+  It's a note, not a fix, so a test with no rule shows in the PR without costing a round.
+- **The quality reviewer's prompt** has it read `tests.md` with the rubric. Where it says to look
+  at the tests, it points to F5 and N5, and says not to look for missing tests.
 - **The README in `docs/standards/`** lists `tests.md` among the files that aren't about docs, and
   says who reads it. The repo's `CLAUDE.md` adds it to the doc map, and says to read it before
   writing or changing a test.
@@ -73,12 +77,12 @@ Then:
 The factory's default number of rounds goes from 3 to 2. Round 1 reviews the work. Round 2 reviews
 only the fixes, as TR-4 already has it.
 
-- Replace FR-4 with a new item whose default is 2. A different default changes the item's meaning,
-  so it gets a new ID.
+- FR-32 holds the default of 2. It's a new item, not a change to the one with a default of 3,
+  since a different default changes the item's meaning.
 - Set `rounds = 2` in `factory.toml`, and change the tests that check the default.
 
-Why 2: Joe, "Maybe 2 rounds is fine, 1 for the fix and then 1 for reviewing the fixes." LLM
-reviewers also mostly find the same bugs as each other, so a third review adds little.
+Why 2: Joe, "Maybe 2 rounds is fine, 1 for the fix and then 1 for reviewing the fixes." FR-32's
+Why gives the reason.
 
 ## Phase 3. A mutation testing spike
 
@@ -100,7 +104,7 @@ The spike decides whether the loop gets a mutation step, and its shape. The shap
 each implementer result, the workflow runs the project's mutation command on the changed lines.
 It gives the surviving mutants to the implementer with the round's findings. Each project names its
 mutation command in its settings file, since the tool depends on the language. The spike also says
-whether F6 stays in the rubric once a mutation step runs.
+whether the purpose reviewer's check for a missing test stays once a mutation step runs.
 
 ## Phase 4. Acceptance tests written before the work
 

@@ -24,7 +24,7 @@ def run_settings(settings_file: str | None, command_rounds: int | None) -> Setti
 
     `settings_file` is the text of the project's settings file, or None when the
     project has none. `command_rounds` is the number of rounds the command sets, or
-    None when it sets none (FR-4).
+    None when it sets none (FR-32).
     """
     settings = project_settings(settings_file)
     if command_rounds is None:

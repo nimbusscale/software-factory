@@ -46,8 +46,11 @@ number, the implementation loop shall start a run on that issue.
 *Why:* an author's own check of its work is thin, so a separate reviewer is the real check. That
 check is what lets the owner trust work no person watched.
 
-**FR-4.** The implementation loop shall give a run the number of rounds its command sets, else the
-number the project sets, else 3.
+**FR-32.** The implementation loop shall give a run the number of rounds its command sets, else the
+number the project sets, else 2.
+
+*Why:* the first round reviews the work, and the second reviews the implementer's fixes. LLM
+reviewers mostly find the same bugs as each other, so a third review adds little.
 
 **FR-5.** When the command or the project sets fewer than 1 round, the implementation loop shall
 refuse to start the run, and say why.
