@@ -1,7 +1,7 @@
 from typing import Literal
 
+from software_factory.config import factory_config
 from software_factory.roles.definition import (
-    DEFAULT_TURN_CAP,
     OPUS,
     ResultModel,
     RoleDefinition,
@@ -70,7 +70,7 @@ def quality_reviewer(review_target: str) -> RoleDefinition[QualityReviewerResult
         prompt=quality_reviewer_prompt(review_target),
         # No tool that edits, since the reviewer only reads and reports.
         tools=("Read", "Glob", "Grep", "Bash"),
-        turn_cap=DEFAULT_TURN_CAP,
+        turn_cap=factory_config().settings.turn_caps.quality_reviewer,
         result_model=QualityReviewerResult,
         ends_run=stopped_reason,
     )

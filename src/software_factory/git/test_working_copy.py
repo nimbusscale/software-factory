@@ -4,8 +4,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from software_factory.conftest import commit_file, run_git
 from software_factory.git.command import CommitId, git
-from software_factory.git.conftest import commit_file, run_git
 from software_factory.git.working_copy import (
     Clone,
     WorkingCopy,

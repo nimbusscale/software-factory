@@ -1,6 +1,6 @@
 ---
-status: active
-retired:
+status: retired
+retired: 2026-11-24
 ---
 
 # The implementation loop

@@ -48,6 +48,18 @@ async def open_clone(remote_url: str, path: Path) -> Clone:
     return Clone(path)
 
 
+async def default_branch_file(clone: Clone, name: str) -> str | None:
+    """The file at `name` on the project's default branch, or None when there's none.
+
+    A run branch starts from there, so it's the file the run's work starts with.
+    """
+    if not await git(
+        "ls-tree", "--name-only", "origin/HEAD", "--", name, cwd=clone.path
+    ):
+        return None
+    return await git("show", f"origin/HEAD:{name}", cwd=clone.path)
+
+
 @asynccontextmanager
 async def working_copy(
     clone: Clone, issue_number: int, started_at: datetime, path: Path

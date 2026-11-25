@@ -14,8 +14,6 @@ OPUS = "claude-opus-5-5"
 
 GLOB_CHARACTERS = frozenset("*?[]{}()!+@")
 
-DEFAULT_TURN_CAP = 100
-
 # Meets AD-7 for the shell, and TD-7 for commits.
 DENIED_COMMANDS = ("Bash(gh:*)", "Bash(git push:*)", "Bash(git commit:*)")
 
