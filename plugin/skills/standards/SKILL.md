@@ -1,6 +1,6 @@
 ---
 name: standards
-description: The software factory's standards for a project's specs, blueprints, code comments, tests, GitHub issues and PRs, and the quality reviewer's rubric, with the doc templates and the doc check script. Load it before you write, change or review a doc, code a doc describes, a code comment, a test, an issue, or a PR's description.
+description: Says which of the software factory's standards to read for a task, and holds them and the doc check script. Load it before you write, change or review a doc, code a doc describes, a code comment, a test, an issue or a PR's description. Then read only the files your task needs.
 ---
 
 # Doc standards
