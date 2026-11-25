@@ -113,8 +113,8 @@ an example, not an option.
 
 ## When a doc and the code disagree
 
-The doc wins, unless CLAUDE.md says otherwise: the doc says what the system should do. The code is
-changed to match, in the same change as any change to the doc.
+The doc wins: the doc says what the system should do. The code is changed to match, in the same
+change as any change to the doc.
 
 ## How to write any doc
 

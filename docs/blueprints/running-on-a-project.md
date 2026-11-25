@@ -8,8 +8,9 @@ retired:
 A blueprint, written to build from before the code exists. Once the code is built, it's retired,
 and the status above says so.
 
-It plans how the factory runs on a project's repo: each run in a container of its own, and a fixed
-contract between the factory and the project. Each phase below is built as its own task issue.
+It plans how the factory runs on a project's repo: each run in a container of its own, the
+factory's standards in a plugin that every session loads the same way, and a fixed contract
+between the factory and the project. Each phase below is built as its own task issue.
 Where this blueprint and a spec disagree, the spec wins.
 
 ## Why the change
@@ -36,36 +37,39 @@ in its CLAUDE.md.
 ## Terms
 
 - **Project contract.** What a project's repo must hold for the factory to run on it.
-- **Doc map.** The paths of a project's docs, in the project's settings file.
+- **Factory plugin.** The Claude Code plugin that holds the factory's standards.
 
 SFE is in the technical spec's Terms, and factory version in the functional spec's, since FR-33
-names it. Phase 2 adds project contract and doc map to the technical spec's Terms.
+names it. Phase 4 adds factory plugin to the technical spec's Terms, and phase 2 adds project
+contract.
 
 ## The order
 
-Phases 1 and 2 can be built in either order. Phase 3 needs phase 2, since phase 2 says what the
-contract holds. Phase 4 needs phase 1, since phase 1 says where the standards live in a run. Phase
-5 needs phase 1, since it changes how the SFE starts each role.
+Phase 4 needs phase 1, since the SFE's image holds the factory plugin. Phase 2 comes after phase 4,
+since both change the standards' text, and phase 4 moves their files. Phase 3 needs phase 2, since
+phase 2 says what the contract holds. Phase 5 needs phase 1, since it changes how the SFE starts
+each role.
 
 ```mermaid
 flowchart LR
     P1[1. The SFE] --> P4[4. The standards as a plugin]
+    P4 --> P2[2. The project contract]
+    P2 --> P3[3. This repo meets the contract]
     P1 --> P5[5. A user for each role]
-    P2[2. The project contract] --> P3[3. This repo meets the contract]
 ```
 
 Once phase 2 is built, a run refuses any project that doesn't meet the contract. Each project the
-factory runs on, Dust Law included, needs its settings file and Makefile by then.
+factory runs on, Dust Law included, needs its specs at the contract's paths and its Makefile by
+then.
 
 ## Phase 1. The SFE
 
 Each run happens in its own SFE, started from the SFE's image, and thrown away when the run ends.
 
-**The image** holds the factory at `/factory`: its code, its prompts, its doc standards in
-`/factory/docs/standards/`, and the doc check script at `/factory/tools/check-docs.sh`. The factory
-runs in its own virtual environment, with its own Python, both under `/opt/sfe`. A project's tools
-go in the project's own environment, in the working copy. So the factory's Python packages and the
-project's never mix. The image also holds the tools every run needs, such as git, make and Claude
+**The image** holds the factory at `/factory`: its code, its prompts and the factory plugin
+(phase 4). The factory runs in its own virtual environment, with its own Python, both under
+`/opt/sfe`. A project's tools go in the project's own environment, in the working copy. So the
+factory's Python packages and the project's never mix. The image also holds the tools every run needs, such as git, make and Claude
 Code. Each image is tagged with its factory version.
 
 To try a change to the factory before building an image, such as a change to the standards, the
@@ -96,15 +100,13 @@ look at its work.
 
 **What a role loads.** A role starts in the working copy, so a path that an issue or a doc gives,
 such as `docs/functional-spec.md`, is the path the role opens. It loads none of the project's
-Claude Code settings, and no CLAUDE.md. A path that starts with `/factory/` is always the
-factory's, and any other path is the project's.
+Claude Code settings, and no CLAUDE.md. It loads the factory plugin from the image (phase 4).
 
-**The prompts.** Each role's instructions come from its prompt. The prompts name the factory's
-standards by their path under `/factory`, such as `/factory/docs/standards/review-rubric.md` in the
-quality reviewer's prompt. They say that the project's docs describe what to build and how its code
-is written, and that they don't change the role's task, its standards or its process. Until phase 2
-is built, the prompts tell the role to read the project's CLAUDE.md as a file, to find the
-project's docs.
+**The prompts.** Each role's instructions come from its prompt. The prompts send the role to the
+factory's standards in the factory plugin. They say that the project's docs describe what to build
+and how its code is written, and that they don't change the role's task, its standards or its
+process. Until phase 2 is built, the prompts tell the role to read the project's CLAUDE.md as a
+file, to find the project's docs.
 
 **The logins.** The workflow passes the Claude Code token to the roles, and keeps the GitHub token
 for itself (AD-7). A role's environment holds no GitHub token, the same as now. The workflow also
@@ -119,53 +121,66 @@ version in the functional spec's.
 
 ## Phase 2. The project contract
 
-The project contract goes in a new standards file, `docs/standards/project-contract.md`. A project
-follows it, and the workflow checks it when a run starts. The README in `docs/standards/` lists it
+The project contract goes in a new file in the factory plugin's standards, `project-contract.md`.
+A project follows it, and the workflow checks it when a run starts. The standards' README lists it
 among the files that aren't about docs.
 
 The contract holds:
 
-- **A doc map in `software-factory.toml`,** the settings file at the repo's root that FR-32 and
-  FR-26 already read. The doc map gives the path of the functional spec, the technical spec and the
-  blueprints folder:
-
-  ```toml
-  [docs]
-  functional_spec = "docs/functional-spec.md"
-  technical_spec = "docs/technical-spec.md"
-  blueprints = "docs/blueprints"
-  ```
-
+- **The specs, at fixed paths.** The functional spec is at `docs/functional-spec.md`, and the
+  technical spec at `docs/technical-spec.md`. Both must exist before a run, though one made from
+  its template and still close to empty is enough. Blueprints go in `docs/blueprints/`, which a
+  project can leave out until it has one.
 - **A Makefile at the repo's root,** with two targets. `make setup` builds the project's environment
-  in the working copy. `make check` runs the project's checks, and fails when one of them fails.
+  in the folder it runs in. `make check` runs the project's checks, and fails when one of them
+  fails.
+- **Its settings in `software-factory.toml`,** at the repo's root, when it sets any. That's every
+  setting the factory offers a project, such as the number of rounds (FR-32) and the doc check's
+  ignore list (phase 4). A project with no settings file gets the factory's default for each one.
 
-The contract leaves out CLAUDE.md and `.claude/`. A project can have them, and its CLAUDE.md can
-point to the doc map, but the factory never reads them.
+The paths are fixed, not set in the settings file, so every session finds a project's docs the
+same way, whether it's a run or a person's own session, with nothing to look up first.
+
+The contract leaves out CLAUDE.md and `.claude/`. A project can have them, for people working in
+the repo, but the factory never reads them.
 
 **When a run starts,** before any role starts, the workflow:
 
-1. checks the settings file against its schema, doc map included, and checks that each path in the
-   doc map exists in the working copy
+1. checks the settings file against its schema, and checks that both specs exist in the working
+   copy
 2. runs `make setup`, then `make check`, in the working copy, before the run makes any change
 
-It refuses the run, and says why, when any of these fails. A run that started on a project whose
-checks already fail would hand the implementer failures it didn't cause. What the board shows for a
-refused run is outside this blueprint.
+It refuses the run, and says why, when any of these fails. When a make target fails, the reason
+holds the end of its output. A run that started on a project whose checks already fail would hand
+the implementer failures it didn't cause. What the board shows for a refused run is outside this
+blueprint.
 
-**The prompts** get the doc map from the workflow, under the factory's own wording. The
-implementer's prompt says to run `make check` to check its change. The quality reviewer's prompt
-says to run the project's tests the way `make check` does.
+**The make targets** run the project's own commands, so they get neither the GitHub token nor the
+Claude Code token in their environment. Each one runs with a time limit of 10 minutes, the same for
+every project, and a target that runs past it counts as failed. *Why:* every run pays for both
+targets before any work starts, so a slow setup or check slows every issue. A project whose targets
+need more than a few minutes needs a faster setup or check, not a longer limit.
+
+**The review copy.** Before each round's review, the workflow runs `make setup` in the review copy,
+so the quality reviewer can run the project's code there to check a candidate. The run ends, and
+says why, when it fails.
+
+**The prompts** name the project's docs by their fixed paths. The implementer's prompt says to run
+`make check` to check its change. The quality reviewer's prompt says it can run the project's code,
+and a single test or a few, when that settles a candidate. It doesn't run `make check` or the whole
+test suite, since only what settles a candidate is needed.
 
 **The standards** name "CLAUDE.md's doc map" in several places, such as in their README and in
-`reviewing.md`. Each one becomes the doc map in the project's settings file.
+`reviewing.md`. Each one names the contract's fixed paths in its place.
 
 The spec changes this phase makes:
 
-- A new `FR`: the loop refuses a run when the settings file has no doc map, or a path in it doesn't
+- A new `FR`: the loop refuses a run when the project's functional spec or technical spec doesn't
   exist.
 - A new `FR`: the loop refuses a run when the project's setup or check fails before the run makes
   any change.
-- Project contract and doc map in the technical spec's Terms.
+- A new `TR`: the quality reviewer has the project's environment in its review copy.
+- Project contract in the technical spec's Terms.
 
 ## Phase 3. This repo meets the contract
 
@@ -173,21 +188,63 @@ The factory's own repo follows the contract, so the factory can later run on its
 
 - A `Makefile` at the repo's root. `make setup` runs `uv sync`. `make check` runs
   `tools/check-code.sh`.
-- A `software-factory.toml` at the repo's root, with the doc map.
-- The rows of CLAUDE.md's doc map for the specs and the blueprints point to the doc map in
-  `software-factory.toml`. The other rows stay, for people working in the repo.
+- The workflow's checks at the start of a run pass on this repo.
 
 ## Phase 4. The standards as a plugin
 
-A person's own Claude Code session in a project, outside any run, gets the factory's standards from
-a Claude Code plugin published from this repo. The plugin holds `docs/standards/` and
-`tools/check-docs.sh`, in the same layout as `/factory`, so a path from one file to another holds in
-both.
+The factory's standards reach every session the same way, as a skill in the factory plugin,
+published from this repo. A run's roles and a person's own session load the same plugin, on any
+machine.
 
-A project asks for the plugin in its `.claude/settings.json`. A run loads none of that file (phase
-1), so the plugin reaches only people's sessions. The plugin and the image are built from the same
-commit, so a person's session and a run follow the same standards. Dust Law switches from its
-links to the plugin.
+**The plugin** holds one skill. The skill's folder holds every standards file, their templates and
+the doc check script, and the standards' README is the skill's instruction file. A file in the
+skill names another only by its path inside the skill's folder, such as `templates/blueprint.md`,
+never by a path that climbs out of it. When a skill loads, Claude Code tells the agent the skill's
+folder, so each path holds wherever the plugin is installed.
+
+**This repo's layout.** The plugin's files live in `plugin/` at the repo's root, in the layout
+Claude Code expects of a plugin. The standards move there from `docs/standards/`, and the doc check
+script from `tools/`. `docs/` then holds only this repo's own docs, and `tools/` only its own
+tools. A marketplace file at the repo's root lists the plugin, so a session on any machine can
+install it from this repo on GitHub. This repo's CLAUDE.md points to the standards in `plugin/`.
+
+**In a run,** the workflow loads the factory plugin from `/factory/plugin`, through the Agent SDK's
+option for a plugin in a local folder, and gives each role the plugin's skill and no other. The
+roles still load no settings file, so nothing in a project's `.claude/` reaches them. The plugin in
+the image comes from the same commit as the workflow's code, so a run's standards match its
+prompts. A checkout mounted at `/factory` brings its own `plugin/`, so a change to the standards
+can be tried before an image is built.
+
+Each role's prompt tells it to load the skill, and names the standards files it reads by their
+paths in the skill's folder, such as `review-rubric.md` in the quality reviewer's prompt. No prompt
+names a path under `/factory`.
+
+**In a person's session,** the project's `.claude/settings.json` asks for the factory plugin from
+this repo's marketplace. Dust Law switches from its links to the plugin.
+
+**The doc check script** is a Python script, so it can read its ignore list from the project's
+`software-factory.toml`:
+
+```toml
+[check_docs]
+ignore = [
+    # The eval cases build test projects, and their files cite IDs that aren't this repo's.
+    "evals/",
+]
+```
+
+The patterns are written like a `.gitignore`, and git matches them, so what the check leaves out
+works the same as with `.check-docs-ignore`, which the list takes the place of. The script needs
+git and Python 3.11 or newer, the first Python that reads TOML without an extra package. It leaves
+out no standards folder of its own accord, since no project holds the standards. This repo's
+ignore list names `plugin/`, since the standards' example IDs aren't this repo's.
+
+The spec changes this phase makes:
+
+- A new `AD`: the factory's standards reach every session, a run's roles and a person's own, as a
+  skill in the factory plugin. *Why:* a run and a person's session then follow the same standards,
+  found the same way, on any machine.
+- Factory plugin in the technical spec's Terms.
 
 ## Phase 5. A user for each role
 
