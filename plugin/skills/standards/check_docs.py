@@ -5,9 +5,10 @@ Usage, from the repo root:
 
     python3 <this folder>/check_docs.py [--uncited] <docs folder> <base branch>
 
-It needs git, and Python 3.10 or newer. A project with a settings file needs Python 3.11
-or newer, the first Python that reads TOML without an extra package. It uses nothing
-outside Python's standard library.
+It needs git, and Python 3.10 or newer. It uses nothing outside Python's standard library.
+Reading a project's settings file needs Python 3.11 or newer, the first Python that reads
+TOML without an extra package. So when the project has one and this Python is older, the
+script runs itself again with a newer Python it finds, such as python3.12.
 
 Docs are the specs and the blueprints. The specs are the .md files in the docs folder
 with F-SEC or T-SEC headings. Blueprints are the .md files in <docs folder>/blueprints.
@@ -40,6 +41,7 @@ It exits 0 whenever it ran. What happens to the findings is up to the project's 
 
 import os
 import re
+import shutil
 import subprocess
 import sys
 from collections import Counter
@@ -779,13 +781,14 @@ def ignore_list() -> list[str]:
     if not os.path.isfile(SETTINGS_FILE):
         return []
     # Imported here, since Python 3.10 has no tomllib, and a project with no settings
-    # file doesn't need it.
+    # file doesn't need it (run_with_newer_python).
     try:
         import tomllib
     except ModuleNotFoundError as error:
         version = ".".join(str(part) for part in sys.version_info[:3])
         message = (
-            f"reading {SETTINGS_FILE} needs Python 3.11 or newer, and this is {version}"
+            f"reading {SETTINGS_FILE} needs Python 3.11 or newer, and this is {version},"
+            " with no newer python3.x on the PATH"
         )
         raise CheckError(message) from error
     try:
@@ -825,7 +828,20 @@ def check(docs_dir: str, base_branch: str, *, all_uncited: bool) -> list[str]:
     return out
 
 
+def run_with_newer_python() -> None:
+    """Runs this script again with Python 3.11 or newer, when it needs one to read the
+    project's settings file and this Python is older. Many systems' python3 is 3.10,
+    such as Ubuntu 22.04's, with a newer one beside it."""
+    if sys.version_info >= (3, 11) or not os.path.isfile(SETTINGS_FILE):
+        return
+    for minor in range(20, 10, -1):
+        newer = shutil.which(f"python3.{minor}")
+        if newer:
+            os.execv(newer, [newer, *sys.argv])
+
+
 def main() -> int:
+    run_with_newer_python()
     args = sys.argv[1:]
     all_uncited = bool(args) and args[0] == "--uncited"
     if all_uncited:
