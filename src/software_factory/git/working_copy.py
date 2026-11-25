@@ -1,16 +1,19 @@
 import asyncio
+import os
 import shutil
+import stat
+import tempfile
 from contextlib import asynccontextmanager
 from dataclasses import dataclass, field
 from datetime import UTC
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from software_factory.git.command import CommitId, git
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncIterator, Callable
     from datetime import datetime
-    from pathlib import Path
 
 
 @dataclass(frozen=True)
@@ -66,7 +69,22 @@ async def working_copy(
 def remove(path: Path) -> None:
     # A clone that failed can leave no folder.
     if path.exists():
-        shutil.rmtree(path)
+        shutil.rmtree(path, onexc=remove_read_only)
+
+
+def remove_read_only(
+    remove_function: Callable[[str], object], name: str, error: BaseException
+) -> None:
+    """Retries a removal that failed in a folder the run made read-only.
+
+    A project's tests can leave such a folder. Without this, the error would replace
+    the run's own result, even after its PR opened.
+    """
+    parent = Path(name).parent
+    if not isinstance(error, PermissionError) or os.access(parent, os.W_OK):
+        raise error
+    parent.chmod(parent.stat().st_mode | stat.S_IWUSR | stat.S_IXUSR)
+    remove_function(name)
 
 
 async def start_file(working_copy: WorkingCopy, name: str) -> str | None:
@@ -98,8 +116,27 @@ async def head(working_copy: WorkingCopy) -> CommitId:
 
 
 async def push(working_copy: WorkingCopy) -> None:
-    await git(
-        *("push", "--quiet", "origin", working_copy.run_branch),
-        cwd=working_copy.path,
-        token=working_copy.remote.token,
+    """Pushes the run branch to the remote from a repo of the push's own.
+
+    A role can write the working copy's git config, such as a remote.origin.pushurl,
+    or a remote.origin.receivepack that runs a command of the role's. A push from the
+    working copy would then send the token where the role chose. The push's repo
+    reads the working copy's commits through git's alternates file, and none of its
+    config (AD-7).
+    """
+    branch = f"refs/heads/{working_copy.run_branch}"
+    tip = await git(
+        "rev-parse", "--verify", f"{branch}^{{commit}}", cwd=working_copy.path
     )
+    git_dir = await git("rev-parse", "--absolute-git-dir", cwd=working_copy.path)
+    with tempfile.TemporaryDirectory(prefix="push-") as folder:
+        repo = Path(folder)
+        await git("init", "--quiet", "--bare", cwd=repo)
+        alternates = repo / "objects" / "info" / "alternates"
+        await asyncio.to_thread(alternates.write_text, f"{git_dir}/objects\n")
+        await git("update-ref", branch, tip, cwd=repo)
+        await git(
+            *("push", "--quiet", "--", working_copy.remote.url, branch),
+            cwd=repo,
+            token=working_copy.remote.token,
+        )

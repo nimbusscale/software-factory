@@ -53,7 +53,10 @@ github_token="$(gh auth token)"
 
 # The commits the workflow makes carry the owner's git identity.
 for part in name email; do
-  value="$(git config --get "user.$part")"
+  if ! value="$(git config --get "user.$part")"; then
+    echo "git has no user.$part set. Set it with: git config --global user.$part <$part>" >&2
+    exit 1
+  fi
   docker_args+=(--env "GIT_AUTHOR_${part^^}=$value" --env "GIT_COMMITTER_${part^^}=$value")
 done
 

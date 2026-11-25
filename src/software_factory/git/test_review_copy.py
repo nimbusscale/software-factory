@@ -50,7 +50,9 @@ def test_review_diffs_cover_the_work_then_each_answer(
             answer_commit = await committed(copy, {"TILES.md": "Fixed tiles\n"})
             second = await review_diff(copy, first)
 
+            # TR-3.
             assert first == ReviewDiff(start=copy.start, end=work_commit)
+            # TR-4.
             assert second == ReviewDiff(start=work_commit, end=answer_commit)
 
     asyncio.run(run())
@@ -71,6 +73,7 @@ def test_review_copy_holds_the_review_diff_as_changes_not_yet_committed(
             (copy.path / "NOTES.md").write_text("Staged\n")
             await git("add", "NOTES.md", cwd=copy.path)
             async with review_copy(copy, second) as path:
+                # TD-2.
                 await check_review_copy(path)
             assert not path.exists()
             assert await git("status", "--porcelain", cwd=copy.path) == "A  NOTES.md"
@@ -100,6 +103,7 @@ def test_review_copy_holds_files_marked_export_ignore(
             await committed(copy, files)
             diff = await review_diff(copy, None)
             async with review_copy(copy, diff) as path:
+                # TD-2.
                 assert (path / "TILES.md").read_text() == "Tiles\n"
 
     asyncio.run(run())
@@ -118,6 +122,7 @@ def test_review_copy_holds_tracked_files_the_project_ignores(
             second = await review_diff(copy, first)
             async with review_copy(copy, second) as path:
                 changes = await git("diff", "HEAD", "--name-status", cwd=path)
+                # TD-2.
                 assert changes == "M\texample.env"
 
     asyncio.run(run())
@@ -140,6 +145,7 @@ def test_base_commit_skips_the_machines_signing_and_hooks(
                 await git("config", "--global", *setting.split("="), cwd=copy.path)
             await git("config", "--global", "core.hooksPath", str(hooks), cwd=copy.path)
             async with review_copy(copy, diff) as path:
+                # TD-2.
                 assert await git("log", "--format=%s", cwd=path) == "base"
 
     asyncio.run(run())

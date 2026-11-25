@@ -166,3 +166,46 @@ def test_push_puts_the_run_branch_on_the_remote(remote: Path, tmp_path: Path) ->
 
     # FR-15.
     assert tip(remote, RUN_BRANCH) == committed
+
+
+def test_push_uses_none_of_the_working_copys_git_config(
+    remote: Path, tmp_path: Path
+) -> None:
+    leak = tmp_path / "leak"
+    elsewhere = tmp_path / "elsewhere.git"
+    run_git("init", "--quiet", "--bare", str(elsewhere), cwd=tmp_path)
+    leak_token = f'echo "$SOFTWARE_FACTORY_GIT_TOKEN" > {leak}'
+    receive = f"sh -c '{leak_token}; exec git-receive-pack \"$@\"' --"
+    login = Remote(str(remote), "login-for-git")
+
+    async def run() -> CommitId | None:
+        async with working_copy(login, ISSUE, STARTED, tmp_path / "work") as copy:
+            await git("config", "remote.origin.pushurl", str(elsewhere), cwd=copy.path)
+            await git("config", "remote.origin.receivepack", receive, cwd=copy.path)
+            (copy.path / "TILES.md").write_text("Tiles\n")
+            committed = await commit(copy, "Add the tiles")
+            await push(copy)
+            return committed
+
+    committed = asyncio.run(run())
+
+    # AD-7.
+    assert tip(remote, RUN_BRANCH) == committed
+    assert not leak.exists()
+    assert not run_git("branch", "--list", cwd=elsewhere)
+
+
+def test_run_end_removes_a_folder_the_run_made_read_only(
+    remote: Path, tmp_path: Path
+) -> None:
+    async def run() -> None:
+        async with started(remote, tmp_path / "work") as copy:
+            locked = copy.path / "build"
+            locked.mkdir()
+            (locked / "out.txt").write_text("Built\n")
+            locked.chmod(0o555)
+
+    asyncio.run(run())
+
+    # TR-8.
+    assert not (tmp_path / "work").exists()

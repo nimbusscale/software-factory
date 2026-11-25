@@ -43,9 +43,9 @@ STALL_CHECK = (*("-c", "http.lowSpeedLimit=1000", "-c", "http.lowSpeedTime=60"),
 # The GitHub token reaches git only in this variable, set for the one command that
 # needs it, so it's never in git's config or any other file a role can read (AD-7).
 LOGIN_VARIABLE = "SOFTWARE_FACTORY_GIT_TOKEN"
-# The empty helper first clears any helper git's config names, so git asks only this
-# one. A helper is called with get, store or erase, and only get is answered. Hooks
-# are off, since the token is in the environment of every hook git starts.
+# The empty helper first clears any helper the repo's config names, so git asks only
+# this one. A helper is called with get, store or erase, and only get is answered.
+# Hooks are off, since the token is in the environment of every hook git starts.
 WITH_TOKEN = (
     *("-c", "credential.helper=", "-c", f"core.hooksPath={os.devnull}"),
     "-c",
@@ -83,6 +83,11 @@ async def git(
     if token is not None:
         auth = WITH_TOKEN
         env[LOGIN_VARIABLE] = token
+        # A role can write the user's git config, such as a url.<base>.insteadOf
+        # that sends the command to another host along with the token. So git reads
+        # no config but the repo's own and the command's (AD-7).
+        env["GIT_CONFIG_GLOBAL"] = os.devnull
+        env["GIT_CONFIG_NOSYSTEM"] = "1"
     executable = shutil.which("git")
     if executable is None:
         message = "git isn't installed, or isn't on the PATH."

@@ -6,6 +6,7 @@ from software_factory.git.command import GitError
 from software_factory.git.working_copy import (
     Remote,
     WorkingCopy,
+    commit,
     push,
     run_branch_name,
     start_file,
@@ -33,6 +34,8 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from software_factory.github.api import GraphQL, Repo
+
+LEFT_WHEN_THE_RUN_ENDED = "Changes not yet committed when the run ended"
 
 # The errors that end a run with a reason for the owner (TR-2, FR-7, TR-15, TR-18).
 RUN_ENDING_ERRORS = (RoleFailedError, GitError, GitHubError, NothingToReviewError)
@@ -139,6 +142,9 @@ async def with_work_on_github(copy: WorkingCopy, reason: str) -> str:
     Hands back `reason`, with where the work is or why it isn't on GitHub.
     """
     try:
+        # A role that stops partway, such as at its turn cap, leaves its changes
+        # not yet committed. The SFE is thrown away, so they'd be lost.
+        await commit(copy, LEFT_WHEN_THE_RUN_ENDED)
         await push(copy)
     except GitError as error:
         return f"{reason}\n\nThe run branch couldn't be put on GitHub: {error}"

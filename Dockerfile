@@ -17,15 +17,17 @@ RUN apt-get update \
 COPY --from=ghcr.io/astral-sh/uv:0.9.21 /uv /usr/local/bin/uv
 
 # The factory's Python and virtual environment are outside /factory, so a checkout
-# mounted at /factory leaves them in place.
-ENV UV_PYTHON_INSTALL_DIR=/opt/sfe/python \
+# mounted at /factory leaves them in place. These settings are only for the build.
+# The roles inherit the container's environment, so with them set there, `uv run` in a
+# project would try to change the factory's own environment, which root owns.
+ARG UV_PYTHON_INSTALL_DIR=/opt/sfe/python \
     UV_PROJECT_ENVIRONMENT=/opt/sfe/venv \
     UV_PYTHON_PREFERENCE=only-managed \
     UV_LINK_MODE=copy \
     UV_COMPILE_BYTECODE=1 \
-    UV_NO_CACHE=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PATH=/opt/sfe/venv/bin:$PATH
+    UV_NO_CACHE=1
+# Python doesn't write bytecode into /factory, which is read-only.
+ENV PYTHONDONTWRITEBYTECODE=1
 
 WORKDIR /factory
 # The packages first, so a change to the factory's own files reuses this layer.
@@ -43,4 +45,4 @@ WORKDIR /home/sfe
 ARG FACTORY_VERSION
 ENV FACTORY_VERSION=$FACTORY_VERSION
 
-ENTRYPOINT ["implementation-loop"]
+ENTRYPOINT ["/opt/sfe/venv/bin/implementation-loop"]

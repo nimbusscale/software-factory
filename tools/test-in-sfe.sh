@@ -12,5 +12,5 @@ if (($# == 0)); then
   set -- -m claude /factory/src
 fi
 # No cache, since /factory is read-only.
-exec bash "$repo_root/tools/run-sfe.sh" --factory "$repo_root" --entrypoint pytest \
+exec bash "$repo_root/tools/run-sfe.sh" --factory "$repo_root" --entrypoint /opt/sfe/venv/bin/pytest \
   -p no:cacheprovider --rootdir /factory "$@"

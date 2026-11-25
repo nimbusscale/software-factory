@@ -119,6 +119,26 @@ def test_run_that_ends_without_a_pr_leaves_its_work_on_github(
     assert_ended_without_pr(github, f"The run's work is on the branch `{RUN_BRANCH}`.")
 
 
+def test_run_that_ends_partway_through_a_turn_keeps_its_changes(
+    remote: Path, tmp_path: Path
+) -> None:
+    def implementer_that_stops(cwd: Path) -> list[RawMessage]:
+        (cwd / "TILES.md").write_text("Half the tiles\n")
+        return saved_response("success_without_structured_output")
+
+    github = fake_github()
+
+    with pytest.raises(RunEndedError):
+        start_run(
+            services(github, ScriptedQuery([implementer_that_stops]), remote, tmp_path)
+        )
+
+    # FR-34.
+    tiles = run_git("show", f"{RUN_BRANCH}:TILES.md", cwd=remote)
+    assert tiles == "Half the tiles"
+    assert_ended_without_pr(github, f"The run's work is on the branch `{RUN_BRANCH}`.")
+
+
 def test_no_role_can_read_the_github_token(remote: Path, tmp_path: Path) -> None:
     login = "login-for-github"
     found: list[str] = []
@@ -132,10 +152,15 @@ def test_no_role_can_read_the_github_token(remote: Path, tmp_path: Path) -> None
 
     def implementer(cwd: Path) -> list[RawMessage]:
         found.extend(files_with_token(cwd))
+        # A role's environment is the workflow's, with ROLE_ENVIRONMENT on top.
+        if login in str(os.environ):
+            found.append("the workflow's environment")
         return implementer_turn({"TILES.md": "Tiles\n"}, "Add the tiles")(cwd)
 
     def reviewer(cwd: Path) -> list[RawMessage]:
         found.extend(files_with_token(cwd))
+        if login in str(os.environ):
+            found.append("the workflow's environment")
         return reviewer_turn([])(cwd)
 
     roles = ScriptedQuery([implementer, reviewer])
@@ -150,7 +175,6 @@ def test_no_role_can_read_the_github_token(remote: Path, tmp_path: Path) -> None
     # AD-7.
     assert len(github.pull_requests) == 1
     assert found == []
-    assert all(login not in str(options.env) for options in roles.options)
 
 
 def test_work_that_changes_nothing_ends_the_run(remote: Path, tmp_path: Path) -> None:
