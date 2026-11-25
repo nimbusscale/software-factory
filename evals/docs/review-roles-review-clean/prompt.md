@@ -1,7 +1,6 @@
 ---
 tags: [review, review-roles]
 model: opus
-runs: 1
 max_turns: 40
 timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Write, Edit, Bash]
