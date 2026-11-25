@@ -98,8 +98,11 @@ whether it's a real problem. It checks:
   `retired`. Its `retired` date is empty while it's active, and a date such as `2026-11-18` once
   it's retired.
 - **Copies,** as a signal: runs of eight or more words that a spec or a blueprint shares with
-  another one, or with any other text file, such as a prompt or a README. Research docs are left
-  out.
+  another one, or with any other text file, such as a prompt or a README. It flags a run only when
+  one of its copies is on a line the change added, so a copy kept on purpose isn't flagged again.
+  Research docs and retired blueprints are left out, and so is text from a doc template. A copy is
+  a problem when it states a fact whose home is somewhere else. Cite that home's ID instead. The
+  same name or phrase used for one thing in two places isn't a problem.
 - **Size,** as a signal: a spec or a blueprint near the Read tool's 25,000-token limit, since past
   that an agent can't read it whole in one call.
 
