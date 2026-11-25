@@ -164,6 +164,10 @@ FR-32 gives the run nor one in the project's own copy of them.
 **FR-37.** The description of a run's PR shall name the commit of the factory's own repo that the
 run's doc standards came from.
 
+*Why:* it labels the run's code with the doc standards it was made by. When a problem shows up in
+that code, the owner can find the other runs that used the same doc standards, and check whether
+the problem is in their code too.
+
 **FR-25.** When a run opens its PR, the implementation loop shall post a comment on the PR that
 lists each nit and pre-existing finding the implementer didn't get.
 
