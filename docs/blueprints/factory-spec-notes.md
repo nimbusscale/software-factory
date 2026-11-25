@@ -1044,6 +1044,28 @@ template.**
 - Decided in: an interactive session about the copy signals.
 - Likely home: `TD`.
 
+**Whether each spec item and bug fix the work calls for has a test is the purpose reviewer's
+check, not the quality reviewer's. The quality reviewer's rubric has no label for a missing test.
+It checks only whether a test is wrong (F5) and whether a test names its rule (N5).**
+- Why: Joe: "The quality checker says, of the things that were built, are they of quality? The
+  purpose checker says, of the things that are built, does it meet what the issue is being asked
+  for?" Knowing which spec items call for a test means reading what they say, and the quality
+  reviewer doesn't judge the code against the docs. Until the purpose reviewer is built, no
+  reviewer checks for a missing test. Joe raised the move, and Claude agreed.
+- Decided in: #110.
+- Likely home: the rubric and the purpose reviewer's prompt.
+
+**A test that a change adds or changes, and that names no rule, is a note (N5), so it's a nit.
+It isn't a fix.**
+- Why: Joe, on whether tests beyond what a spec item calls for are allowed: "There's a cost to
+  them, a cost to reading and writing, updating them, managing them over time." A nit puts the
+  test in front of the owner and the implementer without starting another round. Joe: "I think
+  the nit item is the best middle ground." N2, a missing test for behavior the change didn't add,
+  no longer fits once the quality reviewer doesn't look for missing tests, so N5 replaces it with
+  a new code.
+- Decided in: #110.
+- Likely home: the rubric.
+
 ## Evaluations
 
 **The doc evaluations live in `evals/docs/`, one folder per case, and run with `claude plugin

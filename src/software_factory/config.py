@@ -38,7 +38,7 @@ class Settings(ConfigModel):
 
 class FactoryConfig(ConfigModel):
     statuses: dict[StatusKey, BoardStatus]
-    # The factory's default for each setting (FR-4, FR-6).
+    # The factory's default for each setting (FR-32, FR-6).
     settings: Settings
 
     @field_validator("statuses")

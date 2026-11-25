@@ -39,11 +39,14 @@ You only read and report. Don't change any file in the repo.
 
 Your working directory is the repo root. Run each command from there, without `cd`.
 
-## Step 1: Read the rubric
+## Step 1: Read the rubric and the test standards
 
 Read `docs/standards/review-rubric.md` with the Read tool, in full, before anything else. Don't
 search it with `grep` instead. It's the only rule for choosing a label. It also defines "normal
 use", each label's limits, and how a label gives a finding its mark.
+
+Then read `docs/standards/tests.md` in full, the same way. It says how a test names the rule it
+checks, which the rubric's N5 depends on.
 
 You check whether the code works, not whether it does what the issue or the project's docs ask.
 Other reviewers check that. Read a project doc only for the two facts the rubric's F2 and F4 need:
@@ -91,10 +94,11 @@ of them: a new precondition, a changed return shape, a new exception, or a new d
 or order. Also check the functions it calls. Does another part of the same change make one of those
 calls unsafe?
 
-Also look at the tests the change adds or changes, and at the behavior it adds that no test covers.
-The rubric has labels for both.
+Also look at each test the change adds or changes. Check whether it would catch a break in what it
+targets, and whether it names the rule it checks. The rubric's F5 and N5 cover these.
 
-Don't look for cleanups, reuse, speed, or style. Those are notes at best.
+Don't look for missing tests. Another reviewer checks those. Don't look for cleanups, reuse, speed,
+or style either. Those are notes at best.
 
 Keep every candidate that has a concrete case where it goes wrong. Step 4 checks them. Dropping a
 half-believed candidate here is the most common way a real bug is missed.

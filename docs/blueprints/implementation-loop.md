@@ -36,7 +36,7 @@ flowchart TD
 ```
 
 1. **Start.** The owner calls the command with a project's repo and an issue number (FR-1). The
-   workflow reads the project's settings after setup, from the run branch (FR-4, FR-6), as
+   workflow reads the project's settings after setup, from the run branch (FR-32, FR-6), as
    "Settings" below says.
 2. **Read the issue.** The workflow reads the issue's body from GitHub, and moves the issue to In
    development, as "The board" below says.
@@ -173,7 +173,7 @@ config.
 
 ## Settings
 
-The factory has a default for every setting: the number of rounds is 3 (FR-4), and each role has a
+The factory has a default for every setting: the number of rounds is 2 (FR-32), and each role has a
 turn cap (FR-6), 100 turns for each role to start with. A turn cap counts each time a role is
 started or resumed, as the Agent SDK's `max_turns` option does. The command refuses a number of
 rounds below 1 (FR-5), and any setting that isn't valid (FR-26). A project can set any of them in a

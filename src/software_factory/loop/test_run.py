@@ -197,14 +197,14 @@ def test_rounds_the_command_sets_win_over_the_project(
     assert not roles.turns
 
 
-def test_project_with_no_settings_gets_3_rounds(remote: Path, tmp_path: Path) -> None:
+def test_project_with_no_settings_gets_2_rounds(remote: Path, tmp_path: Path) -> None:
     important = [finding("important", "The deal skips the last player.")]
     roles = ScriptedQuery(
         [
             implementer_turn({"TILES.md": "Tiles\n"}, "Add the tiles"),
             *(
                 turn
-                for answer in range(3)
+                for answer in range(2)
                 for turn in (
                     reviewer_turn(important),
                     implementer_turn({"TILES.md": f"Tiles {answer}\n"}, "Fix it"),
@@ -215,5 +215,6 @@ def test_project_with_no_settings_gets_3_rounds(remote: Path, tmp_path: Path) ->
 
     start_run(services(fake_github(), roles, remote, tmp_path / "home"))
 
+    # FR-32.
     assert not roles.turns
-    assert len(commit_messages(remote)) == 4
+    assert len(commit_messages(remote)) == 3

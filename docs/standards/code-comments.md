@@ -58,6 +58,8 @@ A comment that passes the test nearly always holds one of these, since no name o
   time." A test with a saved response, named after the quirk, checks the handling.
 - **The ID of the requirement or decision this code carries out,** such as `FR-12` or `TD-4`, when
   this code is the place it's carried out.
+- **In a test, the rule the asserts below it check:** a spec item's ID, such as `# FR-5.`, or
+  `Bug:` and what went wrong. `tests.md` in this folder says how it's written.
 
 Anything else has to pass the test on its own.
 

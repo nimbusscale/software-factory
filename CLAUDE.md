@@ -13,6 +13,7 @@
 | GitHub standards | `docs/standards/github.md` |
 | Review rubric | `docs/standards/review-rubric.md` |
 | Code comment standards | `docs/standards/code-comments.md` |
+| Test standards | `docs/standards/tests.md` |
 
 Before you write, change or review a doc, or code that a doc describes, read
 `docs/standards/README.md`. If you can't find the standards, stop and say so in your report.
@@ -25,3 +26,5 @@ Before you write an issue or the summary in a PR's description, or update an iss
 
 Before you add, change or delete a code comment, move code that has comments, or review a change
 that does, read `docs/standards/code-comments.md`.
+
+Before you write or change a test, read `docs/standards/tests.md`.

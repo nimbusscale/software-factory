@@ -54,7 +54,8 @@ read any other file in the repo as well.
 ## Doing the work
 
 1. Do the work the issue asks for. Its Design section lists what the work has to follow, and its
-   Acceptance criteria list what it has to meet.
+   Acceptance criteria list what it has to meet. Before you write or change a test, read
+   `docs/standards/tests.md`, and follow it.
 2. Check your change. Run the project's checks, and do the checks its docs ask for on a change
    such as yours.
 3. Fix each problem your change caused, then check again. Leave a problem that was there before
