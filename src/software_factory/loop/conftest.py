@@ -4,7 +4,9 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
-from software_factory.conftest import commit_file, run_git
+from software_factory.config import factory_config
+from software_factory.conftest import commit_file, make_factory_remote, run_git
+from software_factory.github.api import Repo
 from software_factory.github.fake_github import REPO, FakeGitHub, FakeIssue
 from software_factory.loop.run import RunRequest, Services, run
 from software_factory.roles.fake_agent_sdk import ScriptedQuery, result_message
@@ -24,6 +26,7 @@ ISSUE_BODY = "## Why\n\nThe game needs tiles.\n"
 STARTED = datetime(2026, 11, 24, 21, 30, 0, tzinfo=UTC)
 RUN_BRANCH = "factory/issue-7-20261124-213000"
 IMPLEMENTER_SESSION = "implementer-session"
+FACTORY_REPO = Repo.parse(factory_config().doc_standards.repo)
 
 
 def fake_github() -> FakeGitHub:
@@ -112,17 +115,25 @@ def push_settings(author: Path, text: str) -> None:
 def services(
     github: FakeGitHub, roles: ScriptedQuery, remote: Path, home: Path
 ) -> Services:
+    """Services where the factory's repo is the one make_factory_remote makes."""
+    remotes = {REPO: remote, FACTORY_REPO: make_factory_remote(remote.parent)}
     return Services(
         graphql=github,
         runner=RoleRunner(roles),
         home=home,
-        remote_url=lambda repo: str(remote) if repo == REPO else "",
+        remote_url=lambda repo: str(remotes[repo]) if repo in remotes else "",
     )
 
 
-def start_run(services: Services, rounds: int | None = None) -> PullRequest:
+def start_run(
+    services: Services, rounds: int | None = None, standards: str | None = None
+) -> PullRequest:
     request = RunRequest(
-        repo=REPO, issue_number=ISSUE_NUMBER, rounds=rounds, started_at=STARTED
+        repo=REPO,
+        issue_number=ISSUE_NUMBER,
+        rounds=rounds,
+        started_at=STARTED,
+        doc_standards_branch=standards,
     )
     return asyncio.run(run(request, services))
 

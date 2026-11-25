@@ -7,14 +7,14 @@ from typing import TYPE_CHECKING
 from software_factory.git.command import CommitId, git
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncIterator, Sequence
     from datetime import datetime
     from pathlib import Path
 
 
 @dataclass(frozen=True)
 class Clone:
-    """The one clone of a project's repo that every run on the project works from."""
+    """The one clone of a repo, such as a project's, that every run on it works from."""
 
     path: Path
 
@@ -80,9 +80,18 @@ async def working_copy(
         await git("worktree", "remove", "--force", str(path), cwd=clone.path)
 
 
-async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:
-    """Commits every change in the working copy. Hands back None when there's none."""
+async def commit(
+    working_copy: WorkingCopy, message: str, left_out: Sequence[str] = ()
+) -> CommitId | None:
+    """Commits every change in the working copy but those in `left_out`.
+
+    Hands back None when there's none.
+    """
     await git("add", "--all", cwd=working_copy.path)
+    if left_out:
+        # Unstages them whether add staged them or a role did. An exclude file can't
+        # keep them out, since it doesn't apply to a file the project's repo tracks.
+        await git("reset", "--quiet", "--", *left_out, cwd=working_copy.path)
     # Not git status, which also lists changes inside a submodule that add doesn't
     # stage, so commit would then fail with nothing to commit.
     if not await git("diff", "--cached", "--name-only", cwd=working_copy.path):

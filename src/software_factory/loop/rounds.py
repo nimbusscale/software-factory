@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field, replace
 from typing import TYPE_CHECKING
 
+from software_factory.git.doc_standards import DOC_STANDARDS_PATHS, write_doc_standards
 from software_factory.git.review_copy import ReviewDiff, review_copy, review_diff
 from software_factory.git.working_copy import commit
 from software_factory.github.pull_request import NumberedFinding, RunRecord
@@ -13,6 +14,8 @@ from software_factory.roles.quality_reviewer import (
 
 if TYPE_CHECKING:
     from software_factory.config import Settings
+    from software_factory.git.command import CommitId
+    from software_factory.git.doc_standards import DocStandards
     from software_factory.git.working_copy import WorkingCopy
     from software_factory.github.issue import Issue
     from software_factory.roles.implementer import DeclinedFinding
@@ -29,6 +32,7 @@ class RunContext:
     issue: Issue
     working_copy: WorkingCopy
     settings: Settings
+    doc_standards: DocStandards
     runner: RoleRunner
 
 
@@ -54,7 +58,7 @@ async def work_and_rounds(context: RunContext) -> RunRecord:
     outcome = await context.runner.start(implementer, context.issue.body, copy.path)
     kept = Kept()
     kept.declined.extend(outcome.result.declined)
-    if await commit(copy, outcome.result.commit_message) is None:
+    if await commit_work(context, outcome.result.commit_message) is None:
         message = "The implementer handed back its result without changing any file."
         raise NothingToReviewError(message)
     diff: ReviewDiff | None = None
@@ -73,17 +77,26 @@ async def work_and_rounds(context: RunContext) -> RunRecord:
         )
         kept.declined.extend(outcome.result.declined)
         # Meets TR-5.
-        if await commit(copy, outcome.result.commit_message) is None:
+        if await commit_work(context, outcome.result.commit_message) is None:
             break
     return RunRecord(
         issue=context.issue,
         run_branch=copy.run_branch,
+        doc_standards_commit=context.doc_standards.commit,
         last_result=outcome.result,
         declined=kept.declined,
         findings=kept.findings,
         given=frozenset(kept.given),
         dropped=kept.dropped,
     )
+
+
+async def commit_work(context: RunContext, message: str) -> CommitId | None:
+    """Commits the implementer's changes, with the doc standards left out (FR-36)."""
+    # Meets FR-35 for a change the implementer made with Bash, which its hook can't
+    # see.
+    await write_doc_standards(context.doc_standards, context.working_copy.path)
+    return await commit(context.working_copy, message, left_out=DOC_STANDARDS_PATHS)
 
 
 async def review(
@@ -98,7 +111,7 @@ async def review(
     message = reviewer_message(
         context.issue.body, kept.findings, declined_ids, kept.given
     )
-    async with review_copy(context.working_copy, diff) as path:
+    async with review_copy(context.working_copy, diff, context.doc_standards) as path:
         outcome = await context.runner.start(reviewer, message, path)
     # Meets TD-12.
     findings = [

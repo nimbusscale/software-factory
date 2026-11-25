@@ -2,7 +2,13 @@ import asyncio
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
+from software_factory.conftest import FACTORY_STANDARDS, commit_files
 from software_factory.git.command import git
+from software_factory.git.doc_standards import (
+    DOC_STANDARDS_PATHS,
+    DocStandards,
+    find_doc_standards,
+)
 from software_factory.git.review_copy import ReviewDiff, review_copy, review_diff
 from software_factory.git.working_copy import (
     WorkingCopy,
@@ -26,6 +32,11 @@ def work(path: Path, files: dict[str, str | None]) -> None:
             (path / name).unlink()
         else:
             (path / name).write_text(text)
+
+
+async def factory_standards(factory_remote: Path, tmp_path: Path) -> DocStandards:
+    clone = await open_clone(str(factory_remote), tmp_path / "factory-clone")
+    return await find_doc_standards(clone, "main")
 
 
 async def committed(copy: WorkingCopy, files: dict[str, str | None]) -> CommitId:
@@ -53,7 +64,7 @@ def test_review_diffs_cover_the_work_then_each_answer(
 
 
 def test_review_copy_holds_the_review_diff_as_changes_not_yet_committed(
-    remote: Path, tmp_path: Path
+    remote: Path, factory_remote: Path, tmp_path: Path
 ) -> None:
     async def run() -> None:
         clone = await open_clone(str(remote), tmp_path / "clone")
@@ -67,7 +78,8 @@ def test_review_copy_holds_the_review_diff_as_changes_not_yet_committed(
             second = await review_diff(copy, first)
             (copy.path / "NOTES.md").write_text("Staged\n")
             await git("add", "NOTES.md", cwd=copy.path)
-            async with review_copy(copy, second) as path:
+            standards = await factory_standards(factory_remote, tmp_path)
+            async with review_copy(copy, second, standards) as path:
                 await check_review_copy(path)
             assert not path.exists()
             assert await git("status", "--porcelain", cwd=copy.path) == "A  NOTES.md"
@@ -79,14 +91,16 @@ async def check_review_copy(path: Path) -> None:
     log = await git("log", "--format=%an %s", cwd=path)
     assert log == "Software factory base"
     base_files = await git("ls-tree", "-r", "--name-only", "HEAD", cwd=path)
-    assert base_files.splitlines() == ["README.md", "RULES.md", "TILES.md"]
+    assert base_files.splitlines() == sorted(
+        ["README.md", "RULES.md", "TILES.md", *FACTORY_STANDARDS]
+    )
     changes = await git("diff", "HEAD", "--name-status", cwd=path)
     assert changes.splitlines() == ["A\tLAWS.md", "D\tRULES.md", "M\tTILES.md"]
     assert (path / "TILES.md").read_text() == "Fixed tiles\n"
 
 
 def test_review_copy_holds_files_marked_export_ignore(
-    remote: Path, tmp_path: Path
+    remote: Path, factory_remote: Path, tmp_path: Path
 ) -> None:
     async def run() -> None:
         clone = await open_clone(str(remote), tmp_path / "clone")
@@ -97,14 +111,15 @@ def test_review_copy_holds_files_marked_export_ignore(
             }
             await committed(copy, files)
             diff = await review_diff(copy, None)
-            async with review_copy(copy, diff) as path:
+            standards = await factory_standards(factory_remote, tmp_path)
+            async with review_copy(copy, diff, standards) as path:
                 assert (path / "TILES.md").read_text() == "Tiles\n"
 
     asyncio.run(run())
 
 
 def test_review_copy_holds_tracked_files_the_project_ignores(
-    remote: Path, tmp_path: Path
+    remote: Path, factory_remote: Path, tmp_path: Path
 ) -> None:
     async def run() -> None:
         clone = await open_clone(str(remote), tmp_path / "clone")
@@ -115,7 +130,8 @@ def test_review_copy_holds_tracked_files_the_project_ignores(
             first = await review_diff(copy, None)
             await committed(copy, {"example.env": "A=2\n"})
             second = await review_diff(copy, first)
-            async with review_copy(copy, second) as path:
+            standards = await factory_standards(factory_remote, tmp_path)
+            async with review_copy(copy, second, standards) as path:
                 changes = await git("diff", "HEAD", "--name-status", cwd=path)
                 assert changes == "M\texample.env"
 
@@ -123,7 +139,7 @@ def test_review_copy_holds_tracked_files_the_project_ignores(
 
 
 def test_base_commit_skips_the_machines_signing_and_hooks(
-    remote: Path, tmp_path: Path
+    remote: Path, factory_remote: Path, tmp_path: Path
 ) -> None:
     hooks = tmp_path / "hooks"
     hooks.mkdir()
@@ -139,7 +155,40 @@ def test_base_commit_skips_the_machines_signing_and_hooks(
             for setting in ("commit.gpgsign=true", "gpg.program=false"):
                 await git("config", "--global", *setting.split("="), cwd=copy.path)
             await git("config", "--global", "core.hooksPath", str(hooks), cwd=copy.path)
-            async with review_copy(copy, diff) as path:
+            standards = await factory_standards(factory_remote, tmp_path)
+            async with review_copy(copy, diff, standards) as path:
                 assert await git("log", "--format=%s", cwd=path) == "base"
+
+    asyncio.run(run())
+
+
+def test_review_copy_holds_the_factorys_standards_and_no_change_to_them(
+    remote: Path, author: Path, factory_remote: Path, tmp_path: Path
+) -> None:
+    """Meets FR-32 and TD-13, whatever copy the project's repo holds (TR-3)."""
+    project_standards = {
+        "docs/standards/README.md": "The project's own standards.\n",
+        "docs/standards/extra.md": "A file only the project has.\n",
+        "tools/check-docs.sh": "echo The project's check\n",
+    }
+    commit_files(author, project_standards, "Add the project's standards")
+    asyncio.run(git("push", "--quiet", "origin", "main", cwd=author))
+
+    async def run() -> None:
+        clone = await open_clone(str(remote), tmp_path / "clone")
+        async with working_copy(clone, 7, STARTED, tmp_path / "work") as copy:
+            await committed(copy, {"TILES.md": "Tiles\n"})
+            diff = await review_diff(copy, None)
+            standards = await factory_standards(factory_remote, tmp_path)
+            async with review_copy(copy, diff, standards) as path:
+                changes = await git("diff", "HEAD", "--name-only", cwd=path)
+                assert changes == "TILES.md"
+                for name, text in FACTORY_STANDARDS.items():
+                    assert (path / name).read_text() == text
+                assert not (path / "docs/standards/extra.md").exists()
+                status = await git(
+                    "status", "--porcelain", *DOC_STANDARDS_PATHS, cwd=path
+                )
+                assert status == ""
 
     asyncio.run(run())

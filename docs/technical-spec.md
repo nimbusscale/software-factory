@@ -7,7 +7,6 @@ the code are comments there instead.
 
 ## T-SEC-1. Terms
 
-- **Doc standards.** The rules a project's docs are written and checked by.
 - **Result schema.** The shape of a role's result.
 - **Review copy.** The copy of the run's work that the quality reviewer works in.
 - **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-3,
@@ -212,6 +211,13 @@ meets FR-9.
 
 *Why:* handling a finding needs the implementer's own reasons, such as why it made a choice the
 finding questions. Without them, a fix can undo a decision.
+
+**TD-13.** A run's doc standards are the factory's `docs/standards/` folder and its doc check
+script, `tools/check-docs.sh`, put at those same paths in the working copy and in each review copy,
+in place of any copy the project's repo holds there. This meets FR-32.
+
+*Why:* the paths that the role prompts and a project's CLAUDE.md name for the doc standards then
+work. The doc check script comes with the doc standards, since they tell an agent to run it.
 
 ## T-SEC-5. GitHub and the PR
 

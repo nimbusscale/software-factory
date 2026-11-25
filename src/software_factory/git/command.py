@@ -1,11 +1,12 @@
 import asyncio
 import os
 import shutil
+import tempfile
+from pathlib import Path
 from typing import TYPE_CHECKING, NewType
 
 if TYPE_CHECKING:
-    from collections.abc import Mapping
-    from pathlib import Path
+    from collections.abc import Mapping, Sequence
 
 CommitId = NewType("CommitId", str)
 
@@ -74,3 +75,29 @@ async def git(*args: str, cwd: Path, extra_env: Mapping[str, str] | None = None)
         message = f"git {' '.join(args)} failed: {error}"
         raise GitError(message)
     return stdout.decode().rstrip("\n")
+
+
+async def write_files(
+    repo: Path, commit: CommitId, path: Path, names: Sequence[str] = ()
+) -> None:
+    """Writes the files as they stood at `commit` into `path`, with no git history.
+
+    Writes only the files and folders in `names`, or every file when it's empty.
+    """
+    # Not git archive, which leaves out the files a project marks export-ignore. A
+    # separate index, so the repo's own index stays as it is.
+    with tempfile.TemporaryDirectory() as index_folder:
+        index = {"GIT_INDEX_FILE": str(Path(index_folder) / "index")}
+        await git("read-tree", commit, cwd=repo, extra_env=index)
+        files = ["--all"]
+        if names:
+            listed = await git(
+                *("ls-files", "-z", "--", *names), cwd=repo, extra_env=index
+            )
+            files = ["--", *listed.rstrip("\0").split("\0")] if listed else []
+        if files:
+            await git(
+                *("checkout-index", f"--prefix={path}{os.sep}", *files),
+                cwd=repo,
+                extra_env=index,
+            )

@@ -1,8 +1,10 @@
 from pydantic import Field
 
 from software_factory.config import factory_config
+from software_factory.git.doc_standards import DOC_STANDARDS_PATHS
 from software_factory.roles.definition import (
     OPUS,
+    EditGuard,
     ResultModel,
     RoleDefinition,
     read_prompt,
@@ -93,4 +95,12 @@ IMPLEMENTER = RoleDefinition(
     tools=("Read", "Glob", "Grep", "Edit", "Write", "Bash", "WebSearch", "WebFetch"),
     turn_cap=factory_config().settings.turn_caps.implementer,
     result_model=ImplementerResult,
+    # Meets FR-35.
+    edit_guard=EditGuard(
+        paths=DOC_STANDARDS_PATHS,
+        reason=(
+            "This file is one of the factory's doc standards, which a run never"
+            " changes. Leave it as it is."
+        ),
+    ),
 )

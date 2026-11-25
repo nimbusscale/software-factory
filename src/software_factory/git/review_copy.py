@@ -7,11 +7,14 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from software_factory.git.command import CommitId, git
+from software_factory.git.command import CommitId, git, write_files
+from software_factory.git.doc_standards import write_doc_standards
 from software_factory.git.working_copy import WorkingCopy, head
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
+
+    from software_factory.git.doc_standards import DocStandards
 
 # The base commit is only there so the review diff shows as changes not yet committed.
 # So it has a fixed author, and turns off signing and every hook, which have nothing to
@@ -53,37 +56,27 @@ async def review_diff(
 
 @asynccontextmanager
 async def review_copy(
-    working_copy: WorkingCopy, diff: ReviewDiff
+    working_copy: WorkingCopy, diff: ReviewDiff, standards: DocStandards
 ) -> AsyncIterator[Path]:
     """A new folder that holds the review copy (TD-2), removed when the block ends."""
     path = Path(await asyncio.to_thread(tempfile.mkdtemp, prefix="review-copy-"))
     try:
         await git("init", "--quiet", cwd=path)
-        await write_files(working_copy, diff.start, path)
+        # The doc standards go in both the base commit and the files on top, so the
+        # review diff never shows them, whatever copy the project's repo holds.
+        await write_files(working_copy.path, diff.start, path)
+        await write_doc_standards(standards, path)
         await git(*ADD_EVERY_FILE, cwd=path)
         await git(*BASE_COMMIT, cwd=path, extra_env=BASE_COMMIT_AUTHOR)
         await asyncio.to_thread(clear, path)
-        await write_files(working_copy, diff.end, path)
+        await write_files(working_copy.path, diff.end, path)
+        await write_doc_standards(standards, path)
         # Staged, so `git diff HEAD` shows the files the review diff adds. Left
         # unstaged, they'd be untracked, and missing from it.
         await git(*ADD_EVERY_FILE, cwd=path)
         yield path
     finally:
         await asyncio.to_thread(shutil.rmtree, path)
-
-
-async def write_files(working_copy: WorkingCopy, commit: CommitId, path: Path) -> None:
-    """Writes the files as they stood at `commit` into `path`, with no git history."""
-    # Not git archive, which leaves out the files a project marks export-ignore. A
-    # separate index, so the working copy's own index stays as it is.
-    with tempfile.TemporaryDirectory() as index_folder:
-        index = {"GIT_INDEX_FILE": str(Path(index_folder) / "index")}
-        await git("read-tree", commit, cwd=working_copy.path, extra_env=index)
-        await git(
-            *("checkout-index", "--all", f"--prefix={path}{os.sep}"),
-            cwd=working_copy.path,
-            extra_env=index,
-        )
 
 
 def clear(path: Path) -> None:

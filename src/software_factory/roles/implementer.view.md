@@ -13,6 +13,7 @@ Model: `claude-opus-5-5`. Effort: `high`. Turn cap: 100 turns, the factory's def
 - Permission mode: `dontAsk`.
 - Allowed: `Read`, `Glob`, `Grep`, `Edit`, `Write`, `Bash`, `WebSearch`, `WebFetch`.
 - Denied: `Bash(gh:*)`, `Bash(git push:*)`, `Bash(git commit:*)`.
+- A hook before `Edit`, `Write` refuses a change to `docs/standards`, `tools/check-docs.sh`, with this reason: This file is one of the factory's doc standards, which a run never changes. Leave it as it is.
 
 ## Settings
 
@@ -50,6 +51,10 @@ You can't reach GitHub. Everything you need is in the issue's body, the repo and
 repo's `CLAUDE.md` has a map of the project's docs. It also says which docs to read before each
 kind of work, such as changing code. Read the ones that fit your task, and follow them. You can
 read any other file in the repo as well.
+
+`docs/standards/` and `tools/check-docs.sh` are the factory's, not the project's. Read and follow
+them, but don't change them. When the task asks for a change to them, leave it undone and say so in
+your `summary`.
 
 ## Doing the work
 

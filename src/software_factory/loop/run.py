@@ -3,6 +3,12 @@ from typing import TYPE_CHECKING
 
 from software_factory.config import factory_config
 from software_factory.git.command import GitError
+from software_factory.git.doc_standards import (
+    DocStandardsError,
+    exclude_doc_standards,
+    find_doc_standards,
+    write_doc_standards,
+)
 from software_factory.git.working_copy import (
     default_branch_file,
     open_clone,
@@ -10,7 +16,7 @@ from software_factory.git.working_copy import (
     run_branch_name,
     working_copy,
 )
-from software_factory.github.api import GitHubError
+from software_factory.github.api import GitHubError, Repo
 from software_factory.github.board import Moment, end_without_pr, move_issue
 from software_factory.github.issue import Issue, read_issue
 from software_factory.github.pull_request import (
@@ -32,8 +38,9 @@ if TYPE_CHECKING:
     from pathlib import Path
 
     from software_factory.config import Settings
+    from software_factory.git.doc_standards import DocStandards
     from software_factory.git.working_copy import Clone
-    from software_factory.github.api import GraphQL, Repo
+    from software_factory.github.api import GraphQL
 
 # The errors that end a run with a reason for the owner (TR-2, FR-7, TR-15, TR-18).
 RUN_ENDING_ERRORS = (RoleFailedError, GitError, GitHubError, NothingToReviewError)
@@ -57,13 +64,15 @@ class RunRequest:
     # The number of rounds the command sets, or None when it sets none.
     rounds: int | None
     started_at: datetime
+    # The branch of the factory's repo the command names, or None when it names none.
+    doc_standards_branch: str | None = None
 
 
 @dataclass(frozen=True)
 class Services:
     graphql: GraphQL
     runner: RoleRunner
-    # The folder that holds each project's clone and each run's working copy.
+    # The folder that holds each repo's clone and each run's working copy.
     home: Path
     remote_url: Callable[[Repo], str]
 
@@ -72,6 +81,7 @@ class Services:
 class Setup:
     clone: Clone
     settings: Settings
+    doc_standards: DocStandards
 
 
 def github_remote_url(repo: Repo) -> str:
@@ -103,16 +113,32 @@ async def run(request: RunRequest, services: Services) -> PullRequest:
 
 
 async def set_up(request: RunRequest, services: Services) -> Setup:
-    """Gets the clone and the run's settings, before anything changes on GitHub."""
-    repo = request.repo
-    path = services.home / "clones" / repo.owner / repo.name
+    """Gets the clones, the run's settings and its doc standards.
+
+    All before anything changes on GitHub.
+    """
     try:
-        clone = await open_clone(services.remote_url(repo), path)
+        clone = await open_repo_clone(services, request.repo)
         settings_file = await read_settings_file(clone)
         settings = run_settings(settings_file, request.rounds)
-    except (GitError, SettingsError) as error:
+        doc_standards = await open_doc_standards(request, services)
+    except (GitError, SettingsError, DocStandardsError) as error:
         raise RunRefusedError(str(error)) from error
-    return Setup(clone, settings)
+    return Setup(clone, settings, doc_standards)
+
+
+async def open_repo_clone(services: Services, repo: Repo) -> Clone:
+    path = services.home / "clones" / repo.owner / repo.name
+    return await open_clone(services.remote_url(repo), path)
+
+
+async def open_doc_standards(request: RunRequest, services: Services) -> DocStandards:
+    """Meets FR-32 and FR-33."""
+    source = factory_config().doc_standards
+    clone = await open_repo_clone(services, Repo.parse(source.repo))
+    return await find_doc_standards(
+        clone, request.doc_standards_branch or source.branch
+    )
 
 
 async def read_settings_file(clone: Clone) -> str | None:
@@ -136,7 +162,11 @@ async def work_to_pull_request(
     async with working_copy(
         setup.clone, issue.number, request.started_at, path
     ) as copy:
-        context = RunContext(issue, copy, setup.settings, services.runner)
+        await exclude_doc_standards(copy)
+        await write_doc_standards(setup.doc_standards, copy.path)
+        context = RunContext(
+            issue, copy, setup.settings, setup.doc_standards, services.runner
+        )
         record = await work_and_rounds(context)
         await push(copy)
     # Meets FR-15.

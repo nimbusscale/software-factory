@@ -6,7 +6,15 @@ import pytest
 from software_factory.git.command import CommitId, git
 
 if TYPE_CHECKING:
+    from collections.abc import Mapping
     from pathlib import Path
+
+# A small copy of the factory's doc standards, on its repo's main branch.
+FACTORY_STANDARDS = {
+    "docs/standards/README.md": "The factory's doc standards.\n",
+    "docs/standards/review-rubric.md": "The factory's review rubric.\n",
+    "tools/check-docs.sh": "echo The factory's doc check\n",
+}
 
 
 @pytest.fixture(autouse=True)
@@ -33,6 +41,37 @@ def commit_file(repo: Path, name: str, text: str) -> CommitId:
     run_git("add", "--all", cwd=repo)
     run_git("commit", "--quiet", "--message", f"Add {name}", cwd=repo)
     return CommitId(run_git("rev-parse", "HEAD", cwd=repo))
+
+
+def commit_files(repo: Path, files: Mapping[str, str], message: str) -> CommitId:
+    for name, text in files.items():
+        (repo / name).parent.mkdir(parents=True, exist_ok=True)
+        (repo / name).write_text(text)
+    run_git("add", "--all", cwd=repo)
+    run_git("commit", "--quiet", "--message", message, cwd=repo)
+    return CommitId(run_git("rev-parse", "HEAD", cwd=repo))
+
+
+def make_factory_remote(folder: Path) -> Path:
+    """A bare repo in `folder` that plays the factory's, unless one is there already.
+
+    Its author is at factory-author in `folder`, for a test to push more to it.
+    """
+    bare = folder / "factory.git"
+    if bare.exists():
+        return bare
+    seed = folder / "factory-seed"
+    seed.mkdir()
+    run_git("init", "--quiet", cwd=seed)
+    commit_files(seed, FACTORY_STANDARDS, "Add the doc standards")
+    run_git("clone", "--quiet", "--bare", str(seed), str(bare), cwd=folder)
+    run_git("clone", "--quiet", str(bare), "factory-author", cwd=folder)
+    return bare
+
+
+@pytest.fixture
+def factory_remote(tmp_path: Path) -> Path:
+    return make_factory_remote(tmp_path)
 
 
 @pytest.fixture

@@ -21,7 +21,7 @@ changes the code or the check's config.
   and keeps the board's other statuses.
 - `uv run implementation-loop <owner/name> <issue number>` runs the implementation loop on one
   issue of a project, and opens a PR for its work. `--rounds <number>` sets the number of rounds
-  for this run. It uses the GitHub CLI's login, and keeps each project's clone and each run's
+  for this run. It uses the GitHub CLI's login, and keeps each repo's clone and each run's
   working copy in `~/.local/share/software-factory`, or in `$XDG_DATA_HOME/software-factory`
   when that's set.
 - `uv run pytest -m claude src` runs the tests that call Claude, which `tools/check-code.sh`
@@ -40,3 +40,11 @@ rounds = 2
 [turn_caps]
 implementer = 60
 ```
+
+## A run's doc standards
+
+A run gives its roles the doc standards, `docs/standards/` and `tools/check-docs.sh`, from the
+factory's repo that `src/software_factory/factory.toml` names, never from the project's repo.
+They come from `main`, or from the branch that `--standards <branch>` names, such as a branch
+pushed to try a change to them. A run never changes them, so they change only in an interactive
+session.

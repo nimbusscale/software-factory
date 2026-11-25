@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
+from software_factory.config import factory_config
 from software_factory.github.api import GitHubError, GraphQL, Reply, Repo, ask
 from software_factory.github.board import Moment, move_issue
 from software_factory.github.issue import Issue, post_comment
@@ -10,6 +11,7 @@ if TYPE_CHECKING:
 
     from pydantic import JsonValue
 
+    from software_factory.git.command import CommitId
     from software_factory.roles.implementer import DeclinedFinding, ImplementerResult
     from software_factory.roles.quality_reviewer import DroppedCandidate, Finding
 
@@ -48,6 +50,8 @@ class RunRecord:
 
     issue: Issue
     run_branch: str
+    # The commit of the factory's repo that the run's doc standards came from.
+    doc_standards_commit: CommitId
     last_result: ImplementerResult
     # From every one of the implementer's results (TD-5).
     declined: Sequence[DeclinedFinding]
@@ -170,6 +174,11 @@ def description(record: RunRecord) -> str:
         f"## {heading}\n\n" + "\n".join(lines)
         for heading, lines in sections.items()
         if lines
+    )
+    # Meets FR-37. GitHub links owner/name@commit to the commit.
+    factory_repo = factory_config().doc_standards.repo
+    parts.append(
+        f"The doc standards came from {factory_repo}@{record.doc_standards_commit}."
     )
     return "\n\n".join(parts) + "\n"
 

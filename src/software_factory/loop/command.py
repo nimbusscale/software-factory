@@ -26,7 +26,7 @@ from software_factory.roles.run import RoleRunner
 
 
 def factory_home() -> Path:
-    """The folder that holds each project's clone and each run's working copy."""
+    """The folder that holds each repo's clone and each run's working copy."""
     data_home = os.environ.get("XDG_DATA_HOME") or str(Path.home() / ".local/share")
     return Path(data_home) / "software-factory"
 
@@ -42,6 +42,11 @@ def parse_request(argv: list[str] | None = None) -> RunRequest:
         type=int,
         help="the number of rounds, in place of the project's or the factory's",
     )
+    parser.add_argument(
+        "--standards",
+        metavar="BRANCH",
+        help="the branch of the factory's repo to take the doc standards from",
+    )
     args = parser.parse_args(argv)
     repo_text: str = args.repo
     try:
@@ -50,8 +55,13 @@ def parse_request(argv: list[str] | None = None) -> RunRequest:
         parser.error(str(error))
     issue: int = args.issue
     rounds: int | None = args.rounds
+    standards: str | None = args.standards
     return RunRequest(
-        repo=repo, issue_number=issue, rounds=rounds, started_at=datetime.now(UTC)
+        repo=repo,
+        issue_number=issue,
+        rounds=rounds,
+        started_at=datetime.now(UTC),
+        doc_standards_branch=standards,
     )
 
 

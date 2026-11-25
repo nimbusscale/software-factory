@@ -5,7 +5,6 @@ Opus, on a small project in a local git repo, with a fake GitHub.
 """
 
 import asyncio
-import shutil
 from pathlib import Path
 
 import pytest
@@ -13,11 +12,13 @@ from claude_agent_sdk import query
 
 from software_factory.conftest import run_git
 from software_factory.github.fake_github import REPO, FakeGitHub, FakeIssue
-from software_factory.loop.conftest import STARTED
+from software_factory.loop.conftest import FACTORY_REPO, STARTED
 from software_factory.loop.run import RunRequest, Services, run
 from software_factory.roles.run import RoleRunner
 
-RUBRIC = Path(__file__).parents[3] / "docs" / "standards" / "review-rubric.md"
+# This checkout plays the factory's repo, so the roles get the doc standards on its
+# main branch.
+FACTORY_CHECKOUT = Path(__file__).parents[3]
 
 ISSUE_BODY = """## Why
 
@@ -38,8 +39,6 @@ None.
 
 
 def set_up_project(author: Path) -> None:
-    (author / "docs" / "standards").mkdir(parents=True)
-    shutil.copy(RUBRIC, author / "docs" / "standards" / "review-rubric.md")
     (author / "CLAUDE.md").write_text(
         "# A card game\n\nThe repo holds the game's rules, and no code.\n"
     )
@@ -62,7 +61,9 @@ def test_run_opens_a_pr_for_the_work(
         graphql=github,
         runner=RoleRunner(query),
         home=tmp_path / "home",
-        remote_url=lambda _: str(remote),
+        remote_url=lambda repo: str(
+            FACTORY_CHECKOUT if repo == FACTORY_REPO else remote
+        ),
     )
     request = RunRequest(repo=REPO, issue_number=7, rounds=None, started_at=STARTED)
 

@@ -31,6 +31,16 @@ def test_command_without_rounds_leaves_them_to_the_settings() -> None:
     assert parse_request(["nimbusscale/dust-law", "7"]).rounds is None
 
 
+def test_command_reads_the_doc_standards_branch() -> None:
+    request = parse_request(["nimbusscale/dust-law", "7", "--standards", "trial"])
+
+    assert request.doc_standards_branch == "trial"
+
+
+def test_command_without_a_standards_branch_leaves_it_to_the_factory() -> None:
+    assert parse_request(["nimbusscale/dust-law", "7"]).doc_standards_branch is None
+
+
 def test_command_refuses_a_repo_that_isnt_owner_and_name() -> None:
     with pytest.raises(SystemExit):
         parse_request(["dust-law", "7"])

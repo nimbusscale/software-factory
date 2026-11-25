@@ -7,6 +7,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 
 - **Board.** A project's GitHub project board.
 - **Declined finding.** A finding that the implementer chose not to fix.
+- **Doc standards.** The rules a project's docs are written and checked by.
 - **Dropped candidate.** A possible problem that the quality reviewer looked into and didn't report
   as a finding, such as one whose claim turned out to be false.
 - **Factory.** The app this spec describes, which does a project's work from its issues and docs.
@@ -54,6 +55,21 @@ refuse to start the run, and say why.
 
 **FR-26.** When a setting the project sets isn't valid, such as a number of rounds that isn't a
 whole number, the implementation loop shall refuse to start the run, and say why.
+
+**FR-32.** The implementation loop shall give a run's implementer and quality reviewer the doc
+standards only from the factory's own repo, not from the project's repo.
+
+*Why:* the doc standards work as code for the implementer and the quality reviewer, so a change to
+them changes how the factory works. A change in a project's repo then can't.
+
+**FR-33.** The implementation loop shall give a run the doc standards on the branch of the
+factory's own repo that its command names, else on `main`.
+
+**FR-34.** When the branch that FR-33 picks doesn't exist, or doesn't hold the doc standards, the
+implementation loop shall refuse to start the run, and say why.
+
+**FR-35.** The implementation loop shall use the doc standards only as the factory's own repo holds
+them, and never change them.
 
 **FR-6.** The implementation loop shall give the implementer and the quality reviewer each the turn
 cap the project sets for it, else the factory's default for it, each time it starts or resumes
@@ -141,6 +157,12 @@ the PR.
 **FR-21.** The description of a run's PR shall list each decision from the issue or the docs that
 the implementer wrote into a spec with no reason, as a question for the owner that quotes the
 decision and suggests a reason where the implementer has one.
+
+**FR-36.** The changes in a run's PR shall hold no file of the doc standards, neither one that
+FR-32 gives the run nor one in the project's own copy of them.
+
+**FR-37.** The description of a run's PR shall name the commit of the factory's own repo that the
+run's doc standards came from.
 
 **FR-25.** When a run opens its PR, the implementation loop shall post a comment on the PR that
 lists each nit and pre-existing finding the implementer didn't get.

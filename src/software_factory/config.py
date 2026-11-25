@@ -36,8 +36,16 @@ class Settings(ConfigModel):
     turn_caps: TurnCaps
 
 
+class DocStandardsSource(ConfigModel):
+    # As owner/name.
+    repo: str
+    # The branch a run takes the doc standards from when its command names none (FR-33).
+    branch: str
+
+
 class FactoryConfig(ConfigModel):
     statuses: dict[StatusKey, BoardStatus]
+    doc_standards: DocStandardsSource
     # The factory's default for each setting (FR-4, FR-6).
     settings: Settings
 

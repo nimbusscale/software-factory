@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from software_factory.roles.definition import (
+    EDIT_TOOLS,
     ResultModel,
     RoleDefinition,
     role_options,
@@ -61,6 +62,7 @@ def role_view[ResultT: ResultModel](definition: RoleDefinition[ResultT]) -> str:
         f"- Permission mode: `{options.permission_mode}`.",
         f"- Allowed: {code_list(options.allowed_tools)}.",
         f"- Denied: {code_list(options.disallowed_tools)}.",
+        *edit_guard_lines(definition),
         "",
         "## Settings",
         "",
@@ -87,6 +89,19 @@ def role_view[ResultT: ResultModel](definition: RoleDefinition[ResultT]) -> str:
         "",
     ]
     return "\n".join(lines)
+
+
+def edit_guard_lines[ResultT: ResultModel](
+    definition: RoleDefinition[ResultT],
+) -> list[str]:
+    guard = definition.edit_guard
+    if guard is None:
+        return []
+    line = (
+        f"- A hook before {code_list(EDIT_TOOLS)} refuses a change to"
+        f" {code_list(guard.paths)}, with this reason: {guard.reason}"
+    )
+    return [line]
 
 
 def code_list(items: Iterable[str]) -> str:

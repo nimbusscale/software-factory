@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from software_factory.git.command import CommitId
 from software_factory.github.api import GitHubError
 from software_factory.github.fake_github import REPO, FakeGitHub, FakeIssue
 from software_factory.github.issue import read_issue
@@ -29,6 +30,10 @@ if TYPE_CHECKING:
 
 TILES = FakeIssue(number=7, title="Add the tiles", body="## Why\n\nTiles.\n")
 RUN_BRANCH = "factory/issue-7-20261124-213000"
+STANDARDS_COMMIT = "0123456789abcdef0123456789abcdef01234567"
+STANDARDS_LINE = (
+    f"The doc standards came from nimbusscale/software-factory@{STANDARDS_COMMIT}."
+)
 
 LAST_RESULT = ImplementerResult(
     summary="Adds the tile deck and deals four tiles to each player.",
@@ -89,6 +94,7 @@ def record(*findings: NumberedFinding) -> RunRecord:
     return RunRecord(
         issue=asyncio.run(read_issue(FakeGitHub(issues=[TILES]), REPO, 7)),
         run_branch=RUN_BRANCH,
+        doc_standards_commit=CommitId(STANDARDS_COMMIT),
         last_result=LAST_RESULT,
         declined=[DeclinedFinding(finding_id="R1-F2", reason="It reads better.")],
         findings=findings,
@@ -171,7 +177,14 @@ def test_description_leaves_out_empty_lists() -> None:
     run = record(IMPORTANT)
     empty = replace(run, last_result=result, declined=[])
 
-    assert description(empty) == f"Closes #7\n\n{LAST_RESULT.summary}\n"
+    assert description(empty) == (
+        f"Closes #7\n\n{LAST_RESULT.summary}\n\n{STANDARDS_LINE}\n"
+    )
+
+
+def test_description_ends_with_the_doc_standards_commit() -> None:
+    """Meets FR-37."""
+    assert description(record(IMPORTANT, NIT_GIVEN)).endswith(f"\n\n{STANDARDS_LINE}\n")
 
 
 def test_comment_lists_the_findings_the_implementer_didnt_get() -> None:

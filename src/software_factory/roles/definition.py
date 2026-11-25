@@ -3,12 +3,14 @@ from dataclasses import dataclass
 from importlib.resources import files
 from typing import TYPE_CHECKING
 
-from claude_agent_sdk import ClaudeAgentOptions, EffortLevel
+from claude_agent_sdk import ClaudeAgentOptions, EffortLevel, HookMatcher
 from pydantic import BaseModel, ConfigDict
 
 if TYPE_CHECKING:
     from collections.abc import Callable
     from pathlib import Path
+
+    from claude_agent_sdk import HookCallback, HookContext, HookInput, HookJSONOutput
 
 OPUS = "claude-opus-5-5"
 
@@ -40,6 +42,20 @@ def never_ends_run(_: BaseModel) -> str | None:
     return None
 
 
+# The tools that change a file, which an EditGuard's hook runs before.
+EDIT_TOOLS = ("Edit", "Write")
+
+
+@dataclass(frozen=True)
+class EditGuard:
+    """Paths a role may read but not change with its tools that change a file."""
+
+    # Files and folders, from the folder the role runs in.
+    paths: tuple[str, ...]
+    # What the role is told when its hook refuses a change.
+    reason: str
+
+
 @dataclass(frozen=True)
 class RoleDefinition[ResultT: ResultModel]:
     name: str
@@ -51,6 +67,7 @@ class RoleDefinition[ResultT: ResultModel]:
     result_model: type[ResultT]
     # Why a result that fits the schema still ends the run, or None when it doesn't.
     ends_run: Callable[[ResultT], str | None] = never_ends_run
+    edit_guard: EditGuard | None = None
 
 
 def read_prompt(file_name: str) -> str:
@@ -103,6 +120,45 @@ def role_options[ResultT: ResultModel](
             "type": "json_schema",
             "schema": definition.result_model.model_json_schema(),
         },
+        hooks=(
+            None
+            if definition.edit_guard is None
+            else {
+                "PreToolUse": [
+                    HookMatcher(
+                        matcher="|".join(EDIT_TOOLS),
+                        hooks=[edit_guard_hook(definition.edit_guard, cwd)],
+                    )
+                ]
+            }
+        ),
         cwd=cwd,
         resume=session_id,
     )
+
+
+def edit_guard_hook(guard: EditGuard, cwd: Path) -> HookCallback:
+    """A hook that refuses each change to a path the guard holds."""
+    guarded = [(cwd / name).resolve() for name in guard.paths]
+
+    async def hook(
+        hook_input: HookInput, _tool_use_id: str | None, _context: HookContext
+    ) -> HookJSONOutput:
+        if hook_input["hook_event_name"] != "PreToolUse":
+            return {}
+        file_path = hook_input["tool_input"].get("file_path")
+        if not isinstance(file_path, str):
+            return {}
+        # Resolved, so a path such as docs/../docs/standards is caught too.
+        target = (cwd / file_path).resolve()
+        if not any(target == path or path in target.parents for path in guarded):
+            return {}
+        return {
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "deny",
+                "permissionDecisionReason": guard.reason,
+            }
+        }
+
+    return hook

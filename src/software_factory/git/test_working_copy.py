@@ -154,6 +154,31 @@ def test_commit_holds_every_change_with_the_given_message(
     assert message == "Move the readme to the rules"
 
 
+def test_commit_leaves_out_the_paths_it_is_given(
+    remote: Path, author: Path, tmp_path: Path
+) -> None:
+    """Whether the project's repo tracks them or not, and when a role staged them."""
+    commit_file(author, "KEPT.md", "The project's file\n")
+    run_git("push", "--quiet", "origin", "main", cwd=author)
+    clone = clone_of(remote)
+
+    async def run() -> CommitId | None:
+        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
+            (copy.path / "KEPT.md").write_text("Changed\n")
+            (copy.path / "NEW.md").write_text("New\n")
+            await git("add", "NEW.md", cwd=copy.path)
+            (copy.path / "TILES.md").write_text("Tiles\n")
+            return await commit(copy, "Add the tiles", left_out=("KEPT.md", "NEW.md"))
+
+    committed = asyncio.run(run())
+
+    assert committed is not None
+    changed = run_git(
+        "diff", "--name-only", f"{committed}~1", committed, cwd=clone.path
+    )
+    assert changed == "TILES.md"
+
+
 def test_commit_with_no_changes_hands_back_none(remote: Path, tmp_path: Path) -> None:
     clone = clone_of(remote)
 
