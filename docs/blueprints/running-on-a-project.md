@@ -48,11 +48,13 @@ contract and doc map.
 ## The order
 
 Phases 1 and 2 can be built in either order. Phase 3 needs phase 2, since phase 2 says what the
-contract holds. Phase 4 needs phase 1, since phase 1 says where the standards live in a run.
+contract holds. Phase 4 needs phase 1, since phase 1 says where the standards live in a run. Phase
+5 needs phase 1, since it changes how the SFE starts each role.
 
 ```mermaid
 flowchart LR
     P1[1. The SFE] --> P4[4. The standards as a plugin]
+    P1 --> P5[5. A user for each role]
     P2[2. The project contract] --> P3[3. This repo meets the contract]
 ```
 
@@ -129,6 +131,8 @@ The spec changes this phase makes:
 - A new `FR`: the PR's description names the factory version the run used.
 - A new `FR`: when a run ends without a PR, the run branch is on GitHub. *Why:* the factory can run
   on any machine, not only the owner's, so nothing kept on the machine is sure to be there later.
+- AD-7's accepted gap names the gap that's left. The roles run as the same user as the workflow,
+  so a role's shell can read the GitHub token from the workflow's process. Phase 5 closes it.
 - SFE and factory version in the technical spec's Terms.
 
 ## Phase 2. The project contract
@@ -202,6 +206,34 @@ A project asks for the plugin in its `.claude/settings.json`. A run loads none o
 1), so the plugin reaches only people's sessions. The plugin and the image are built from the same
 commit, so a person's session and a run follow the same standards. Dust Law switches from its
 links to the plugin.
+
+## Phase 5. A user for each role
+
+Each role runs as a Linux user of its own in the SFE, and the workflow runs as another. The
+operating system then keeps each role to its own files, which a role's tool permissions can't do
+for its shell.
+
+- **The GitHub token.** A role's user can't read the workflow's process, so its shell can't read
+  the token from the workflow's environment.
+- **The copies.** The implementer's user can write the working copy, and can't write any review
+  copy. The quality reviewer's user can write its review copy, and can't write the working copy.
+- **The factory.** No role's user can write anything under `/factory`.
+- **The workflow** can read and commit the files the implementer writes, and makes each review copy
+  so the quality reviewer's user can work in it.
+- **The sessions.** Each role's user has a home folder of its own, which holds that role's Claude
+  Code config and sessions. The implementer always runs as the same user, so it can resume its
+  session each round (TD-3).
+
+The Agent SDK starts Claude Code as a child of the workflow, with no option to start it as another
+user. It does let the workflow name the Claude Code command to run. So that command is a small
+script that switches to the role's user, then starts Claude Code.
+
+The spec changes this phase makes:
+
+- A new `TD`: each role runs as a Linux user of its own, which meets AD-7, TR-7 and TR-11. *Why:*
+  a role's shell can run any command its tool permissions allow, and the operating system's file
+  and process permissions are what stop it reading or changing what isn't its own.
+- AD-7's accepted gap is deleted.
 
 ## Outside this blueprint
 
