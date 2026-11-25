@@ -40,3 +40,5 @@ rounds = 2
 [turn_caps]
 implementer = 60
 ```
+
+The factory can run on this repo too, since it's a project like any other.
