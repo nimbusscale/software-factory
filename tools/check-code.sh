@@ -2,6 +2,8 @@
 # Runs every check on the Python code in src/, in order, and stops at the first failure.
 # Run it from the repo root: bash tools/check-code.sh
 #
+# It leaves out the scripts in plugin/, since the code standards don't apply to them (CS-7).
+#
 # Claude Code asks the owner before each edit to this file, so an agent can't weaken a check to
 # make it pass.
 set -euo pipefail

@@ -134,6 +134,12 @@ the code.
 *Why:* a change to what a role is given then shows in the PR's diff as text a reviewer can read.
 In the code, such a change is easy to miss.
 
+**CS-7.** No other code standard applies to the scripts in the factory plugin.
+
+*Why:* a plugin script runs on the machine of each person who loads the plugin, with the Python
+found there, which may be older than the factory's own. Each script is written to run on what
+those machines have, so the rules for the factory's own code don't fit it.
+
 ## T-SEC-4. A run's rounds and roles
 
 **TR-1.** The workflow shall act on a role's result only after checking it against that role's
