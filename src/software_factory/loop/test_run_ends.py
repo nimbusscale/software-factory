@@ -1,4 +1,6 @@
+import os
 import shutil
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
@@ -25,8 +27,6 @@ from software_factory.roles.fake_agent_sdk import (
 )
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from software_factory.github.fake_github import FakeGitHub
 
 
@@ -227,3 +227,16 @@ def test_github_failing_as_the_run_ends_still_ends_the_run(
     assert "The issue couldn't be moved to Needs attention: The board" in message
     [comment] = issue_comments(github)
     assert "has no Status field" in comment
+
+
+def test_failed_clone_with_an_error_that_isnt_utf_8_refuses_the_run(
+    tmp_path: Path,
+) -> None:
+    github = fake_github()
+    # Git's error names the path, so its error isn't UTF-8 either.
+    missing = Path(os.fsdecode(bytes(tmp_path) + b"/caf\xe9.git"))
+
+    with pytest.raises(RunRefusedError, match="git clone"):
+        start_run(services(github, ScriptedQuery([]), missing, tmp_path / "home"))
+
+    assert github.operations == []

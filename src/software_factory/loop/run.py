@@ -108,14 +108,19 @@ async def set_up(request: RunRequest, services: Services) -> Setup:
     path = services.home / "clones" / repo.owner / repo.name
     try:
         clone = await open_clone(services.remote_url(repo), path)
-        settings_file = await default_branch_file(clone, SETTINGS_FILE)
+        settings_file = await read_settings_file(clone)
         settings = run_settings(settings_file, request.rounds)
     except (GitError, SettingsError) as error:
         raise RunRefusedError(str(error)) from error
+    return Setup(clone, settings)
+
+
+async def read_settings_file(clone: Clone) -> str | None:
+    try:
+        return await default_branch_file(clone, SETTINGS_FILE)
     except UnicodeDecodeError as error:
         message = f"The project's {SETTINGS_FILE} isn't UTF-8 text: {error}"
-        raise RunRefusedError(message) from error
-    return Setup(clone, settings)
+        raise SettingsError(message) from error
 
 
 async def work_to_pull_request(

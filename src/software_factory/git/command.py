@@ -69,6 +69,8 @@ async def git(*args: str, cwd: Path, extra_env: Mapping[str, str] | None = None)
     )
     stdout, stderr = await process.communicate()
     if process.returncode != 0:
-        message = f"git {' '.join(args)} failed: {stderr.decode().strip()}"
+        # Git prints its errors in the machine's locale, which may not be UTF-8.
+        error = stderr.decode(errors="replace").strip()
+        message = f"git {' '.join(args)} failed: {error}"
         raise GitError(message)
     return stdout.decode().rstrip("\n")
