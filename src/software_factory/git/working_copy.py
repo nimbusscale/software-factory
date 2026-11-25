@@ -1,27 +1,35 @@
 import asyncio
+import os
+import shutil
+import stat
+import tempfile
 from contextlib import asynccontextmanager
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from software_factory.git.command import CommitId, git
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncIterator, Callable
     from datetime import datetime
-    from pathlib import Path
 
 
 @dataclass(frozen=True)
-class Clone:
-    """The one clone of a project's repo that every run on the project works from."""
+class Remote:
+    """The project's repo on GitHub, which each run clones."""
 
-    path: Path
+    url: str
+    # The token git sends when the remote asks for one, or None when it asks for
+    # none. Out of the repr, so an error that prints the remote doesn't print it.
+    token: str | None = field(default=None, repr=False)
 
 
 @dataclass(frozen=True)
 class WorkingCopy:
     path: Path
+    remote: Remote
     run_branch: str
     # The commit on the project's default branch that the run branch started from.
     start: CommitId
@@ -34,50 +42,62 @@ def run_branch_name(issue_number: int, started_at: datetime) -> str:
     return f"factory/issue-{issue_number}-{started_at.astimezone(UTC):%Y%m%d-%H%M%S}"
 
 
-async def open_clone(remote_url: str, path: Path) -> Clone:
-    """Makes the clone on the project's first run, and fetches into it on later runs."""
-    if not await asyncio.to_thread(path.exists):
-        await asyncio.to_thread(path.parent.mkdir, parents=True, exist_ok=True)
-        await git("clone", "--quiet", "--", remote_url, str(path), cwd=path.parent)
-        return Clone(path)
-    await git("fetch", "--quiet", "--prune", "origin", cwd=path)
-    # A fetch leaves origin/HEAD where the clone first set it. Without this, run
-    # branches would go on starting from the old default branch after the project
-    # changes it.
-    await git("remote", "set-head", "origin", "--auto", cwd=path)
-    return Clone(path)
-
-
-async def default_branch_file(clone: Clone, name: str) -> str | None:
-    """The file at `name` on the project's default branch, or None when there's none.
-
-    A run branch starts from there, so it's the file the run's work starts with.
-    """
-    if not await git(
-        "ls-tree", "--name-only", "origin/HEAD", "--", name, cwd=clone.path
-    ):
-        return None
-    return await git("show", f"origin/HEAD:{name}", cwd=clone.path)
-
-
 @asynccontextmanager
 async def working_copy(
-    clone: Clone, issue_number: int, started_at: datetime, path: Path
+    remote: Remote, issue_number: int, started_at: datetime, path: Path
 ) -> AsyncIterator[WorkingCopy]:
-    """Adds a worktree at `path`, on a new run branch, and removes it at the end."""
+    """Clones the remote at `path`, on a new run branch, and removes it at the end.
+
+    Each run clones the remote afresh, and keeps nothing from an earlier run.
+    """
     run_branch = run_branch_name(issue_number, started_at)
-    start = CommitId(await git("rev-parse", "origin/HEAD^{commit}", cwd=clone.path))
-    await git(
-        *("worktree", "add", "--quiet", "-b", run_branch, str(path), start),
-        cwd=clone.path,
-    )
     try:
-        yield WorkingCopy(path=path, run_branch=run_branch, start=start)
+        await asyncio.to_thread(path.parent.mkdir, parents=True, exist_ok=True)
+        await git(
+            *("clone", "--quiet", "--", remote.url, str(path)),
+            cwd=path.parent,
+            token=remote.token,
+        )
+        start = CommitId(await git("rev-parse", "HEAD^{commit}", cwd=path))
+        await git("switch", "--quiet", "--create", run_branch, cwd=path)
+        yield WorkingCopy(path=path, remote=remote, run_branch=run_branch, start=start)
     finally:
-        # Meets TR-8. The run branch stays in the clone, so the owner can look at the
-        # work of a run that ended without a PR. A run that ends early can leave
-        # changes not yet committed, and git won't remove those without --force.
-        await git("worktree", "remove", "--force", str(path), cwd=clone.path)
+        # Meets TR-8.
+        await asyncio.to_thread(remove, path)
+
+
+def remove(path: Path) -> None:
+    # A clone that failed can leave no folder.
+    if path.exists():
+        shutil.rmtree(path, onexc=remove_read_only)
+
+
+def remove_read_only(
+    remove_function: Callable[[str], object], name: str, error: BaseException
+) -> None:
+    """Retries a removal that failed in a folder the run made read-only.
+
+    A project's tests can leave such a folder. Without this, the error would replace
+    the run's own result, even after its PR opened.
+    """
+    parent = Path(name).parent
+    if not isinstance(error, PermissionError) or os.access(parent, os.W_OK):
+        raise error
+    parent.chmod(parent.stat().st_mode | stat.S_IWUSR | stat.S_IXUSR)
+    remove_function(name)
+
+
+async def start_file(working_copy: WorkingCopy, name: str) -> str | None:
+    """The file at `name` where the run branch started, or None when there's none.
+
+    That's the file on the project's default branch, which the run's work starts with.
+    """
+    start = working_copy.start
+    if not await git(
+        "ls-tree", "--name-only", start, "--", name, cwd=working_copy.path
+    ):
+        return None
+    return await git("show", f"{start}:{name}", cwd=working_copy.path)
 
 
 async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:
@@ -96,6 +116,27 @@ async def head(working_copy: WorkingCopy) -> CommitId:
 
 
 async def push(working_copy: WorkingCopy) -> None:
-    await git(
-        "push", "--quiet", "origin", working_copy.run_branch, cwd=working_copy.path
+    """Pushes the run branch to the remote from a repo of the push's own.
+
+    A role can write the working copy's git config, such as a remote.origin.pushurl,
+    or a remote.origin.receivepack that runs a command of the role's. A push from the
+    working copy would then send the token where the role chose. The push's repo
+    reads the working copy's commits through git's alternates file, and none of its
+    config (AD-7).
+    """
+    branch = f"refs/heads/{working_copy.run_branch}"
+    tip = await git(
+        "rev-parse", "--verify", f"{branch}^{{commit}}", cwd=working_copy.path
     )
+    git_dir = await git("rev-parse", "--absolute-git-dir", cwd=working_copy.path)
+    with tempfile.TemporaryDirectory(prefix="push-") as folder:
+        repo = Path(folder)
+        await git("init", "--quiet", "--bare", cwd=repo)
+        alternates = repo / "objects" / "info" / "alternates"
+        await asyncio.to_thread(alternates.write_text, f"{git_dir}/objects\n")
+        await git("update-ref", branch, tip, cwd=repo)
+        await git(
+            *("push", "--quiet", "--", working_copy.remote.url, branch),
+            cwd=repo,
+            token=working_copy.remote.token,
+        )

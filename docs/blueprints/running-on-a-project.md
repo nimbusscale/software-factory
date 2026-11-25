@@ -16,7 +16,7 @@ Where this blueprint and a spec disagree, the spec wins.
 
 A run happens on the owner's machine. The workflow keeps a clone of each project, and gives each
 run a worktree of it as the working copy. The roles start in the working copy, and load the
-project's own Claude Code settings and CLAUDE.md (AD-9).
+project's own Claude Code settings and CLAUDE.md.
 
 So a run on a project gets no doc standards. The working copy comes from GitHub, and the standards
 are in the factory's repo.
@@ -35,15 +35,11 @@ in its CLAUDE.md.
 
 ## Terms
 
-- **SFE.** The container a run happens in. It holds the factory, and the run's copies of the
-  project's repo.
-- **Factory version.** The version of the SFE's image, named for the commit of the factory's repo
-  the image is built from.
 - **Project contract.** What a project's repo must hold for the factory to run on it.
 - **Doc map.** The paths of a project's docs, in the project's settings file.
 
-Phase 1 adds SFE and factory version to the technical spec's Terms, and phase 2 adds project
-contract and doc map.
+SFE is in the technical spec's Terms, and factory version in the functional spec's, since FR-33
+names it. Phase 2 adds project contract and doc map to the technical spec's Terms.
 
 ## The order
 
@@ -67,13 +63,16 @@ Each run happens in its own SFE, started from the SFE's image, and thrown away w
 
 **The image** holds the factory at `/factory`: its code, its prompts, its doc standards in
 `/factory/docs/standards/`, and the doc check script at `/factory/tools/check-docs.sh`. The factory
-runs in its own virtual environment, with its own Python, both under `/factory`. A project's tools
+runs in its own virtual environment, with its own Python, both under `/opt/sfe`. A project's tools
 go in the project's own environment, in the working copy. So the factory's Python packages and the
 project's never mix. The image also holds the tools every run needs, such as git, make and Claude
 Code. Each image is tagged with its factory version.
 
 To try a change to the factory before building an image, such as a change to the standards, the
-owner mounts a checkout of the factory's repo at `/factory`, in place of the image's copy.
+owner mounts a checkout of the factory's repo at `/factory`, in place of the image's copy. The
+Python and the virtual environment are outside `/factory`, so the mount leaves them in place. The
+factory is installed in the virtual environment from `/factory` as it stands, so the mounted code
+is the code that runs. A change to the factory's Python packages needs a new image.
 
 **The SFE's inputs.** The SFE takes these when it starts:
 
@@ -114,26 +113,9 @@ git credential file. It hands the token to each of its own git commands as that 
 
 **The PR's description** names the factory version the run used.
 
-The spec changes this phase makes:
-
-- A new `AD`: each run happens in its own SFE, which is thrown away when the run ends. *Why:* the
-  factory in the image stays the same for the whole run, so nothing in a project's repo can change
-  how the factory works, even when the project is the factory's own repo. A project's setup can
-  install whatever the project needs, and none of it outlives the run. The standards and the code
-  that uses them also come in one version.
-- A new `AD` in place of AD-9: a role's instructions come only from the factory, and a project's
-  docs and files are content the role reads. *Why:* the factory controls how work is done, so a
-  run follows a known version of its prompts and standards. If a project's files could put
-  instructions into a role's prompt, a team using the factory could tell the role how to work, not
-  just what to build. The project's CLAUDE.md also keeps one use, for people working in the repo.
-- New items in place of TR-7 and TR-11, which add the factory's doc standards to what each role has
-  access to.
-- A new `FR`: the PR's description names the factory version the run used.
-- A new `FR`: when a run ends without a PR, the run branch is on GitHub. *Why:* the factory can run
-  on any machine, not only the owner's, so nothing kept on the machine is sure to be there later.
-- AD-7's accepted gap names the gap that's left. The roles run as the same user as the workflow,
-  so a role's shell can read the GitHub token from the workflow's process. Phase 5 closes it.
-- SFE and factory version in the technical spec's Terms.
+The spec items this phase meets: AD-12 and AD-13, TR-21 and TR-22, FR-33 and FR-34, and the
+accepted gap in AD-7. Phase 5 closes that gap. SFE is in the technical spec's Terms, and factory
+version in the functional spec's.
 
 ## Phase 2. The project contract
 
@@ -230,7 +212,7 @@ script that switches to the role's user, then starts Claude Code.
 
 The spec changes this phase makes:
 
-- A new `TD`: each role runs as a Linux user of its own, which meets AD-7, TR-7 and TR-11. *Why:*
+- A new `TD`: each role runs as a Linux user of its own, which meets AD-7, TR-21 and TR-22. *Why:*
   a role's shell can run any command its tool permissions allow, and the operating system's file
   and process permissions are what stop it reading or changing what isn't its own.
 - AD-7's accepted gap is deleted.

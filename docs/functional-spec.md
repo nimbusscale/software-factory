@@ -10,6 +10,8 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Dropped candidate.** A possible problem that the quality reviewer looked into and didn't report
   as a finding, such as one whose claim turned out to be false.
 - **Factory.** The app this spec describes, which does a project's work from its issues and docs.
+- **Factory version.** The version of the factory that a run uses, named for the commit of the
+  factory's repo it's built from.
 - **Finding.** A problem that the quality reviewer reports in a round.
 - **Finding to check.** A finding that the quality reviewer can't mark until someone checks a fact
   from outside the project's repo, such as how an outside service answers a request.
@@ -114,6 +116,12 @@ starts each run by hand, so they see when one stops.
 **FR-14.** When a run ends without opening a PR, the implementation loop shall post a comment on
 the issue that gives the reason.
 
+**FR-34.** When a run ends without opening a PR, the implementation loop shall put the run's work on
+a branch on GitHub.
+
+*Why:* the factory can run on any machine, not only the owner's, so nothing kept on the machine is
+sure to be there later.
+
 ## F-SEC-5. The PR
 
 **FR-15.** When a run's last round ends, the implementation loop shall open a PR for the run's
@@ -140,6 +148,8 @@ the issue and the docs left open, with the text it's about, what was unclear and
 
 *Why:* the implementer has no one to ask during a run, so the owner checks each such decision at
 the PR.
+
+**FR-33.** The description of a run's PR shall name the factory version the run used.
 
 **FR-21.** The description of a run's PR shall list each decision from the issue or the docs that
 the implementer wrote into a spec with no reason, as a question for the owner that quotes the

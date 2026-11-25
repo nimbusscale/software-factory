@@ -4,10 +4,12 @@ from typing import TYPE_CHECKING
 from software_factory.config import factory_config
 from software_factory.git.command import GitError
 from software_factory.git.working_copy import (
-    default_branch_file,
-    open_clone,
+    Remote,
+    WorkingCopy,
+    commit,
     push,
     run_branch_name,
+    start_file,
     working_copy,
 )
 from software_factory.github.api import GitHubError
@@ -31,9 +33,9 @@ if TYPE_CHECKING:
     from datetime import datetime
     from pathlib import Path
 
-    from software_factory.config import Settings
-    from software_factory.git.working_copy import Clone
     from software_factory.github.api import GraphQL, Repo
+
+LEFT_WHEN_THE_RUN_ENDED = "Changes not yet committed when the run ended"
 
 # The errors that end a run with a reason for the owner (TR-2, FR-7, TR-15, TR-18).
 RUN_ENDING_ERRORS = (RoleFailedError, GitError, GitHubError, NothingToReviewError)
@@ -63,19 +65,14 @@ class RunRequest:
 class Services:
     graphql: GraphQL
     runner: RoleRunner
-    # The folder that holds each project's clone and each run's working copy.
+    # The folder that holds each run's working copy.
     home: Path
-    remote_url: Callable[[Repo], str]
+    remote: Callable[[Repo], Remote]
+    factory_version: str
 
 
-@dataclass(frozen=True)
-class Setup:
-    clone: Clone
-    settings: Settings
-
-
-def github_remote_url(repo: Repo) -> str:
-    return f"https://github.com/{repo}.git"
+def github_remote(repo: Repo, token: str) -> Remote:
+    return Remote(url=f"https://github.com/{repo}.git", token=token)
 
 
 async def run(request: RunRequest, services: Services) -> PullRequest:
@@ -84,63 +81,74 @@ async def run(request: RunRequest, services: Services) -> PullRequest:
     Raises RunRefusedError when the run doesn't start, RunEndedError when it ends
     without a PR, and OpenedPullRequestError when it ends after opening one.
     """
-    setup = await set_up(request, services)
+    repo = request.repo
+    branch = run_branch_name(request.issue_number, request.started_at)
+    path = (services.home / "working-copies" / repo.owner / repo.name) / branch.replace(
+        "/", "-"
+    )
+    remote = services.remote(repo)
     try:
+        async with working_copy(
+            remote, request.issue_number, request.started_at, path
+        ) as copy:
+            return await run_in(request, services, copy)
+    except GitError as error:
+        # Only the clone and the read of the settings file raise it here, since the
+        # run ends on any git error after them.
+        raise RunRefusedError(str(error)) from error
+
+
+async def run_in(
+    request: RunRequest, services: Services, copy: WorkingCopy
+) -> PullRequest:
+    """Runs in the working copy. Refuses the run before anything changes on GitHub."""
+    try:
+        settings = run_settings(await read_settings_file(copy), request.rounds)
         issue = await read_issue(services.graphql, request.repo, request.issue_number)
-    except GitHubError as error:
+    except (SettingsError, GitHubError) as error:
         raise RunRefusedError(str(error)) from error
     try:
         await move_issue(services.graphql, request.repo, issue, Moment.RUN_STARTED)
-        return await work_to_pull_request(request, services, setup, issue)
+        record = await work_and_rounds(
+            RunContext(issue, copy, settings, services.runner)
+        )
+        await push(copy)
+        # Meets FR-15.
+        return await open_pull_request(
+            services.graphql, request.repo, record, services.factory_version
+        )
     except OpenedPullRequestError:
         raise
     except RUN_ENDING_ERRORS as error:
-        raise await end_run(request, services, issue, str(error)) from error
+        reason = await with_work_on_github(copy, str(error))
+        raise await end_run(request, services, issue, reason) from error
     except Exception as error:
         reason = f"The workflow failed with an error it doesn't handle: {error!r}"
-        await end_run(request, services, issue, reason)
+        await end_run(request, services, issue, await with_work_on_github(copy, reason))
         raise
 
 
-async def set_up(request: RunRequest, services: Services) -> Setup:
-    """Gets the clone and the run's settings, before anything changes on GitHub."""
-    repo = request.repo
-    path = services.home / "clones" / repo.owner / repo.name
+async def read_settings_file(copy: WorkingCopy) -> str | None:
     try:
-        clone = await open_clone(services.remote_url(repo), path)
-        settings_file = await read_settings_file(clone)
-        settings = run_settings(settings_file, request.rounds)
-    except (GitError, SettingsError) as error:
-        raise RunRefusedError(str(error)) from error
-    return Setup(clone, settings)
-
-
-async def read_settings_file(clone: Clone) -> str | None:
-    try:
-        return await default_branch_file(clone, SETTINGS_FILE)
+        return await start_file(copy, SETTINGS_FILE)
     except UnicodeDecodeError as error:
         message = f"The project's {SETTINGS_FILE} isn't UTF-8 text: {error}"
         raise SettingsError(message) from error
 
 
-async def work_to_pull_request(
-    request: RunRequest,
-    services: Services,
-    setup: Setup,
-    issue: Issue,
-) -> PullRequest:
-    branch = run_branch_name(request.issue_number, request.started_at)
-    path = (
-        services.home / "working-copies" / request.repo.owner / request.repo.name
-    ) / branch.replace("/", "-")
-    async with working_copy(
-        setup.clone, issue.number, request.started_at, path
-    ) as copy:
-        context = RunContext(issue, copy, setup.settings, services.runner)
-        record = await work_and_rounds(context)
+async def with_work_on_github(copy: WorkingCopy, reason: str) -> str:
+    """Pushes the run branch of a run that ends without a PR (FR-34).
+
+    Hands back `reason`, with where the work is or why it isn't on GitHub.
+    """
+    try:
+        # A role that stops partway, such as at its turn cap, leaves its changes
+        # not yet committed. The SFE is thrown away, so they'd be lost.
+        await commit(copy, LEFT_WHEN_THE_RUN_ENDED)
         await push(copy)
-    # Meets FR-15.
-    return await open_pull_request(services.graphql, request.repo, record)
+    except GitError as error:
+        return f"{reason}\n\nThe run branch couldn't be put on GitHub: {error}"
+    return f"{reason}\n\nThe run's work is on the branch `{copy.run_branch}`."
 
 
 async def end_run(

@@ -29,6 +29,7 @@ if TYPE_CHECKING:
 
 TILES = FakeIssue(number=7, title="Add the tiles", body="## Why\n\nTiles.\n")
 RUN_BRANCH = "factory/issue-7-20261124-213000"
+VERSION = "0123456789ab"
 
 LAST_RESULT = ImplementerResult(
     summary="Adds the tile deck and deals four tiles to each player.",
@@ -99,7 +100,7 @@ def record(*findings: NumberedFinding) -> RunRecord:
 
 def open_for(run: RunRecord) -> tuple[FakeGitHub, PullRequest]:
     github = FakeGitHub(issues=[TILES])
-    pull_request = asyncio.run(open_pull_request(github, REPO, run))
+    pull_request = asyncio.run(open_pull_request(github, REPO, run, VERSION))
     return github, pull_request
 
 
@@ -107,34 +108,42 @@ def test_opens_the_pr_from_the_run_branch_with_the_issues_title() -> None:
     github, pull_request = open_for(record(IMPORTANT))
 
     [opened] = github.pull_requests
+    # FR-15.
     assert (opened.base, opened.head, opened.title) == ("main", RUN_BRANCH, TILES.title)
-    assert opened.body == description(record(IMPORTANT))
+    assert opened.body == description(record(IMPORTANT), VERSION)
     assert pull_request.number == opened.number
 
 
 def test_description_closes_the_issue_and_holds_the_implementers_text() -> None:
-    text = description(record(IMPORTANT, NIT_GIVEN))
+    text = description(record(IMPORTANT, NIT_GIVEN), VERSION)
 
+    # FR-16.
     assert text.startswith("Closes #7\n\n")
+    # FR-17.
     assert LAST_RESULT.summary in text
+    # FR-19.
     assert "**FR-3**, in `deal` in `src/tiles.py`: FR-3 says five tiles" in text
+    # FR-20.
     assert "> Deal the tiles at the start." in text
     assert "Whether a player who joins late gets tiles." in text
     assert "A late player gets four tiles" in text
+    # FR-21.
     assert "What's the reason for this decision?\n\n  > The deck holds 40" in text
     assert "no reason to suggest" in text
 
 
 def test_description_lists_each_declined_finding_with_its_reason() -> None:
-    text = description(record(IMPORTANT, NIT_GIVEN))
+    text = description(record(IMPORTANT, NIT_GIVEN), VERSION)
 
+    # FR-18.
     assert "**R1-F2**, `src/tiles.py:12`: The loop could be a comprehension." in text
     assert "Declined because: It reads better." in text
 
 
 def test_declined_finding_no_review_reported_is_still_listed() -> None:
-    text = description(record(IMPORTANT))
+    text = description(record(IMPORTANT), VERSION)
 
+    # FR-18.
     assert "**R1-F2**, no review reported a finding with this ID." in text
 
 
@@ -144,8 +153,9 @@ def test_description_gives_the_implementers_suggested_reason() -> None:
     )
     result = LAST_RESULT.model_copy(update={"missing_reasons": [reason]})
 
-    text = description(replace(record(IMPORTANT), last_result=result))
+    text = description(replace(record(IMPORTANT), last_result=result), VERSION)
 
+    # FR-21.
     assert "The implementer suggests: 40 fills the table." in text
 
 
@@ -157,9 +167,10 @@ def test_text_with_a_blank_line_stays_in_its_list_item() -> None:
     )
     result = LAST_RESULT.model_copy(update={"decisions": [decision]})
 
-    text = description(replace(record(IMPORTANT), last_result=result))
+    text = description(replace(record(IMPORTANT), last_result=result), VERSION)
 
     quoted = "  > Deal the tiles.\n  >\n  > A late player waits."
+    # Bug: a blank line in a decision's text ended its list item early.
     assert quoted in text
     assert "It left unclear: Who deals.\n  \n  And when." in text
 
@@ -171,7 +182,18 @@ def test_description_leaves_out_empty_lists() -> None:
     run = record(IMPORTANT)
     empty = replace(run, last_result=result, declined=[])
 
-    assert description(empty) == f"Closes #7\n\n{LAST_RESULT.summary}\n"
+    # FR-16, FR-17, FR-33.
+    assert description(empty, VERSION) == (
+        f"Closes #7\n\n{LAST_RESULT.summary}\n\n"
+        "Made by factory version `0123456789ab`.\n"
+    )
+
+
+def test_description_names_the_factory_version() -> None:
+    text = description(record(IMPORTANT), VERSION)
+
+    # FR-33.
+    assert text.endswith("\n\nMade by factory version `0123456789ab`.\n")
 
 
 def test_comment_lists_the_findings_the_implementer_didnt_get() -> None:
@@ -234,15 +256,17 @@ def test_pr_with_a_finding_to_check_needs_the_owner() -> None:
 def test_pr_reply_that_doesnt_fit_its_schema_ends_the_run() -> None:
     github = FakeGitHub(issues=[TILES], broken={"CreatePullRequest"})
 
+    # TR-15.
     with pytest.raises(GitHubError, match="doesn't fit its schema"):
-        asyncio.run(open_pull_request(github, REPO, record(IMPORTANT)))
+        asyncio.run(open_pull_request(github, REPO, record(IMPORTANT), VERSION))
     assert github.board.status_of(TILES) is None
 
 
 def test_failure_after_the_pr_opens_says_the_pr_is_open() -> None:
     github = FakeGitHub(issues=[TILES], broken={"AddComment"})
 
+    # TR-15.
     with pytest.raises(OpenedPullRequestError, match="opened its PR") as error:
-        asyncio.run(open_pull_request(github, REPO, record(IMPORTANT)))
+        asyncio.run(open_pull_request(github, REPO, record(IMPORTANT), VERSION))
     [opened] = github.pull_requests
     assert error.value.pull_request.number == opened.number

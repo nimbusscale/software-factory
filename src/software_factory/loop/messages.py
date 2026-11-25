@@ -26,7 +26,7 @@ def reviewer_message(
     declined_ids: Collection[str],
     given_ids: Collection[str],
 ) -> str:
-    """The message that starts the quality reviewer in a round (TR-7).
+    """The message that starts the quality reviewer in a round (TR-21).
 
     `earlier` holds the findings from the run's earlier rounds. `given_ids` holds the
     IDs of the ones the workflow gave the implementer, and `declined_ids` the IDs of

@@ -1,6 +1,6 @@
 """The implementation loop's command (FR-1).
 
-Run it with `uv run implementation-loop <owner/name> <issue number>`.
+It runs only in an SFE, which `tools/run-sfe.sh` starts with the command's arguments.
 """
 
 import argparse
@@ -19,14 +19,14 @@ from software_factory.loop.run import (
     RunRefusedError,
     RunRequest,
     Services,
-    github_remote_url,
+    github_remote,
     run,
 )
 from software_factory.roles.run import RoleRunner
 
 
 def factory_home() -> Path:
-    """The folder that holds each project's clone and each run's working copy."""
+    """The folder that holds each run's working copy."""
     data_home = os.environ.get("XDG_DATA_HOME") or str(Path.home() / ".local/share")
     return Path(data_home) / "software-factory"
 
@@ -55,13 +55,23 @@ def parse_request(argv: list[str] | None = None) -> RunRequest:
     )
 
 
+def from_environment(name: str) -> str:
+    value = os.environ.get(name)
+    if not value:
+        sys.exit(f"The run didn't start. {name} isn't set. Start runs in an SFE.")
+    return value
+
+
 def main() -> None:
     request = parse_request()
+    # The GitHub CLI reads the same variable for the workflow's requests to GitHub.
+    token = from_environment("GH_TOKEN")
     services = Services(
         graphql=gh_graphql,
         runner=RoleRunner(query),
         home=factory_home(),
-        remote_url=github_remote_url,
+        remote=lambda repo: github_remote(repo, token),
+        factory_version=from_environment("FACTORY_VERSION"),
     )
     try:
         pull_request = asyncio.run(run(request, services))

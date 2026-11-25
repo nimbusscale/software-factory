@@ -1,4 +1,3 @@
-import json
 from dataclasses import dataclass
 from importlib.resources import files
 from typing import TYPE_CHECKING
@@ -12,8 +11,6 @@ if TYPE_CHECKING:
 
 OPUS = "claude-opus-5-5"
 
-GLOB_CHARACTERS = frozenset("*?[]{}()!+@")
-
 # Meets AD-7 for the shell, and TD-7 for commits.
 DENIED_COMMANDS = ("Bash(gh:*)", "Bash(git push:*)", "Bash(git commit:*)")
 
@@ -21,7 +18,7 @@ ROLE_ENVIRONMENT = {
     # Empty, so the role's shell finds no GitHub token in its environment (AD-7).
     "GH_TOKEN": "",
     "GITHUB_TOKEN": "",
-    # Claude Code's memory would carry notes from one run to the next (TR-11).
+    # Claude Code's memory would carry notes from one run to the next (TR-22).
     "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1",
 }
 
@@ -64,10 +61,6 @@ def role_options[ResultT: ResultModel](
     session_id: str | None,
 ) -> ClaudeAgentOptions:
     """The options a role starts with, or resumes with when `session_id` is given."""
-    if GLOB_CHARACTERS & set(str(cwd)):
-        # The folder goes into a glob in claudeMdExcludes below, unescaped.
-        message = f"A role can't run in {cwd}, since its path has a glob character."
-        raise ValueError(message)
     return ClaudeAgentOptions(
         model=definition.model,
         effort=definition.effort,
@@ -84,17 +77,12 @@ def role_options[ResultT: ResultModel](
         # Refuses each tool call the rules above don't allow, since no one is there
         # to ask.
         permission_mode="dontAsk",
-        # Only the project's own settings and CLAUDE.md, which points the role to the
-        # project's docs (AD-9).
-        setting_sources=["project"],
-        # Claude Code also loads each CLAUDE.md in the folders above the working
-        # directory, such as ~/.claude/CLAUDE.md when the working copy is in the
-        # home folder. This keeps only the ones in the role's own folder (TR-7,
-        # TR-11).
-        settings=json.dumps({"claudeMdExcludes": [f"!{cwd}/**"]}),
+        # No settings file and no CLAUDE.md, the project's or any other, so a role's
+        # instructions come only from its prompt (AD-13).
+        setting_sources=[],
         env=ROLE_ENVIRONMENT,
         # The prompt holds text from GitHub, such as the issue's body. Without this,
-        # an @path in it makes Claude Code read that file into the prompt (TR-11).
+        # an @path in it makes Claude Code read that file into the prompt (TR-22).
         verbatim_prompts=True,
         # Meets FR-6.
         max_turns=definition.turn_cap,

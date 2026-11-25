@@ -40,19 +40,54 @@ REPO_ENV_VARS = frozenset(
 # second for 60 seconds. A slow clone that's still moving never trips them.
 STALL_CHECK = (*("-c", "http.lowSpeedLimit=1000", "-c", "http.lowSpeedTime=60"),)
 
+# The GitHub token reaches git only in this variable, set for the one command that
+# needs it, so it's never in git's config or any other file a role can read (AD-7).
+LOGIN_VARIABLE = "SOFTWARE_FACTORY_GIT_TOKEN"
+# The empty helper first clears any helper the repo's config names, so git asks only
+# this one. A helper is called with get, store or erase, and only get is answered.
+# Hooks are off, since the token is in the environment of every hook git starts.
+WITH_TOKEN = (
+    *("-c", "credential.helper=", "-c", f"core.hooksPath={os.devnull}"),
+    "-c",
+    (
+        'credential.helper=!f() { test "$1" = get'
+        " && echo username=x-access-token"
+        f' && echo "password=${LOGIN_VARIABLE}"; }}; f'
+    ),
+)
+# The variables the GitHub CLI reads its token from. They're left out of every git
+# command, so a hook that git starts never gets them.
+GITHUB_TOKEN_VARIABLES = frozenset({"GH_TOKEN", "GITHUB_TOKEN"})
+
 
 class GitError(Exception):
     pass
 
 
-async def git(*args: str, cwd: Path, extra_env: Mapping[str, str] | None = None) -> str:
-    """Hands back what git printed, without its trailing newline."""
-    env = {
-        name: value for name, value in os.environ.items() if name not in REPO_ENV_VARS
-    }
+async def git(
+    *args: str,
+    cwd: Path,
+    extra_env: Mapping[str, str] | None = None,
+    token: str | None = None,
+) -> str:
+    """Hands back what git printed, without its trailing newline.
+
+    `token` is the token git sends when the remote asks for one.
+    """
+    left_out = REPO_ENV_VARS | GITHUB_TOKEN_VARIABLES
+    env = {name: value for name, value in os.environ.items() if name not in left_out}
     # A run has no one at the terminal, so git fails rather than wait for a username.
     env["GIT_TERMINAL_PROMPT"] = "0"
     env.update(extra_env or {})
+    auth: tuple[str, ...] = ()
+    if token is not None:
+        auth = WITH_TOKEN
+        env[LOGIN_VARIABLE] = token
+        # A role can write the user's git config, such as a url.<base>.insteadOf
+        # that sends the command to another host along with the token. So git reads
+        # no config but the repo's own and the command's (AD-7).
+        env["GIT_CONFIG_GLOBAL"] = os.devnull
+        env["GIT_CONFIG_NOSYSTEM"] = "1"
     executable = shutil.which("git")
     if executable is None:
         message = "git isn't installed, or isn't on the PATH."
@@ -60,6 +95,7 @@ async def git(*args: str, cwd: Path, extra_env: Mapping[str, str] | None = None)
     process = await asyncio.create_subprocess_exec(
         executable,
         *STALL_CHECK,
+        *auth,
         *args,
         cwd=cwd,
         env=env,

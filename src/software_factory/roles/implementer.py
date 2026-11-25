@@ -89,7 +89,7 @@ IMPLEMENTER = RoleDefinition(
     model=OPUS,
     effort="high",
     prompt=read_prompt("implementer.md"),
-    # Meets TR-11.
+    # Meets TR-22.
     tools=("Read", "Glob", "Grep", "Edit", "Write", "Bash", "WebSearch", "WebFetch"),
     turn_cap=factory_config().settings.turn_caps.implementer,
     result_model=ImplementerResult,

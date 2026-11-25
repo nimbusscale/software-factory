@@ -1,14 +1,17 @@
 import os
 import shutil
+from dataclasses import replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
 
 from software_factory.conftest import run_git
+from software_factory.git.working_copy import Remote
 from software_factory.github.pull_request import OpenedPullRequestError
 from software_factory.loop.conftest import (
     ISSUE_NUMBER,
+    RUN_BRANCH,
     board_status,
     fake_github,
     finding,
@@ -88,6 +91,90 @@ def test_failed_git_command_ends_the_run(remote: Path, tmp_path: Path) -> None:
         start_run(services(github, roles, remote, tmp_path / "home"))
 
     assert_ended_without_pr(github, "git push")
+    # FR-34.
+    assert_ended_without_pr(github, "The run branch couldn't be put on GitHub: git")
+
+
+def test_run_that_ends_without_a_pr_leaves_its_work_on_github(
+    remote: Path, tmp_path: Path
+) -> None:
+    def reviewer_with_no_findings_field(_: Path) -> list[RawMessage]:
+        return [result_message(structured_output={"status": "done", "reason": "."})]
+
+    roles = ScriptedQuery(
+        [
+            implementer_turn({"TILES.md": "Tiles\n"}, "Add the tiles"),
+            reviewer_with_no_findings_field,
+        ]
+    )
+    github = fake_github()
+
+    with pytest.raises(RunEndedError):
+        start_run(services(github, roles, remote, tmp_path / "home"))
+
+    # FR-34.
+    assert run_git("log", "--format=%s", "-1", RUN_BRANCH, cwd=remote) == (
+        "Add the tiles"
+    )
+    assert_ended_without_pr(github, f"The run's work is on the branch `{RUN_BRANCH}`.")
+
+
+def test_run_that_ends_partway_through_a_turn_keeps_its_changes(
+    remote: Path, tmp_path: Path
+) -> None:
+    def implementer_that_stops(cwd: Path) -> list[RawMessage]:
+        (cwd / "TILES.md").write_text("Half the tiles\n")
+        return saved_response("success_without_structured_output")
+
+    github = fake_github()
+
+    with pytest.raises(RunEndedError):
+        start_run(
+            services(github, ScriptedQuery([implementer_that_stops]), remote, tmp_path)
+        )
+
+    # FR-34.
+    tiles = run_git("show", f"{RUN_BRANCH}:TILES.md", cwd=remote)
+    assert tiles == "Half the tiles"
+    assert_ended_without_pr(github, f"The run's work is on the branch `{RUN_BRANCH}`.")
+
+
+def test_no_role_can_read_the_github_token(remote: Path, tmp_path: Path) -> None:
+    login = "login-for-github"
+    found: list[str] = []
+
+    def files_with_token(cwd: Path) -> list[str]:
+        return [
+            str(path)
+            for path in cwd.rglob("*")
+            if path.is_file() and login.encode() in path.read_bytes()
+        ]
+
+    def implementer(cwd: Path) -> list[RawMessage]:
+        found.extend(files_with_token(cwd))
+        # A role's environment is the workflow's, with ROLE_ENVIRONMENT on top.
+        if login in str(os.environ):
+            found.append("the workflow's environment")
+        return implementer_turn({"TILES.md": "Tiles\n"}, "Add the tiles")(cwd)
+
+    def reviewer(cwd: Path) -> list[RawMessage]:
+        found.extend(files_with_token(cwd))
+        if login in str(os.environ):
+            found.append("the workflow's environment")
+        return reviewer_turn([])(cwd)
+
+    roles = ScriptedQuery([implementer, reviewer])
+    github = fake_github()
+
+    with_login = replace(
+        services(github, roles, remote, tmp_path / "home"),
+        remote=lambda _: Remote(str(remote), login),
+    )
+    start_run(with_login)
+
+    # AD-7.
+    assert len(github.pull_requests) == 1
+    assert found == []
 
 
 def test_work_that_changes_nothing_ends_the_run(remote: Path, tmp_path: Path) -> None:

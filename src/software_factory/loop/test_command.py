@@ -17,6 +17,13 @@ if TYPE_CHECKING:
     from software_factory.loop.run import RunRequest, Services
 
 
+@pytest.fixture(autouse=True)
+def sfe_environment(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The variables the SFE sets for the command."""
+    monkeypatch.setenv("GH_TOKEN", "token-for-github")
+    monkeypatch.setenv("FACTORY_VERSION", "0123456789ab")
+
+
 def test_command_reads_the_repo_issue_and_rounds() -> None:
     before = datetime.now(UTC)
 

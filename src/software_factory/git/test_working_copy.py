@@ -7,16 +7,17 @@ import pytest
 from software_factory.conftest import commit_file, run_git
 from software_factory.git.command import CommitId, git
 from software_factory.git.working_copy import (
-    Clone,
+    Remote,
     WorkingCopy,
     commit,
-    open_clone,
+    head,
     push,
     run_branch_name,
     working_copy,
 )
 
 if TYPE_CHECKING:
+    from contextlib import AbstractAsyncContextManager
     from pathlib import Path
 
 ISSUE = 7
@@ -24,59 +25,29 @@ STARTED = datetime(2026, 11, 24, 21, 30, 0, tzinfo=UTC)
 RUN_BRANCH = "factory/issue-7-20261124-213000"
 
 
-def clone_of(remote: Path) -> Clone:
-    return asyncio.run(open_clone(str(remote), remote.parent / "clones" / "dust-law"))
+def started(
+    remote: Path, path: Path, at: datetime = STARTED
+) -> AbstractAsyncContextManager[WorkingCopy]:
+    return working_copy(Remote(str(remote)), ISSUE, at, path)
 
 
 def tip(repo: Path, ref: str) -> CommitId:
     return CommitId(run_git("rev-parse", ref, cwd=repo))
 
 
-async def start_and_end_run(clone: Clone, path: Path) -> WorkingCopy:
-    async with working_copy(clone, ISSUE, STARTED, path) as copy:
-        return copy
-
-
-def test_first_run_makes_the_clone(remote: Path, author: Path) -> None:
-    clone = clone_of(remote)
-
-    assert tip(clone.path, "origin/main") == tip(author, "HEAD")
-
-
-def test_later_run_fetches_into_the_clone(remote: Path, author: Path) -> None:
-    clone_of(remote)
-    new_commit = commit_file(author, "RULES.md", "Rules\n")
-    run_git("push", "--quiet", "origin", "main", cwd=author)
-
-    clone = clone_of(remote)
-
-    assert tip(clone.path, "origin/main") == new_commit
-
-
 def test_run_branch_starts_from_the_default_branch(
     remote: Path, author: Path, tmp_path: Path
 ) -> None:
-    clone = clone_of(remote)
+    async def run() -> tuple[WorkingCopy, str]:
+        async with started(remote, tmp_path / "work") as copy:
+            return copy, await git("branch", "--show-current", cwd=copy.path)
 
-    copy = asyncio.run(start_and_end_run(clone, tmp_path / "work"))
+    copy, branch = asyncio.run(run())
 
-    assert copy.run_branch == RUN_BRANCH
+    # TR-16.
+    assert copy.run_branch == branch == RUN_BRANCH
+    # TR-3.
     assert copy.start == tip(author, "HEAD")
-    assert tip(clone.path, copy.run_branch) == copy.start
-
-
-def test_run_branch_follows_a_change_of_default_branch(
-    remote: Path, author: Path, tmp_path: Path
-) -> None:
-    clone_of(remote)
-    run_git("switch", "--quiet", "--create", "trunk", cwd=author)
-    trunk = commit_file(author, "RULES.md", "Rules\n")
-    run_git("push", "--quiet", "origin", "trunk", cwd=author)
-    run_git("symbolic-ref", "HEAD", "refs/heads/trunk", cwd=remote)
-
-    copy = asyncio.run(start_and_end_run(clone_of(remote), tmp_path / "work"))
-
-    assert copy.start == trunk
 
 
 def test_run_branch_name_holds_the_start_time_in_utc() -> None:
@@ -87,80 +58,78 @@ def test_run_branch_name_holds_the_start_time_in_utc() -> None:
     assert name == RUN_BRANCH
 
 
-def test_earlier_run_branch_is_kept(remote: Path, tmp_path: Path) -> None:
-    clone = clone_of(remote)
-
+def test_later_run_leaves_an_earlier_run_branch_as_it_is(
+    remote: Path, tmp_path: Path
+) -> None:
     async def earlier_run() -> CommitId | None:
-        async with working_copy(clone, ISSUE, STARTED, tmp_path / "earlier") as copy:
+        async with started(remote, tmp_path / "earlier") as copy:
             (copy.path / "TILES.md").write_text("Tiles\n")
-            return await commit(copy, "Add the tiles")
+            committed = await commit(copy, "Add the tiles")
+            await push(copy)
+            return committed
 
     earlier_commit = asyncio.run(earlier_run())
 
     async def later_run() -> WorkingCopy:
         later = STARTED + timedelta(minutes=5)
-        async with working_copy(clone, ISSUE, later, tmp_path / "later") as copy:
+        async with started(remote, tmp_path / "later", later) as copy:
+            await push(copy)
             return copy
 
     copy = asyncio.run(later_run())
 
+    # TR-16.
     assert copy.run_branch == "factory/issue-7-20261124-213500"
-    assert tip(clone.path, copy.run_branch) == copy.start
-    assert tip(clone.path, RUN_BRANCH) == earlier_commit
+    assert tip(remote, copy.run_branch) == copy.start
+    assert tip(remote, RUN_BRANCH) == earlier_commit
 
 
 class RunFailedError(Exception):
     pass
 
 
-def test_run_end_removes_the_working_copy_and_keeps_the_branch(
-    remote: Path, tmp_path: Path
-) -> None:
-    clone = clone_of(remote)
-    committed: list[CommitId | None] = []
-
+def test_run_end_removes_the_working_copy(remote: Path, tmp_path: Path) -> None:
     async def run_that_fails() -> None:
-        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path / "work") as copy:
             (copy.path / "TILES.md").write_text("Tiles\n")
-            committed.append(await commit(copy, "Add the tiles"))
+            await commit(copy, "Add the tiles")
             (copy.path / "RULES.md").write_text("Not committed\n")
             raise RunFailedError
 
     with pytest.raises(RunFailedError):
         asyncio.run(run_that_fails())
 
+    # TR-8.
     assert not (tmp_path / "work").exists()
-    assert committed == [tip(clone.path, RUN_BRANCH)]
 
 
 def test_commit_holds_every_change_with_the_given_message(
     remote: Path, tmp_path: Path
 ) -> None:
-    clone = clone_of(remote)
-
-    async def run() -> tuple[WorkingCopy, CommitId | None]:
-        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
+    async def run() -> tuple[CommitId | None, CommitId, str, str]:
+        async with started(remote, tmp_path / "work") as copy:
             (copy.path / "README.md").unlink()
             (copy.path / "rules").mkdir()
             (copy.path / "rules" / "RULES.md").write_text("Rules\n")
-            return copy, await commit(copy, "Move the readme to the rules")
+            committed = await commit(copy, "Move the readme to the rules")
+            files = await git("ls-tree", "-r", "--name-only", "HEAD", cwd=copy.path)
+            message = await git("log", "-1", "--format=%B", cwd=copy.path)
+            return committed, await head(copy), files, message
 
-    copy, committed = asyncio.run(run())
+    committed, branch_tip, files, message = asyncio.run(run())
 
-    assert committed == tip(clone.path, copy.run_branch)
-    files = run_git("ls-tree", "-r", "--name-only", copy.run_branch, cwd=clone.path)
+    # TD-7, TD-9.
+    assert committed == branch_tip
     assert files.splitlines() == ["rules/RULES.md"]
-    message = run_git("log", "-1", "--format=%B", copy.run_branch, cwd=clone.path)
     assert message == "Move the readme to the rules"
 
 
 def test_commit_with_no_changes_hands_back_none(remote: Path, tmp_path: Path) -> None:
-    clone = clone_of(remote)
-
     async def run() -> CommitId | None:
-        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path / "work") as copy:
             return await commit(copy, "Nothing")
 
+    # TR-5.
     assert asyncio.run(run()) is None
 
 
@@ -171,24 +140,23 @@ def test_commit_with_changes_only_inside_a_submodule_hands_back_none(
     library.mkdir()
     run_git("init", "--quiet", cwd=library)
     commit_file(library, "tiles.py", "TILES = []\n")
-    clone = clone_of(remote)
 
     async def run() -> CommitId | None:
-        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path / "work") as copy:
             add = ("-c", "protocol.file.allow=always", "submodule", "add", "--quiet")
             await git(*add, str(library), "lib", cwd=copy.path)
             await commit(copy, "Add the library")
             (copy.path / "lib" / "tiles.py").write_text("TILES = [1]\n")
             return await commit(copy, "Change the library")
 
+    # Bug: a change only inside a submodule made the commit fail with nothing to
+    # commit.
     assert asyncio.run(run()) is None
 
 
 def test_push_puts_the_run_branch_on_the_remote(remote: Path, tmp_path: Path) -> None:
-    clone = clone_of(remote)
-
     async def run() -> CommitId | None:
-        async with working_copy(clone, ISSUE, STARTED, tmp_path / "work") as copy:
+        async with started(remote, tmp_path / "work") as copy:
             (copy.path / "TILES.md").write_text("Tiles\n")
             committed = await commit(copy, "Add the tiles")
             await push(copy)
@@ -196,4 +164,48 @@ def test_push_puts_the_run_branch_on_the_remote(remote: Path, tmp_path: Path) ->
 
     committed = asyncio.run(run())
 
+    # FR-15.
     assert tip(remote, RUN_BRANCH) == committed
+
+
+def test_push_uses_none_of_the_working_copys_git_config(
+    remote: Path, tmp_path: Path
+) -> None:
+    leak = tmp_path / "leak"
+    elsewhere = tmp_path / "elsewhere.git"
+    run_git("init", "--quiet", "--bare", str(elsewhere), cwd=tmp_path)
+    leak_token = f'echo "$SOFTWARE_FACTORY_GIT_TOKEN" > {leak}'
+    receive = f"sh -c '{leak_token}; exec git-receive-pack \"$@\"' --"
+    login = Remote(str(remote), "login-for-git")
+
+    async def run() -> CommitId | None:
+        async with working_copy(login, ISSUE, STARTED, tmp_path / "work") as copy:
+            await git("config", "remote.origin.pushurl", str(elsewhere), cwd=copy.path)
+            await git("config", "remote.origin.receivepack", receive, cwd=copy.path)
+            (copy.path / "TILES.md").write_text("Tiles\n")
+            committed = await commit(copy, "Add the tiles")
+            await push(copy)
+            return committed
+
+    committed = asyncio.run(run())
+
+    # AD-7.
+    assert tip(remote, RUN_BRANCH) == committed
+    assert not leak.exists()
+    assert not run_git("branch", "--list", cwd=elsewhere)
+
+
+def test_run_end_removes_a_folder_the_run_made_read_only(
+    remote: Path, tmp_path: Path
+) -> None:
+    async def run() -> None:
+        async with started(remote, tmp_path / "work") as copy:
+            locked = copy.path / "build"
+            locked.mkdir()
+            (locked / "out.txt").write_text("Built\n")
+            locked.chmod(0o555)
+
+    asyncio.run(run())
+
+    # TR-8.
+    assert not (tmp_path / "work").exists()
