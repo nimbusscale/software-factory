@@ -89,6 +89,10 @@ makes the run branch in that clone. It keeps no clone from one run to the next. 
 go beside the working copy. TR-8 holds once the SFE is thrown away. TR-19 applies when an issue is
 closed, when no run is going, so whatever starts runs deletes the branches, not the SFE.
 
+Nothing in an SFE outlasts the run, branches included. Whatever has to outlast it goes to GitHub.
+So when a run ends without a PR, the workflow pushes the run branch to GitHub, where the owner can
+look at its work.
+
 **What a role loads.** A role starts in the working copy, so a path that an issue or a doc gives,
 such as `docs/functional-spec.md`, is the path the role opens. It loads none of the project's
 Claude Code settings, and no CLAUDE.md. A path that starts with `/factory/` is always the
@@ -102,7 +106,9 @@ is built, the prompts tell the role to read the project's CLAUDE.md as a file, t
 project's docs.
 
 **The logins.** The workflow passes the Claude Code token to the roles, and keeps the GitHub token
-for itself (AD-7). A role's environment holds no GitHub token, the same as now.
+for itself (AD-7). A role's environment holds no GitHub token, the same as now. The workflow also
+never writes the token where a role can read it, such as into the working copy's git config or a
+git credential file. It hands the token to each of its own git commands as that command runs.
 
 **The PR's description** names the factory version the run used.
 
@@ -121,6 +127,8 @@ The spec changes this phase makes:
 - New items in place of TR-7 and TR-11, which add the factory's doc standards to what each role has
   access to.
 - A new `FR`: the PR's description names the factory version the run used.
+- A new `FR`: when a run ends without a PR, the run branch is on GitHub. *Why:* the factory can run
+  on any machine, not only the owner's, so nothing kept on the machine is sure to be there later.
 - SFE and factory version in the technical spec's Terms.
 
 ## Phase 2. The project contract
