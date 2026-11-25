@@ -1029,6 +1029,21 @@ matches, written like a `.gitignore`. A project with no such file is checked as 
 - Decided in: #67.
 - Likely home: `TD`.
 
+**The doc check script flags a shared run of eight words only when one of its copies is on a line
+added since the base branch. It leaves out retired blueprints, and every run that's in a doc
+template.**
+- Why: agents read the copy signals and moved on, and the list kept growing. Joe: "When I watch
+  them work, they just say, okay, this is Signal, and then they sort of ignore it, and then it
+  just seems to be growing... what's the point of tracking them?" On main, the check flagged 13
+  pairs of files, and none was a fact with two homes. Three were the opening paragraph that the
+  blueprint template gives every blueprint, which adds a pair for each new blueprint. One was a
+  retired blueprint, which is frozen like a research doc. The rest were the same phrase used on
+  purpose, such as "when the implementer finishes the work the issue asks for" in FR-8 and TR-12.
+  Looking only at added lines is how the history check already works. Claude proposed this, and
+  Joe agreed.
+- Decided in: an interactive session about the copy signals.
+- Likely home: `TD`.
+
 ## Evaluations
 
 **The doc evaluations live in `evals/docs/`, one folder per case, and run with `claude plugin

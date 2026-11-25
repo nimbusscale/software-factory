@@ -11,8 +11,9 @@
 # Nor is any path that .check-docs-ignore at the repo root matches, if the project has one. It's
 # written like a .gitignore, and lists files such as test fixtures, whose IDs aren't the project's.
 #
-# The history checks look only at lines added since the base branch, uncommitted ones included.
-# A line someone kept on purpose is then never flagged again. The other checks look at every doc.
+# The history and copy checks look only at lines added since the base branch, uncommitted ones
+# included. A line someone kept on purpose is then never flagged again. The other checks look at
+# every doc.
 #
 # A requirement that nothing cites is flagged only if something cited it on the base branch. A
 # requirement written before the code that meets it is normal, but one that lost its last citation
@@ -351,36 +352,63 @@ done < <(lines "$docs")
 
 # --- Copies ------------------------------------------------------------------------------------
 
-# Every run of eight words, with the file and line it starts on. Research docs in
-# <docs folder>/research are left out. They're frozen records that no agent reads as a current
-# rule, and specs are often written from them, so shared text there is expected.
+# Every run of eight words in a file, as "<run> <file> <line it starts on> <new>". New is 1 when
+# one of the run's words is on a line in the list given as the second argument, else 0.
+runs_of() {
+  awk -v f="$1" 'FILENAME == ARGV[1] { added[$1]; next } {
+    s = tolower($0); gsub(/[^a-z0-9'\'']+/, " ", s); k = split(s, w, " ")
+    for (i = 1; i <= k; i++) { buf[++nw] = w[i]; at[nw] = FNR
+      if (nw >= 8) { r = buf[nw-7]; new = 0
+        for (j = nw-7; j <= nw; j++) { if (j > nw-7) r = r " " buf[j]; if (at[j] in added) new = 1 }
+        print r "\t" f "\t" at[nw-7] "\t" new } }
+  }' <(lines "${2:-}") "$1"
+}
+
+# A blueprint whose front matter gives the status retired.
+is_retired() {
+  is_blueprint "$1" && awk 'NR == 1 && $0 != "---" { exit } NR > 1 && $0 == "---" { exit }
+    /^status:[ \t]*retired[ \t]*$/ { found = 1; exit } END { exit !found }' "$1"
+}
+
+# The runs in the docs and the source files. Research docs in <docs folder>/research are left
+# out. They're frozen records that no agent reads as a current rule, and specs are often written
+# from them, so shared text there is expected. Retired blueprints are left out too. A retired
+# blueprint is frozen, and the code was written from it.
+changed=$(git diff --name-only --no-renames "$base"; git ls-files --others --exclude-standard)
 runs() {
   { lines "$docs"; lines "$src"; } | while read -r f; do
     [[ $(realpath -m "$f") == "$research_dir"/* ]] && continue
-    awk -v f="$f" '{
-      s = tolower($0); gsub(/[^a-z0-9'\'']+/, " ", s); k = split(s, w, " ")
-      for (i = 1; i <= k; i++) { buf[++nw] = w[i]; at[nw] = FNR
-        if (nw >= 8) { r = buf[nw-7]; for (j = nw-6; j <= nw; j++) r = r " " buf[j]; print r "\t" f "\t" at[nw-7] } }
-    }' "$f"
+    is_retired "$f" && continue
+    if has_line "$changed" "$f"; then runs_of "$f" "$(added_lines "$f")"; else runs_of "$f"; fi
   done | sort -t$'\t' -k1,1
 }
 
-# For each pair of files sharing runs, where at least one is a doc: how many, and the first.
+# The runs in the doc templates. A template's text is meant to be in every doc made from it, so
+# a run that's in a template is never flagged.
+template_runs() {
+  for f in "$docs_dir"/standards/templates/*.md; do [[ -f $f ]] && runs_of "$f"; done
+}
+
+# For each pair of files sharing runs, where at least one is a doc and at least one copy of the
+# run is on a line added since the base: how many, and the first. A copy someone kept on purpose
+# is then never flagged again.
 awk -F'\t' '
-  NR == FNR { doc[$0]; next }
+  FILENAME == ARGV[1] { doc[$0]; next }
+  FILENAME == ARGV[2] { template[$1]; next }
+  $1 in template { next }
   $1 != run { flush(); run = $1; n = 0 }
-  { file[++n] = $2; line[n] = $3 }
+  { file[++n] = $2; line[n] = $3; new[n] = $4 }
   function flush(   i, j, a, b, k) {
     for (i = 1; i <= n; i++) for (j = 1; j <= n; j++) {
       a = file[i]; b = file[j]
-      if (a >= b || !((a in doc) || (b in doc))) continue
+      if (a >= b || !((a in doc) || (b in doc)) || !(new[i] || new[j])) continue
       k = a SUBSEP b
       if (!(k in count)) first[k] = a ":" line[i] " and " b ":" line[j] ": \"" run "\""
       count[k]++
     }
   }
-  END { flush(); for (k in count) print "SIGNAL " first[k] " (" count[k] " shared 8-word runs)" }
-' <(lines "$docs") <(runs) | sort
+  END { flush(); for (k in count) print "SIGNAL " first[k] " (" count[k] " new shared 8-word runs)" }
+' <(lines "$docs") <(template_runs) <(runs) | sort
 
 # --- Size --------------------------------------------------------------------------------------
 
