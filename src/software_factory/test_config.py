@@ -4,7 +4,11 @@ from pydantic import ValidationError
 from software_factory.config import FactoryConfig
 
 STATUS = {"name": "In review", "color": "BLUE", "description": "Ready."}
-SETTINGS = {"rounds": 3, "turn_caps": {"implementer": 100, "quality_reviewer": 100}}
+SETTINGS = {
+    "rounds": 3,
+    "turn_caps": {"implementer": 100, "quality_reviewer": 100},
+    "check_docs": {"ignore": []},
+}
 
 
 def test_config_without_every_status_is_refused() -> None:

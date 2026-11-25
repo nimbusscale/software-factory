@@ -8,6 +8,7 @@ the code are comments there instead.
 ## T-SEC-1. Terms
 
 - **Doc standards.** The rules a project's docs are written and checked by.
+- **Factory plugin.** The Claude Code plugin that holds the factory's standards.
 - **Result schema.** The shape of a role's result.
 - **Review copy.** The copy of the run's work that the quality reviewer works in.
 - **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-3,
@@ -91,6 +92,12 @@ content the role reads.
 standards. If a project's files could put instructions into a role's prompt, a team using the
 factory could tell the role how to work, not just what to build. The project's CLAUDE.md also
 keeps one use, for people working in the repo.
+
+**AD-14.** The factory's standards reach every session, a run's roles and a person's own, as a
+skill in the factory plugin.
+
+*Why:* a run and a person's session then follow the same standards, found the same way, on any
+machine.
 
 ## T-SEC-3. Code standards
 

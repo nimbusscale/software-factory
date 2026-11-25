@@ -8,7 +8,7 @@ retired:
 A blueprint that collects decisions made while building the factory, each with its reason, until
 the specs cover them. When a part of the factory gets its sections of the functional and technical
 specs, the entries about that part are sorted into them following the doc standards in
-`docs/standards/`. Once every entry is sorted, this file is retired.
+`plugin/skills/standards/`. Once every entry is sorted, this file is retired.
 
 Each entry gives the rule, why, where it was decided, and a guess at its home: `FR`, `TR`, a
 decision (`AD`, `TD`) or a code standard (`CS`). The guess is only a starting point. "Why unknown" means no reason was given.
@@ -643,6 +643,8 @@ writing or reviewing a doc.**
 - Decided in: #67, in an interactive session. It replaces #60, which was going to tune the skill's
   description.
 - Likely home: `AD`.
+- Replaced by AD-14 in the technical spec: the standards are a skill in the factory plugin, so a
+  session in any repo, on any machine, gets them the same way. Decided in #103 and #107.
 
 **Nothing checks that a doc change in an interactive session gets a review by a subagent. Docs work
 moves on to getting the factory running, and the factory improves its docs work from there.**
@@ -972,8 +974,8 @@ new ID, or tell whether a change keeps an item's meaning, is in `changing-items.
   standards in #67.
 - Likely home: `AD`.
 
-**The doc standards' source is files in the factory repo, in `docs/standards/`, versioned and
-reviewed like everything else. Not a GitHub wiki.**
+**The doc standards' source is files in the factory repo, in `plugin/skills/standards/`, versioned
+and reviewed like everything else. Not a GitHub wiki.**
 - Why: agents would read a wiki through WebFetch, which treats a page as untrusted data, not
   instructions, and returns a smaller model's summary, not the exact text. A wiki edit also isn't
   reviewed or pinned to a version, so it would change every agent's behavior at once with no eval
@@ -989,6 +991,8 @@ is. How the copy gets there, by push or pull, isn't decided.**
   agent can do the copy.
 - Decided in: #66.
 - Likely home: `AD`.
+- Replaced by AD-14 in the technical spec: a project's sessions load the factory plugin, so a
+  project keeps no copy. Decided in #103 and #107.
 
 **When the factory runs, its roles follow the factory's own version of the doc standards, not the
 copy in the project's repo. The project's copy is for interactive sessions, which work outside the
@@ -1005,6 +1009,8 @@ follow, such as the quality reviewer's rubric, still go in `docs/standards/`.**
 - Decided in: an interactive session while planning #91, which puts the quality reviewer's rubric
   in `docs/standards/`.
 - Likely home: `AD`.
+- How the roles get the factory's version is AD-14: the workflow loads the factory plugin from the
+  SFE's image, and gives each role its skill. Decided in #103 and #107.
 
 **The templates for each kind of doc are part of the doc standards, in `templates/`.**
 - Why: a template is a second copy of standards, such as a spec's opening line, the technical
@@ -1019,6 +1025,8 @@ follow, such as the quality reviewer's rubric, still go in `docs/standards/`.**
   would flag each one as a broken citation. Claude proposed this, and Joe agreed.
 - Decided in: #66.
 - Likely home: `TD`.
+- Replaced in #107: the script leaves out no standards folder of its own accord, since no project
+  holds the standards. This repo's ignore list names `plugin/`.
 
 **The doc check script also leaves out every path that `.check-docs-ignore` at the repo root
 matches, written like a `.gitignore`. A project with no such file is checked as before.**
@@ -1028,6 +1036,8 @@ matches, written like a `.gitignore`. A project with no such file is checked as 
   itself. Claude proposed this, and Joe agreed.
 - Decided in: #67.
 - Likely home: `TD`.
+- In #107 the list moved to `[check_docs] ignore` in the project's `software-factory.toml`, in
+  place of `.check-docs-ignore`, when the script became a Python script that can read it.
 
 **The doc check script flags a shared run of eight words only when one of its copies is on a line
 added since the base branch. It leaves out retired blueprints, and every run that's in a doc
@@ -1250,7 +1260,7 @@ attention.**
 stands. When one differs, or the item is gone, it flags it, since the spec may have changed after
 the issue was written.**
 - Why: a task issue quotes each spec item it cites, as it stood when the issue was written
-  (`docs/standards/github.md`). A difference shows the work may no longer match what the issue
+  (`plugin/skills/standards/github.md`). A difference shows the work may no longer match what the issue
   asked for.
 - Decided in: the interactive session that answered #85, #86 and #87.
 - Likely home: `FR`.

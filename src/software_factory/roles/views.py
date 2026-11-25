@@ -66,6 +66,8 @@ def role_view[ResultT: ResultModel](definition: RoleDefinition[ResultT]) -> str:
         "",
         f"- Setting sources: {code_list(options.setting_sources or []) or 'none'}.",
         f"- Settings: {code_list(filter(None, [options.settings])) or 'none'}.",
+        f"- Plugins: {code_list(plugin['path'] for plugin in options.plugins)}.",
+        f"- Skills: {code_list(options.skills or [])}.",
         f"- Environment: {code_list(f'{k}={v}' for k, v in options.env.items())}.",
         f"- Verbatim prompts: {'on' if options.verbatim_prompts else 'off'}.",
         "",

@@ -1,9 +1,17 @@
+---
+name: standards
+description: The software factory's standards for a project's specs, blueprints, code comments, tests, GitHub issues and PRs, and the quality reviewer's rubric, with the doc templates and the doc check script. Load it before you write, change or review a doc, code a doc describes, a code comment, a test, an issue, or a PR's description.
+---
+
 # Doc standards
 
 The functional spec, the technical spec and blueprints are the input an agent turns into code.
 These files say what each doc is, how it's written, how to change it, and how to check a change.
 `code-comments.md` does the same for code comments, which hold the facts one place in the code
 owns. CLAUDE.md's doc map says where each doc is.
+
+Every file these standards name, such as `templates/blueprint.md` or `check_docs.py`, is in the
+folder this file is in.
 
 Three files here aren't about docs, and the list below leaves them out. `github.md` is about GitHub
 work, and CLAUDE.md points to it on its own. `review-rubric.md` is the rubric the quality reviewer

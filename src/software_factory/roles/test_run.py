@@ -195,3 +195,24 @@ def test_role_loads_no_settings_and_gets_no_github_token(
     assert options.setting_sources == []
     # AD-7.
     assert options.env["GH_TOKEN"] == options.env["GITHUB_TOKEN"] == ""
+
+
+@pytest.mark.parametrize(
+    "definition", [IMPLEMENTER, quality_reviewer(UNCOMMITTED_CHANGES)]
+)
+def test_role_gets_the_factory_plugin_and_only_its_standards_skill(
+    definition: RoleDefinition[ResultModel],
+) -> None:
+    fake = FakeQuery([[]])
+
+    with pytest.raises(RoleFailedError):
+        asyncio.run(RoleRunner(fake).start(definition, "Do the work.", WORKING_COPY))
+
+    [options] = fake.options
+    # AD-14.
+    assert options.plugins == [{"type": "local", "path": "/factory/plugin"}]
+    assert "Skill" in (options.tools or [])
+    # AD-13.
+    assert options.skills == ["software-factory:standards"]
+    skill_rules = [rule for rule in options.allowed_tools if rule.startswith("Skill")]
+    assert skill_rules == ["Skill(software-factory:standards)"]

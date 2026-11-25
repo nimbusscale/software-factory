@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from importlib.resources import files
+from pathlib import Path
 from typing import TYPE_CHECKING
 
 from claude_agent_sdk import ClaudeAgentOptions, EffortLevel
@@ -7,9 +8,12 @@ from pydantic import BaseModel, ConfigDict
 
 if TYPE_CHECKING:
     from collections.abc import Callable
-    from pathlib import Path
 
 OPUS = "claude-opus-5-5"
+
+# The factory plugin in the SFE, from the same commit as this code (AD-14).
+FACTORY_PLUGIN = Path("/factory/plugin")
+STANDARDS_SKILL = "software-factory:standards"
 
 # Meets AD-7 for the shell, and TD-7 for commits.
 DENIED_COMMANDS = ("Bash(gh:*)", "Bash(git push:*)", "Bash(git commit:*)")
@@ -71,15 +75,19 @@ def role_options[ResultT: ResultModel](
             "preset": "claude_code",
             "append": definition.prompt,
         },
-        tools=list(definition.tools),
-        allowed_tools=list(definition.tools),
+        tools=[*definition.tools, "Skill"],
+        allowed_tools=[*definition.tools, f"Skill({STANDARDS_SKILL})"],
         disallowed_tools=list(DENIED_COMMANDS),
         # Refuses each tool call the rules above don't allow, since no one is there
         # to ask.
         permission_mode="dontAsk",
         # No settings file and no CLAUDE.md, the project's or any other, so a role's
-        # instructions come only from its prompt (AD-13).
+        # instructions come only from its prompt and the factory plugin (AD-13).
         setting_sources=[],
+        # Meets AD-14. Only the standards skill, since any other skill would give the
+        # role instructions that aren't the factory's (AD-13).
+        plugins=[{"type": "local", "path": str(FACTORY_PLUGIN)}],
+        skills=[STANDARDS_SKILL],
         env=ROLE_ENVIRONMENT,
         # The prompt holds text from GitHub, such as the issue's body. Without this,
         # an @path in it makes Claude Code read that file into the prompt (TR-22).

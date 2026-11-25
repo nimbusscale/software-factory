@@ -1,7 +1,7 @@
 # Doc evaluations
 
-These cases test the doc standards in `docs/standards/`, together with the CLAUDE.md that points to
-them and the task's prompt. Each folder here is one test case, in the layout `claude plugin eval`
+These cases test the doc standards in the factory plugin, in `plugin/skills/standards/`, together
+with the CLAUDE.md that points to them and the task's prompt. Each folder here is one test case, in the layout `claude plugin eval`
 reads. A case gives a fresh agent one small task, in a throwaway repo that the case's scaffold
 script builds. Then graders check what the agent produced.
 
@@ -18,9 +18,10 @@ script builds. Then graders check what the agent produced.
 - `place-files.sh`: builds the repo the agent works in, as a git repo, from `files/`. `base/` is
   what's on main. `change/` is copied over it on a branch, and is committed for a reviewer or left
   uncommitted for an agent checking its own change. It sources `add-doc-standards.sh`, which adds
-  three things to the first commit: the doc standards in `docs/standards/`, the doc check script in
-  `tools/`, and `project-claude.md` as the repo's CLAUDE.md. The standards and the script come from
-  this repo as it is when the case runs, uncommitted changes included, whatever branch is checked
+  three things to the first commit: a copy of the standards' folder in `docs/standards/`, doc check
+  script included, a `software-factory.toml` whose ignore list leaves that folder out of the doc
+  check, and `project-claude.md` as the repo's CLAUDE.md. The standards come from this repo's
+  plugin as it is when the case runs, uncommitted changes included, whatever branch is checked
   out. So a case tests the standards you're working on. It stops with an error if it can't find
   them.
 - `files/`: the input files.
@@ -32,8 +33,8 @@ script builds. Then graders check what the agent produced.
 - `STATUS.md`: only in a case that still fails some runs. It says how the last run went and
   describes the known failure. When a case fails, read it first to see whether the failure is new.
 
-The case files cite IDs that aren't this repo's, so `.check-docs-ignore` at the repo root keeps the
-doc check script from flagging them.
+The case files cite IDs that aren't this repo's, so the ignore list in `software-factory.toml` at
+the repo root keeps the doc check script from flagging them.
 
 ## Cases
 

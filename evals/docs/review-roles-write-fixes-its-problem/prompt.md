@@ -15,10 +15,10 @@ append_system_prompt: |
   | Functional spec | `docs/functional-spec.md` |
   | Technical spec | `docs/technical-spec.md` |
   | Blueprints | `docs/blueprints/` |
-  | Doc check script | `tools/check-docs.sh` |
+  | Doc check script | `docs/standards/check_docs.py` |
 
   Before you write, change or review a doc, or code that a doc describes, read
-  `docs/standards/README.md`. If you can't find the standards, stop and say so in your report.
+  `docs/standards/SKILL.md`. If you can't find the standards, stop and say so in your report.
   Don't write the docs from memory of them.
 ---
 

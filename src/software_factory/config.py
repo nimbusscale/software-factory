@@ -28,12 +28,19 @@ class TurnCaps(ConfigModel):
     quality_reviewer: int = Field(ge=1)
 
 
+class CheckDocs(ConfigModel):
+    ignore: list[str]
+
+
 class Settings(ConfigModel):
     """The settings a run uses. A project can set each one in its settings file."""
 
     # Meets FR-5.
     rounds: int = Field(ge=1)
     turn_caps: TurnCaps
+    # The doc check script reads it from the settings file itself. It's here so a run
+    # checks it, and doesn't refuse a project that sets it (TR-14, FR-26).
+    check_docs: CheckDocs
 
 
 class FactoryConfig(ConfigModel):

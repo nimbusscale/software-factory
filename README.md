@@ -45,8 +45,8 @@ your git config.
 
 ## A project's settings
 
-A project can set the number of rounds and each role's turn cap in `software-factory.toml`, at
-the root of its repo. The `[settings]` table in `src/software_factory/factory.toml` lists each
+A project can set the number of rounds, each role's turn cap and the paths the doc check leaves
+out in `software-factory.toml`, at the root of its repo. The `[settings]` table in `src/software_factory/factory.toml` lists each
 setting and the factory's default for it. A run reads the file from the project's default branch,
 and uses the default for each setting the file leaves out. For example:
 
@@ -55,4 +55,31 @@ rounds = 2
 
 [turn_caps]
 implementer = 60
+
+[check_docs]
+ignore = ["tests/fixtures/"]
 ```
+
+## The factory plugin
+
+The factory's standards, their templates and the doc check script are a Claude Code plugin, in
+`plugin/`, with one skill, `software-factory:standards`. `.claude-plugin/marketplace.json` lists
+the plugin, so a session on any machine can install it from this repo on GitHub. A run loads it
+from `/factory/plugin` in the SFE.
+
+A project asks for the plugin in its `.claude/settings.json`, so each person's session in the
+project offers to install it:
+
+```json
+{
+  "extraKnownMarketplaces": {
+    "software-factory": {
+      "source": { "source": "github", "repo": "nimbusscale/software-factory" }
+    }
+  },
+  "enabledPlugins": { "software-factory@software-factory": true }
+}
+```
+
+To install it by hand, run `/plugin install software-factory --marketplace
+nimbusscale/software-factory` in Claude Code.

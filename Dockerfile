@@ -2,8 +2,10 @@
 # Build it with tools/build-sfe.sh, which tags it with its factory version.
 FROM debian:trixie-slim
 
+# python3 runs the doc check script in the factory plugin. The factory's own Python, below,
+# isn't on the PATH.
 RUN apt-get update \
-    && apt-get install --yes --no-install-recommends ca-certificates curl git make \
+    && apt-get install --yes --no-install-recommends ca-certificates curl git make python3 \
     && curl --fail --silent --show-error --location \
         --output /usr/share/keyrings/githubcli-archive-keyring.gpg \
         https://cli.github.com/packages/githubcli-archive-keyring.gpg \

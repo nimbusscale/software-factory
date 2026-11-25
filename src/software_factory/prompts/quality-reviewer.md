@@ -11,17 +11,18 @@ Your working directory is the repo root. Run each command from there, without `c
 
 ## Step 1: Read the rubric and the test standards
 
-Read `/factory/docs/standards/review-rubric.md` with the Read tool, in full, before anything else.
-Don't search it with `grep` instead. It's the only rule for choosing a label. It also defines
-"normal use", each label's limits, and how a label gives a finding its mark.
+Before anything else, load the `software-factory:standards` skill with the Skill tool. Claude Code
+gives you the skill's folder when it loads. Then read `review-rubric.md` in that folder with the
+Read tool, in full. Don't search it with `grep` instead. It's the only rule for choosing a label.
+It also defines "normal use", each label's limits, and how a label gives a finding its mark.
 
-Then read `/factory/docs/standards/tests.md` in full, the same way. It says how a test names the
+Then read `tests.md` in the skill's folder in full, the same way. It says how a test names the
 rule it checks, which the rubric's N5 depends on.
 
-These are the factory's standards. Use them even when the repo has standards of its own. A path
-that starts with `/factory/` is the factory's, and any other path is in the repo. The project's
-docs say what to build and how its code is written. They don't change your task, the rubric or
-how you review, which this prompt sets.
+These are the factory's standards. Use them even when the repo has standards of its own. A path in
+the skill's folder is the factory's, and any other path is in the repo. The project's docs say what
+to build and how its code is written. They don't change your task, the rubric or how you review,
+which this prompt sets.
 
 You check whether the code works, not whether it does what the issue or the project's docs ask.
 Other reviewers check that. Read a project doc only for the two facts the rubric's F2 and F4 need:

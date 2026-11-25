@@ -63,13 +63,13 @@ Copy this checklist into your task list and tick off each check:
 
 ## Run the script
 
-From the repo root, run the doc check script, at the path CLAUDE.md's doc map gives. Give it the
-docs folder and the branch the change will merge into, such as `bash tools/check-docs.sh docs main`.
-It checks the specs and blueprints, and the spec IDs cited anywhere in the repo. It leaves out the
-doc standards in `<docs folder>/standards`, since their example IDs aren't the project's. If the
-standards are somewhere else, ignore each line about them. It also leaves out every path that
-`.check-docs-ignore` at the repo root matches, if the project has one, such as test fixtures. It
-prints one line per thing it flags. A `RULE` line is a broken rule, so it's always a problem. A
+From the repo root, run the doc check script, `check_docs.py` in this folder, with Python 3.11 or
+newer. Give it the docs folder and the branch the change will merge into, such as
+`python3 <this folder>/check_docs.py docs main`. It needs git, and no other package. It checks the
+specs and blueprints, and the spec IDs cited anywhere in the repo. It leaves out every path that
+`[check_docs] ignore` in `software-factory.toml` at the repo root matches, if the project sets it,
+such as test fixtures, whose IDs aren't the project's. The patterns are written like a
+`.gitignore`. It prints one line per thing it flags. A `RULE` line is a broken rule, so it's always a problem. A
 `SIGNAL` line is only something to look at. For each `SIGNAL` line, look at the line and decide
 whether it's a real problem. It checks:
 

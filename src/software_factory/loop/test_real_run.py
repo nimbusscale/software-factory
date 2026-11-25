@@ -6,7 +6,6 @@ does, on Opus, on a small project in a local git repo, with a fake GitHub.
 
 import asyncio
 import json
-import re
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -32,7 +31,8 @@ if TYPE_CHECKING:
     from claude_agent_sdk import ClaudeAgentOptions, Message
 
 FACTORY = Path("/factory")
-RUBRIC = str(FACTORY / "docs" / "standards" / "review-rubric.md")
+STANDARDS = FACTORY / "plugin" / "skills" / "standards"
+RUBRIC = str(STANDARDS / "review-rubric.md")
 
 ISSUE_BODY = """## Why
 
@@ -78,7 +78,7 @@ class ReadingQuery:
 
 @pytest.fixture(autouse=True)
 def in_sfe() -> None:
-    if not (FACTORY / "docs" / "standards").is_dir():
+    if not STANDARDS.is_dir():
         pytest.fail("These tests run in the SFE. Run them with tools/test-in-sfe.sh.")
 
 
@@ -131,10 +131,12 @@ def test_run_on_a_project_with_no_standards_uses_the_factorys(
     reading = run_on_project(remote, tmp_path)
 
     prompts = IMPLEMENTER.prompt + quality_reviewer(UNCOMMITTED_CHANGES).prompt
-    named = {Path(path) for path in re.findall(r"`(/factory/[^`]+)`", prompts)}
+    # AD-14.
+    assert "/factory" not in prompts
     # TR-21, TR-22.
-    assert named
-    assert all(path.exists() for path in named)
+    for name in ("review-rubric.md", "tests.md", "check_docs.py"):
+        assert f"`{name}`" in prompts
+        assert (STANDARDS / name).is_file()
     # TR-21.
     assert RUBRIC in reading.reads
 

@@ -233,6 +233,7 @@ def test_reply_that_doesnt_fit_after_the_pr_opens_leaves_the_board(
         ('rounds = "3"\n', "rounds: Input should be a valid integer"),
         ("rounds = 2.0\n", "rounds: Input should be a valid integer"),
         ("[turn_caps]\nimplementer = -1\n", "turn_caps.implementer: Input should"),
+        ('[check_docs]\nignore = "evals/"\n', "check_docs.ignore: Input should be"),
         ("round = 2\n", "round: Extra inputs are not permitted"),
         ("rounds = \n", "isn't valid TOML"),
     ],
