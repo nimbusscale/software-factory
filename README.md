@@ -16,5 +16,8 @@ changes the code or the check's config.
 
 - `uv run write-role-views` rewrites each role's view file, such as
   `src/software_factory/roles/implementer.view.md`, after a change to what the role is given.
+- `uv run set-board-statuses <owner/name>` sets the statuses on a project's board from
+  `src/software_factory/factory.toml`, the factory's own config. It uses the GitHub CLI's login,
+  and keeps the board's other statuses.
 - `uv run pytest -m claude src` runs the tests that call Claude, which `tools/check-code.sh`
   leaves out.

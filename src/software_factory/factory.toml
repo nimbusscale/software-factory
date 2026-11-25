@@ -1,0 +1,21 @@
+# The factory's own config.
+
+# The code names each status by its key, such as in_review. A board's statuses are set
+# from these, and agents in a project read them from the board. So each description
+# says what the requirements that move an issue to the status call for the board to
+# show (FR-11, FR-28, FR-29, FR-13).
+
+[statuses.in_development]
+name = "In development"
+color = "ORANGE"
+description = "The factory is working on the issue."
+
+[statuses.in_review]
+name = "In review"
+color = "BLUE"
+description = "The issue's PR is open and ready for the owner."
+
+[statuses.needs_attention]
+name = "Needs attention"
+color = "RED"
+description = "The issue waits on the owner before work on it can go on."
