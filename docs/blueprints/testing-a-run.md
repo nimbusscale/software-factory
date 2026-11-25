@@ -135,8 +135,8 @@ flowchart TD
    command, a new setting in the project's settings file. The workflow adds the test files as
    arguments. Each test that already passes is listed in the PR's comment, since a test that
    passes before the work may not check it.
-4. **Keeping them fixed.** The implementer's edit guard covers the acceptance test files, as it
-   covers the doc standards. A shell can still write to them, so after each implementer result the
+4. **Keeping them fixed.** An edit guard refuses the implementer's edits to the acceptance test
+   files. A shell can still write to them, so after each implementer result the
    workflow also compares them with the first commit. It puts back any change, and the PR's
    comment says which files the implementer changed.
 5. **A test the implementer thinks is wrong.** The implementer says so in a new field of its
