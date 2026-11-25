@@ -95,6 +95,11 @@ def test_run_with_an_important_finding_each_round(remote: Path, tmp_path: Path) 
     assert "R1-F1, an important finding\n" in reviewer_prompts[1]
     assert "R1-F2, a nit, declined by the implementer" in reviewer_prompts[1]
     assert "matches the rules' term" not in reviewer_prompts[1]
+    # TR-20.
+    assert (
+        "R1-F3, a pre-existing finding, not given to the implementer"
+        in reviewer_prompts[1]
+    )
     # TD-5 and FR-18.
     assert "Closes #7" in opened.body
     assert "**R1-F2**" in opened.body

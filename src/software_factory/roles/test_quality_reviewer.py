@@ -78,7 +78,7 @@ def test_dropped_candidate_takes_only_the_two_reasons() -> None:
     schema = QualityReviewerResult.model_json_schema()
 
     dropped_as = schema["$defs"]["DroppedCandidate"]["properties"]["dropped_as"]
-    assert dropped_as["enum"] == ["false_claim", "older_note"]
+    assert dropped_as["enum"] == ["false_claim", "older_note", "earlier_finding"]
 
 
 @pytest.mark.parametrize(

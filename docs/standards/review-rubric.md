@@ -169,4 +169,5 @@ unchanged line that the change only fails to fix was there before the change.
 
 A note about a problem that was there before is dropped, with "a note about older code" as its
 reason. A note about a problem the change caused is always a nit, however small or unlikely it is.
-Only D1 and a note about older code drop a candidate.
+Among the labels, only D1 and a note about older code drop a candidate. The quality reviewer's
+prompt also drops a candidate that an earlier round already raised.

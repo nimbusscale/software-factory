@@ -241,6 +241,7 @@ MARK_NAMES = {
 DROPPED_AS = {
     "false_claim": "the claim is false",
     "older_note": "it's a note about a problem that was there before the change",
+    "earlier_finding": "an earlier round already raised it",
 }
 
 

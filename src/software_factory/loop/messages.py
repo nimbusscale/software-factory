@@ -16,7 +16,7 @@ FINDINGS_INTRO = (
 def findings_message(given: Sequence[NumberedFinding]) -> str:
     """The message that gives the implementer a round's findings (FR-9)."""
     parts = [FINDINGS_INTRO]
-    parts.extend(finding_text(numbered, declined=False) for numbered in given)
+    parts.extend(finding_text(numbered, mark="") for numbered in given)
     return "\n\n".join(parts) + "\n"
 
 
@@ -24,16 +24,19 @@ def reviewer_message(
     issue_body: str,
     earlier: Sequence[NumberedFinding],
     declined_ids: Collection[str],
+    given_ids: Collection[str],
 ) -> str:
     """The message that starts the quality reviewer in a round (TR-7).
 
-    `earlier` holds the findings from the run's earlier rounds, and `declined_ids` the
-    IDs of the ones the implementer declined.
+    `earlier` holds the findings from the run's earlier rounds. `given_ids` holds the
+    IDs of the ones the workflow gave the implementer, and `declined_ids` the IDs of
+    the ones it declined.
     """
     # Tags, not headings, since the issue's body has headings of its own.
     earlier_text = (
         "\n\n".join(
-            finding_text(n, declined=n.finding_id in declined_ids) for n in earlier
+            finding_text(n, earlier_mark(n.finding_id, declined_ids, given_ids))
+            for n in earlier
         )
         if earlier
         else "None."
@@ -46,14 +49,24 @@ def reviewer_message(
     )
 
 
-def finding_text(numbered: NumberedFinding, *, declined: bool) -> str:
+def earlier_mark(
+    finding_id: str, declined_ids: Collection[str], given_ids: Collection[str]
+) -> str:
+    """What the heading of an earlier finding adds after the finding's mark."""
+    if finding_id in declined_ids:
+        # The mark alone, with no reason (TR-10).
+        return ", declined by the implementer"
+    if finding_id not in given_ids:
+        # Meets TR-20.
+        return ", not given to the implementer"
+    return ""
+
+
+def finding_text(numbered: NumberedFinding, mark: str) -> str:
     finding = numbered.finding
-    # The mark alone, with no reason, so the reviewer doesn't raise a declined finding
-    # again (TR-10).
-    declined_mark = ", declined by the implementer" if declined else ""
     return (
         f"### {numbered.finding_id}, {with_article(MARK_NAMES[finding.mark])}"
-        f"{declined_mark}\n\n"
+        f"{mark}\n\n"
         f"{where(finding)}, labeled {finding.label}.\n\n"
         f"**Problem:** {finding.problem}\n\n"
         f"**Where it goes wrong:** {finding.failure_case}\n\n"

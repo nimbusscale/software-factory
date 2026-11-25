@@ -32,7 +32,7 @@ class DroppedCandidate(ResultModel):
     line: int
     problem: str
     label: str
-    dropped_as: Literal["false_claim", "older_note"]
+    dropped_as: Literal["false_claim", "older_note", "earlier_finding"]
     reason: str
 
 

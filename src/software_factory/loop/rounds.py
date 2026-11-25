@@ -95,7 +95,9 @@ async def review(
         turn_cap=context.settings.turn_caps.quality_reviewer,
     )
     declined_ids = {declined.finding_id for declined in kept.declined}
-    message = reviewer_message(context.issue.body, kept.findings, declined_ids)
+    message = reviewer_message(
+        context.issue.body, kept.findings, declined_ids, kept.given
+    )
     async with review_copy(context.working_copy, diff) as path:
         outcome = await context.runner.start(reviewer, message, path)
     # Meets TD-12.
