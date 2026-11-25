@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from software_factory.roles.definition import (
-    DEFAULT_TURN_CAP,
     ResultModel,
     RoleDefinition,
     role_options,
@@ -39,9 +38,9 @@ def role_views() -> dict[str, str]:
 
 def role_view[ResultT: ResultModel](definition: RoleDefinition[ResultT]) -> str:
     options = role_options(definition, ROLE_FOLDER, session_id=None)
-    turn_cap = f"{options.max_turns} turns"
-    if options.max_turns == DEFAULT_TURN_CAP:
-        turn_cap += ", the factory's default"
+    # The definition holds the factory's default. A run gives the role the project's
+    # turn cap in its place, when the project sets one.
+    turn_cap = f"{options.max_turns} turns, the factory's default"
     schema = json.dumps(options.output_format, indent=2)
     lines = [
         f"# What the {definition.name} is given",

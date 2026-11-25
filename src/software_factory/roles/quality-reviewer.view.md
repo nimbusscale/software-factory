@@ -115,6 +115,8 @@ Then, for each candidate:
 2. **Drop it if an earlier round already raised it.** You may be given the findings from earlier
    rounds. When one of them makes the same point:
    - **Marked as declined:** drop it.
+   - **Marked as not given to the implementer:** drop it. Nobody was asked to fix it, and the
+     owner already has it.
    - **Not marked:** check whether the change since fixed it. If the problem is still there, keep
      it, and say in the finding that the earlier fix didn't cover it.
 3. **Label it.** Go down the rubric's table, and give it the first label that fits. A D label fits
@@ -155,13 +157,14 @@ Each dropped candidate has these fields, all of them required:
 
 - `file` and `line`, as for a finding.
 - `problem`: what the candidate claimed.
-- `label`: the label it got, such as `D1` or `N1`.
-- `dropped_as`: `"false_claim"` for D1, or `"older_note"` for a note about a problem that was there
-  before the change. These are the only two reasons to drop a candidate. When neither fits, the
-  candidate is a finding.
+- `label`: the label it got, such as `D1` or `N1`. For one you drop in step 2, the earlier
+  finding's label.
+- `dropped_as`: `"false_claim"` for D1, `"older_note"` for a note about a problem that was there
+  before the change, or `"earlier_finding"` for one you drop in step 2. These are the only three
+  reasons to drop a candidate. When none fits, the candidate is a finding.
 - `reason`: why it was dropped. For D1, give the proof the rubric asks for: the check in the code
   that refuses the failure case, or the run that shows it doesn't fail. For an older note, say
-  where the problem was before the change.
+  where the problem was before the change. For an earlier finding, give its ID and its mark.
 
 Write `problem`, `failure_case`, `label_reason` and `reason` in plain words, with one idea per
 sentence. Name the function or value you mean. Give the concrete case, such as "a trip of 15 days
@@ -197,7 +200,8 @@ saves without an error", instead of a general statement such as "edge cases aren
           "dropped_as": {
             "enum": [
               "false_claim",
-              "older_note"
+              "older_note",
+              "earlier_finding"
             ],
             "title": "Dropped As",
             "type": "string"

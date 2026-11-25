@@ -180,6 +180,13 @@ finding as declined, with no reason.
 
 *Why:* without the mark, the quality reviewer raises a declined finding again in every round.
 
+**TR-20.** The findings from earlier rounds that the quality reviewer gets shall mark each finding
+the implementer didn't get as not given to the implementer.
+
+*Why:* without the mark, the quality reviewer takes a finding nobody was asked to fix, such as a
+pre-existing finding, for one whose fix didn't work. It raises the finding again under a new ID,
+so the PR's comment lists the same problem twice.
+
 **TD-12.** The workflow gives each finding an ID made of its round and its place in the round's
 list, such as `R2-F3` for the third finding of round 2. This meets FR-18.
 

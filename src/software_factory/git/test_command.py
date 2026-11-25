@@ -3,8 +3,8 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from software_factory.conftest import run_git
 from software_factory.git.command import GitError, git
-from software_factory.git.conftest import run_git
 
 if TYPE_CHECKING:
     from pathlib import Path

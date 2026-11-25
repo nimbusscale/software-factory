@@ -1,7 +1,7 @@
 from pydantic import Field
 
+from software_factory.config import factory_config
 from software_factory.roles.definition import (
-    DEFAULT_TURN_CAP,
     OPUS,
     ResultModel,
     RoleDefinition,
@@ -91,6 +91,6 @@ IMPLEMENTER = RoleDefinition(
     prompt=read_prompt("implementer.md"),
     # Meets TR-11.
     tools=("Read", "Glob", "Grep", "Edit", "Write", "Bash", "WebSearch", "WebFetch"),
-    turn_cap=DEFAULT_TURN_CAP,
+    turn_cap=factory_config().settings.turn_caps.implementer,
     result_model=ImplementerResult,
 )

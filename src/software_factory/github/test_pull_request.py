@@ -191,6 +191,20 @@ def test_comment_lists_findings_to_check_and_dropped_candidates() -> None:
     assert "Dropped because the claim is false: The deck is refilled" in comment
 
 
+def test_comment_says_why_a_repeat_of_an_earlier_finding_was_dropped() -> None:
+    repeat = DroppedCandidate(
+        file="src/tiles.py",
+        line=12,
+        problem="The shuffle isn't seeded.",
+        label="F1",
+        dropped_as="earlier_finding",
+        reason="R1-F3, a pre-existing finding.",
+    )
+    comment = review_comment(replace(record(IMPORTANT), dropped=[repeat]))
+
+    assert "Dropped because an earlier round already raised it: R1-F3" in comment
+
+
 def test_comment_says_none_for_an_empty_list() -> None:
     run = record(IMPORTANT)
     comment = review_comment(replace(run, dropped=[]))

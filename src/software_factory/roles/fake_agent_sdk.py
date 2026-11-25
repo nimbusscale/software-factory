@@ -13,13 +13,17 @@ import anyio
 from claude_agent_sdk import ClaudeAgentOptions, Message, ProcessError, Transport, query
 
 if TYPE_CHECKING:
-    from collections.abc import AsyncIterator
+    from collections.abc import AsyncIterator, Callable
 
     from pydantic import JsonValue
 
 SAVED_RESPONSES = Path(__file__).parent / "saved_responses"
 
 type RawMessage = dict[str, JsonValue]
+
+# What a role does in one call: it can change the files in the folder it runs in, then
+# it hands back the messages Claude Code would send.
+type Turn = Callable[[Path], list[RawMessage]]
 
 
 def saved_response(name: str) -> list[RawMessage]:
@@ -102,4 +106,25 @@ class FakeQuery:
     ) -> AsyncIterator[Message]:
         self.options.append(options)
         transport = ReplayTransport(self.responses.pop(0))
+        return query(prompt=prompt, options=options, transport=transport)
+
+
+@dataclass
+class ScriptedQuery:
+    """Plays one turn for each call, and keeps each call's prompt and options."""
+
+    turns: list[Turn]
+    prompts: list[str] = field(default_factory=list)
+    options: list[ClaudeAgentOptions] = field(default_factory=list)
+
+    def __call__(
+        self, *, prompt: str, options: ClaudeAgentOptions
+    ) -> AsyncIterator[Message]:
+        self.prompts.append(prompt)
+        self.options.append(options)
+        if options.cwd is None:
+            message = "A role runs in a folder of its own, so it needs a cwd."
+            raise ValueError(message)
+        messages = self.turns.pop(0)(Path(options.cwd))
+        transport = ReplayTransport(messages)
         return query(prompt=prompt, options=options, transport=transport)

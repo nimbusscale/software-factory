@@ -10,9 +10,12 @@ if TYPE_CHECKING:
 
 
 @pytest.fixture(autouse=True)
-def git_config(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def git_config(
+    tmp_path_factory: pytest.TempPathFactory, monkeypatch: pytest.MonkeyPatch
+) -> None:
     """Gives git an identity of its own, and keeps the machine's git config out."""
-    config = tmp_path / "gitconfig"
+    # Not in tmp_path, which some tests list.
+    config = tmp_path_factory.mktemp("git") / "gitconfig"
     config.write_text(
         "[user]\n\tname = Test\n\temail = test@localhost\n"
         "[init]\n\tdefaultBranch = main\n"

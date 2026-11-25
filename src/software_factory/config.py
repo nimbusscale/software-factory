@@ -3,7 +3,7 @@ from functools import cache
 from importlib.resources import files
 from typing import Literal, get_args
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 type StatusKey = Literal["in_development", "in_review", "needs_attention"]
 
@@ -23,8 +23,23 @@ class BoardStatus(ConfigModel):
     description: str
 
 
+class TurnCaps(ConfigModel):
+    implementer: int = Field(ge=1)
+    quality_reviewer: int = Field(ge=1)
+
+
+class Settings(ConfigModel):
+    """The settings a run uses. A project can set each one in its settings file."""
+
+    # Meets FR-5.
+    rounds: int = Field(ge=1)
+    turn_caps: TurnCaps
+
+
 class FactoryConfig(ConfigModel):
     statuses: dict[StatusKey, BoardStatus]
+    # The factory's default for each setting (FR-4, FR-6).
+    settings: Settings
 
     @field_validator("statuses")
     @classmethod
