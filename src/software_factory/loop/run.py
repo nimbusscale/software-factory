@@ -112,6 +112,9 @@ async def set_up(request: RunRequest, services: Services) -> Setup:
         settings = run_settings(settings_file, request.rounds)
     except (GitError, SettingsError) as error:
         raise RunRefusedError(str(error)) from error
+    except UnicodeDecodeError as error:
+        message = f"The project's {SETTINGS_FILE} isn't UTF-8 text: {error}"
+        raise RunRefusedError(message) from error
     return Setup(clone, settings)
 
 

@@ -3,6 +3,7 @@ from typing import TYPE_CHECKING
 
 import pytest
 
+from software_factory.conftest import run_git
 from software_factory.github.pull_request import OpenedPullRequestError
 from software_factory.loop.conftest import (
     ISSUE_NUMBER,
@@ -183,3 +184,46 @@ def test_issue_that_cant_be_read_refuses_the_run(remote: Path, tmp_path: Path) -
         start_run(services(github, ScriptedQuery([]), remote, tmp_path / "home"))
 
     assert github.operations == ["ReadIssue"]
+
+
+def test_settings_file_that_isnt_utf_8_refuses_the_run(
+    remote: Path, author: Path, tmp_path: Path
+) -> None:
+    (author / "software-factory.toml").write_bytes(
+        "rounds = 2 # café\n".encode("latin-1")
+    )
+    run_git("add", "--all", cwd=author)
+    run_git("commit", "--quiet", "--message", "Add the settings", cwd=author)
+    run_git("push", "--quiet", "origin", "main", cwd=author)
+    github = fake_github()
+
+    with pytest.raises(RunRefusedError, match="isn't UTF-8 text"):
+        start_run(services(github, ScriptedQuery([]), remote, tmp_path / "home"))
+
+    assert github.operations == []
+
+
+def test_remote_that_cant_be_cloned_refuses_the_run(tmp_path: Path) -> None:
+    github = fake_github()
+    missing = tmp_path / "missing.git"
+
+    with pytest.raises(RunRefusedError, match="git clone"):
+        start_run(services(github, ScriptedQuery([]), missing, tmp_path / "home"))
+
+    assert github.operations == []
+
+
+def test_github_failing_as_the_run_ends_still_ends_the_run(
+    remote: Path, tmp_path: Path
+) -> None:
+    github = fake_github()
+    github.board.has_status_field = False
+
+    with pytest.raises(RunEndedError) as ended:
+        start_run(services(github, ScriptedQuery([]), remote, tmp_path / "home"))
+
+    message = str(ended.value)
+    assert message.startswith("The board 'dust-law' has no Status field.")
+    assert "The issue couldn't be moved to Needs attention: The board" in message
+    [comment] = issue_comments(github)
+    assert "has no Status field" in comment
