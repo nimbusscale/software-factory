@@ -3,6 +3,7 @@ import asyncio
 import pytest
 
 from software_factory.config import factory_config
+from software_factory.github import board as board_module
 from software_factory.github.api import GitHubError
 from software_factory.github.board import (
     STATUS_AT,
@@ -91,6 +92,22 @@ def test_repo_without_exactly_one_board_ends_the_run(count: int) -> None:
         asyncio.run(move_issue(github, REPO, issue, Moment.RUN_STARTED))
 
 
+def test_board_with_no_status_field_ends_the_run() -> None:
+    github = FakeGitHub(issues=[TILES], boards=[FakeBoard(has_status_field=False)])
+    issue = issue_from(github)
+
+    with pytest.raises(GitHubError, match="has no Status field"):
+        asyncio.run(move_issue(github, REPO, issue, Moment.RUN_STARTED))
+
+
+def test_board_that_github_counts_but_doesnt_show_ends_the_run() -> None:
+    github = FakeGitHub(issues=[TILES], boards_shown=0)
+    issue = issue_from(github)
+
+    with pytest.raises(GitHubError, match="may not have access"):
+        asyncio.run(move_issue(github, REPO, issue, Moment.RUN_STARTED))
+
+
 def test_status_reply_that_doesnt_fit_its_schema_ends_the_run() -> None:
     github = FakeGitHub(issues=[TILES], broken={"SetItemStatus"})
     issue = issue_from(github)
@@ -136,3 +153,28 @@ def test_setting_board_statuses_adds_the_ones_the_board_lacks() -> None:
         "In review",
         "Needs attention",
     ]
+
+
+def test_command_sets_the_statuses_of_the_repos_board(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    board = FakeBoard(options=[FakeOption(id="opt-0", name="Todo")])
+    github = FakeGitHub(boards=[board])
+    monkeypatch.setattr(board_module, "gh_graphql", github)
+    monkeypatch.setattr("sys.argv", ["set-board-statuses", str(REPO)])
+
+    board_module.main()
+
+    assert len(github.board.options) == 4
+
+
+def test_command_refuses_a_repo_that_isnt_owner_and_name(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    monkeypatch.setattr("sys.argv", ["set-board-statuses", "dust-law"])
+
+    with pytest.raises(SystemExit) as exit_info:
+        board_module.main()
+
+    assert exit_info.value.code == 2
+    assert "Give it as owner/name" in capsys.readouterr().err

@@ -9,6 +9,7 @@ from software_factory.github.fake_github import REPO, FakeGitHub, FakeIssue
 from software_factory.github.issue import read_issue
 from software_factory.github.pull_request import (
     NumberedFinding,
+    OpenedPullRequestError,
     RunRecord,
     description,
     open_pull_request,
@@ -137,6 +138,32 @@ def test_declined_finding_no_review_reported_is_still_listed() -> None:
     assert "**R1-F2**, no review reported a finding with this ID." in text
 
 
+def test_description_gives_the_implementers_suggested_reason() -> None:
+    reason = MissingReason(
+        decision="The deck holds 40 tiles.", suggested_reason="40 fills the table."
+    )
+    result = LAST_RESULT.model_copy(update={"missing_reasons": [reason]})
+
+    text = description(replace(record(IMPORTANT), last_result=result))
+
+    assert "The implementer suggests: 40 fills the table." in text
+
+
+def test_text_with_a_blank_line_stays_in_its_list_item() -> None:
+    decision = Decision(
+        text="Deal the tiles.\n\nA late player waits.",
+        unclear="Who deals.\n\nAnd when.",
+        decision="The host deals.",
+    )
+    result = LAST_RESULT.model_copy(update={"decisions": [decision]})
+
+    text = description(replace(record(IMPORTANT), last_result=result))
+
+    quoted = "  > Deal the tiles.\n  >\n  > A late player waits."
+    assert quoted in text
+    assert "It left unclear: Who deals.\n  \n  And when." in text
+
+
 def test_description_leaves_out_empty_lists() -> None:
     result = LAST_RESULT.model_copy(
         update={"disagreements": [], "decisions": [], "missing_reasons": []}
@@ -196,3 +223,12 @@ def test_pr_reply_that_doesnt_fit_its_schema_ends_the_run() -> None:
     with pytest.raises(GitHubError, match="doesn't fit its schema"):
         asyncio.run(open_pull_request(github, REPO, record(IMPORTANT)))
     assert github.board.status_of(TILES) is None
+
+
+def test_failure_after_the_pr_opens_says_the_pr_is_open() -> None:
+    github = FakeGitHub(issues=[TILES], broken={"AddComment"})
+
+    with pytest.raises(OpenedPullRequestError, match="opened its PR") as error:
+        asyncio.run(open_pull_request(github, REPO, record(IMPORTANT)))
+    [opened] = github.pull_requests
+    assert error.value.pull_request.number == opened.number

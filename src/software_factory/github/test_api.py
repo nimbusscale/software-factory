@@ -62,8 +62,16 @@ def test_reply_that_doesnt_fit_its_schema_ends_the_run() -> None:
         asyncio.run(ask(github, "query Count { }", {}, CountReply))
 
 
-def test_reply_with_no_data_ends_the_run() -> None:
+def test_reply_with_data_of_another_shape_ends_the_run() -> None:
     github = FakeGitHub(broken={"Count"})
+
+    with pytest.raises(GitHubError, match="doesn't fit its schema"):
+        asyncio.run(ask(github, "query Count { }", {}, CountReply))
+
+
+def test_reply_with_no_data_ends_the_run() -> None:
+    async def github(_query: str, _variables: Mapping[str, JsonValue]) -> JsonValue:
+        return {"errors": [{"message": "Something went wrong"}]}
 
     with pytest.raises(GitHubError, match="doesn't fit its schema"):
         asyncio.run(ask(github, "query Count { }", {}, CountReply))
@@ -121,4 +129,13 @@ def test_gh_reply_that_isnt_json_ends_the_run(
     fake_gh(tmp_path, monkeypatch, "print('<html>')\n")
 
     with pytest.raises(GitHubError, match="isn't JSON"):
+        asyncio.run(gh_graphql("query Count { }", {}))
+
+
+def test_gh_that_isnt_installed_ends_the_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("PATH", str(tmp_path))
+
+    with pytest.raises(GitHubError, match="gh, isn't installed"):
         asyncio.run(gh_graphql("query Count { }", {}))

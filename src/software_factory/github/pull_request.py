@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import TYPE_CHECKING
 
-from software_factory.github.api import GraphQL, Reply, Repo, ask
+from software_factory.github.api import GitHubError, GraphQL, Reply, Repo, ask
 from software_factory.github.board import Moment, move_issue
 from software_factory.github.issue import Issue, post_comment
 
@@ -98,6 +98,19 @@ class CreatePullRequestReply(Reply):
     create_pull_request: CreatedPullRequest
 
 
+class OpenedPullRequestError(GitHubError):
+    """The run's PR is open, and a request to GitHub after it failed.
+
+    So the run still ends, but it isn't a run that ended without a PR.
+    """
+
+    def __init__(self, pull_request: PullRequest, error: GitHubError) -> None:
+        super().__init__(
+            f"The run opened its PR, {pull_request.url}, and then: {error}"
+        )
+        self.pull_request = pull_request
+
+
 async def open_pull_request(
     graphql: GraphQL, repo: Repo, record: RunRecord
 ) -> PullRequest:
@@ -116,14 +129,17 @@ async def open_pull_request(
     }
     reply = await ask(graphql, CREATE_PULL_REQUEST, variables, CreatePullRequestReply)
     pull_request = reply.create_pull_request.pull_request
-    await post_comment(graphql, pull_request.id, review_comment(record))
     # Meets FR-28 and FR-29.
     moment = (
         Moment.PR_OPENED_WITH_FINDING_TO_CHECK
         if record.to_check()
         else Moment.PR_OPENED
     )
-    await move_issue(graphql, repo, record.issue, moment)
+    try:
+        await post_comment(graphql, pull_request.id, review_comment(record))
+        await move_issue(graphql, repo, record.issue, moment)
+    except GitHubError as error:
+        raise OpenedPullRequestError(pull_request, error) from error
     return pull_request
 
 
@@ -135,17 +151,18 @@ def description(record: RunRecord) -> str:
     sections = {
         "Declined findings": declined_lines(record),
         "Doc and code disagreements": [
-            f"- **{d.item_id}**, in {d.code}: {d.disagreement}"
+            f"- **{d.item_id}**, in {indent(d.code)}: {indent(d.disagreement)}"
             for d in result.disagreements
         ],
         "Decisions on open points": [
-            f"- On this text:\n\n  > {d.text}\n\n  It left unclear: {d.unclear}\n\n"
-            f"  The implementer chose: {d.decision}"
+            f"- On this text:\n\n{quote(d.text)}\n\n"
+            f"  It left unclear: {indent(d.unclear)}\n\n"
+            f"  The implementer chose: {indent(d.decision)}"
             for d in result.decisions
         ],
         "Missing reasons": [
-            f"- What's the reason for this decision?\n\n  > {m.decision}\n\n"
-            f"  {suggestion(m.suggested_reason)}"
+            f"- What's the reason for this decision?\n\n{quote(m.decision)}\n\n"
+            f"  {indent(suggestion(m.suggested_reason))}"
             for m in result.missing_reasons
         ],
     }
@@ -166,11 +183,11 @@ def declined_lines(record: RunRecord) -> list[str]:
         about = (
             "no review reported a finding with this ID."
             if finding is None
-            else f"`{finding.file}:{finding.line}`: {finding.problem}"
+            else f"{where(finding)}: {indent(finding.problem)}"
         )
         lines.append(
             f"- **{declined.finding_id}**, {about}\n\n"
-            f"  Declined because: {declined.reason}"
+            f"  Declined because: {indent(declined.reason)}"
         )
     return lines
 
@@ -188,16 +205,16 @@ def review_comment(record: RunRecord) -> str:
     """
     not_given = [
         f"- **{n.finding_id}**, a {MARK_NAMES[n.finding.mark]}, {where(n.finding)}:"
-        f" {n.finding.problem}"
+        f" {indent(n.finding.problem)}"
         for n in record.not_given()
     ]
     to_check = [
-        f"- **{n.finding_id}**, {where(n.finding)}: {n.finding.problem}"
+        f"- **{n.finding_id}**, {where(n.finding)}: {indent(n.finding.problem)}"
         for n in record.to_check()
     ]
     dropped = [
-        f"- `{d.file}:{d.line}`: {d.problem}\n\n"
-        f"  Dropped because {DROPPED_AS[d.dropped_as]}: {d.reason}"
+        f"- `{d.file}:{d.line}`: {indent(d.problem)}\n\n"
+        f"  Dropped because {DROPPED_AS[d.dropped_as]}: {indent(d.reason)}"
         for d in record.dropped
     ]
     sections = {
@@ -229,3 +246,13 @@ DROPPED_AS = {
 
 def where(finding: Finding) -> str:
     return f"`{finding.file}:{finding.line}`"
+
+
+def indent(text: str) -> str:
+    """Indents each line after the first, so a blank line doesn't end the item."""
+    return text.replace("\n", "\n  ")
+
+
+def quote(text: str) -> str:
+    """The text as a quote inside a list item, with every line quoted."""
+    return "\n".join(f"  > {line}".rstrip() for line in text.splitlines())

@@ -63,6 +63,7 @@ class FakeBoard:
     title: str = "dust-law"
     field_id: str = "PVTSSF_status"
     options: list[FakeOption] = field(default_factory=starting_options)
+    has_status_field: bool = True
     # Each issue's node ID, and the ID of the status option its item is in, or None.
     items: dict[str, str | None] = field(default_factory=dict)
 
@@ -79,6 +80,8 @@ class FakeGitHub:
     pull_requests: list[FakePullRequest] = field(default_factory=list)
     # The comments on each issue or PR, by its node ID.
     comments: dict[str, list[str]] = field(default_factory=dict)
+    # How many linked boards the reply lists, as GitHub lists at most the one asked for.
+    boards_shown: int = 1
     # The operations whose replies don't fit their schemas, such as `ReadIssue`.
     broken: set[str] = field(default_factory=set)
     # The name of each operation asked for, in order.
@@ -135,13 +138,17 @@ class FakeGitHub:
             {
                 "id": board.id,
                 "title": board.title,
-                "field": {"id": board.field_id, "options": json_options(board)},
+                "field": (
+                    {"id": board.field_id, "options": json_options(board)}
+                    if board.has_status_field
+                    else None
+                ),
             }
             for board in self.boards
         ]
         projects: dict[str, JsonValue] = {
             "totalCount": len(self.boards),
-            "nodes": nodes[:1],
+            "nodes": nodes[: self.boards_shown],
         }
         return {"repository": {"projectsV2": projects}}
 

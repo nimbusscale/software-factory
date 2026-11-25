@@ -148,10 +148,16 @@ async def read_board(graphql: GraphQL, repo: Repo) -> tuple[Board, StatusField]:
     variables: dict[str, JsonValue] = {"owner": repo.owner, "name": repo.name}
     reply = await ask(graphql, READ_BOARD, variables, ReadBoardReply)
     boards = reply.repository.projects_v2
-    if boards.total_count != 1 or not boards.nodes:
+    if boards.total_count != 1:
         message = (
             f"The repo {repo} has {boards.total_count} GitHub projects linked to it,"
             " and the factory needs exactly one, as the project's board."
+        )
+        raise GitHubError(message)
+    if not boards.nodes:
+        message = (
+            f"GitHub lists a project linked to the repo {repo}, but doesn't show it."
+            " The GitHub CLI's login may not have access to it."
         )
         raise GitHubError(message)
     board = boards.nodes[0]
