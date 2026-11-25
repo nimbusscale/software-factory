@@ -5,8 +5,9 @@ Usage, from the repo root:
 
     python3 <this folder>/check_docs.py [--uncited] <docs folder> <base branch>
 
-It needs git, and Python 3.11 or newer, the first Python that reads TOML without an
-extra package. It uses nothing outside Python's standard library.
+It needs git, and Python 3.10 or newer. A project with a settings file needs Python 3.11
+or newer, the first Python that reads TOML without an extra package. It uses nothing
+outside Python's standard library.
 
 Docs are the specs and the blueprints. The specs are the .md files in the docs folder
 with F-SEC or T-SEC headings. Blueprints are the .md files in <docs folder>/blueprints.
@@ -41,7 +42,6 @@ import os
 import re
 import subprocess
 import sys
-import tomllib
 from collections import Counter
 from pathlib import Path
 
@@ -77,7 +77,7 @@ RUN_LENGTH = 8
 MAX_TOKENS = 20000
 
 
-class UsageError(Exception):
+class CheckError(Exception):
     pass
 
 
@@ -86,7 +86,7 @@ def git(*args: str) -> str:
         ["git", *args], capture_output=True, text=True, errors="replace", check=False
     )
     if done.returncode != 0:
-        raise UsageError(done.stderr.strip())
+        raise CheckError(done.stderr.strip())
     return done.stdout
 
 
@@ -115,7 +115,11 @@ class Repo:
 
     def __init__(self, docs_dir: str, base_branch: str, ignore: list[str]) -> None:
         self.docs_dir = docs_dir
-        self.base = git("merge-base", base_branch, "HEAD").strip()
+        try:
+            self.base = git("merge-base", base_branch, "HEAD").strip()
+        except CheckError as error:
+            message = f"can't find the base branch {base_branch}: {error}"
+            raise CheckError(message) from error
         self.blueprints_dir = realpath(f"{docs_dir}/blueprints")
         self.research_dir = realpath(f"{docs_dir}/research")
         self.ignored = self._ignored(ignore)
@@ -193,7 +197,10 @@ class Repo:
         if in_base.returncode != 0:
             return set(range(1, len(read_lines(path)) + 1))
         added = set()
-        for line in git("diff", "-U0", self.base, "--", path).split("\n"):
+        # Without these, a user's diff.external or color.diff setting changes the
+        # output, and no hunk is found.
+        diff = git("diff", "--no-ext-diff", "--no-color", "-U0", self.base, "--", path)
+        for line in diff.split("\n"):
             hunk = re.match(r"^@@ \S+ \+(\d+)(?:,(\d+))?", line)
             if hunk:
                 start, count = int(hunk[1]), int(hunk[2] or 1)
@@ -732,8 +739,8 @@ def copies(repo: Repo) -> list[str]:
     frozen, and the code was written from it. A template's text is meant to be in every
     doc made from it, so a run that's in a template is never flagged.
     """
-    changed = set(git("diff", "--name-only", "--no-renames", repo.base).split("\n"))
-    changed |= set(git("ls-files", "--others", "--exclude-standard").split("\n"))
+    changed = set(git_paths("diff", "--name-only", "--no-renames", repo.base))
+    changed |= set(git_paths("ls-files", "--others", "--exclude-standard"))
     template_runs = {
         run[0]
         for t in sorted(TEMPLATES.glob("*.md"))
@@ -771,24 +778,34 @@ def ignore_list() -> list[str]:
     """The patterns in `[check_docs] ignore` in the project's settings file."""
     if not os.path.isfile(SETTINGS_FILE):
         return []
+    # Imported here, since Python 3.10 has no tomllib, and a project with no settings
+    # file doesn't need it.
+    try:
+        import tomllib
+    except ModuleNotFoundError as error:
+        version = ".".join(str(part) for part in sys.version_info[:3])
+        message = (
+            f"reading {SETTINGS_FILE} needs Python 3.11 or newer, and this is {version}"
+        )
+        raise CheckError(message) from error
     try:
         settings = tomllib.loads(Path(SETTINGS_FILE).read_text(encoding="utf-8"))
     except tomllib.TOMLDecodeError as error:
         message = f"{SETTINGS_FILE} isn't valid TOML: {error}"
-        raise UsageError(message) from error
+        raise CheckError(message) from error
     table = settings.get("check_docs", {})
     patterns = table.get("ignore", []) if isinstance(table, dict) else None
     if not isinstance(patterns, list) or not all(isinstance(p, str) for p in patterns):
         message = f"[check_docs] ignore in {SETTINGS_FILE} isn't a list of strings"
-        raise UsageError(message)
+        raise CheckError(message)
     return [p for p in patterns if p]
 
 
 def check(docs_dir: str, base_branch: str, *, all_uncited: bool) -> list[str]:
     top = git("rev-parse", "--show-toplevel").strip()
     if realpath(top) != realpath(os.getcwd()):
-        message = "run it from the repo root"
-        raise UsageError(message)
+        message = "check_docs.py runs from the repo root"
+        raise CheckError(message)
     repo = Repo(docs_dir.rstrip("/") or "/", base_branch, ignore_list())
     out = history(repo)
     out += references(repo, all_uncited=all_uncited)
@@ -819,8 +836,8 @@ def main() -> int:
         return 2
     try:
         lines = check(args[0], args[1], all_uncited=all_uncited)
-    except UsageError as error:
-        print(f"{usage}\n{error}", file=sys.stderr)
+    except CheckError as error:
+        print(f"check_docs.py: {error}", file=sys.stderr)
         return 2
     for line in lines:
         print(line)
