@@ -16,9 +16,9 @@ Copy this checklist into your task list, and tick off each one once it holds:
 - [ ] The change passes every check
 ```
 
-CLAUDE.md's doc map says where each doc is. To decide what kind of fact it is, ask the questions in
-"Which doc a fact goes in" in `project-docs.md`. To write it, follow "How to write any doc" there,
-and for an item in a spec, "Spec items" in `specs.md`.
+"The specs" in `project-contract.md` says where each doc is. To decide what kind of fact it is, ask
+the questions in "Which doc a fact goes in" in `project-docs.md`. To write it, follow "How to write
+any doc" there, and for an item in a spec, "Spec items" in `specs.md`.
 
 ## The fact is written down once
 

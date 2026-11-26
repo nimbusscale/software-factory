@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 from software_factory.git.review_copy import ReviewDiff, review_copy, review_diff
 from software_factory.git.working_copy import commit
 from software_factory.github.pull_request import NumberedFinding, RunRecord
+from software_factory.loop.contract import make
 from software_factory.loop.messages import findings_message, reviewer_message
 from software_factory.roles.implementer import IMPLEMENTER
 from software_factory.roles.quality_reviewer import (
@@ -99,6 +100,8 @@ async def review(
         context.issue.body, kept.findings, declined_ids, kept.given
     )
     async with review_copy(context.working_copy, diff) as path:
+        # Meets TR-23, and TR-24 through the error it raises when it fails.
+        await make("setup", path, "the review copy")
         outcome = await context.runner.start(reviewer, message, path)
     # Meets TD-12.
     findings = [

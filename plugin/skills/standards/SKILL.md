@@ -8,16 +8,17 @@ description: Standards for writing and reviewing a project's docs, code comments
 The functional spec, the technical spec and blueprints are the input an agent turns into code.
 These files say what each doc is, how it's written, how to change it, and how to check a change.
 `code-comments.md` does the same for code comments, which hold the facts one place in the code
-owns. CLAUDE.md's doc map says where each doc is.
+owns. "The specs" in `project-contract.md` says where each doc is.
 
 Every file these standards name, such as `templates/blueprint.md` or `check_docs.py`, is in the
 folder this file is in.
 
-Three files here aren't about docs, and the list below leaves them out. `github.md` is about GitHub
-work, and CLAUDE.md points to it on its own. `review-rubric.md` is the rubric the quality reviewer
-labels its findings with, and the quality reviewer's prompt points to it. `tests.md` is about a
-project's tests. Whoever writes or changes a test reads it, and CLAUDE.md points to it on its own.
-The implementer's and the quality reviewer's prompts point to it too.
+Four files here aren't about docs, and the list below leaves them out. `project-contract.md` says
+what a project's repo must hold for the factory to run on it. `github.md` is about GitHub work, and
+CLAUDE.md points to it on its own. `review-rubric.md` is the rubric the quality reviewer labels its
+findings with, and the quality reviewer's prompt points to it. `tests.md` is about a project's
+tests. Whoever writes or changes a test reads it, and CLAUDE.md points to it on its own. The
+implementer's and the quality reviewer's prompts point to it too.
 
 ## What to read for your task
 
@@ -42,5 +43,6 @@ Read every file that applies to your task, and only those. Most tasks need more 
 
 ## A doc that doesn't exist yet
 
-If a doc or a folder in the doc map doesn't exist yet, create it at the path the doc map gives.
+If a spec or the blueprints' folder doesn't exist yet, create it at the path "The specs" in
+`project-contract.md` gives.
 Start a doc from its template in `templates/`. Say in your report that you created it.

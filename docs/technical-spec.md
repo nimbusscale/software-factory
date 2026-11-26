@@ -9,6 +9,7 @@ the code are comments there instead.
 
 - **Doc standards.** The rules a project's docs are written and checked by.
 - **Factory plugin.** The Claude Code plugin that holds the factory's standards.
+- **Project contract.** What a project's repo must hold for the factory to run on it.
 - **Result schema.** The shape of a role's result.
 - **Review copy.** The copy of the run's work that the quality reviewer works in.
 - **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-3,
@@ -175,6 +176,14 @@ earlier rounds, and the factory's doc standards.
 implementer's account of its work. A reviewer that reads them may accept a choice because it's
 explained, or look only where the author points. A fresh reviewer that couldn't see them has found
 bugs the author missed.
+
+**TR-23.** When a round's review starts, the review copy shall hold the environment the project
+setup builds.
+
+*Why:* the quality reviewer runs the project's code to check a candidate, and the code needs its
+environment to run.
+
+**TR-24.** When the project setup fails in a review copy, the workflow shall end the run.
 
 **TD-2.** The review copy is a git repo with one commit, which holds the docs and code as they
 stood before the round's review diff, and the review diff on top as changes not yet committed.

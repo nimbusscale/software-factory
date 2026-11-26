@@ -28,6 +28,9 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Pre-existing finding.** A finding about a problem that was there before the run's work, and
   that the work doesn't make worse or expose again.
 - **Project.** A piece of software the factory builds, with its own GitHub repo and board.
+- **Project checks.** A project's own checks of its code, such as its tests and its linter.
+- **Project setup.** The steps that build the environment a project's code runs in, such as
+  installing its packages.
 - **Quality reviewer.** The agent that reviews a run's work.
 - **Round.** One review of a run's work by the quality reviewer, and any answer the implementer
   gives to its findings.
@@ -40,6 +43,24 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 number, the implementation loop shall start a run on that issue.
 
 **FR-2.** When a run starts, the implementer shall do the work the issue asks for.
+
+**FR-35.** When a project has no functional spec or no technical spec, the implementation loop
+shall refuse to start the run, and say why.
+
+**FR-36.** When the project setup fails before the run makes any change, the implementation loop
+shall refuse to start the run, and say why.
+
+**FR-37.** When the project checks fail before the run makes any change, the implementation loop
+shall refuse to start the run, and say why.
+
+*Why:* a run that started on a project whose checks already fail would hand the implementer
+failures it didn't cause.
+
+**FR-38.** When the project setup or the project checks add or change a file that the project's
+repo doesn't ignore, the implementation loop shall refuse to start the run, and say why.
+
+*Why:* a run commits every change in its copy of the repo, so such a file would be committed with
+the run's work.
 
 ## F-SEC-3. How a run goes
 

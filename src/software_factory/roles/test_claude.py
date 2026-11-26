@@ -53,9 +53,8 @@ def test_role_starts_and_resumes_with_a_result(tmp_path: Path) -> None:
 
     async def start_and_resume() -> tuple[str, str]:
         started = await runner.start(ROLE, ASK, repo)
-        assert started.result == CodeWords(
-            code_words=[CodeWord(found_in="project", code_word="PELICAN")]
-        )
+        # AD-13: neither the project's CLAUDE.md nor its parent folder's.
+        assert started.result == CodeWords(code_words=[])
         resumed = await runner.resume(
             started, ROLE, "Hand back the same answer again.", repo
         )

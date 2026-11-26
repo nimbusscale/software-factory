@@ -91,6 +91,23 @@ async def check_review_copy(path: Path) -> None:
     assert (path / "TILES.md").read_text() == "Fixed tiles\n"
 
 
+def test_review_copy_is_removed_with_a_folder_made_read_only(
+    remote: Path, tmp_path: Path
+) -> None:
+    async def run() -> None:
+        async with started(remote, tmp_path) as copy:
+            await committed(copy, {"TILES.md": "Tiles\n"})
+            async with review_copy(copy, await review_diff(copy, None)) as path:
+                locked = path / ".cache"
+                locked.mkdir()
+                (locked / "module.txt").write_text("Cached\n")
+                locked.chmod(0o555)
+            # Bug: a read-only folder in the review copy ended the run with an error.
+            assert not path.exists()
+
+    asyncio.run(run())
+
+
 def test_review_copy_holds_files_marked_export_ignore(
     remote: Path, tmp_path: Path
 ) -> None:

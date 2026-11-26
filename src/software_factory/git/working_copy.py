@@ -100,6 +100,34 @@ async def start_file(working_copy: WorkingCopy, name: str) -> str | None:
     return await git("show", f"{start}:{name}", cwd=working_copy.path)
 
 
+async def start_has_file(working_copy: WorkingCopy, name: str) -> bool:
+    """Whether there's a file at `name` where the run branch started."""
+    entry = await git("ls-tree", working_copy.start, "--", name, cwd=working_copy.path)
+    # Each line is the mode, the type, the object and the path. A folder is a tree.
+    return entry.split(maxsplit=2)[1:2] == ["blob"]
+
+
+async def changed_files(working_copy: WorkingCopy) -> list[str]:
+    """Each file git doesn't ignore that was added or changed since the last commit.
+
+    A new folder is one entry, such as `.venv/`.
+    """
+    # With -z, a path is as it is, not quoted the way git quotes a name that has a
+    # space or a letter outside ASCII.
+    status = await git("status", "--porcelain", "-z", cwd=working_copy.path)
+    entries = iter(status.split("\0"))
+    files = []
+    for entry in entries:
+        if not entry:
+            continue
+        # Each entry is two letters for the file's state, a space, then the path. A
+        # rename or a copy is followed by an entry of its own for the old path.
+        files.append(entry[3:])
+        if entry[0] in "RC":
+            next(entries, None)
+    return files
+
+
 async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:
     """Commits every change in the working copy. Hands back None when there's none."""
     await git("add", "--all", cwd=working_copy.path)
