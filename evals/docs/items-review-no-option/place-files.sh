@@ -6,8 +6,8 @@ here=$(dirname "$0")
 git init -q -b main
 git config user.name "Eval"
 git config user.email "eval@example.com"
-# The doc standards, the doc check script and a CLAUDE.md that points to them.
-source "$here/../add-doc-standards.sh"
+# A CLAUDE.md that says to load the doc standards.
+source "$here/../add-claude-md.sh"
 cp -R "$here/files/base/." .
 git add -A
 git commit -q -m "Add the functional and technical specs"

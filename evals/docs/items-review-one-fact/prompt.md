@@ -5,6 +5,7 @@ runs: 1
 max_turns: 40
 timeout_seconds: 900
 allowed_tools: [Read, Glob, Grep, Write, Edit, Bash]
+plugins: [../../../plugin]
 append_system_prompt: |
   # CLAUDE.md
 
@@ -12,15 +13,13 @@ append_system_prompt: |
 
   | Doc | Path |
   |---|---|
-  | Doc standards | `docs/standards/` |
   | Functional spec | `docs/functional-spec.md` |
   | Technical spec | `docs/technical-spec.md` |
   | Blueprints | `docs/blueprints/` |
-  | Doc check script | `docs/standards/check_docs.py` |
 
-  Before you write, change or review a doc, or code that a doc describes, read
-  `docs/standards/SKILL.md`. If you can't find the standards, stop and say so in your report.
-  Don't write the docs from memory of them.
+  Before you write, change or review a doc, or code that a doc describes, load the
+  `software-factory:standards` skill. It holds the doc standards and the doc check script. If you
+  can't load it, stop and say so in your report. Don't write the docs from memory of them.
 ---
 
 Review the change on this branch against main.

@@ -1,35 +1,42 @@
 # Doc evaluations
 
 These cases test the doc standards in the factory plugin, in `plugin/skills/standards/`, together
-with the CLAUDE.md that points to them and the task's prompt. Each folder here is one test case, in the layout `claude plugin eval`
-reads. A case gives a fresh agent one small task, in a throwaway repo that the case's scaffold
-script builds. Then graders check what the agent produced.
+with the CLAUDE.md that says to load them and the task's prompt. Each folder here is one test case,
+in the layout `claude plugin eval` reads. A case gives a fresh agent one small task, in a throwaway
+repo that the case's scaffold script builds. Then graders check what the agent produced.
+
+Each case loads the factory plugin from this repo's `plugin/`, as it is when the case runs,
+uncommitted changes included, whatever branch is checked out. So a case tests the standards you're
+working on. The agent gets them the way a person's session in a project does: the test project's
+CLAUDE.md says to load the `software-factory:standards` skill, and the agent loads it with the
+Skill tool. Claude Code then tells the agent the skill's folder, where it reads the standards and
+runs the doc check script. The test repo holds no copy of the standards.
 
 ## A case folder
 
 - `prompt.md`: run settings, then the task exactly as a user would type it. `model` sets the agent's
   model. `tags` puts the case in groups you can run together. `runs` sets how many times the case
-  runs. A case without it runs 3 times. See "How many runs" below. `append_system_prompt` holds the
-  test project's CLAUDE.md. Don't edit it by hand: `../run-docs-evals.sh` copies it in from
-  `project-claude.md` before every run. `claude plugin eval` loads no CLAUDE.md, so this field is
-  how the agent gets it.
+  runs. A case without it runs 3 times. See "How many runs" below. `plugins` loads the factory
+  plugin. `append_system_prompt` holds the test project's CLAUDE.md. `claude plugin eval` loads no
+  CLAUDE.md, so this field is how the agent gets it. Don't edit either by hand:
+  `../run-docs-evals.sh` sets both before every run, `append_system_prompt` from
+  `project-claude.md`.
 - `case.yaml`: the case's name, a plain description of a good result, and the scaffold script. The
   description is for people. The runner never shows it to the judge.
 - `place-files.sh`: builds the repo the agent works in, as a git repo, from `files/`. `base/` is
   what's on main. `change/` is copied over it on a branch, and is committed for a reviewer or left
-  uncommitted for an agent checking its own change. It sources `add-doc-standards.sh`, which adds
-  three things to the first commit: a copy of the standards' folder in `docs/standards/`, doc check
-  script included, a `software-factory.toml` whose ignore list leaves that folder out of the doc
-  check, and `project-claude.md` as the repo's CLAUDE.md. The standards come from this repo's
-  plugin as it is when the case runs, uncommitted changes included, whatever branch is checked
-  out. So a case tests the standards you're working on. It stops with an error if it can't find
-  them.
+  uncommitted for an agent checking its own change. It sources `add-claude-md.sh`, which adds
+  `project-claude.md` to the first commit as the repo's CLAUDE.md.
 - `files/`: the input files.
 - `graders/`: one check per file. Each is a statement about the result that's true or false.
+  `00-loads-standards.md` passes only if the agent loaded the standards skill. It's the same in
+  every case, so don't edit it by hand: `../run-docs-evals.sh` copies it in from
+  `loads-standards-grader.md` before every run.
   - `type: llm` means a judge model decides, from the file or message named in `focus`. Each one is
     a separate judge call, asked 3 times, and the majority wins.
   - `type: regex` matches a pattern against a file or the agent's last message. It's free.
-  - `type: tool_used` with `max: 0` passes only if the agent never called that tool. It's free.
+  - `type: tool_used` counts the agent's calls to one tool, and passes when the count is between
+    `min` and `max`. With `max: 0`, it passes only if the agent never called that tool. It's free.
 - `STATUS.md`: only in a case that still fails some runs. It says how the last run went and
   describes the known failure. When a case fails, read it first to see whether the failure is new.
 
@@ -112,11 +119,14 @@ From the repo root:
 evals/run-docs-evals.sh
 ```
 
-The script copies `project-claude.md` into each case's `append_system_prompt`, then runs `claude
-plugin eval` on this folder with the flags every run uses: `--scaffold`, so each case's
-`place-files.sh` runs; `--allow-tools Write,Edit,Bash`; `--judge-model sonnet`, since Anthropic's
-guide for writing these evals recommends a Sonnet-class judge; `-j 8`, to run 8 agent runs at once;
-`--ablation none`; and `--trust-plugin`. Any other flags go on to `claude plugin eval`:
+The script sets each case's `plugins`, `append_system_prompt` and `00-loads-standards.md`. Then it
+runs `claude plugin eval` on the repo's root, with `--eval-dir evals/docs`. It runs on the root
+because `claude plugin eval` loads a case's plugins only from inside the folder it runs on. It
+passes the flags every run uses: `--scaffold`, so each case's `place-files.sh` runs; `--allow-tools
+Write,Edit,Bash`; `--judge-model sonnet`, since Anthropic's guide for writing these evals
+recommends a Sonnet-class judge; `-j 8`, to run 8 agent runs at once; `--ablation none`, so it
+doesn't also run each case without the plugin; and `--trust-plugin`. Any other flags go on to
+`claude plugin eval`:
 
 - Each case runs as many times as its `runs` says, or 3 times if it has none. `--runs <n>` runs
   every case n times, whatever its `runs` says.
