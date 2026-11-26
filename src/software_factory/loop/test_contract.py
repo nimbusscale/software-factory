@@ -78,6 +78,32 @@ def test_project_whose_checks_fail_refuses_the_run(
     assert "\n39\n40\nmake: ***" in reason
 
 
+@pytest.mark.parametrize(
+    "case",
+    [
+        (
+            "setup:\n\t@mkdir .venv; touch .venv/python\n\ncheck:\n\t@true\n",
+            "`make setup` added or changed files that git doesn't ignore: `.venv/`.",
+        ),
+        (
+            "setup:\n\t@true\n\ncheck:\n\t@echo formatted >> docs/technical-spec.md\n",
+            (
+                "`make check` added or changed files that git doesn't ignore:"
+                " `docs/technical-spec.md`."
+            ),
+        ),
+    ],
+)
+def test_target_that_leaves_files_git_doesnt_ignore_refuses_the_run(
+    remote: Path, author: Path, tmp_path: Path, case: tuple[str, str]
+) -> None:
+    makefile, reason = case
+    push_files(author, {"Makefile": makefile})
+
+    # FR-38.
+    assert reason in refused_reason(remote, tmp_path)
+
+
 def test_setup_that_runs_past_its_time_limit_fails(tmp_path: Path) -> None:
     (tmp_path / "Makefile").write_text("setup:\n\t@echo Installing; sleep 30\n")
 

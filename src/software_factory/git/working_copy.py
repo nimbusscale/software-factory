@@ -107,6 +107,16 @@ async def start_has_file(working_copy: WorkingCopy, name: str) -> bool:
     return entry.split(maxsplit=2)[1:2] == ["blob"]
 
 
+async def changed_files(working_copy: WorkingCopy) -> list[str]:
+    """Each file git doesn't ignore that was added or changed since the last commit.
+
+    A new folder is one entry, such as `.venv/`.
+    """
+    status = await git("status", "--porcelain", cwd=working_copy.path)
+    # Each line is two letters for the file's state, a space, then the path.
+    return [line[3:] for line in status.splitlines()]
+
+
 async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:
     """Commits every change in the working copy. Hands back None when there's none."""
     await git("add", "--all", cwd=working_copy.path)

@@ -18,14 +18,19 @@ nothing to look up first.
 A `Makefile` at the repo's root has two targets:
 
 - `make setup` builds the project's environment in the folder it runs in, such as by installing the
-  project's packages. Git ignores what it builds, such as through `.gitignore`. Otherwise a run
-  commits it along with its work.
+  project's packages.
 - `make check` runs the project's checks, such as its tests and its linter. It fails when one of
   them fails.
 
+Neither target adds or changes a file that git doesn't ignore. Whatever `make setup` builds is
+ignored, such as through `.gitignore`, and `make check` changes no file, such as by formatting the
+code. A run commits every change in its copy of the repo, so such a file would be committed with
+its work.
+
 When a run starts, before it changes anything, the factory runs `make setup`, then `make check`, in
-the run's copy of the repo. It refuses the run when either one fails. Before each review, it also
-runs `make setup` in the quality reviewer's copy, and ends the run when that fails.
+the run's copy of the repo. It refuses the run when either one fails, or adds or changes a file
+that git doesn't ignore. Before each review, it also runs `make setup` in the quality reviewer's
+copy, and ends the run when that fails.
 
 Each target gets 10 minutes, and one that runs longer counts as failed. Every run waits for both
 targets before any work starts, so a project whose targets take longer needs a faster setup or

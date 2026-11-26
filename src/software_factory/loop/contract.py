@@ -9,7 +9,7 @@ import tempfile
 from typing import IO, TYPE_CHECKING
 
 from software_factory.git.command import GITHUB_TOKEN_VARIABLES, REPO_ENV_VARS
-from software_factory.git.working_copy import start_has_file
+from software_factory.git.working_copy import changed_files, start_has_file
 
 if TYPE_CHECKING:
     from pathlib import Path
@@ -36,6 +36,8 @@ LEFT_OUT = CLAUDE_TOKEN_VARIABLES | GITHUB_TOKEN_VARIABLES | REPO_ENV_VARS
 # How much of the end of a target's output a reason holds.
 OUTPUT_LINES = 30
 OUTPUT_BYTES = 64 * 1024
+# The most files a reason names.
+LISTED_FILES = 10
 
 
 class ContractError(Exception):
@@ -43,7 +45,7 @@ class ContractError(Exception):
 
 
 async def check_contract(working_copy: WorkingCopy) -> None:
-    """Meets FR-35, FR-36 and FR-37, before the run makes any change."""
+    """Meets FR-35, FR-36, FR-37 and FR-38, before the run makes any change."""
     missing = [
         f"The project has no {name} at `{path}`."
         for name, path in SPECS.items()
@@ -51,8 +53,25 @@ async def check_contract(working_copy: WorkingCopy) -> None:
     ]
     if missing:
         raise ContractError(" ".join(missing))
-    await make("setup", working_copy.path, "the working copy")
-    await make("check", working_copy.path, "the working copy")
+    for target in ("setup", "check"):
+        await make(target, working_copy.path, "the working copy")
+        # Checked after each target, so the reason names the one that left them.
+        await left_no_files(target, working_copy)
+
+
+async def left_no_files(target: str, working_copy: WorkingCopy) -> None:
+    files = await changed_files(working_copy)
+    if not files:
+        return
+    listed = ", ".join(f"`{name}`" for name in files[:LISTED_FILES])
+    more = len(files) - LISTED_FILES
+    if more > 0:
+        listed += f" and {more} more"
+    message = (
+        f"`make {target}` added or changed files that git doesn't ignore: {listed}."
+        " The run would commit them with its work."
+    )
+    raise ContractError(message)
 
 
 async def make(

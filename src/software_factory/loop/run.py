@@ -52,7 +52,7 @@ RUN_ENDING_ERRORS = (
 class RunRefusedError(Exception):
     """The run didn't start, so the issue and its board are as they were.
 
-    Raised for FR-5, FR-26, FR-35, FR-36 and FR-37.
+    Raised for FR-5, FR-26, FR-35, FR-36, FR-37 and FR-38.
 
     The message says why, in words for the owner.
     """
@@ -103,8 +103,8 @@ async def run(request: RunRequest, services: Services) -> PullRequest:
         ) as copy:
             return await run_in(request, services, copy)
     except GitError as error:
-        # Only the clone, the read of the settings file and the check of the specs
-        # raise it here, since the run ends on any git error after them.
+        # Only the clone, the read of the settings file and the checks of the project
+        # contract raise it here, since the run ends on any git error after them.
         raise RunRefusedError(str(error)) from error
 
 

@@ -56,6 +56,12 @@ shall refuse to start the run, and say why.
 *Why:* a run that started on a project whose checks already fail would hand the implementer
 failures it didn't cause.
 
+**FR-38.** When the project setup or the project checks add or change a file that the project's
+repo doesn't ignore, the implementation loop shall refuse to start the run, and say why.
+
+*Why:* a run commits every change in its copy of the repo, so such a file would be committed with
+the run's work.
+
 ## F-SEC-3. How a run goes
 
 **FR-3.** The quality reviewer shall be a different agent from the implementer.
