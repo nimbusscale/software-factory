@@ -53,6 +53,11 @@ jobs:
           # tests use a fake GitHub.
           GH_TOKEN: ${{ github.token }}
         run: |
+          # A PR from a fork gets no secrets.
+          if [[ -z "$CLAUDE_TOKEN" ]]; then
+            echo "::error::The repo secret FACTORY_CLAUDE_CODE_OAUTH_TOKEN isn't set, or this PR comes from a fork, which gets no secrets."
+            exit 1
+          fi
           export FACTORY_ENV_FILE="$RUNNER_TEMP/factory.env"
           printf 'FACTORY_CLAUDE_CODE_OAUTH_TOKEN=%s\n' "$CLAUDE_TOKEN" > "$FACTORY_ENV_FILE"
           git config --global user.name "GitHub Actions"
