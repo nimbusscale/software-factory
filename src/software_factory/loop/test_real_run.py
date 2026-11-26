@@ -1,12 +1,14 @@
 """The tests of a whole run that call Claude (CS-4).
 
 Run them in the SFE with `tools/test-in-sfe.sh`. Each runs each role as the factory
-does, on Opus, on a small project in a local git repo, with a fake GitHub.
+does, on a small project in a local git repo, with a fake GitHub. The roles run on
+Opus, or on the model `FACTORY_TEST_MODEL` names, such as Haiku to keep a run cheap.
 """
 
 import asyncio
 import json
-from dataclasses import dataclass, field
+import os
+from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import TYPE_CHECKING
 
@@ -54,13 +56,19 @@ None.
 
 @dataclass
 class ReadingQuery:
-    """The Agent SDK's `query`, which keeps the path of each file a role reads."""
+    """The Agent SDK's `query`, which keeps the path of each file a role reads.
 
+    It runs each role on `model` in place of the role's own, when `model` is set.
+    """
+
+    model: str | None = None
     reads: list[str] = field(default_factory=list)
 
     def __call__(
         self, *, prompt: str, options: ClaudeAgentOptions
     ) -> AsyncIterator[Message]:
+        if self.model is not None:
+            options = replace(options, model=self.model)
         return self._messages(prompt, options)
 
     async def _messages(
@@ -95,7 +103,7 @@ def run_on_project(remote: Path, tmp_path: Path) -> ReadingQuery:
     """Runs on the project, checks the run opened a PR, and hands back what it read."""
     issue = FakeIssue(number=7, title="Say how many players", body=ISSUE_BODY)
     github = FakeGitHub(issues=[issue])
-    reading = ReadingQuery()
+    reading = ReadingQuery(model=os.environ.get("FACTORY_TEST_MODEL") or None)
     services = Services(
         graphql=github,
         runner=RoleRunner(reading),

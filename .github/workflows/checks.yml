@@ -1,0 +1,60 @@
+# The checks a PR passes before it merges: make check, and the tests that call Claude.
+name: Checks
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  make-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10
+        with:
+          # The same uv as the SFE's image, in the Dockerfile.
+          version: "0.9.21"
+      - run: make setup
+      - run: make check
+
+  claude-tests:
+    runs-on: ubuntu-latest
+    steps:
+      # The merge commit and its first parent, the base branch, so the next step can diff them.
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 2
+
+      # The job runs on every PR and passes when the change can't affect a run, rather than being
+      # left out by a paths filter. A required check that never starts blocks the PR's merge.
+      - name: See whether the change can affect a run
+        id: changes
+        run: |
+          if git diff --quiet HEAD^1 HEAD -- src plugin tools Dockerfile pyproject.toml uv.lock \
+            .python-version .github/workflows; then
+            echo "affects_run=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "affects_run=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build the SFE's image
+        if: steps.changes.outputs.affects_run == 'true'
+        run: bash tools/build-sfe.sh
+
+      # Haiku, so a run costs little.
+      - name: Run the tests that call Claude, on Haiku
+        if: steps.changes.outputs.affects_run == 'true'
+        env:
+          CLAUDE_TOKEN: ${{ secrets.FACTORY_CLAUDE_CODE_OAUTH_TOKEN }}
+          FACTORY_TEST_MODEL: claude-haiku-5-5
+          # run-sfe.sh reads the GitHub token with gh auth token, which hands back this one. The
+          # tests use a fake GitHub.
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          export FACTORY_ENV_FILE="$RUNNER_TEMP/factory.env"
+          printf 'FACTORY_CLAUDE_CODE_OAUTH_TOKEN=%s\n' "$CLAUDE_TOKEN" > "$FACTORY_ENV_FILE"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          bash tools/test-in-sfe.sh

@@ -31,7 +31,22 @@ TIME_LIMIT_SECONDS = 10 * 60
 CLAUDE_TOKEN_VARIABLES = frozenset(
     {"CLAUDE_CODE_OAUTH_TOKEN", "ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN"}
 )
-LEFT_OUT = CLAUDE_TOKEN_VARIABLES | GITHUB_TOKEN_VARIABLES | REPO_ENV_VARS
+# A make the workflow itself runs under, such as the one that runs the factory's own
+# tests, exports these. The project's make would take its flags, such as -n, which
+# only prints a target's commands, so a failing check would pass.
+MAKE_VARIABLES = frozenset(
+    {
+        "MAKEFLAGS",
+        "MFLAGS",
+        "MAKELEVEL",
+        "MAKEOVERRIDES",
+        "MAKE_TERMOUT",
+        "MAKE_TERMERR",
+    }
+)
+LEFT_OUT = (
+    CLAUDE_TOKEN_VARIABLES | GITHUB_TOKEN_VARIABLES | REPO_ENV_VARS | MAKE_VARIABLES
+)
 
 # How much of the end of a target's output a reason holds.
 OUTPUT_LINES = 30
