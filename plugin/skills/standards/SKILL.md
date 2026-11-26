@@ -1,6 +1,6 @@
 ---
 name: standards
-description: Says which of the software factory's standards to read for a task, and holds them and the doc check script. Load it before you write, change or review a doc, code a doc describes, a code comment, a test, an issue or a PR's description. Then read only the files your task needs.
+description: Standards for writing and reviewing a project's docs, code comments, tests, GitHub issues and PR descriptions. Use when writing, changing or reviewing any of these, or code that the docs describe.
 ---
 
 # Doc standards
@@ -21,7 +21,7 @@ The implementer's and the quality reviewer's prompts point to it too.
 
 ## What to read for your task
 
-Read every file that applies to your task. Most tasks need more than one.
+Read every file that applies to your task, and only those. Most tasks need more than one.
 
 - **Every task:** `project-docs.md`, which says which doc a fact goes in and how to write any doc.
   And `reports.md`, which says what goes in your report.
