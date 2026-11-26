@@ -226,12 +226,15 @@ class Repo:
         files, at = {}, 0
         for path in paths:
             header_end = out.index(b"\n", at)
-            header = out[at:header_end].split()
+            header = out[at:header_end]
             at = header_end + 1
-            if len(header) != 3:
+            # A path with no object here, such as a submodule's, gets "<base>:<path>
+            # missing", and the path can hold spaces, so it can't be told by its parts.
+            if header.endswith((b" missing", b" ambiguous")):
                 continue
-            size = int(header[2])
-            if header[1] == b"blob":
+            _, kind, size_text = header.split()
+            size = int(size_text)
+            if kind == b"blob":
                 text = out[at : at + size].decode("utf-8", errors="replace")
                 files[path] = split_lines(text)
             at += size + 1
