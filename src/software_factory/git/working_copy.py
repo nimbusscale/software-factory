@@ -112,9 +112,20 @@ async def changed_files(working_copy: WorkingCopy) -> list[str]:
 
     A new folder is one entry, such as `.venv/`.
     """
-    status = await git("status", "--porcelain", cwd=working_copy.path)
-    # Each line is two letters for the file's state, a space, then the path.
-    return [line[3:] for line in status.splitlines()]
+    # With -z, a path is as it is, not quoted the way git quotes a name that has a
+    # space or a letter outside ASCII.
+    status = await git("status", "--porcelain", "-z", cwd=working_copy.path)
+    entries = iter(status.split("\0"))
+    files = []
+    for entry in entries:
+        if not entry:
+            continue
+        # Each entry is two letters for the file's state, a space, then the path. A
+        # rename or a copy is followed by an entry of its own for the old path.
+        files.append(entry[3:])
+        if entry[0] in "RC":
+            next(entries, None)
+    return files
 
 
 async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:

@@ -8,7 +8,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from software_factory.git.command import CommitId, git
-from software_factory.git.working_copy import WorkingCopy, head
+from software_factory.git.working_copy import WorkingCopy, head, remove
 
 if TYPE_CHECKING:
     from collections.abc import AsyncIterator
@@ -69,7 +69,9 @@ async def review_copy(
         await git(*ADD_EVERY_FILE, cwd=path)
         yield path
     finally:
-        await asyncio.to_thread(shutil.rmtree, path)
+        # Not a plain rmtree, since the project setup or the quality reviewer's tests
+        # can leave a read-only folder in the review copy.
+        await asyncio.to_thread(remove, path)
 
 
 async def write_files(working_copy: WorkingCopy, commit: CommitId, path: Path) -> None:

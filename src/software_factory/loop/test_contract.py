@@ -85,6 +85,12 @@ def test_project_whose_checks_fail_refuses_the_run(
             "setup:\n\t@mkdir .venv; touch .venv/python\n\ncheck:\n\t@true\n",
             "`make setup` added or changed files that git doesn't ignore: `.venv/`.",
         ),
+        # Bug: a path with a space or a letter outside ASCII was named the way git
+        # quotes it, as "caf\303\251 notes.txt".
+        (
+            "setup:\n\t@touch 'café notes.txt'\n\ncheck:\n\t@true\n",
+            "files that git doesn't ignore: `café notes.txt`.",
+        ),
         (
             "setup:\n\t@true\n\ncheck:\n\t@echo formatted >> docs/technical-spec.md\n",
             (
