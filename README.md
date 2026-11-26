@@ -5,15 +5,18 @@
 Install [uv](https://docs.astral.sh/uv/), then run these once in each clone:
 
 ```sh
-uv sync
+make setup
 uv run lefthook install
 ```
 
-The second command adds the pre-commit hook, which runs `tools/check-code.sh` on any commit that
-changes the code or the check's config.
+The second command adds the pre-commit hook, which runs `make check` on any commit that changes the
+code or the check's config.
 
 ## Commands
 
+- `make setup` installs the factory's packages with `uv sync`, and `make check` runs
+  `tools/check-code.sh`. They're the project contract's two targets, so a run on this repo calls
+  them too.
 - `uv run write-role-views` rewrites each role's view file, such as
   `src/software_factory/roles/implementer.view.md`, after a change to what the role is given.
 - `uv run set-board-statuses <owner/name>` sets the statuses on a project's board from
@@ -34,7 +37,8 @@ thrown away when the run ends.
   this repo at `/factory` in place of the image's copy, to try a change before building an image.
   A change to the Python packages still needs a new image.
 - `bash tools/test-in-sfe.sh` runs the tests that call Claude in an SFE, with this checkout
-  mounted at `/factory`. `tools/check-code.sh` leaves those tests out.
+  mounted at `/factory`. `tools/check-code.sh` leaves those tests out. The tests of a whole run use
+  Opus, or the model `FACTORY_TEST_MODEL` names, such as `claude-haiku-5-5`.
 
 `run-sfe.sh` gives the SFE two tokens. It reads the Claude Code token from the line
 `FACTORY_CLAUDE_CODE_OAUTH_TOKEN=<token>` in `.env` at the repo's root, which git ignores, and
@@ -42,6 +46,13 @@ reads no other line of that file. Make the token with `claude setup-token`. Set 
 to read another file, such as the `.env` of another checkout. The GitHub token comes from
 `gh auth token`, so it's the GitHub CLI's login. The commits a run makes carry the git identity in
 your git config.
+
+## Checks on a PR
+
+GitHub Actions runs `make check` on every PR. When the PR changes a file the SFE's image or a run
+uses, such as in `src/`, `plugin/` or `tools/`, it also builds the image and runs
+`tools/test-in-sfe.sh` on Haiku. The Claude Code token comes from the repo secret
+`FACTORY_CLAUDE_CODE_OAUTH_TOKEN`. The workflow is `.github/workflows/checks.yml`.
 
 ## A project's settings
 

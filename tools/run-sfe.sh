@@ -6,7 +6,8 @@
 # --factory mounts the checkout of the factory's repo at PATH at /factory, in place of the image's
 # copy, to try a change before building an image. --image picks the image, which is
 # software-factory-sfe:latest by default. --entrypoint runs another command in the SFE, such as
-# pytest. The other arguments go to the implementation loop's command.
+# pytest. --env NAME passes the variable NAME from this command's environment into the SFE, when
+# it's set. The other arguments go to the implementation loop's command.
 #
 # The Claude Code token comes from FACTORY_CLAUDE_CODE_OAUTH_TOKEN in the .env file at the repo's
 # root, or in the file FACTORY_ENV_FILE names. The GitHub token comes from `gh auth token`.
@@ -32,6 +33,10 @@ while (($# > 0)); do
       ;;
     --entrypoint)
       docker_args+=(--entrypoint "$2")
+      shift 2
+      ;;
+    --env)
+      docker_args+=(--env "$2")
       shift 2
       ;;
     *)

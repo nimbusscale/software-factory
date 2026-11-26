@@ -17,4 +17,5 @@ pre-commit:
         - "ruff.toml"
         - "mypy.ini"
         - "tools/check-code.sh"
-      run: bash tools/check-code.sh
+        - "Makefile"
+      run: make check

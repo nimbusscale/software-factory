@@ -78,6 +78,21 @@ def test_project_whose_checks_fail_refuses_the_run(
     assert "\n39\n40\nmake: ***" in reason
 
 
+def test_make_the_workflow_runs_under_doesnt_reach_the_project(
+    remote: Path, author: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    makefile = "setup:\n\t@true\n\ncheck:\n\t@seq 1 40; exit 1\n"
+    push_files(author, {"Makefile": makefile})
+    monkeypatch.setenv("MAKEFLAGS", "n")
+    monkeypatch.setenv("MAKELEVEL", "1")
+
+    reason = refused_reason(remote, tmp_path)
+
+    # Bug: under a make started with -n, the project's failing check passed.
+    assert "`make check` failed in the working copy" in reason
+    assert "\n40\nmake: ***" in reason
+
+
 @pytest.mark.parametrize(
     "case",
     [
