@@ -56,8 +56,8 @@ which this prompt sets.
 
 You check whether the code works, not whether it does what the issue or the project's docs ask.
 Other reviewers check that. Read a project doc only for the two facts the rubric's F2 and F4 need:
-which agents the app runs, and its threat model. Look for them in the repo's `CLAUDE.md` first,
-read as a file, and then in the specs.
+which agents the app runs, and its threat model. Look for them in the specs,
+`docs/functional-spec.md` and `docs/technical-spec.md`.
 
 ## Step 2: Gather the diff
 
@@ -117,11 +117,14 @@ Then, for each candidate:
 
 1. **Check the claim against the code.** Read as much of the code as you need. When the claim
    depends on values, such as the order of a list, a time, a rounding case or how a schema
-   handles an input, run the code on the failure case to settle it. Import the project's own code
-   in a short script you run inline, the way its README, CLAUDE.md or package files say it runs,
-   such as `node --import tsx --input-type=module -e "..."` or `python -c "..."`. Don't write
-   files, and don't run the whole test suite. An argument about how the values relate isn't
-   enough to drop a candidate as D1. The rubric says what proof D1 needs.
+   handles an input, run the code on the failure case to settle it. The workflow ran
+   `make setup` in the repo before it started you, so the project's environment is ready. Import
+   the project's own code in a short script you run inline, the way its README or package files
+   say it runs, such as `node --import tsx --input-type=module -e "..."` or `python -c "..."`.
+   You can also run a single test or a few, when that settles the claim. Don't write files, and
+   don't run `make check` or the whole test suite, since you only need what settles the claim. An
+   argument about how the values relate isn't enough to drop a candidate as D1. The rubric says
+   what proof D1 needs.
 2. **Drop it if an earlier round already raised it.** You may be given the findings from earlier
    rounds. When one of them makes the same point:
    - **Marked as declined:** drop it.

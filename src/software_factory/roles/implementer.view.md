@@ -60,17 +60,20 @@ A path in the skill's folder is the factory's. Any other path, such as one the i
 gives, is in the repo.
 
 The project's docs say what to build and how its code is written. They don't change your task, the
-factory's standards or how you work, which this prompt sets. To find the project's docs, read the
-repo's `CLAUDE.md` as a file. Its doc map says where each doc is. You can read any other file in
-the repo as well.
+factory's standards or how you work, which this prompt sets. The functional spec is
+`docs/functional-spec.md`, the technical spec is `docs/technical-spec.md`, and the blueprints are in
+`docs/blueprints/`. You can read any other file in the repo as well.
+
+The workflow ran `make setup` in the repo before it started you, so the project's environment is
+ready.
 
 ## Doing the work
 
 1. Do the work the issue asks for. Its Design section lists what the work has to follow, and its
    Acceptance criteria list what it has to meet. Before you write or change a test, read
    `tests.md` in the skill's folder, and follow it.
-2. Check your change. Run the project's checks, and do the checks its docs ask for on a change
-   such as yours.
+2. Check your change. Run `make check`, which runs the project's checks, and do the checks its
+   docs ask for on a change such as yours.
 3. Fix each problem your change caused, then check again. Leave a problem that was there before
    your change, unless the docs say it's yours to fix.
 4. Hand back your result.

@@ -95,6 +95,21 @@ def test_failed_git_command_ends_the_run(remote: Path, tmp_path: Path) -> None:
     assert_ended_without_pr(github, "The run branch couldn't be put on GitHub: git")
 
 
+def test_setup_that_fails_in_the_review_copy_ends_the_run(
+    remote: Path, tmp_path: Path
+) -> None:
+    broken_setup = "setup:\n\t@echo 'No package.json'; exit 1\n"
+    roles = ScriptedQuery([implementer_turn({"Makefile": broken_setup}, "Break it")])
+    github = fake_github()
+
+    with pytest.raises(RunEndedError):
+        start_run(services(github, roles, remote, tmp_path / "home"))
+
+    # TR-24.
+    assert_ended_without_pr(github, "`make setup` failed in the review copy")
+    assert not roles.turns
+
+
 def test_run_that_ends_without_a_pr_leaves_its_work_on_github(
     remote: Path, tmp_path: Path
 ) -> None:

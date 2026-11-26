@@ -20,6 +20,7 @@ from software_factory.github.pull_request import (
     PullRequest,
     open_pull_request,
 )
+from software_factory.loop.contract import ContractError, check_contract
 from software_factory.loop.rounds import (
     NothingToReviewError,
     RunContext,
@@ -37,12 +38,21 @@ if TYPE_CHECKING:
 
 LEFT_WHEN_THE_RUN_ENDED = "Changes not yet committed when the run ended"
 
-# The errors that end a run with a reason for the owner (TR-2, FR-7, TR-15, TR-18).
-RUN_ENDING_ERRORS = (RoleFailedError, GitError, GitHubError, NothingToReviewError)
+# The errors that end a run with a reason for the owner (TR-2, FR-7, TR-15, TR-18,
+# TR-24).
+RUN_ENDING_ERRORS = (
+    RoleFailedError,
+    GitError,
+    GitHubError,
+    NothingToReviewError,
+    ContractError,
+)
 
 
 class RunRefusedError(Exception):
-    """The run didn't start, so the issue and its board are as they were (FR-5, FR-26).
+    """The run didn't start, so the issue and its board are as they were.
+
+    Raised for FR-5, FR-26, FR-35, FR-36 and FR-37.
 
     The message says why, in words for the owner.
     """
@@ -93,8 +103,8 @@ async def run(request: RunRequest, services: Services) -> PullRequest:
         ) as copy:
             return await run_in(request, services, copy)
     except GitError as error:
-        # Only the clone and the read of the settings file raise it here, since the
-        # run ends on any git error after them.
+        # Only the clone, the read of the settings file and the check of the specs
+        # raise it here, since the run ends on any git error after them.
         raise RunRefusedError(str(error)) from error
 
 
@@ -105,7 +115,8 @@ async def run_in(
     try:
         settings = run_settings(await read_settings_file(copy), request.rounds)
         issue = await read_issue(services.graphql, request.repo, request.issue_number)
-    except (SettingsError, GitHubError) as error:
+        await check_contract(copy)
+    except (SettingsError, GitHubError, ContractError) as error:
         raise RunRefusedError(str(error)) from error
     try:
         await move_issue(services.graphql, request.repo, issue, Moment.RUN_STARTED)

@@ -679,6 +679,9 @@ to its pointer.**
   naming the script there, and Joe agreed.
 - Decided in: #67.
 - Likely home: `TD`.
+- Replaced by the project contract, in `project-contract.md` in the factory plugin's standards. A
+  project's specs and blueprints sit at fixed paths, and every session loads the standards from the
+  factory plugin (AD-14). Decided in #103, and built in #105.
 
 **The doc standards cover only the functional spec, the technical spec and blueprints. Research
 docs, skills, CLAUDE.md and a README are other concerns.**
@@ -697,6 +700,8 @@ each doc through CLAUDE.md's doc map.**
   lost when it left the skill, so it went into an issue right away rather than being dropped.
 - Decided in: #46.
 - Likely home: `TD`.
+- Its last sentence is replaced by the project contract: an agent finds each doc at its fixed path,
+  which `project-contract.md` in the factory plugin's standards gives. Built in #105.
 
 **The doc check script checks only the specs and blueprints, and the spec IDs cited
 anywhere in the repo. The checks it used to run on other docs, such as history in CLAUDE.md and

@@ -100,6 +100,13 @@ async def start_file(working_copy: WorkingCopy, name: str) -> str | None:
     return await git("show", f"{start}:{name}", cwd=working_copy.path)
 
 
+async def start_has_file(working_copy: WorkingCopy, name: str) -> bool:
+    """Whether there's a file at `name` where the run branch started."""
+    entry = await git("ls-tree", working_copy.start, "--", name, cwd=working_copy.path)
+    # Each line is the mode, the type, the object and the path. A folder is a tree.
+    return entry.split(maxsplit=2)[1:2] == ["blob"]
+
+
 async def commit(working_copy: WorkingCopy, message: str) -> CommitId | None:
     """Commits every change in the working copy. Hands back None when there's none."""
     await git("add", "--all", cwd=working_copy.path)

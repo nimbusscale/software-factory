@@ -4,6 +4,8 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import TYPE_CHECKING
 
+import pytest
+
 from software_factory.conftest import commit_file, run_git
 from software_factory.git.working_copy import Remote
 from software_factory.github.fake_github import REPO, FakeGitHub, FakeIssue
@@ -103,6 +105,34 @@ def reviewer_turn(
         return [result_message(structured_output=result, session_id=str(cwd))]
 
     return turn
+
+
+# A Makefile whose targets each pass, and do nothing.
+PASSING_MAKEFILE = "setup:\n\t@true\n\ncheck:\n\t@true\n"
+
+
+@pytest.fixture
+def author(author: Path) -> Path:
+    """The author's clone, of a project that meets the project contract."""
+    push_files(
+        author,
+        {
+            "Makefile": PASSING_MAKEFILE,
+            "docs/functional-spec.md": "# Functional spec\n",
+            "docs/technical-spec.md": "# Technical spec\n",
+        },
+    )
+    return author
+
+
+def push_files(author: Path, files: Mapping[str, str]) -> None:
+    """Puts `files` on the project's default branch, in one commit."""
+    for name, text in files.items():
+        (author / name).parent.mkdir(parents=True, exist_ok=True)
+        (author / name).write_text(text)
+    run_git("add", "--all", cwd=author)
+    run_git("commit", "--quiet", "--message", "Change the project", cwd=author)
+    run_git("push", "--quiet", "origin", "main", cwd=author)
 
 
 def push_settings(author: Path, text: str) -> None:
