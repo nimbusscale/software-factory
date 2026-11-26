@@ -31,8 +31,9 @@ the whole doc. Some checks also look past the change, such as grepping every doc
 uses. When the change touches code, grep the docs for the names of what it touched, such as a
 function, a setting or a behavior. Read each item that comes up, and check it still holds.
 
-These checks cover the docs, and whether the code does what the docs say. A bug in the code that
-doesn't make a doc wrong isn't part of them. Leave it out, and don't mention it.
+These checks cover the docs, and whether the code does what the docs say. Nothing else about the
+code is part of them, such as a bug that doesn't make a doc wrong, a missing test, or whether code
+outside the repo does its part. Leave it out of your report, even as a note after the two lists.
 
 A problem belongs to the change only if the change caused it. To tell, look at the same place on the
 branch the change will merge into. If the problem is there too, it's older than the change. For
@@ -109,7 +110,7 @@ a broken rule, so it's always a problem. A `SIGNAL` line is only something to lo
 ## Then check by reading
 
 - **Each item follows the rules for its kind of doc.** Each kind of doc has a file of its own
-  rules in the standards, listed in "What to read for your task" in `README.md`, such as `specs.md`.
+  rules in the standards, listed in "What to read for your task" in `SKILL.md`, such as `specs.md`.
   Read the file for each kind of doc the change touches. An item written the way that file asks
   isn't a problem, even when a rule in `project-docs.md` seems to say a part of it
   could go.
