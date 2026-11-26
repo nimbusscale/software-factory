@@ -1,8 +1,8 @@
 # Status
 
 Last run: 2026-11-25, with the standards in the factory plugin and the skill description that
-names the tasks it's for. It passed 2 of 3 runs. Every earlier run, from 2026-11-17 to 2026-11-19, passed, and so did 4 runs on main
-(`96d8a1e`) on 2026-11-25.
+names the tasks it's for. It passed 2 of 3 runs. Every earlier run, from 2026-11-17 to
+2026-11-19, passed, and so did 4 runs on main (`96d8a1e`) on 2026-11-25.
 
 ## Known failure
 
