@@ -69,8 +69,10 @@ Each run happens in its own SFE, started from the SFE's image, and thrown away w
 **The image** holds the factory at `/factory`: its code, its prompts and the factory plugin
 (phase 4). The factory runs in its own virtual environment, with its own Python, both under
 `/opt/sfe`. A project's tools go in the project's own environment, in the working copy. So the
-factory's Python packages and the project's never mix. The image also holds the tools every run needs, such as git, make and Claude
-Code. Each image is tagged with its factory version.
+factory's Python packages and the project's never mix. The exceptions are the Node and the Python
+that TD-13 puts in the image for projects. Without them, Dust Law's `make setup` fails with no npm, and every run on the factory's
+own repo downloads Python 3.14 first. The image also holds the tools every run needs, such as git,
+make and Claude Code. Each image is tagged with its factory version.
 
 To try a change to the factory before building an image, such as a change to the standards, the
 owner mounts a checkout of the factory's repo at `/factory`, in place of the image's copy. The

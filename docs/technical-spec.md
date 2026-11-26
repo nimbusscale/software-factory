@@ -298,3 +298,13 @@ acting on it.
 generated from the role's Pydantic model. This meets TR-1.
 
 *Why:* the schema the Agent SDK gets and the check the workflow runs then can't drift apart.
+
+## T-SEC-7. The SFE
+
+**TD-13.** The SFE's image holds Node 24, with its npm, and Python 3.14 for projects to use, apart
+from the factory's own Python. This meets FR-1 for Dust Law and the factory's own repo.
+
+*Why:* Dust Law and the factory's own repo are the only projects the factory runs on, and Node 24
+and Python 3.14 are the only runtimes they need that the image doesn't already hold. Putting them
+in the image lets the factory be used on both sooner. The factory will later let each project build
+its own SFE image, so the factory's image doesn't carry each project's runtimes.
