@@ -1,9 +1,17 @@
+---
+name: standards
+description: Standards for writing and reviewing a project's docs, code comments, tests, GitHub issues and PR descriptions. Use when writing, changing or reviewing any of these, or code that the docs describe.
+---
+
 # Doc standards
 
 The functional spec, the technical spec and blueprints are the input an agent turns into code.
 These files say what each doc is, how it's written, how to change it, and how to check a change.
 `code-comments.md` does the same for code comments, which hold the facts one place in the code
 owns. CLAUDE.md's doc map says where each doc is.
+
+Every file these standards name, such as `templates/blueprint.md` or `check_docs.py`, is in the
+folder this file is in.
 
 Three files here aren't about docs, and the list below leaves them out. `github.md` is about GitHub
 work, and CLAUDE.md points to it on its own. `review-rubric.md` is the rubric the quality reviewer
@@ -13,7 +21,7 @@ The implementer's and the quality reviewer's prompts point to it too.
 
 ## What to read for your task
 
-Read every file that applies to your task. Most tasks need more than one.
+Read every file that applies to your task, and only those. Most tasks need more than one.
 
 - **Every task:** `project-docs.md`, which says which doc a fact goes in and how to write any doc.
   And `reports.md`, which says what goes in your report.

@@ -1,7 +1,11 @@
-from software_factory.config import Settings, TurnCaps
+from software_factory.config import CheckDocs, Settings, TurnCaps
 from software_factory.loop.settings import run_settings
 
-DEFAULTS = Settings(rounds=2, turn_caps=TurnCaps(implementer=100, quality_reviewer=100))
+DEFAULTS = Settings(
+    rounds=2,
+    turn_caps=TurnCaps(implementer=100, quality_reviewer=100),
+    check_docs=CheckDocs(ignore=[]),
+)
 
 
 def test_project_with_no_settings_file_gets_the_defaults() -> None:
@@ -14,7 +18,9 @@ def test_setting_the_project_leaves_out_keeps_its_default() -> None:
 
     # FR-32, FR-6.
     assert settings == Settings(
-        rounds=2, turn_caps=TurnCaps(implementer=40, quality_reviewer=100)
+        rounds=2,
+        turn_caps=TurnCaps(implementer=40, quality_reviewer=100),
+        check_docs=CheckDocs(ignore=[]),
     )
 
 

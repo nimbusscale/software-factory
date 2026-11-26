@@ -8,6 +8,7 @@ the code are comments there instead.
 ## T-SEC-1. Terms
 
 - **Doc standards.** The rules a project's docs are written and checked by.
+- **Factory plugin.** The Claude Code plugin that holds the factory's standards.
 - **Result schema.** The shape of a role's result.
 - **Review copy.** The copy of the run's work that the quality reviewer works in.
 - **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-3,
@@ -92,6 +93,12 @@ standards. If a project's files could put instructions into a role's prompt, a t
 factory could tell the role how to work, not just what to build. The project's CLAUDE.md also
 keeps one use, for people working in the repo.
 
+**AD-14.** The factory's standards reach every session, a run's roles and a person's own, as a
+skill in the factory plugin.
+
+*Why:* a run and a person's session then follow the same standards, found the same way, on any
+machine.
+
 ## T-SEC-3. Code standards
 
 How all code is written, with examples where they help. A standard gets a Why only when its reason
@@ -126,6 +133,12 @@ the code.
 
 *Why:* a change to what a role is given then shows in the PR's diff as text a reviewer can read.
 In the code, such a change is easy to miss.
+
+**CS-7.** No other code standard applies to the scripts in the factory plugin.
+
+*Why:* a plugin script runs on the machine of each person who loads the plugin, with the Python
+found there, which may be older than the factory's own. Each script is written to run on what
+those machines have, so the rules for the factory's own code don't fit it.
 
 ## T-SEC-4. A run's rounds and roles
 

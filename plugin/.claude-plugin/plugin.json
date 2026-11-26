@@ -1,0 +1,6 @@
+{
+  "name": "software-factory",
+  "description": "The software factory's standards for a project's docs, code comments, tests and GitHub work, with the doc check script.",
+  "repository": "https://github.com/nimbusscale/software-factory",
+  "license": "MIT"
+}

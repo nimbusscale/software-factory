@@ -29,3 +29,7 @@ rounds = 2
 [settings.turn_caps]
 implementer = 100
 quality_reviewer = 100
+
+# The paths the doc check script leaves out, written like a .gitignore.
+[settings.check_docs]
+ignore = []

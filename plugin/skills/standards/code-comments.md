@@ -191,9 +191,9 @@ Copy this checklist into your task list and tick off each check:
 - [ ] The comments on the code the change touched still hold
 ```
 
-**Run the doc check script,** at the path CLAUDE.md's doc map gives. It checks that each ID cited in
-the code resolves, and flags text a spec shares with a source file. Then list history in the comment
-lines the change added:
+**Run the doc check script,** `check_docs.py` in this folder, as "Run the script" in `reviewing.md`
+says. It checks that each ID cited in the code resolves, and flags text a spec shares with a source
+file. Then list history in the comment lines the change added:
 
 ```bash
 git diff <base branch> -U0 -- . ':(exclude)*.md' \

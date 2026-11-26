@@ -39,7 +39,7 @@ flowchart LR
 
 ## Phase 1. The test standards
 
-Add `docs/standards/tests.md`, the factory's standards for a project's tests. Each run gets the
+Add `tests.md` to the factory's standards, for a project's tests. Each run gets the
 factory's own standards folder, so the implementer and the quality reviewer read the same rules.
 The factory's own code follows them too.
 
@@ -68,7 +68,7 @@ Then:
   It's a note, not a fix, so a test with no rule shows in the PR without costing a round.
 - **The quality reviewer's prompt** has it read `tests.md` with the rubric. Where it says to look
   at the tests, it points to F5 and N5, and says not to look for missing tests.
-- **The README in `docs/standards/`** lists `tests.md` among the files that aren't about docs, and
+- **The standards' README** lists `tests.md` among the files that aren't about docs, and
   says who reads it. The repo's `CLAUDE.md` adds it to the doc map, and says to read it before
   writing or changing a test.
 
@@ -157,7 +157,7 @@ The spec changes this phase makes:
 - A change to FR-24, so a round whose acceptance tests fail isn't the last because its review found
   no important finding.
 - Changes to FR-28 and FR-29, so failing acceptance tests send the issue to Needs attention.
-- In `docs/standards/github.md`, the Acceptance criteria section of a task issue says acceptance
+- In the standards' `github.md`, the Acceptance criteria section of a task issue says acceptance
   tests come from the acceptance branch. Its line that a missing test is written as part of the
   work then covers only the other tests.
 - The implementer's prompt says which files are the acceptance tests, that it can run them, and

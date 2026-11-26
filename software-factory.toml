@@ -1,0 +1,19 @@
+# This repo's settings for the software factory.
+
+[check_docs]
+# Paths the doc check leaves out. Written like a .gitignore.
+ignore = [
+    # The eval cases build test projects, and their files cite IDs that aren't this repo's.
+    "evals/",
+    # Research docs are frozen records of a point in time, not read again once done, so they
+    # aren't checked.
+    "docs/research/",
+    # The factory spec notes quote other projects' IDs as evidence, so they aren't checked as
+    # citations of this repo's specs.
+    "docs/blueprints/factory-spec-notes.md",
+    # A role's view file is made from the code, and copies the role's prompt. The prompt's own file
+    # is checked.
+    "src/**/*.view.md",
+    # The standards are full of example IDs that this repo doesn't define.
+    "plugin/",
+]

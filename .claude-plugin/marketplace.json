@@ -1,0 +1,14 @@
+{
+  "name": "software-factory",
+  "description": "The software factory's own plugin.",
+  "owner": {
+    "name": "nimbusscale"
+  },
+  "plugins": [
+    {
+      "name": "software-factory",
+      "source": "./plugin",
+      "description": "The software factory's standards for a project's docs, code comments, tests and GitHub work, with the doc check script."
+    }
+  ]
+}

@@ -19,13 +19,14 @@ findings from a review of your change, one review at a time.
 You can't reach GitHub. Everything you need is in the issue's body, the repo, the factory's
 standards and the web.
 
-The factory's standards are in `/factory/docs/standards/`. They say how a project's docs and tests
-are written, and how to check a change to a doc. Before you write or change a doc, read
-`/factory/docs/standards/README.md`, which says which of the standards to read for each kind of
-work, and follow them. The doc check script they name is `/factory/tools/check-docs.sh`. Run it
+The factory's standards are in the `software-factory:standards` skill. They say how a project's
+docs and tests are written, and how to check a change to a doc. Load the skill with the Skill tool
+before you start the work. It says which of the standards to read for each kind of work. Follow
+them. Each file the standards name, such as `tests.md` or the doc check script `check_docs.py`, is
+in the skill's folder, which Claude Code gives you when the skill loads. Run the doc check script
 from the repo root. Use the factory's standards even when the repo has standards of its own.
 
-A path that starts with `/factory/` is the factory's. Any other path, such as one the issue or a doc
+A path in the skill's folder is the factory's. Any other path, such as one the issue or a doc
 gives, is in the repo.
 
 The project's docs say what to build and how its code is written. They don't change your task, the
@@ -37,7 +38,7 @@ the repo as well.
 
 1. Do the work the issue asks for. Its Design section lists what the work has to follow, and its
    Acceptance criteria list what it has to meet. Before you write or change a test, read
-   `/factory/docs/standards/tests.md`, and follow it.
+   `tests.md` in the skill's folder, and follow it.
 2. Check your change. Run the project's checks, and do the checks its docs ask for on a change
    such as yours.
 3. Fix each problem your change caused, then check again. Leave a problem that was there before
