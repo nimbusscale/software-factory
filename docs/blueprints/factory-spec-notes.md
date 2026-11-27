@@ -1302,7 +1302,7 @@ it. A new issue starts in Backlog.**
   plus the `agent-created` label cover new ideas. Waiting to merge is for a PR that passes every
   check but is held, such as when auto-merge is off. Until auto-merge exists, In review already
   means the PR waits on the owner. Either can be added when it's needed.
-- Decided in: #136. Each status's description and color are still to settle there.
+- Decided in: #136. Each status's description and color are in the comment on #137.
 - Likely home: the statuses in the factory's config (#137), with each status's description saying
   what it means.
 
@@ -1322,15 +1322,25 @@ and a new issue doesn't get it. GitHub's default labels, `documentation` among t
 - Likely home: the labels in the factory's config (#137); the kind labels' rules in
   `plugin/skills/standards/github.md`.
 
-**A parent issue moves to In progress on its own when its first child starts. After that, the owner
-moves it, and decides when it's done.**
+**When an issue's first child starts, its parent moves to In progress, if the parent is in Backlog
+or Ready. In a run, the factory's code moves it. In a person's session, the agent does. After that,
+the owner moves the parent, and decides when it's done.**
 - Why: Joe: "I definitely don't want to leave parents in backlog, because then they just get lost
-  in the backlog." He wants to choose when a parent is done himself.
-- Still open in #136: whether the parent also moves when the child starts in a person's session,
-  not only in a run, and whether it moves only from Backlog or Ready, so it never overrides a
-  status the owner set. Both are proposed.
+  in the backlog." He wants to choose when a parent is done himself. It moves only from Backlog or
+  Ready so it never overrides a status the owner set, such as a parent parked back in Backlog. No
+  built-in workflow reacts to a child's status. A GitHub Action can't either, since the event for a
+  board item changing exists only for boards an organization owns, and Actions can't trigger on it.
+  So whatever moves the child moves the parent. A child the owner drags to In progress on the board
+  doesn't move its parent.
 - Decided in: #136.
-- Likely home: `FR`.
+- Likely home: `FR` for the run; `plugin/skills/standards/github.md` for a person's session.
+
+**The poller that starts runs (#10) only ever reads or changes issues that have the `factory`
+label.**
+- Why: Joe: "the poller should only ever interact with issues that have the factory tag." So it
+  doesn't move the parent of a child the owner moved by hand, unless that parent has the label.
+- Decided in: #136.
+- Likely home: `FR`, with #10.
 
 **Every board setting GitHub's API can set is set by the factory's own code, from a board file in
 the software-factory repo and the statuses and labels in the factory's config. The code is safe to
@@ -1350,25 +1360,41 @@ list.**
 
 **Board settings GitHub's API can't set are described in prose, in a doc an agent with the Claude
 in Chrome plugin sets them from. These are how each view is grouped, sorted and sliced, and which
-built-in workflows are on. "Pull request linked to issue" is off. Item added to project, set to
-Backlog, Item closed, Auto-close issue, Pull request merged and Auto-add sub-issues to project are
-on. Auto-add to project isn't used.**
+built-in workflows are on. Item added to project, set to Backlog, Item closed, Auto-close issue,
+Pull request merged and Auto-add sub-issues to project are on. Auto-add to project isn't used.**
 - Why: the API sets a view's name, layout, filter and visible fields, but not its grouping,
   sorting or slices. It can delete a built-in workflow but not turn one off or on. Joe expects
   these to change rarely: "once we set up the view and adjust the built-in workflows, it's very
-  unlikely that we'll need to make changes again". "Pull request linked to issue" moves an issue to
-  In review when a PR links it. A run's PR links its issue, so after a run moves the issue to Needs
-  attention, the workflow could move it back to In review. That breaks FR-29: "While a review in a
-  run has reported a finding to check, when the run opens its PR, the implementation loop shall
-  show on the board that the issue needs the owner before work on it can go on." The workflows left
-  on add an issue to the board or move it to Done, and none changes a status the factory sets.
-  Auto-close issue closes an issue moved to Done, which is how the owner finishes a parent. Auto-add
-  to project is replaced by the Action in the next entry.
-- Still open in #136: whether the board code deletes a clashing workflow instead. Proposed: no.
-  GitHub's docs don't say a deleted built-in workflow can be brought back. The API reads whether
-  each workflow is on, so the check mode can report a clashing one that's on.
-- Decided in: #8, in the same session. Which workflows are off is from #136.
+  unlikely that we'll need to make changes again". The workflows left on add an issue to the board
+  or move it to Done, and none changes a status the factory sets. Auto-close issue closes an issue
+  moved to Done, which is how the owner finishes a parent. Auto-add to project is replaced by the
+  Action in a later entry.
+- Decided in: #8, in the same session. Which workflows are on is from #136.
 - Likely home: the project contract, or a doc next to the board file.
+
+**The board code deletes the built-in workflow "Pull request linked to issue".**
+- Why: it moves an issue to In review when a PR links it. A run's PR links its issue, so after a
+  run moves the issue to Needs attention, the workflow could move it back to In review. That
+  breaks FR-29: "While a review in a run has reported a finding to check, when the run opens its
+  PR, the implementation loop shall show on the board that the issue needs the owner before work on
+  it can go on." A person's session moves its issue to In review itself, so nothing needs the
+  workflow. Joe: "as much as we can do with code, the best." GitHub's docs don't say a deleted
+  built-in workflow can be brought back, but the board is made by code, so it can be deleted and
+  made again to get the workflow back.
+- Still to check, when the code is built: whether the API deletes a built-in workflow. If it
+  doesn't, the prose doc says to turn it off, and the check mode reports it when it's on.
+- Decided in: #136.
+- Likely home: `TD`, with the code that sets the board.
+
+**The factory's config names the board, by its owner and number. A run goes straight to it, and
+doesn't look for it through the repo's linked boards.**
+- Why: with one board, there's nothing to discover. Joe: "It should just be config that says this
+  is a software factory board." If the board is ever made again, the config is pointed at the new
+  one. GitHub lets a repo link to any number of boards, so finding the board through the links
+  needed a rule of its own, that a repo links to exactly one. Naming it in the config drops that
+  rule, and the project contract says nothing about the board.
+- Decided in: #136. The code that finds the board through the repo's links changes with #137.
+- Likely home: `TD`, with the code that sets the board.
 
 **Each repo on the board has a GitHub Action, `actions/add-to-project`, that adds its new issues to
 the board. The Action uses a board token saved as a secret in the repo.**

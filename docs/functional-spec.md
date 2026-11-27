@@ -5,7 +5,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 
 ## F-SEC-1. Terms
 
-- **Board.** A project's GitHub project board.
+- **Board.** The factory's GitHub project board.
 - **Declined finding.** A finding that the implementer chose not to fix.
 - **Dropped candidate.** A possible problem that the quality reviewer looked into and didn't report
   as a finding, such as one whose claim turned out to be false.
@@ -27,7 +27,7 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **PR.** A GitHub pull request in a project's repo.
 - **Pre-existing finding.** A finding about a problem that was there before the run's work, and
   that the work doesn't make worse or expose again.
-- **Project.** A piece of software the factory builds, with its own GitHub repo and board.
+- **Project.** A piece of software the factory builds, with its own GitHub repo.
 - **Project checks.** A project's own checks of its code, such as its tests and its linter.
 - **Project setup.** The steps that build the environment a project's code runs in, such as
   installing its packages.
