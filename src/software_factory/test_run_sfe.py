@@ -1,6 +1,7 @@
 """Tests of tools/run-sfe.sh, with stand-ins for docker and gh on the PATH."""
 
 import asyncio
+import json
 import os
 import re
 import shutil
@@ -8,12 +9,17 @@ from pathlib import Path
 
 import pytest
 
+from software_factory.conftest import commit_file, run_git
+
 RUN_SFE = Path(__file__).parents[2] / "tools" / "run-sfe.sh"
 
-# Hands back this user's ID as the image's, and writes the arguments of `docker run`
-# to the file DOCKER_ARGS names, one a line.
-FAKE_DOCKER = """#!/usr/bin/env bash
-if [[ "$1" == image ]]; then id -u; exit 0; fi
+IMAGE_VERSION = "0123456789ab"
+
+# Hands back this user's ID as the image's, and IMAGE_VERSION as its factory version.
+# Writes the arguments of `docker run` to the file DOCKER_ARGS names, one a line.
+FAKE_DOCKER = f"""#!/usr/bin/env bash
+if [[ "$1" == image && "$4" == *sfe-uid* ]]; then id -u; exit 0; fi
+if [[ "$1" == image ]]; then echo {IMAGE_VERSION}; exit 0; fi
 shift
 printf '%s\\n' "$@" > "$DOCKER_ARGS"
 """
@@ -115,3 +121,40 @@ def test_runs_folder_can_start_from_the_home_folder(
 
     # FR-39.
     assert run_folder(tmp_path / "home" / "sfe-runs").is_dir()
+
+
+def test_records_the_factory_version_and_the_command(tmp_path: Path) -> None:
+    run_sfe(tmp_path, "", "nimbusscale/dust-law", "1", "--rounds", "3")
+
+    folder = run_folder(tmp_path / "data" / "software-factory" / "runs")
+    run = json.loads((folder / "run.json").read_text())
+    # FR-44.
+    assert run["factory_version"] == IMAGE_VERSION
+    assert run["arguments"] == ["nimbusscale/dust-law", "1", "--rounds", "3"]
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z", run["started_at"])
+    assert not (folder / "factory-changes.diff").exists()
+
+
+def test_keeps_the_factory_checkouts_changes(tmp_path: Path) -> None:
+    factory = tmp_path / "factory"
+    factory.mkdir()
+    run_git("init", "--quiet", cwd=factory)
+    (factory / ".gitignore").write_text(".env\n")
+    commit_file(factory, "README.md", "The factory.\n")
+    (factory / "README.md").write_text("The factory, changed.\n")
+    (factory / "new.py").write_text("print('new')\n")
+    (factory / ".env").write_text("SECRET=1\n")
+
+    run_sfe(tmp_path, "", "--factory", str(factory), "nimbusscale/dust-law", "1")
+
+    folder = run_folder(tmp_path / "data" / "software-factory" / "runs")
+    changes = (folder / "factory-changes.diff").read_text()
+    # FR-45.
+    assert "+The factory, changed." in changes
+    assert "+print('new')" in changes
+    assert "SECRET" not in changes
+    # FR-44.
+    commit = run_git("rev-parse", "--short=12", "HEAD", cwd=factory)
+    assert json.loads((folder / "run.json").read_text())["factory_version"] == (
+        f"{commit}-local"
+    )

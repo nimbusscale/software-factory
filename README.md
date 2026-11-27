@@ -56,6 +56,10 @@ script prints its path, and the run's PR or the issue's comment names it. It hol
   `<session ID>.jsonl` in a folder for the copy the role ran in.
 - `agents.jsonl`, with a line for each time the workflow started or resumed a role: the role, its
   session ID, how it ended, its turns, its cost and its result.
+- `run.json`, with the factory version, the image, the arguments and the time the run started.
+- `factory-changes.diff`, for a run with `--factory`, with the checkout's changes not committed,
+  new files included. A PR's commits stay on GitHub under `refs/pull/<number>/head` after a squash
+  merge, so a factory version's commit can still be fetched later once it's pushed.
 
 The SFE's user has the user ID of whoever built the image, so the files in the run folder are
 yours. `run-sfe.sh` refuses an image built by another user.

@@ -74,5 +74,7 @@ RUN mkdir --parents /home/sfe/run /home/sfe/.claude/projects
 
 ARG FACTORY_VERSION
 ENV FACTORY_VERSION=$FACTORY_VERSION
+# run-sfe.sh reads it to record the version in the run folder.
+LABEL software-factory.version=$FACTORY_VERSION
 
 ENTRYPOINT ["/opt/sfe/venv/bin/implementation-loop"]

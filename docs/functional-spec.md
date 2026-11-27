@@ -211,6 +211,18 @@ machine shuts down, still leaves the transcripts up to where it stopped.
 agent, in order, with which agent it was, its transcript, how it ended, the turns it took and what
 it cost.
 
+**FR-44.** When a run starts, the implementation loop shall record in the run folder the factory
+version the run uses, what the command was called with, and when the run started.
+
+*Why:* comparing two runs' transcripts needs the factory each one ran, and a run that ends early
+names its factory version nowhere else.
+
+**FR-45.** Where a run uses a checkout of the factory's repo with changes not committed, the
+implementation loop shall keep those changes in the run folder.
+
+*Why:* the factory version names only the checkout's commit, so without the changes nobody could
+tell later what factory the run used.
+
 **FR-42.** The description of a run's PR shall name the run's run folder.
 
 **FR-43.** When a run ends without opening a PR, the comment that FR-14 calls for shall name the
