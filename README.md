@@ -55,7 +55,10 @@ script prints its path, and the run's PR or the issue's comment names it. It hol
 - `transcripts/`, where Claude Code writes each role's transcript as the role works, as
   `<session ID>.jsonl` in a folder for the copy the role ran in.
 - `agents.jsonl`, with a line for each time the workflow started or resumed a role: the role, its
-  session ID, how it ended, its turns, its cost and its result.
+  session ID, how it ended, its turns, its cost and its result. Its `models` holds each model the
+  role used, with its input tokens, output tokens, cache reads, cache writes, web searches and
+  cost. For a resumed role, the cost and `models` are the session's totals so far, so they include
+  the lines before it for the same session. Take the last line of each session to sum up a run.
 - `run.json`, with the factory version, the image, the arguments and the time the run started.
 - `factory-changes.diff`, for a run with `--factory`, with the checkout's changes not committed,
   new files included. A PR's commits stay on GitHub under `refs/pull/<number>/head` after a squash

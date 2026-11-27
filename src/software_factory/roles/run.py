@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Protocol
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKError, Message, ResultMessage
 from pydantic import ValidationError
 
-from software_factory.roles.agent_list import AgentListEntry, add_entry
+from software_factory.roles.agent_list import AgentListEntry, add_entry, model_uses
 from software_factory.roles.definition import ResultModel, RoleDefinition, role_options
 
 if TYPE_CHECKING:
@@ -145,6 +145,7 @@ def agent_list_entry(
             error=None if sdk_error is None else str(sdk_error),
             turns=None,
             cost_usd=None,
+            models=None,
             duration_ms=None,
             result=None,
         )
@@ -157,6 +158,7 @@ def agent_list_entry(
         error=error_text(result_message) if failed else None,
         turns=result_message.num_turns,
         cost_usd=result_message.total_cost_usd,
+        models=model_uses(result_message.model_usage),
         duration_ms=result_message.duration_ms,
         result=result_message.structured_output,
     )

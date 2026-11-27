@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 import pytest
 from claude_agent_sdk import ClaudeAgentOptions, Message, query
 
-from software_factory.roles.agent_list import AgentListEntry
+from software_factory.roles.agent_list import AgentListEntry, ModelUse
 from software_factory.roles.definition import ResultModel, RoleDefinition
 from software_factory.roles.fake_agent_sdk import (
     FakeQuery,
@@ -156,7 +156,7 @@ def test_lists_each_start_and_resume_in_order(tmp_path: Path) -> None:
     asyncio.run(start_and_resume())
 
     started, resumed = listed(agent_list)
-    # FR-41.
+    # FR-46.
     assert (started.agent, started.resumed) == ("implementer", False)
     assert (resumed.agent, resumed.resumed) == ("implementer", True)
     assert resumed.session_id == "s-1"
@@ -177,10 +177,69 @@ def test_lists_a_role_that_ends_the_run(tmp_path: Path) -> None:
         asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
 
     at_turn_cap, no_result = listed(agent_list)
-    # FR-41.
+    # FR-46.
     assert at_turn_cap.ended == "error_max_turns"
     assert at_turn_cap.session_id is not None
     assert (no_result.ended, no_result.session_id) == ("no_result", None)
+
+
+def test_lists_the_tokens_and_cost_of_each_model(tmp_path: Path) -> None:
+    agent_list = tmp_path / "agents.jsonl"
+    runner = RoleRunner(
+        FakeQuery([saved_response("turn_cap_reached")]), agent_list=agent_list
+    )
+
+    with pytest.raises(RoleFailedError):
+        asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
+
+    (entry,) = listed(agent_list)
+    # FR-46.
+    assert entry.models == {
+        "claude-haiku-5-5": ModelUse(
+            input_tokens=1206,
+            output_tokens=165,
+            cache_read_input_tokens=15874,
+            cache_creation_input_tokens=4834,
+            web_search_requests=0,
+            cost_usd=0.00132864,
+        )
+    }
+
+
+def test_lists_no_models_when_the_model_usage_doesnt_fit(tmp_path: Path) -> None:
+    agent_list = tmp_path / "agents.jsonl"
+    usage_without_tokens: JsonValue = {"claude-opus-5-5": {"costUSD": 0.5}}
+    fake = FakeQuery(
+        [
+            [
+                result_message(
+                    structured_output=IMPLEMENTER_RESULT,
+                    modelUsage=usage_without_tokens,
+                )
+            ]
+        ]
+    )
+    runner = RoleRunner(fake, agent_list=agent_list)
+
+    asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
+
+    (entry,) = listed(agent_list)
+    # TR-14.
+    assert entry.models is None
+    assert entry.ended == "success"
+
+
+def test_reads_a_line_written_without_models() -> None:
+    line = (
+        '{"agent": "implementer", "resumed": false, "session_id": "s-1",'
+        ' "ended": "success", "error": null, "turns": 2, "cost_usd": 0.5,'
+        ' "duration_ms": 1000, "result": null}'
+    )
+
+    entry = AgentListEntry.model_validate_json(line)
+
+    # Bug: a run folder's list written before it held `models` couldn't be read back.
+    assert entry.models is None
 
 
 def test_gives_the_role_its_turn_cap_each_time() -> None:
