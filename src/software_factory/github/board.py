@@ -1,30 +1,20 @@
-import argparse
-import asyncio
 from enum import Enum, auto
 from typing import TYPE_CHECKING
 
-from software_factory.config import BoardStatus, StatusKey, factory_config
-from software_factory.github.api import (
-    GitHubError,
-    GraphQL,
-    Reply,
-    Repo,
-    ask,
-    gh_graphql,
-)
+from software_factory.config import StatusKey, factory_config
+from software_factory.github.api import GitHubError, GraphQL, Reply, ask
 from software_factory.github.issue import Issue, post_comment
 
 if TYPE_CHECKING:
-    from collections.abc import Iterable, Mapping
+    from collections.abc import Mapping
 
     from pydantic import JsonValue
 
 READ_BOARD = """
-query ReadBoard($owner: String!, $name: String!) {
-  repository(owner: $owner, name: $name) {
-    projectsV2(first: 1) {
-      totalCount
-      nodes {
+query ReadBoard($owner: String!, $number: Int!) {
+  repositoryOwner(login: $owner) {
+    ... on ProjectV2Owner {
+      projectV2(number: $number) {
         id
         title
         field(name: "Status") {
@@ -53,16 +43,6 @@ mutation SetItemStatus(
     value: {singleSelectOptionId: $optionId}
   }) {
     projectV2Item { id }
-  }
-}
-"""
-
-SET_STATUS_OPTIONS = """
-mutation SetStatusOptions(
-  $fieldId: ID!, $options: [ProjectV2SingleSelectFieldOptionInput!]!
-) {
-  updateProjectV2Field(input: {fieldId: $fieldId, singleSelectOptions: $options}) {
-    projectV2Field { ... on ProjectV2SingleSelectField { id } }
   }
 }
 """
@@ -102,17 +82,12 @@ class Board(Reply):
     field: StatusField | None
 
 
-class Boards(Reply):
-    total_count: int
-    nodes: list[Board]
-
-
-class BoardRepository(Reply):
-    projects_v2: Boards
+class BoardOwner(Reply):
+    project_v2: Board
 
 
 class ReadBoardReply(Reply):
-    repository: BoardRepository
+    repository_owner: BoardOwner
 
 
 class Item(Reply):
@@ -135,46 +110,29 @@ class SetItemStatusReply(Reply):
     update_project_v2_item_field_value: UpdatedItem
 
 
-class UpdatedField(Reply):
-    project_v2_field: Item
+async def read_board(graphql: GraphQL) -> tuple[Board, StatusField]:
+    """The board the factory's config names.
 
-
-class SetStatusOptionsReply(Reply):
-    update_project_v2_field: UpdatedField
-
-
-async def read_board(graphql: GraphQL, repo: Repo) -> tuple[Board, StatusField]:
-    """The project's board: the one GitHub project linked to its repo."""
-    variables: dict[str, JsonValue] = {"owner": repo.owner, "name": repo.name}
+    Every project the factory runs on shares the one board, so a run goes straight to
+    it, and doesn't look for it through the repo's links. A repo can link to any number
+    of boards.
+    """
+    name = factory_config().board
+    variables: dict[str, JsonValue] = {"owner": name.owner, "number": name.number}
     reply = await ask(graphql, READ_BOARD, variables, ReadBoardReply)
-    boards = reply.repository.projects_v2
-    if boards.total_count != 1:
-        message = (
-            f"The repo {repo} has {boards.total_count} GitHub projects linked to it,"
-            " and the factory needs exactly one, as the project's board."
-        )
-        raise GitHubError(message)
-    if not boards.nodes:
-        message = (
-            f"GitHub lists a project linked to the repo {repo}, but doesn't show it."
-            " The GitHub CLI's login may not have access to it."
-        )
-        raise GitHubError(message)
-    board = boards.nodes[0]
+    board = reply.repository_owner.project_v2
     if board.field is None:
         message = f"The board {board.title!r} has no Status field."
         raise GitHubError(message)
     return board, board.field
 
 
-async def move_issue(
-    graphql: GraphQL, repo: Repo, issue: Issue, moment: Moment
-) -> None:
+async def move_issue(graphql: GraphQL, issue: Issue, moment: Moment) -> None:
     """Moves the issue to the status the board shows at `moment`.
 
     Adds the issue to the board first, when it isn't on it.
     """
-    board, field = await read_board(graphql, repo)
+    board, field = await read_board(graphql)
     status = factory_config().statuses[STATUS_AT[moment]]
     option = next((o for o in field.options if o.name == status.name), None)
     if option is None:
@@ -199,59 +157,8 @@ async def move_issue(
     await ask(graphql, SET_ITEM_STATUS, variables, SetItemStatusReply)
 
 
-async def end_without_pr(
-    graphql: GraphQL, repo: Repo, issue: Issue, reason: str
-) -> None:
+async def end_without_pr(graphql: GraphQL, issue: Issue, reason: str) -> None:
     """Meets FR-14 and FR-13. `reason` says why the run ended, for the owner."""
     body = f"The factory's run on this issue ended without a PR.\n\n{reason}"
     await post_comment(graphql, issue.id, body)
-    await move_issue(graphql, repo, issue, Moment.RUN_ENDED_WITHOUT_PR)
-
-
-async def set_board_statuses(graphql: GraphQL, repo: Repo) -> None:
-    """Sets the board's statuses from the factory's config, and keeps its others."""
-    _, field = await read_board(graphql, repo)
-    statuses = factory_config().statuses.values()
-    options = status_options(field.options, statuses)
-    variables: dict[str, JsonValue] = {"fieldId": field.id, "options": options}
-    await ask(graphql, SET_STATUS_OPTIONS, variables, SetStatusOptionsReply)
-
-
-def status_options(
-    board_options: list[StatusOption], statuses: Iterable[BoardStatus]
-) -> list[JsonValue]:
-    by_name = {status.name: status for status in statuses}
-    options: list[JsonValue] = []
-    for option in board_options:
-        status = by_name.pop(option.name, None)
-        # GitHub replaces every option with the ones given. Each one keeps its ID, or
-        # GitHub clears the status of every issue in it.
-        options.append(
-            {
-                "id": option.id,
-                "name": option.name,
-                "color": option.color if status is None else status.color,
-                "description": (
-                    option.description if status is None else status.description
-                ),
-            }
-        )
-    options.extend(
-        {"name": s.name, "color": s.color, "description": s.description}
-        for s in by_name.values()
-    )
-    return options
-
-
-def main() -> None:
-    """Run it with `uv run set-board-statuses <owner/name>`."""
-    parser = argparse.ArgumentParser(
-        description="Sets a project's board statuses from the factory's config."
-    )
-    parser.add_argument("repo", help="the project's repo, owner/name")
-    text: str = parser.parse_args().repo
-    try:
-        repo = Repo.parse(text)
-    except ValueError as error:
-        parser.error(str(error))
-    asyncio.run(set_board_statuses(gh_graphql, repo))
+    await move_issue(graphql, issue, Moment.RUN_ENDED_WITHOUT_PR)

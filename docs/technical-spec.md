@@ -310,3 +310,15 @@ from the factory's own Python. This meets FR-1 for Dust Law and the factory's ow
 and Python 3.14 are the only runtimes they need that the image doesn't already hold. Putting them
 in the image lets the factory be used on both sooner. The factory will later let each project build
 its own SFE image, so the factory's image doesn't carry each project's runtimes.
+
+## T-SEC-8. The board
+
+**TD-14.** Every board setting GitHub's API can set is set by the factory's own code, from a board
+file and the statuses and labels in the factory's config. The code is safe to run again, and has a
+check mode that lists how GitHub differs without changing anything. This meets FR-11, FR-28, FR-29
+and FR-13, which need the statuses on the board.
+
+*Why:* the file is what's intended and committed, and the board is what's set up, so the check can
+tell the two apart. Neither the Terraform GitHub provider nor the Pulumi one built from it has
+resources for this kind of board, so a tool like Pulumi would need custom code making the same API
+calls, plus its own state to keep.

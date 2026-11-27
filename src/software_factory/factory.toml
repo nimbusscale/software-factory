@@ -1,9 +1,30 @@
 # The factory's own config.
 
-# The code names each status by its key, such as in_review. A board's statuses are set
-# from these, and agents in a project read them from the board. So each description
-# says what the requirements that move an issue to the status call for the board to
-# show (FR-11, FR-28, FR-29, FR-13).
+# The board every project the factory runs on shares, named by its owner and number.
+[board]
+owner = "nimbusscale"
+number = 6
+
+# The code names each status by its key, such as in_review. The board's statuses are set
+# from these, in this order, and agents in a project read them from the board. So each
+# description says what the status means. For a status a run moves an issue to, it says
+# what the requirement that moves it calls for the board to show (FR-11, FR-28, FR-29,
+# FR-13).
+
+[statuses.backlog]
+name = "Backlog"
+color = "GRAY"
+description = "Accepted work that isn't ready to start yet."
+
+[statuses.ready]
+name = "Ready"
+color = "GREEN"
+description = "The issue is ready to start. The factory takes it only if it has the `factory` label."
+
+[statuses.in_progress]
+name = "In progress"
+color = "YELLOW"
+description = "The owner is working on the issue."
 
 [statuses.in_development]
 name = "In development"
@@ -19,6 +40,38 @@ description = "The issue's PR is open and ready for the owner."
 name = "Needs attention"
 color = "RED"
 description = "The issue waits on the owner before work on it can go on."
+
+[statuses.done]
+name = "Done"
+color = "PURPLE"
+description = "The issue is closed."
+
+# The labels set on each repo linked to the board. What each one means for an issue is
+# in the GitHub standards, plugin/skills/standards/github.md.
+
+[labels.task]
+color = "1d76db"
+description = "Work to do, with Why, Design, Do and Acceptance criteria."
+
+[labels.bug]
+color = "d73a4a"
+description = "Something that doesn't work as it should."
+
+[labels.question]
+color = "d876e3"
+description = "A question to settle. Its answer goes in a spec or the standards, and it generates no code."
+
+[labels.interactive]
+color = "fbca04"
+description = "Work the owner does in a session with an agent."
+
+[labels.agent-created]
+color = "c5def5"
+description = "An agent opened this issue on its own judgment."
+
+[labels.factory]
+color = "0e8a16"
+description = "The factory may take this issue."
 
 # The factory's default for each setting. A project's settings file can set any of them.
 

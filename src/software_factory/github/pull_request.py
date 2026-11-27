@@ -139,7 +139,7 @@ async def open_pull_request(
     )
     try:
         await post_comment(graphql, pull_request.id, review_comment(record))
-        await move_issue(graphql, repo, record.issue, moment)
+        await move_issue(graphql, record.issue, moment)
     except GitHubError as error:
         raise OpenedPullRequestError(pull_request, error) from error
     return pull_request

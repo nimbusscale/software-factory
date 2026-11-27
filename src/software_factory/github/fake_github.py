@@ -8,7 +8,8 @@ import re
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
-from software_factory.github.api import Repo
+from software_factory.config import factory_config
+from software_factory.github.api import GitHubError, Repo
 
 if TYPE_CHECKING:
     from collections.abc import Callable, Mapping
@@ -59,6 +60,7 @@ def starting_options() -> list[FakeOption]:
 
 @dataclass
 class FakeBoard:
+    number: int = field(default_factory=lambda: factory_config().board.number)
     id: str = "PVT_board"
     title: str = "dust-law"
     field_id: str = "PVTSSF_status"
@@ -80,8 +82,6 @@ class FakeGitHub:
     pull_requests: list[FakePullRequest] = field(default_factory=list)
     # The comments on each issue or PR, by its node ID.
     comments: dict[str, list[str]] = field(default_factory=dict)
-    # How many linked boards the reply lists, as GitHub lists at most the one asked for.
-    boards_shown: int = 1
     # The operations whose replies don't fit their schemas, such as `ReadIssue`.
     broken: set[str] = field(default_factory=set)
     # The name of each operation asked for, in order.
@@ -104,7 +104,6 @@ class FakeGitHub:
             "ReadBoard": self.read_board,
             "AddItem": self.add_item,
             "SetItemStatus": self.set_item_status,
-            "SetStatusOptions": self.set_status_options,
             "ReadRepo": self.read_repo,
             "CreatePullRequest": self.create_pull_request,
         }
@@ -112,7 +111,9 @@ class FakeGitHub:
 
     @property
     def board(self) -> FakeBoard:
-        return self.boards[0]
+        """The board the factory's config names."""
+        number = factory_config().board.number
+        return next(board for board in self.boards if board.number == number)
 
     def issue(self, number: int) -> FakeIssue:
         return next(issue for issue in self.issues if issue.number == number)
@@ -133,24 +134,23 @@ class FakeGitHub:
         node_id = f"IC_{len(subject_comments)}"
         return {"addComment": {"commentEdge": {"node": {"id": node_id}}}}
 
-    def read_board(self, _: Mapping[str, JsonValue]) -> JsonValue:
-        nodes: list[JsonValue] = [
-            {
-                "id": board.id,
-                "title": board.title,
-                "field": (
-                    {"id": board.field_id, "options": json_options(board)}
-                    if board.has_status_field
-                    else None
-                ),
-            }
-            for board in self.boards
-        ]
-        projects: dict[str, JsonValue] = {
-            "totalCount": len(self.boards),
-            "nodes": nodes[: self.boards_shown],
+    def read_board(self, variables: Mapping[str, JsonValue]) -> JsonValue:
+        number = integer(variables, "number")
+        board = next((b for b in self.boards if b.number == number), None)
+        if board is None:
+            # The GitHub CLI fails on the error GitHub sends with the reply.
+            message = f"Could not resolve to a ProjectV2 with the number {number}."
+            raise GitHubError(message)
+        node: dict[str, JsonValue] = {
+            "id": board.id,
+            "title": board.title,
+            "field": (
+                {"id": board.field_id, "options": json_options(board)}
+                if board.has_status_field
+                else None
+            ),
         }
-        return {"repository": {"projectsV2": projects}}
+        return {"repositoryOwner": {"projectV2": node}}
 
     def add_item(self, variables: Mapping[str, JsonValue]) -> JsonValue:
         expect("the board's ID", holds=text(variables, "projectId") == self.board.id)
@@ -167,31 +167,6 @@ class FakeGitHub:
         expect("an option's ID", holds=option_id in {o.id for o in self.board.options})
         self.board.items[item_id.removeprefix("PVTI_")] = option_id
         return {"updateProjectV2ItemFieldValue": {"projectV2Item": {"id": item_id}}}
-
-    def set_status_options(self, variables: Mapping[str, JsonValue]) -> JsonValue:
-        options = variables["options"]
-        if not isinstance(options, list):
-            raise BadRequestError(str(options))
-        new_options: list[FakeOption] = []
-        for i, option in enumerate(options):
-            if not isinstance(option, dict):
-                raise BadRequestError(str(option))
-            new_options.append(
-                FakeOption(
-                    id=text(option, "id") if "id" in option else f"opt-new-{i}",
-                    name=text(option, "name"),
-                    color=text(option, "color"),
-                    description=text(option, "description"),
-                )
-            )
-        # As GitHub does, an item whose option is gone loses its status.
-        kept = {o.id for o in new_options}
-        for issue_id, option_id in self.board.items.items():
-            if option_id not in kept:
-                self.board.items[issue_id] = None
-        self.board.options = new_options
-        field_id = self.board.field_id
-        return {"updateProjectV2Field": {"projectV2Field": {"id": field_id}}}
 
     def read_repo(self, _: Mapping[str, JsonValue]) -> JsonValue:
         branch: dict[str, JsonValue] = {"name": self.default_branch}

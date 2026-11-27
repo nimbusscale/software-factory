@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from software_factory.config import FactoryConfig
+from software_factory.config import FactoryConfig, StatusKey
 
 STATUS = {"name": "In review", "color": "BLUE", "description": "Ready."}
 SETTINGS = {
@@ -12,7 +12,13 @@ SETTINGS = {
 
 
 def test_config_without_every_status_is_refused() -> None:
-    statuses = {"in_development": STATUS, "in_review": STATUS}
+    keys = [key for key in StatusKey.__value__.__args__ if key != "needs_attention"]
+    config = {
+        "board": {"owner": "nimbusscale", "number": 1},
+        "statuses": dict.fromkeys(keys, STATUS),
+        "labels": {},
+        "settings": SETTINGS,
+    }
 
-    with pytest.raises(ValidationError, match="no status needs_attention"):
-        FactoryConfig.model_validate({"statuses": statuses, "settings": SETTINGS})
+    with pytest.raises(ValidationError, match=r"no status needs_attention\."):
+        FactoryConfig.model_validate(config)

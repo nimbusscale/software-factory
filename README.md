@@ -19,9 +19,11 @@ code or the check's config.
   them too.
 - `uv run write-role-views` rewrites each role's view file, such as
   `src/software_factory/roles/implementer.view.md`, after a change to what the role is given.
-- `uv run set-board-statuses <owner/name>` sets the statuses on a project's board from
-  `src/software_factory/factory.toml`, the factory's own config. It uses the GitHub CLI's login,
-  and keeps the board's other statuses.
+- `uv run set-up-board` makes the factory's board match `board/board.toml` and the statuses and
+  labels in `src/software_factory/factory.toml`, the factory's own config. It creates the board if
+  it's missing, and sets the labels on each repo linked to the board. `--check` lists how GitHub
+  differs and changes nothing. Run it from the repo root. It uses the GitHub CLI's login, which
+  needs the `project` scope. The settings it can't set are in `board/manual-settings.md`.
 
 ## Running the factory
 
