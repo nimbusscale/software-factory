@@ -41,15 +41,18 @@ def run_sfe(tmp_path: Path, env_file_text: str, *args: str) -> list[str]:
     }
     bash = shutil.which("bash")
     assert bash is not None
-    asyncio.run(run_script(bash, [str(RUN_SFE), *args], environment))
+    asyncio.run(run_script(bash, [str(RUN_SFE), *args], environment, tmp_path))
     return docker_args.read_text().splitlines()
 
 
-async def run_script(bash: str, args: list[str], environment: dict[str, str]) -> None:
+async def run_script(
+    bash: str, args: list[str], environment: dict[str, str], cwd: Path
+) -> None:
     process = await asyncio.create_subprocess_exec(
         bash,
         *args,
         env=environment,
+        cwd=cwd,
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE,
     )
@@ -76,6 +79,22 @@ def test_makes_the_run_folder_in_the_folder_the_env_file_sets(tmp_path: Path) ->
     assert f"FACTORY_RUN_FOLDER={folder.name}" in docker_args
     # FR-40.
     assert f"{folder}/transcripts:/home/sfe/.claude/projects" in docker_args
+
+
+def test_only_the_owner_can_open_the_run_folder(tmp_path: Path) -> None:
+    run_sfe(tmp_path, "", "nimbusscale/dust-law", "1")
+
+    folder = run_folder(tmp_path / "data" / "software-factory" / "runs")
+    # FR-39.
+    assert folder.stat().st_mode & 0o777 == 0o700
+
+
+def test_runs_folder_that_isnt_a_full_path_is_refused(tmp_path: Path) -> None:
+    with pytest.raises(AssertionError, match="isn't a full path"):
+        run_sfe(tmp_path, "FACTORY_RUNS_FOLDER=runs\n", "nimbusscale/dust-law", "1")
+
+    # Bug: a relative runs folder made a stray folder, and Docker then refused it.
+    assert not (tmp_path / "runs").exists()
 
 
 def test_makes_the_run_folder_in_the_default_folder(tmp_path: Path) -> None:

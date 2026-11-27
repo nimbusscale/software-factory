@@ -71,6 +71,12 @@ if [[ "$runs_folder" == "~/"* ]]; then
   runs_folder="$HOME/${runs_folder#"~/"}"
 fi
 runs_folder="${runs_folder:-${XDG_DATA_HOME:-$HOME/.local/share}/software-factory/runs}"
+# Docker refuses a mount whose path isn't absolute, with an error that doesn't name the setting.
+if [[ "$runs_folder" != /* ]]; then
+  echo "FACTORY_RUNS_FOLDER in $env_file is $runs_folder, which isn't a full path." \
+    "Give one that starts with / or ~/." >&2
+  exit 1
+fi
 
 # Claude Code in the SFE writes each file as its user, so the files would belong to someone else
 # here, and could fail to be written, if the user IDs differed.
@@ -91,8 +97,10 @@ elif [[ "${1:-}" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ && "${2:-}" =~ ^[0-9]+$ ]]
 fi
 run_folder="$runs_folder/$run_name"
 mkdir -p "$runs_folder"
-# Without -p, so two runs started in the same second never share a folder.
-mkdir "$run_folder" "$run_folder/transcripts"
+# Without -p, so two runs started in the same second never share a folder. Only the owner can open
+# it, since a transcript can hold a secret (FR-39).
+mkdir --mode 700 "$run_folder"
+mkdir "$run_folder/transcripts"
 echo "The run folder is $run_folder" >&2
 # Claude Code writes each session's transcript under ~/.claude/projects as it goes, so mounting the
 # run folder there keeps every step, even of a run that stops partway (FR-40). The SFE gets only
