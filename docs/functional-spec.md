@@ -35,6 +35,9 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Round.** One review of a run's work by the quality reviewer, and any answer the implementer
   gives to its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
+- **Run folder.** The folder that holds what the factory keeps from one run.
+- **Transcript.** The record of what an agent was told, each step it took with what came back, and
+  what it wrote.
 - **Turn cap.** The most turns an agent may take.
 
 ## F-SEC-2. Starting a run
@@ -188,3 +191,39 @@ it.
 
 *Why:* a candidate dropped by mistake is a real problem that nobody else sees. The list lets the
 owner check each call.
+
+## F-SEC-6. The run folder
+
+**FR-39.** The implementation loop shall make each run's run folder in the folder the owner sets for
+run folders, else in the factory's default folder for them.
+
+*Accepted gap:* the run folder is only on the machine the run was started on, unlike the run's work
+(FR-34). A transcript holds what each command an agent ran printed, which can include a secret, so
+the factory doesn't put it anywhere others could read it.
+
+**FR-40.** The implementation loop shall write each step of an agent's transcript to the run folder
+as the agent takes it.
+
+*Why:* the owner can then read a run that's still going. A run that stops partway, such as when its
+machine shuts down, still leaves the transcripts up to where it stopped.
+
+**FR-41.** The implementation loop shall list in the run folder each time it started or resumed an
+agent, in order, with which agent it was, its transcript, how it ended, the turns it took and what
+it cost.
+
+**FR-44.** When a run starts, the implementation loop shall record in the run folder the factory
+version the run uses, what the command was called with, and when the run started.
+
+*Why:* comparing two runs' transcripts needs the factory each one ran, and a run that ends early
+names its factory version nowhere else.
+
+**FR-45.** Where a run uses a checkout of the factory's repo with changes not committed, the
+implementation loop shall keep those changes in the run folder.
+
+*Why:* the factory version names only the checkout's commit, so without the changes nobody could
+tell later what factory the run used.
+
+**FR-42.** The description of a run's PR shall name the run's run folder.
+
+**FR-43.** When a run ends without opening a PR, the comment that FR-14 calls for shall name the
+run's run folder.

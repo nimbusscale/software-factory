@@ -13,12 +13,13 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 import pytest
-from claude_agent_sdk import AssistantMessage, ToolUseBlock, query
+from claude_agent_sdk import AssistantMessage, ResultMessage, ToolUseBlock, query
 
 from software_factory.conftest import run_git
 from software_factory.git.working_copy import Remote
 from software_factory.github.fake_github import REPO, FakeGitHub, FakeIssue
-from software_factory.loop.conftest import FACTORY_VERSION, STARTED
+from software_factory.loop.command import RUN_FOLDER as RUN_FOLDER_PATH
+from software_factory.loop.conftest import FACTORY_VERSION, RUN_FOLDER, STARTED
 from software_factory.loop.run import RunRequest, Services, run
 from software_factory.roles.implementer import IMPLEMENTER
 from software_factory.roles.quality_reviewer import (
@@ -35,6 +36,7 @@ if TYPE_CHECKING:
 FACTORY = Path("/factory")
 STANDARDS = FACTORY / "plugin" / "skills" / "standards"
 RUBRIC = str(STANDARDS / "review-rubric.md")
+TRANSCRIPTS = RUN_FOLDER_PATH / "transcripts"
 
 ISSUE_BODY = """## Why
 
@@ -58,11 +60,14 @@ None.
 class ReadingQuery:
     """The Agent SDK's `query`, which keeps the path of each file a role reads.
 
-    It runs each role on `model` in place of the role's own, when `model` is set.
+    It runs each role on `model` in place of the role's own, when `model` is set. When
+    each role hands back its result, it keeps whether the role's transcript is in the
+    run folder.
     """
 
     model: str | None = None
     reads: list[str] = field(default_factory=list)
+    transcript_in_run_folder: list[bool] = field(default_factory=list)
 
     def __call__(
         self, *, prompt: str, options: ClaudeAgentOptions
@@ -81,6 +86,9 @@ class ReadingQuery:
                     for block in message.content
                     if isinstance(block, ToolUseBlock) and block.name == "Read"
                 )
+            if isinstance(message, ResultMessage):
+                transcript = f"{message.session_id}.jsonl"
+                self.transcript_in_run_folder.append(any(TRANSCRIPTS.rglob(transcript)))
             yield message
 
 
@@ -110,6 +118,7 @@ def run_on_project(remote: Path, tmp_path: Path) -> ReadingQuery:
         home=tmp_path / "home",
         remote=lambda _: Remote(str(remote)),
         factory_version=FACTORY_VERSION,
+        run_folder=RUN_FOLDER,
     )
     request = RunRequest(repo=REPO, issue_number=7, rounds=None, started_at=STARTED)
 
@@ -124,6 +133,9 @@ def run_on_project(remote: Path, tmp_path: Path) -> ReadingQuery:
     assert "2 to 4 players" in readme
     # FR-28, FR-29.
     assert github.board.status_of(issue) in {"In review", "Needs attention"}
+    # FR-40: each role's transcript is there before the role ends.
+    assert len(reading.transcript_in_run_folder) >= 2
+    assert all(reading.transcript_in_run_folder)
     return reading
 
 

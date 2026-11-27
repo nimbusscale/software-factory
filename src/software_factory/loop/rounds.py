@@ -31,6 +31,8 @@ class RunContext:
     working_copy: WorkingCopy
     settings: Settings
     runner: RoleRunner
+    # The run folder's name.
+    run_folder: str
 
 
 @dataclass
@@ -79,6 +81,7 @@ async def work_and_rounds(context: RunContext) -> RunRecord:
     return RunRecord(
         issue=context.issue,
         run_branch=copy.run_branch,
+        run_folder=context.run_folder,
         last_result=outcome.result,
         declined=kept.declined,
         findings=kept.findings,

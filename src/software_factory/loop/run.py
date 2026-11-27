@@ -19,6 +19,7 @@ from software_factory.github.pull_request import (
     OpenedPullRequestError,
     PullRequest,
     open_pull_request,
+    transcripts_line,
 )
 from software_factory.loop.contract import ContractError, check_contract
 from software_factory.loop.rounds import (
@@ -79,6 +80,8 @@ class Services:
     home: Path
     remote: Callable[[Repo], Remote]
     factory_version: str
+    # The run folder's name.
+    run_folder: str
 
 
 def github_remote(repo: Repo, token: str) -> Remote:
@@ -121,7 +124,7 @@ async def run_in(
     try:
         await move_issue(services.graphql, request.repo, issue, Moment.RUN_STARTED)
         record = await work_and_rounds(
-            RunContext(issue, copy, settings, services.runner)
+            RunContext(issue, copy, settings, services.runner, services.run_folder)
         )
         await push(copy)
         # Meets FR-15.
@@ -166,6 +169,8 @@ async def end_run(
     request: RunRequest, services: Services, issue: Issue, reason: str
 ) -> RunEndedError:
     """Moves the issue to Needs attention and posts why, and hands back the error."""
+    # Meets FR-43.
+    reason = f"{reason}\n\n{transcripts_line(services.run_folder)}"
     try:
         await end_without_pr(services.graphql, request.repo, issue, reason)
     except GitHubError as error:
