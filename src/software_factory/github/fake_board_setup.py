@@ -274,12 +274,19 @@ class FakeBoardOwner:
     def create_label(self, variables: Mapping[str, JsonValue]) -> JsonValue:
         repo = self.repo(text(variables, "repositoryId"))
         fields = [text(variables, name) for name in ("name", "color", "description")]
+        # As GitHub does, it takes names that differ only in case as the same.
+        taken = {x.name.casefold() for x in repo.labels}
+        expect("a name no label has", holds=fields[0].casefold() not in taken)
         label = FakeLabel(*fields)
         repo.labels.append(label)
         return {"createLabel": {"label": {"id": label.id}}}
 
     def update_label(self, variables: Mapping[str, JsonValue]) -> JsonValue:
-        _, label = self.label(text(variables, "id"))
+        repo, label = self.label(text(variables, "id"))
+        name = text(variables, "name")
+        others = (x.name.casefold() for x in repo.labels if x is not label)
+        expect("a name no other label has", holds=name.casefold() not in others)
+        label.name = name
         label.color = text(variables, "color")
         label.description = text(variables, "description")
         return {"updateLabel": {"label": {"id": label.id}}}

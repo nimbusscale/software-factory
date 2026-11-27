@@ -7,9 +7,9 @@
 
 title = "Factory"
 
-# Each view, in the order the board shows them. `layout` is BOARD_LAYOUT, TABLE_LAYOUT or
-# ROADMAP_LAYOUT. `filter` is written as in the filter bar on GitHub. `fields` names the
-# visible fields.
+# Each view. GitHub's API can't set the order of a board's views, so the order here doesn't
+# count. `layout` is BOARD_LAYOUT, TABLE_LAYOUT or ROADMAP_LAYOUT. `filter` is written as in the
+# filter bar on GitHub. `fields` names the visible fields.
 
 [[views]]
 name = "Factory"

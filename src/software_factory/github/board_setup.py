@@ -161,22 +161,30 @@ def board_changes(
 
 def status_changes(graphql: GraphQL, field: StatusField) -> list[Change]:
     statuses = list(factory_config().statuses.values())
-    by_name = {option.name: option for option in field.options}
+    # A status whose name differs only in case is renamed, not removed and added, so the
+    # issues in it keep their status.
+    by_name = {option.name.casefold(): option for option in field.options}
     lines: list[str] = []
     for status in statuses:
-        option = by_name.get(status.name)
+        option = by_name.get(status.name.casefold())
         if option is None:
             lines.append(f"The board has no status {status.name!r}. It gets added.")
-        elif (option.color, option.description) != (status.color, status.description):
+        elif (option.name, option.color, option.description) != (
+            status.name,
+            status.color,
+            status.description,
+        ):
             lines.append(
-                f"The status {status.name!r} has a different color or description."
+                f"The status {option.name!r} has a different name, color or"
+                f" description from {status.name!r}."
             )
     wanted = [status.name for status in statuses]
+    wanted_names = {name.casefold() for name in wanted}
     lines.extend(
         f"The status {option.name!r} isn't in the factory's config. It gets removed,"
         " which takes it off every issue in it."
         for option in field.options
-        if option.name not in wanted
+        if option.name.casefold() not in wanted_names
     )
     if not lines and [option.name for option in field.options] != wanted:
         lines.append("The board's statuses are in a different order from the config's.")
@@ -186,7 +194,11 @@ def status_changes(graphql: GraphQL, field: StatusField) -> list[Change]:
     # clears the status of every issue in it.
     options: list[JsonValue] = [
         {
-            **({"id": by_name[status.name].id} if status.name in by_name else {}),
+            **(
+                {"id": by_name[status.name.casefold()].id}
+                if status.name.casefold() in by_name
+                else {}
+            ),
             "name": status.name,
             "color": status.color,
             "description": status.description,

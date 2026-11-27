@@ -247,3 +247,28 @@ def test_command_says_when_the_board_matches(
     assert capsys.readouterr().out == (
         "The board matches the board file and the config.\n"
     )
+
+
+def test_label_whose_name_differs_only_in_case_is_renamed() -> None:
+    bug = FakeLabel("Bug", "d73a4a", "Something isn't working")
+    repo = FakeRepo("nimbusscale/dust-law", labels=[bug])
+    owner = owner_with_board(repo)
+
+    set_up(owner)
+
+    # Bug: a label named Bug made setting up create bug, which GitHub refuses.
+    assert [x.id for x in repo.labels if x.name.casefold() == "bug"] == [bug.id]
+    assert bug.name == "bug"
+
+
+def test_status_whose_name_differs_only_in_case_keeps_its_issues() -> None:
+    in_progress = FakeOption("In Progress", "YELLOW", "")
+    owner = FakeBoardOwner(boards=[FakeSetupBoard(options=[in_progress])])
+
+    lines = set_up(owner)
+
+    # Bug: a status named In Progress was removed and In progress added, which took
+    # the status off every issue in it.
+    assert "isn't in the factory's config" not in "\n".join(lines)
+    renamed = next(o for o in owner.board.options if o.name == "In progress")
+    assert renamed.id == in_progress.id

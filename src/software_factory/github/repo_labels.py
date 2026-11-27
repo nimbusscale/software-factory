@@ -41,8 +41,12 @@ mutation CreateLabel(
 """
 
 UPDATE_LABEL = """
-mutation UpdateLabel($id: ID!, $color: String!, $description: String!) {
-  updateLabel(input: {id: $id, color: $color, description: $description}) {
+mutation UpdateLabel(
+  $id: ID!, $name: String!, $color: String!, $description: String!
+) {
+  updateLabel(input: {
+    id: $id, name: $name, color: $color, description: $description
+  }) {
     label { id }
   }
 }
@@ -81,19 +85,31 @@ class DeleteLabelReply(Reply):
 
 def label_changes(graphql: GraphQL, repo: LinkedRepo) -> list[Change]:
     wanted = factory_config().labels
-    by_name = {label.name: label for label in repo.labels.nodes}
+    # GitHub takes two names that differ only in case as the same label.
+    by_name = {label.name.casefold(): label for label in repo.labels.nodes}
     where = repo.name_with_owner
     changes: list[Change] = []
     for name, label in wanted.items():
-        found = by_name.get(name)
+        found = by_name.get(name.casefold())
         if found is None:
             lines = (f"{where} has no label {name!r}. It gets created.",)
             changes.append(Change(lines, create_label(graphql, repo.id, name, label)))
-        elif (found.color, found.description or "") != (label.color, label.description):
-            lines = (f"{where}'s label {name!r} has a different color or description.",)
-            changes.append(Change(lines, update_label(graphql, found.id, label)))
+        elif (found.name, found.color, found.description or "") != (
+            name,
+            label.color,
+            label.description,
+        ):
+            line = (
+                f"{where}'s label {found.name!r} has a different name, color or"
+                f" description from {name!r}."
+            )
+            changes.append(
+                Change((line,), update_label(graphql, found.id, name, label))
+            )
+    wanted_names = {name.casefold() for name in wanted}
     for found in repo.labels.nodes:
-        if found.name in GITHUB_DEFAULT_LABELS and found.name not in wanted:
+        name = found.name.casefold()
+        if name in GITHUB_DEFAULT_LABELS and name not in wanted_names:
             line = (
                 f"{where} has GitHub's default label {found.name!r}. It gets deleted,"
                 " which takes it off every issue that has it."
@@ -118,11 +134,12 @@ def create_label(
 
 
 def update_label(
-    graphql: GraphQL, label_id: str, label: RepoLabel
+    graphql: GraphQL, label_id: str, name: str, label: RepoLabel
 ) -> Callable[[], Awaitable[None]]:
     async def apply() -> None:
         variables: dict[str, JsonValue] = {
             "id": label_id,
+            "name": name,
             "color": label.color,
             "description": label.description,
         }
