@@ -1270,6 +1270,17 @@ the issue was written.**
 - Decided in: the interactive session that answered #85, #86 and #87.
 - Likely home: `FR`.
 
+**Whether the issue checker reads commit messages isn't decided yet.**
+- Why it matters: a commit message can record a choice the owner already made. In the review of
+  Dust Law's specs (nimbusscale/dust-law#17), the reviewer asked Joe to confirm choices he had made,
+  such as SVG for tiles and no chat. The branch's commit messages recorded them, but the reviewer
+  never read them. The quality reviewer is kept from commit messages on purpose (TR-21, TD-2),
+  since the author's reasons sway a review. The lean is that the issue checker may read them. Which
+  commit messages it would read, and why the quality reviewer's reason doesn't apply to it, wasn't
+  said.
+- Raised in: #21, closed once the specs settled that the workflow runs every review.
+- Likely home: `TR`.
+
 ## The factory board
 
 **One board holds the issues of every project the factory runs on, both the ones the factory works
