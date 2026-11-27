@@ -1283,8 +1283,8 @@ board's views split the two kinds of work. A project the factory doesn't run on 
   field, so every project on it uses the factory's statuses. A project that needs other statuses
   can't share the board.
 - Decided in: #8, in an interactive session that planned #8, #64, #115 and #134. The label's name
-  and whether new issues get it by default are settled in #136. The ideation doc's `auto-develop` label
-  is the starting point.
+  and whether new issues get it by default are settled in #136. The ideation doc's `auto-develop`
+  label is the starting point.
 - Likely home: `FR` for the board, which changes the functional spec's terms Board and Project; `AD`
   for one board across projects.
 
