@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING, Protocol
 from claude_agent_sdk import ClaudeAgentOptions, ClaudeSDKError, Message, ResultMessage
 from pydantic import ValidationError
 
+from software_factory.roles.agent_list import AgentListEntry, add_entry
 from software_factory.roles.definition import ResultModel, RoleDefinition, role_options
 
 if TYPE_CHECKING:
@@ -33,15 +34,17 @@ class RoleOutcome[ResultT: ResultModel]:
 
 
 class RoleRunner:
-    def __init__(self, query: Query) -> None:
+    def __init__(self, query: Query, agent_list: Path | None = None) -> None:
+        """`agent_list` is the run folder's list of roles, or None to keep no list."""
         self._query = query
+        self._agent_list = agent_list
 
     async def start[ResultT: ResultModel](
         self, definition: RoleDefinition[ResultT], prompt: str, cwd: Path
     ) -> RoleOutcome[ResultT]:
         """Starts the role in a new session (TR-6)."""
         options = role_options(definition, cwd, session_id=None)
-        return await self._run(definition, prompt, options)
+        return await self._run(definition, prompt, options, resumed=False)
 
     async def resume[ResultT: ResultModel](
         self,
@@ -52,26 +55,40 @@ class RoleRunner:
     ) -> RoleOutcome[ResultT]:
         """Resumes the session that `outcome` came from (TD-3)."""
         options = role_options(definition, cwd, session_id=outcome.session_id)
-        return await self._run(definition, prompt, options)
+        return await self._run(definition, prompt, options, resumed=True)
 
     async def _run[ResultT: ResultModel](
         self,
         definition: RoleDefinition[ResultT],
         prompt: str,
         options: ClaudeAgentOptions,
+        *,
+        resumed: bool,
     ) -> RoleOutcome[ResultT]:
         result_message: ResultMessage | None = None
+        sdk_error: ClaudeSDKError | None = None
         try:
             async for message in self._query(prompt=prompt, options=options):
                 if isinstance(message, ResultMessage):
                     result_message = message
         except ClaudeSDKError as error:
-            # When a role ends with an error result, such as at its turn cap, the
-            # SDK hands over the result message and then raises. The result message
-            # says more than the error does.
-            if result_message is None or not result_message.is_error:
-                reason = f"The {definition.name} stopped with an error: {error}"
-                raise RoleFailedError(reason) from error
+            sdk_error = error
+        if self._agent_list is not None:
+            entry = agent_list_entry(
+                definition.name,
+                resumed=resumed,
+                result_message=result_message,
+                sdk_error=sdk_error,
+            )
+            add_entry(self._agent_list, entry)
+        # When a role ends with an error result, such as at its turn cap, the SDK
+        # hands over the result message and then raises. The result message says
+        # more than the error does.
+        if sdk_error is not None and (
+            result_message is None or not result_message.is_error
+        ):
+            reason = f"The {definition.name} stopped with an error: {sdk_error}"
+            raise RoleFailedError(reason) from sdk_error
         if result_message is None:
             reason = f"The {definition.name} ended without a result."
             raise RoleFailedError(reason)
@@ -110,6 +127,39 @@ def read_result[ResultT: ResultModel](
     if reason is not None:
         raise RoleFailedError(reason)
     return result
+
+
+def agent_list_entry(
+    agent: str,
+    *,
+    resumed: bool,
+    result_message: ResultMessage | None,
+    sdk_error: ClaudeSDKError | None,
+) -> AgentListEntry:
+    if result_message is None:
+        return AgentListEntry(
+            agent=agent,
+            resumed=resumed,
+            session_id=None,
+            ended="no_result",
+            error=None if sdk_error is None else str(sdk_error),
+            turns=None,
+            cost_usd=None,
+            duration_ms=None,
+            result=None,
+        )
+    failed = result_message.is_error or result_message.subtype != "success"
+    return AgentListEntry(
+        agent=agent,
+        resumed=resumed,
+        session_id=result_message.session_id,
+        ended=result_message.subtype,
+        error=error_text(result_message) if failed else None,
+        turns=result_message.num_turns,
+        cost_usd=result_message.total_cost_usd,
+        duration_ms=result_message.duration_ms,
+        result=result_message.structured_output,
+    )
 
 
 def error_text(result_message: ResultMessage) -> str:

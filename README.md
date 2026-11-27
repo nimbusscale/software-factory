@@ -47,6 +47,19 @@ to read another file, such as the `.env` of another checkout. The GitHub token c
 `gh auth token`, so it's the GitHub CLI's login. The commits a run makes carry the git identity in
 your git config.
 
+Each `run-sfe.sh` call makes a run folder, named for when it started and for the repo and issue,
+such as `20261127T143000Z-nimbusscale-dust-law-1`. It's made in the folder that the line
+`FACTORY_RUNS_FOLDER=<path>` in `.env` names, else in `~/.local/share/software-factory/runs`. The
+script prints its path, and the run's PR or the issue's comment names it. It holds:
+
+- `transcripts/`, where Claude Code writes each role's transcript as the role works, as
+  `<session ID>.jsonl` in a folder for the copy the role ran in.
+- `agents.jsonl`, with a line for each time the workflow started or resumed a role: the role, its
+  session ID, how it ended, its turns, its cost and its result.
+
+The SFE's user has the user ID of whoever built the image, so the files in the run folder are
+yours. `run-sfe.sh` refuses an image built by another user.
+
 ## Checks on a PR
 
 GitHub Actions runs `make check` on every PR. When the PR changes a file the SFE's image or a run

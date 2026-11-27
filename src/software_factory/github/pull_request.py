@@ -48,6 +48,8 @@ class RunRecord:
 
     issue: Issue
     run_branch: str
+    # The run folder's name.
+    run_folder: str
     last_result: ImplementerResult
     # From every one of the implementer's results (TD-5).
     declined: Sequence[DeclinedFinding]
@@ -173,7 +175,13 @@ def description(record: RunRecord, factory_version: str) -> str:
     )
     # Meets FR-33.
     parts.append(f"Made by factory version `{factory_version}`.")
+    # Meets FR-42.
+    parts.append(transcripts_line(record.run_folder))
     return "\n\n".join(parts) + "\n"
+
+
+def transcripts_line(run_folder: str) -> str:
+    return f"The run's transcripts are in the run folder `{run_folder}`."
 
 
 def declined_lines(record: RunRecord) -> list[str]:

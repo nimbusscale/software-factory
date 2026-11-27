@@ -30,6 +30,7 @@ if TYPE_CHECKING:
 TILES = FakeIssue(number=7, title="Add the tiles", body="## Why\n\nTiles.\n")
 RUN_BRANCH = "factory/issue-7-20261124-213000"
 VERSION = "0123456789ab"
+RUN_FOLDER = "20261124T213000Z-nimbusscale-dust-law-7"
 
 LAST_RESULT = ImplementerResult(
     summary="Adds the tile deck and deals four tiles to each player.",
@@ -90,6 +91,7 @@ def record(*findings: NumberedFinding) -> RunRecord:
     return RunRecord(
         issue=asyncio.run(read_issue(FakeGitHub(issues=[TILES]), REPO, 7)),
         run_branch=RUN_BRANCH,
+        run_folder=RUN_FOLDER,
         last_result=LAST_RESULT,
         declined=[DeclinedFinding(finding_id="R1-F2", reason="It reads better.")],
         findings=findings,
@@ -182,10 +184,12 @@ def test_description_leaves_out_empty_lists() -> None:
     run = record(IMPORTANT)
     empty = replace(run, last_result=result, declined=[])
 
-    # FR-16, FR-17, FR-33.
+    # FR-16, FR-17, FR-33, FR-42.
     assert description(empty, VERSION) == (
         f"Closes #7\n\n{LAST_RESULT.summary}\n\n"
-        "Made by factory version `0123456789ab`.\n"
+        "Made by factory version `0123456789ab`.\n\n"
+        "The run's transcripts are in the run folder"
+        " `20261124T213000Z-nimbusscale-dust-law-7`.\n"
     )
 
 
@@ -193,7 +197,14 @@ def test_description_names_the_factory_version() -> None:
     text = description(record(IMPORTANT), VERSION)
 
     # FR-33.
-    assert text.endswith("\n\nMade by factory version `0123456789ab`.\n")
+    assert "\n\nMade by factory version `0123456789ab`.\n" in text
+
+
+def test_description_names_the_run_folder() -> None:
+    text = description(record(IMPORTANT), VERSION)
+
+    # FR-42.
+    assert "run folder `20261124T213000Z-nimbusscale-dust-law-7`" in text
 
 
 def test_comment_lists_the_findings_the_implementer_didnt_get() -> None:

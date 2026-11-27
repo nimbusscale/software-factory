@@ -24,6 +24,10 @@ from software_factory.loop.run import (
 )
 from software_factory.roles.run import RoleRunner
 
+# Where tools/run-sfe.sh mounts the run folder.
+RUN_FOLDER = Path("/home/sfe/run")
+AGENT_LIST = "agents.jsonl"
+
 
 def factory_home() -> Path:
     """The folder that holds each run's working copy."""
@@ -68,10 +72,11 @@ def main() -> None:
     token = from_environment("GH_TOKEN")
     services = Services(
         graphql=gh_graphql,
-        runner=RoleRunner(query),
+        runner=RoleRunner(query, agent_list=RUN_FOLDER / AGENT_LIST),
         home=factory_home(),
         remote=lambda repo: github_remote(repo, token),
         factory_version=from_environment("FACTORY_VERSION"),
+        run_folder=from_environment("FACTORY_RUN_FOLDER"),
     )
     try:
         pull_request = asyncio.run(run(request, services))

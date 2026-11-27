@@ -6,6 +6,7 @@ from typing import TYPE_CHECKING
 import pytest
 from claude_agent_sdk import ClaudeAgentOptions, Message, query
 
+from software_factory.roles.agent_list import AgentListEntry
 from software_factory.roles.definition import ResultModel, RoleDefinition
 from software_factory.roles.fake_agent_sdk import (
     FakeQuery,
@@ -124,6 +125,62 @@ def test_start_uses_a_new_session_and_resume_the_same_one() -> None:
     asyncio.run(start_and_resume())
 
     assert [options.resume for options in fake.options] == [None, "s-1"]
+
+
+def listed(agent_list: Path) -> list[AgentListEntry]:
+    lines = agent_list.read_text(encoding="utf-8").splitlines()
+    return [AgentListEntry.model_validate_json(line) for line in lines]
+
+
+def test_lists_each_start_and_resume_in_order(tmp_path: Path) -> None:
+    agent_list = tmp_path / "agents.jsonl"
+    fake = FakeQuery(
+        [
+            [result_message(structured_output=IMPLEMENTER_RESULT, session_id="s-1")],
+            [
+                result_message(
+                    structured_output=IMPLEMENTER_RESULT,
+                    session_id="s-1",
+                    num_turns=4,
+                    total_cost_usd=0.25,
+                )
+            ],
+        ]
+    )
+    runner = RoleRunner(fake, agent_list=agent_list)
+
+    async def start_and_resume() -> None:
+        outcome = await runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY)
+        await runner.resume(outcome, IMPLEMENTER, "Findings: F1.", WORKING_COPY)
+
+    asyncio.run(start_and_resume())
+
+    started, resumed = listed(agent_list)
+    # FR-41.
+    assert (started.agent, started.resumed) == ("implementer", False)
+    assert (resumed.agent, resumed.resumed) == ("implementer", True)
+    assert resumed.session_id == "s-1"
+    assert (resumed.ended, resumed.error) == ("success", None)
+    assert (resumed.turns, resumed.cost_usd) == (4, 0.25)
+    assert resumed.result == IMPLEMENTER_RESULT
+
+
+def test_lists_a_role_that_ends_the_run(tmp_path: Path) -> None:
+    agent_list = tmp_path / "agents.jsonl"
+    runner = RoleRunner(
+        FakeQuery([saved_response("turn_cap_reached"), []]), agent_list=agent_list
+    )
+
+    with pytest.raises(RoleFailedError):
+        asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
+    with pytest.raises(RoleFailedError):
+        asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
+
+    at_turn_cap, no_result = listed(agent_list)
+    # FR-41.
+    assert at_turn_cap.ended == "error_max_turns"
+    assert at_turn_cap.session_id is not None
+    assert (no_result.ended, no_result.session_id) == ("no_result", None)
 
 
 def test_gives_the_role_its_turn_cap_each_time() -> None:

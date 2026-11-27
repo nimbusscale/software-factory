@@ -17,6 +17,7 @@ version="$(git rev-parse --short=12 HEAD)"
 git archive --format=tar HEAD \
   | docker build \
       --build-arg "FACTORY_VERSION=$version" \
+      --build-arg "SFE_UID=$(id -u)" \
       --tag "software-factory-sfe:$version" \
       --tag software-factory-sfe:latest \
       -

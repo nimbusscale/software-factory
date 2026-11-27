@@ -28,6 +28,7 @@ STARTED = datetime(2026, 11, 24, 21, 30, 0, tzinfo=UTC)
 RUN_BRANCH = "factory/issue-7-20261124-213000"
 IMPLEMENTER_SESSION = "implementer-session"
 FACTORY_VERSION = "0123456789ab"
+RUN_FOLDER = "20261124T213000Z-nimbusscale-dust-law-7"
 
 
 def fake_github() -> FakeGitHub:
@@ -153,6 +154,7 @@ def services(
         home=home,
         remote=lambda repo: Remote(str(remote) if repo == REPO else ""),
         factory_version=FACTORY_VERSION,
+        run_folder=RUN_FOLDER,
     )
 
 

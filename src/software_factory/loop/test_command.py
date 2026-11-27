@@ -22,6 +22,7 @@ def sfe_environment(monkeypatch: pytest.MonkeyPatch) -> None:
     """The variables the SFE sets for the command."""
     monkeypatch.setenv("GH_TOKEN", "token-for-github")
     monkeypatch.setenv("FACTORY_VERSION", "0123456789ab")
+    monkeypatch.setenv("FACTORY_RUN_FOLDER", "20261124T213000Z-nimbusscale-dust-law-7")
 
 
 def test_command_reads_the_repo_issue_and_rounds() -> None:

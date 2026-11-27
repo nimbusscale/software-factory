@@ -60,9 +60,17 @@ COPY . .
 # the code that runs.
 RUN uv sync --locked
 
-RUN useradd --create-home sfe
+# The user ID of whoever builds the image, which tools/build-sfe.sh passes in. So the files the SFE
+# writes in the run folder, which run-sfe.sh mounts, belong to that user outside the SFE. run-sfe.sh
+# reads the label to check it.
+ARG SFE_UID=1000
+LABEL software-factory.sfe-uid=$SFE_UID
+RUN useradd --create-home --uid "$SFE_UID" sfe
 USER sfe
 WORKDIR /home/sfe
+# Where run-sfe.sh mounts the run folder. Docker would make each missing folder on the way as root,
+# and then Claude Code couldn't write its other files in ~/.claude.
+RUN mkdir --parents /home/sfe/run /home/sfe/.claude/projects
 
 ARG FACTORY_VERSION
 ENV FACTORY_VERSION=$FACTORY_VERSION

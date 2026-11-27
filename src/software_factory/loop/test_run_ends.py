@@ -12,6 +12,7 @@ from software_factory.github.pull_request import OpenedPullRequestError
 from software_factory.loop.conftest import (
     ISSUE_NUMBER,
     RUN_BRANCH,
+    RUN_FOLDER,
     board_status,
     fake_github,
     finding,
@@ -132,6 +133,21 @@ def test_run_that_ends_without_a_pr_leaves_its_work_on_github(
         "Add the tiles"
     )
     assert_ended_without_pr(github, f"The run's work is on the branch `{RUN_BRANCH}`.")
+
+
+def test_comment_on_a_run_that_ends_without_a_pr_names_the_run_folder(
+    remote: Path, tmp_path: Path
+) -> None:
+    roles = ScriptedQuery(
+        [lambda _: saved_response("success_without_structured_output")]
+    )
+    github = fake_github()
+
+    with pytest.raises(RunEndedError):
+        start_run(services(github, roles, remote, tmp_path / "home"))
+
+    # FR-43.
+    assert_ended_without_pr(github, f"the run folder `{RUN_FOLDER}`.")
 
 
 def test_run_that_ends_partway_through_a_turn_keeps_its_changes(
