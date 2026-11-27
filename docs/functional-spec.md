@@ -212,7 +212,8 @@ agent, in order, with which agent it was, its transcript, how it ended, the turn
 it cost.
 
 **FR-46.** The list that FR-41 calls for shall give, for each time the implementation loop started
-or resumed an agent, the tokens the agent used with each model, and what each model cost.
+or resumed an agent, the tokens the agent's session had used with each model by the end of that
+time, and what each model had cost.
 
 *Why:* the owner compares runs by what they used, such as what a change to the factory did to a
 run's cost, or the average cost of a PR. Those comparisons can only be made later if each run's

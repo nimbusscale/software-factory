@@ -229,6 +229,19 @@ def test_lists_no_models_when_the_model_usage_doesnt_fit(tmp_path: Path) -> None
     assert entry.ended == "success"
 
 
+def test_reads_a_line_written_without_models() -> None:
+    line = (
+        '{"agent": "implementer", "resumed": false, "session_id": "s-1",'
+        ' "ended": "success", "error": null, "turns": 2, "cost_usd": 0.5,'
+        ' "duration_ms": 1000, "result": null}'
+    )
+
+    entry = AgentListEntry.model_validate_json(line)
+
+    # Bug: a run folder's list written before it held `models` couldn't be read back.
+    assert entry.models is None
+
+
 def test_gives_the_role_its_turn_cap_each_time() -> None:
     implementer = replace(IMPLEMENTER, turn_cap=7)
     fake = FakeQuery(

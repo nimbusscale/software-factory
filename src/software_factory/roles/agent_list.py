@@ -49,10 +49,13 @@ class AgentListEntry(BaseModel):
     ended: str
     error: str | None
     turns: int | None
+    # Claude Code gives a resumed session's cost and tokens as the session's totals so
+    # far, not the resume's own, so each line's `cost_usd` and `models` include the
+    # lines before it for the same session.
     cost_usd: float | None
-    # Each model the role used, by the model's name. None when there's no result, or
-    # when the result's `modelUsage` doesn't fit `ModelUse`.
-    models: dict[str, ModelUse] | None
+    # Each model the role used, by the model's name. None when there's no result, when
+    # the result's `modelUsage` doesn't fit `ModelUse`, or in a line without the field.
+    models: dict[str, ModelUse] | None = None
     duration_ms: int | None
     result: JsonValue
 
