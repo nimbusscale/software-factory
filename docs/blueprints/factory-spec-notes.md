@@ -1273,8 +1273,9 @@ the issue was written.**
 ## The factory board
 
 **One board holds the issues of every project the factory runs on, both the ones the factory works
-and the ones the owner works by hand. A label on the issue says the factory may take it, and the
-board's views split the two kinds of work. A project the factory doesn't run on has its own board.**
+and the ones the owner works by hand. The `factory` label on an issue says the factory may take it,
+and the board's views split the two kinds of work. A project the factory doesn't run on has its own
+board.**
 - Why: Joe wants one place to see what's being worked on in every repo, "regardless of what repo is
   using the factory". He also wants each issue on one board, not two. Splitting the boards by the
   label puts issues on both, since a board's auto-add only ever adds an issue and never removes
@@ -1283,38 +1284,115 @@ board's views split the two kinds of work. A project the factory doesn't run on 
   field, so every project on it uses the factory's statuses. A project that needs other statuses
   can't share the board.
 - Decided in: #8, in an interactive session that planned #8, #64, #115 and #134. The label's name
-  and whether new issues get it by default are settled in #136. The ideation doc's `auto-develop`
-  label is the starting point.
+  is from #136.
 - Likely home: `FR` for the board, which changes the functional spec's terms Board and Project; `AD`
   for one board across projects.
+
+**The board's statuses are Backlog, Ready, In progress, In development, In review, Needs attention
+and Done. In progress is the owner's own work, and In development always means a run is going.
+Ready means the issue is ready to start, and the `factory` label says whether the factory may take
+it. A new issue starts in Backlog.**
+- Why: Joe: "let's give this a shot and we can adjust as needed." Both kinds of work share the
+  board, so In progress and In development keep them apart. Without that, neither the owner nor a
+  poller that starts runs (#10) could tell from the board whether a run is going. "In progress" is
+  written like "In development". The label already says who takes an issue, so Ready doesn't have
+  to. A new issue starts in Backlog so the factory never starts on one the owner hasn't looked at:
+  an issue only reaches Ready when the owner moves it.
+- Left out: Triage, and Waiting to merge from the ideation doc. Joe is the only user, and Backlog
+  plus the `agent-created` label cover new ideas. Waiting to merge is for a PR that passes every
+  check but is held, such as when auto-merge is off. Until auto-merge exists, In review already
+  means the PR waits on the owner. Either can be added when it's needed.
+- Decided in: #136. Each status's description and color are still to settle there.
+- Likely home: the statuses in the factory's config (#137), with each status's description saying
+  what it means.
+
+**Every issue has one kind label: `task`, `bug`, `question` or `interactive`. An issue an agent
+opens on its own also has `agent-created`. The `factory` label goes only on a `task` or a `bug`,
+and a new issue doesn't get it. GitHub's default labels, `documentation` among them, are removed.**
+- Why: nimbusscale is a personal account, so GitHub's issue types aren't available, and labels do
+  that job. `task` and `bug` are separate because a bug has its own shape, which asks for what
+  happened. The check when a run starts reads the kind label to know which headings the body must
+  have. The label also lets the board show or count the bugs, which mostly come from the factory's
+  own work. Joe asked why the two are separate, then chose to keep both. The `factory` label is off
+  by default because, once a poller starts runs, an issue in Ready with the label starts a run
+  without anyone asking. So the label means the owner chose to hand the issue over. A run never
+  takes a question or an interactive issue. `documentation` is dropped because a doc-only change is
+  a task. Joe chose the name `factory` over the ideation doc's `auto-develop`.
+- Decided in: #136, from the proposal in #8.
+- Likely home: the labels in the factory's config (#137); the kind labels' rules in
+  `plugin/skills/standards/github.md`.
+
+**A parent issue moves to In progress on its own when its first child starts. After that, the owner
+moves it, and decides when it's done.**
+- Why: Joe: "I definitely don't want to leave parents in backlog, because then they just get lost
+  in the backlog." He wants to choose when a parent is done himself.
+- Still open in #136: whether the parent also moves when the child starts in a person's session,
+  not only in a run, and whether it moves only from Backlog or Ready, so it never overrides a
+  status the owner set. Both are proposed.
+- Decided in: #136.
+- Likely home: `FR`.
 
 **Every board setting GitHub's API can set is set by the factory's own code, from a board file in
 the software-factory repo and the statuses and labels in the factory's config. The code is safe to
 run again, and has a check mode that lists how the board differs from the file without changing
-anything. The board file includes the repos on the board.**
+anything. The board file doesn't list the repos on the board. The board's own repo links are that
+list.**
 - Why: Joe wants the board created and managed by code. A file is what's intended and committed,
   and the board is what's set up, so the check can tell the two apart. Joe: "if it's going to be
   something that's related to code, then we should have a file for it." Neither the Terraform
   GitHub provider nor the Pulumi one built from it has resources for this kind of board, so a tool
   like Pulumi would need custom code making the same API calls, plus its own state to keep. The
-  file lives in the software-factory repo because Joe is the factory's only user.
-- Decided in: #8, in the same session.
+  file lives in the software-factory repo because Joe is the factory's only user. The init script
+  links a repo to the board, and the API reads those links. A list in the board file would need a
+  second change, in the software-factory repo, each time a repo joins.
+- Decided in: #8, in the same session. The repo list moved to the board's links in #136.
 - Likely home: `TD`, with the code that sets the board.
 
 **Board settings GitHub's API can't set are described in prose, in a doc an agent with the Claude
 in Chrome plugin sets them from. These are how each view is grouped, sorted and sliced, and which
-built-in workflows are on.**
+built-in workflows are on. "Pull request linked to issue" is off. Item added to project, set to
+Backlog, Item closed, Auto-close issue, Pull request merged and Auto-add sub-issues to project are
+on. Auto-add to project isn't used.**
 - Why: the API sets a view's name, layout, filter and visible fields, but not its grouping,
   sorting or slices. It can delete a built-in workflow but not turn one off or on. Joe expects
   these to change rarely: "once we set up the view and adjust the built-in workflows, it's very
-  unlikely that we'll need to make changes again".
-- Decided in: #8, in the same session. Which workflows are off is #136.
+  unlikely that we'll need to make changes again". "Pull request linked to issue" moves an issue to
+  In review when a PR links it. A run's PR links its issue, so after a run moves the issue to Needs
+  attention, the workflow could move it back to In review. That breaks FR-29: "While a review in a
+  run has reported a finding to check, when the run opens its PR, the implementation loop shall
+  show on the board that the issue needs the owner before work on it can go on." The workflows left
+  on add an issue to the board or move it to Done, and none changes a status the factory sets.
+  Auto-close issue closes an issue moved to Done, which is how the owner finishes a parent. Auto-add
+  to project is replaced by the Action in the next entry.
+- Still open in #136: whether the board code deletes a clashing workflow instead. Proposed: no.
+  GitHub's docs don't say a deleted built-in workflow can be brought back. The API reads whether
+  each workflow is on, so the check mode can report a clashing one that's on.
+- Decided in: #8, in the same session. Which workflows are off is from #136.
 - Likely home: the project contract, or a doc next to the board file.
 
-**A repo joins the factory board when the owner adds it to the board file and runs the board code
-again. Starting a project doesn't add it.**
-- Why: Joe is the only person who uses the factory. Adding a repo is the change most likely to
-  come up, and it won't come up often.
-- Decided in: #8, in the same session. #63, starting a project with slash commands, may change
-  this later.
-- Likely home: `FR`.
+**Each repo on the board has a GitHub Action, `actions/add-to-project`, that adds its new issues to
+the board. The Action uses a board token saved as a secret in the repo.**
+- Why: nimbusscale is on GitHub Free, which allows one "Auto-add to project" workflow per board,
+  and each one adds issues from one repo. GitHub's docs: "GitHub Free: 1". So on one board across
+  repos, only one repo's issues would be added on their own. Upgrading to Pro allows 5, set by
+  hand. The Action costs nothing and is committed code, which fits the board being set up by code.
+- Still to check, when the code is built: which kind of GitHub token can write to a board a
+  personal account owns. A fine-grained token may not be able to, and a classic one needs the
+  `project` scope.
+- Decided in: #136.
+- Likely home: `TD`, with the init script.
+
+**A repo joins the factory by running the factory's init script in it. Init adds the factory's
+plugin to the repo's `.claude/settings.json`, adds the Action and its secret, sets the repo's labels,
+links the repo to the board, adds the repo's existing issues to the board once, and sets up what the
+project contract needs. It's safe to run again, has a check mode, and adds its files through a PR.**
+- Why: Joe: "That would include adding the plugin so that we don't end up having this dependency
+  of the plugin needs to be added, then something else needs to be done." A Claude Code plugin
+  can't run anything when it's installed, so the plugin alone can't set the repo up. A hook that
+  checks at the start of every session would run in every session in every repo, for a step that
+  happens once. Labels are set per repo, so a per-repo step is where they get set. Auto-add never
+  adds issues that already exist, so init adds them once. `main` is protected, so init's files go
+  in through a PR.
+- Decided in: #136, which replaces #8's "the owner adds it to the board file and runs the board
+  code again". #63, starting a project with slash commands, can call the same code.
+- Likely home: `FR` for joining the factory; `TD` for the script.
