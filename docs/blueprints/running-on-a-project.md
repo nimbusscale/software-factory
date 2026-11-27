@@ -194,9 +194,8 @@ The factory's own repo follows the contract, so the factory can later run on its
 
 ## Phase 4. The standards as a plugin
 
-The factory's standards reach every session the same way, as a skill in the factory plugin,
-published from this repo. A run's roles and a person's own session load the same plugin, on any
-machine.
+The factory's standards ship as a skill in the factory plugin, published from this repo, to the
+sessions AD-14 names.
 
 **The plugin** holds one skill. The skill's folder holds every standards file, their templates and
 the doc check script, and the standards' README is the skill's instruction file. A file in the
@@ -222,7 +221,9 @@ paths in the skill's folder, such as `review-rubric.md` in the quality reviewer'
 names a path under `/factory`.
 
 **In a person's session,** the project's `.claude/settings.json` asks for the factory plugin from
-this repo's marketplace. Dust Law switches from its links to the plugin.
+this repo's marketplace. Dust Law switches from its links to the plugin. This repo's own
+`.claude/settings.json` asks for no plugin, so a session here reads the standards in `plugin/` that
+its CLAUDE.md points to, on the session's own branch.
 
 **The doc check script** is a Python script, so it can read its ignore list from the project's
 `software-factory.toml`:
@@ -243,9 +244,7 @@ ignore list names `plugin/`, since the standards' example IDs aren't this repo's
 
 The spec changes this phase makes:
 
-- A new `AD`: the factory's standards reach every session, a run's roles and a person's own, as a
-  skill in the factory plugin. *Why:* a run and a person's session then follow the same standards,
-  found the same way, on any machine.
+- AD-14, which says how the factory's standards reach each session.
 - Factory plugin in the technical spec's Terms.
 
 ## Phase 5. A user for each role
