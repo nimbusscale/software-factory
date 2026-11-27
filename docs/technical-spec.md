@@ -98,14 +98,9 @@ keeps one use, for people working in the repo.
 the factory's own, as a skill in the factory plugin.
 
 *Why:* a run and a person's session then follow the same standards, found the same way, on any
-machine.
-
-**AD-15.** A person's own session in the factory's own repo reads the standards from the repo's
-checkout, through the paths in its CLAUDE.md, with no factory plugin installed.
-
-*Why:* that session is where the standards are changed, so it has to read the version on its
-branch. An installed factory plugin is a separate copy, so the session could load an older version
-of a standard than the one CLAUDE.md points to.
+machine. The factory's own repo is left out because the standards are changed there. A session
+there has to read the version on its branch, and an installed factory plugin would be a second copy
+that could be older.
 
 ## T-SEC-3. Code standards
 
