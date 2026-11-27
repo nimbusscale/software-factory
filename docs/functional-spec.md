@@ -207,13 +207,9 @@ as the agent takes it.
 *Why:* the owner can then read a run that's still going. A run that stops partway, such as when its
 machine shuts down, still leaves the transcripts up to where it stopped.
 
-**FR-41.** The implementation loop shall list in the run folder each time it started or resumed an
-agent, in order, with which agent it was, its transcript, how it ended, the turns it took and what
-it cost.
-
-**FR-46.** The list that FR-41 calls for shall give, for each time the implementation loop started
-or resumed an agent, the tokens the agent's session had used with each model by the end of that
-time, and what each model had cost.
+**FR-46.** The implementation loop shall list in the run folder each time it started or resumed an
+agent, in order, with which agent it was, its transcript, how it ended, the turns it took, and the
+tokens its session had used with each model and what they had cost by the end of that time.
 
 *Why:* the owner compares runs by what they used, such as what a change to the factory did to a
 run's cost, or the average cost of a PR. Those comparisons can only be made later if each run's

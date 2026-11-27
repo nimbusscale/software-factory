@@ -156,7 +156,7 @@ def test_lists_each_start_and_resume_in_order(tmp_path: Path) -> None:
     asyncio.run(start_and_resume())
 
     started, resumed = listed(agent_list)
-    # FR-41.
+    # FR-46.
     assert (started.agent, started.resumed) == ("implementer", False)
     assert (resumed.agent, resumed.resumed) == ("implementer", True)
     assert resumed.session_id == "s-1"
@@ -177,7 +177,7 @@ def test_lists_a_role_that_ends_the_run(tmp_path: Path) -> None:
         asyncio.run(runner.start(IMPLEMENTER, "Do the work.", WORKING_COPY))
 
     at_turn_cap, no_result = listed(agent_list)
-    # FR-41.
+    # FR-46.
     assert at_turn_cap.ended == "error_max_turns"
     assert at_turn_cap.session_id is not None
     assert (no_result.ended, no_result.session_id) == ("no_result", None)
