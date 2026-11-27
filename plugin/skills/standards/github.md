@@ -1,13 +1,13 @@
 # GitHub work
 
-The standards for working with a project's GitHub issues, its board and its PRs: what a task
-issue and a question issue hold, what the board's statuses mean, how an issue is updated, and how
-the summary in a PR's description is written.
+The standards for working with a project's GitHub issues, its board and its PRs: what each kind of
+issue holds, which labels an issue has, what the board's statuses mean, who moves an issue's
+status, how an issue is updated, and how the summary in a PR's description is written.
 
 ## A task issue
 
-A task issue is the kind of issue the factory's implementation loop takes. Its body has these four
-sections, in this order, each under a `##` heading of that name:
+A task issue is the kind of issue the factory's implementation loop takes. It has the `task` label.
+Its body has these four sections, in this order, each under a `##` heading of that name:
 
 - **Why:** what the work is for, in a few sentences.
 - **Design:** what the work has to follow, other than the requirements it meets. That's the
@@ -40,6 +40,22 @@ List each item on its own, not a whole section by its section ID, so each one ca
 item is. The text also shows what the item said when the issue was written. If the spec changed
 before the work starts, the two differ, and the spec wins.
 
+## A bug issue
+
+A bug issue is a task issue for something that doesn't work as it should. It has the `bug` label
+in place of `task`. Its body has these five sections, in this order, each under a `##` heading of
+that name:
+
+- **What happened:** what was seen, with links to what shows it, such as a session, a trace or a
+  failed check.
+- **Expected:** what should have happened instead.
+- **Design**, **Do** and **Acceptance criteria:** as in a task issue. Acceptance criteria includes
+  the failing case, written as behavior, such as "Running `make check` on a fresh clone passes."
+
+It has no Why section, since What happened and Expected say why the work is needed.
+
+*Why:* agents and code open many bugs, and a fixed shape prompts them for the evidence.
+
 ## A question issue
 
 A question issue holds a question that has to be settled before some work can start. It generates
@@ -57,10 +73,48 @@ standards, and the question issue is closed.
 *Why:* a question written only in a comment or a conversation is easy to miss. The agent that
 picks up the waiting work may never see it, and nothing shows the owner what's waiting on it.
 
+## An interactive issue
+
+An interactive issue is work the owner does in a session with an agent, such as settling a set of
+questions or doing research. The factory never takes one. It has the `interactive` label. Its body
+has these two sections, in this order, each under a `##` heading of that name:
+
+- **Goal:** what the session is for, in whatever form helps. It can hold links to read, or a list
+  of items to go through, or neither.
+- **Acceptance criteria:** the conditions that say the work is done, so it's clear when to close
+  the issue. They're plain conditions, such as "the decisions are in the spec", not requirements.
+
+*Why:* an interactive issue can be whatever the owner needs it to be, so its shape stays small. The
+owner is in the session, so the agent can ask about anything the issue doesn't say.
+
+## Labels
+
+Every issue has exactly one kind label: `task`, `bug`, `question` or `interactive`. An issue an
+agent opens on its own judgment also has `agent-created`.
+
+The `factory` label says the factory may take the issue. Only a `task` or a `bug` can have it, and
+a new issue doesn't get it. The owner adds it.
+
+*Why:* once the factory starts runs on its own, an issue in Ready with the `factory` label starts a
+run without anyone asking. So the label goes on only when the owner chooses to hand the issue over.
+
 ## The board's statuses
 
-The statuses the factory uses are on the project's board, and each status's description says what
+The statuses the factory uses are on the board, and each status's description says what
 it means. Read them there, and don't list them anywhere else.
+
+## Moving an issue's status in a person's session
+
+In a person's session, the agent moves the issue it works on to In progress when it starts work on
+it, and to In review when it opens the issue's PR. It does this without being asked. When the PR
+merges and closes the issue, the board moves it to Done on its own.
+
+When it moves an issue to In progress, it also moves the issue's parent to In progress, if the
+parent is in Backlog or Ready. After that, only the owner moves the parent.
+
+*Why:* the board is where the owner sees what's being worked on. Nothing else moves the issue to In
+review when its PR opens, or its parent to In progress. A parent left in Backlog gets lost there.
+It moves only from Backlog or Ready, so it never overrides a status the owner set.
 
 ## Updating an issue
 
