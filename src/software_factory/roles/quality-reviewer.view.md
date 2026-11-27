@@ -4,6 +4,8 @@ Written by `uv run write-role-views`, from the options the role starts with. Don
 
 Model: `claude-opus-5-5`. Effort: `high`. Turn cap: 100 turns, the factory's default.
 
+Thinking: `{"type": "adaptive", "display": "summarized"}`.
+
 ## Tools
 
 `Read`, `Glob`, `Grep`, `Bash`, `Skill`
@@ -77,6 +79,13 @@ or `...`, commands grouped in parentheses, and shell variables such as `$?`.
 Look at the change from each of these three angles, one after another, yourself. Don't start
 subagents for them. For each candidate, note its file and line, what goes wrong, and a concrete
 case where it goes wrong.
+
+A candidate is each possible problem you look into, even one you settle at once. When you run a
+command to see whether something goes wrong, such as a type check of one file or a call to one
+function, what you're testing for is a candidate, whatever the command prints. Note it before you
+run the command. When the command shows it doesn't go wrong, it's a D1 in step 4, and the command
+and what it printed are its proof. The owner reads your dropped candidates to see what you checked,
+so one that's missing looks like a check you never made.
 
 ### Angle A: line by line
 

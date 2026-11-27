@@ -52,6 +52,8 @@ def role_view[ResultT: ResultModel](definition: RoleDefinition[ResultT]) -> str:
         "",
         f"Model: `{options.model}`. Effort: `{options.effort}`. Turn cap: {turn_cap}.",
         "",
+        f"Thinking: `{json.dumps(options.thinking)}`.",
+        "",
         "## Tools",
         "",
         code_list(options.tools if isinstance(options.tools, list) else []),

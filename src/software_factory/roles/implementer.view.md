@@ -4,6 +4,8 @@ Written by `uv run write-role-views`, from the options the role starts with. Don
 
 Model: `claude-opus-5-5`. Effort: `high`. Turn cap: 100 turns, the factory's default.
 
+Thinking: `{"type": "adaptive", "display": "summarized"}`.
+
 ## Tools
 
 `Read`, `Glob`, `Grep`, `Edit`, `Write`, `Bash`, `WebSearch`, `WebFetch`, `Skill`
