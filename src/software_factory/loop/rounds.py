@@ -13,11 +13,13 @@ from software_factory.roles.quality_reviewer import (
 )
 
 if TYPE_CHECKING:
+    from collections.abc import Sequence
+
     from software_factory.config import Settings
     from software_factory.git.working_copy import WorkingCopy
     from software_factory.github.issue import Issue
     from software_factory.roles.implementer import DeclinedFinding
-    from software_factory.roles.quality_reviewer import DroppedCandidate
+    from software_factory.roles.quality_reviewer import DroppedCandidate, Finding
     from software_factory.roles.run import RoleRunner
 
 
@@ -65,11 +67,10 @@ async def work_and_rounds(context: RunContext) -> RunRecord:
     for round_number in range(1, context.settings.rounds + 1):
         diff = await review_diff(copy, diff)
         findings = await review(context, round_number, diff, kept)
+        given = findings_to_give(findings)
         # Meets FR-24.
-        if not any(n.finding.mark == "important" for n in findings):
+        if not given:
             break
-        # Meets FR-23.
-        given = [n for n in findings if n.finding.mark in {"important", "nit"}]
         kept.given.update(n.finding_id for n in given)
         outcome = await context.runner.resume(
             outcome, implementer, findings_message(given), copy.path
@@ -90,6 +91,21 @@ async def work_and_rounds(context: RunContext) -> RunRecord:
     )
 
 
+def findings_to_give(findings: Sequence[NumberedFinding]) -> list[NumberedFinding]:
+    """The findings the implementer gets from a round, or none (FR-23)."""
+    if not any(n.finding.mark == "important" for n in findings):
+        return []
+    return [n for n in findings if n.finding.mark in {"important", "nit"}]
+
+
+def numbered(round_number: int, findings: Sequence[Finding]) -> list[NumberedFinding]:
+    """Meets TD-12."""
+    return [
+        NumberedFinding(finding_id=f"R{round_number}-F{place}", finding=finding)
+        for place, finding in enumerate(findings, start=1)
+    ]
+
+
 async def review(
     context: RunContext, round_number: int, diff: ReviewDiff, kept: Kept
 ) -> list[NumberedFinding]:
@@ -102,15 +118,11 @@ async def review(
     message = reviewer_message(
         context.issue.body, kept.findings, declined_ids, kept.given
     )
-    async with review_copy(context.working_copy, diff) as path:
+    async with review_copy(context.working_copy.path, diff) as path:
         # Meets TR-23, and TR-24 through the error it raises when it fails.
         await make("setup", path, "the review copy")
         outcome = await context.runner.start(reviewer, message, path)
-    # Meets TD-12.
-    findings = [
-        NumberedFinding(finding_id=f"R{round_number}-F{place}", finding=finding)
-        for place, finding in enumerate(outcome.result.findings, start=1)
-    ]
+    findings = numbered(round_number, outcome.result.findings)
     kept.findings.extend(findings)
     kept.dropped.extend(outcome.result.dropped)
     return findings

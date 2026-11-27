@@ -4,9 +4,13 @@ from typing import TYPE_CHECKING
 from pydantic import ValidationError
 
 from software_factory.config import Settings, factory_config
+from software_factory.git.working_copy import file_at
 
 if TYPE_CHECKING:
     from collections.abc import Mapping
+    from pathlib import Path
+
+    from software_factory.git.command import CommitId
 
 # The project's settings file, at the root of its repo.
 SETTINGS_FILE = "software-factory.toml"
@@ -17,6 +21,15 @@ class SettingsError(Exception):
 
     The message says why, in words for the owner.
     """
+
+
+async def settings_file_at(repo: Path, commit: CommitId) -> str | None:
+    """The text of the project's settings file at `commit`, or None when it has none."""
+    try:
+        return await file_at(repo, commit, SETTINGS_FILE)
+    except UnicodeDecodeError as error:
+        message = f"The project's {SETTINGS_FILE} isn't UTF-8 text: {error}"
+        raise SettingsError(message) from error
 
 
 def run_settings(settings_file: str | None, command_rounds: int | None) -> Settings:

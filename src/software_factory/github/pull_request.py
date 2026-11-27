@@ -6,7 +6,7 @@ from software_factory.github.board import Moment, move_issue
 from software_factory.github.issue import Issue, post_comment
 
 if TYPE_CHECKING:
-    from collections.abc import Sequence
+    from collections.abc import Collection, Sequence
 
     from pydantic import JsonValue
 
@@ -60,17 +60,24 @@ class RunRecord:
     # From every round.
     dropped: Sequence[DroppedCandidate]
 
-    def not_given(self) -> list[NumberedFinding]:
-        """Meets FR-25."""
-        return [
-            numbered
-            for numbered in self.findings
-            if numbered.finding.mark in {"nit", "pre_existing"}
-            and numbered.finding_id not in self.given
-        ]
-
     def to_check(self) -> list[NumberedFinding]:
-        return [n for n in self.findings if n.finding.mark == "to_check"]
+        return to_check(self.findings)
+
+
+def not_given(
+    findings: Sequence[NumberedFinding], given: Collection[str]
+) -> list[NumberedFinding]:
+    """Meets FR-25."""
+    return [
+        numbered
+        for numbered in findings
+        if numbered.finding.mark in {"nit", "pre_existing"}
+        and numbered.finding_id not in given
+    ]
+
+
+def to_check(findings: Sequence[NumberedFinding]) -> list[NumberedFinding]:
+    return [n for n in findings if n.finding.mark == "to_check"]
 
 
 class BranchRef(Reply):
@@ -209,28 +216,38 @@ def suggestion(suggested_reason: str | None) -> str:
 
 
 def review_comment(record: RunRecord) -> str:
-    """The comment on the PR. Says None. for a list that has nothing in it.
+    """The comment on the run's PR."""
+    return findings_comment(record.findings, record.given, record.dropped)
 
-    Meets FR-25, FR-30 and FR-31.
+
+def findings_comment(
+    findings: Sequence[NumberedFinding],
+    given: Collection[str],
+    dropped: Sequence[DroppedCandidate],
+) -> str:
+    """The lists of a comment on a PR. Says None. for a list that has nothing in it.
+
+    `given` holds the IDs of the findings the implementer got. Meets FR-25, FR-30 and
+    FR-31.
     """
-    not_given = [
+    not_given_lines = [
         f"- **{n.finding_id}**, a {MARK_NAMES[n.finding.mark]}, {where(n.finding)}:"
         f" {indent(n.finding.problem)}"
-        for n in record.not_given()
+        for n in not_given(findings, given)
     ]
-    to_check = [
+    to_check_lines = [
         f"- **{n.finding_id}**, {where(n.finding)}: {indent(n.finding.problem)}"
-        for n in record.to_check()
+        for n in to_check(findings)
     ]
-    dropped = [
+    dropped_lines = [
         f"- `{d.file}:{d.line}`: {indent(d.problem)}\n\n"
         f"  Dropped because {DROPPED_AS[d.dropped_as]}: {indent(d.reason)}"
-        for d in record.dropped
+        for d in dropped
     ]
     sections = {
-        "Nits and pre-existing findings the implementer didn't get": not_given,
-        "Findings to check": to_check,
-        "Dropped candidates": dropped,
+        "Nits and pre-existing findings the implementer didn't get": not_given_lines,
+        "Findings to check": to_check_lines,
+        "Dropped candidates": dropped_lines,
     }
     return (
         "\n\n".join(

@@ -11,15 +11,15 @@ the code are comments there instead.
 - **Factory plugin.** The Claude Code plugin that holds the factory's standards.
 - **Project contract.** What a project's repo must hold for the factory to run on it.
 - **Result schema.** The shape of a role's result.
-- **Review copy.** The copy of the run's work that the quality reviewer works in.
-- **Review diff.** The part of a run's work that the quality reviewer reviews in a round (TR-3,
-  TR-4).
-- **Role.** An agent that the workflow starts to do one task in a run.
+- **Review copy.** The copy of the reviewed work that the quality reviewer works in.
+- **Review diff.** The part of the reviewed work that the quality reviewer reviews (TR-3, TR-4,
+  TR-25).
+- **Role.** An agent that the workflow starts to do one task in a run, or for the review command.
 - **Run branch.** The git branch that holds a run's work.
 - **Session.** One agent's conversation, with the context it has built up.
-- **SFE.** The container a run happens in. It holds the factory, and the run's copies of the
-  project's repo.
-- **Workflow.** The code that carries out the implementation loop.
+- **SFE.** The container a run, or a use of the review command, happens in. It holds the factory,
+  and the copies of the project's repo.
+- **Workflow.** The code that carries out the implementation loop and the review command.
 - **Working copy.** The checkout of the project's repo that a run works in.
 
 ## T-SEC-2. Architecture decisions
@@ -179,8 +179,8 @@ implementer's account of its work. A reviewer that reads them may accept a choic
 explained, or look only where the author points. A fresh reviewer that couldn't see them has found
 bugs the author missed.
 
-**TR-23.** When a round's review starts, the review copy shall hold the environment the project
-setup builds.
+**TR-23.** When the quality reviewer's review starts, the review copy shall hold the environment
+the project setup builds.
 
 *Why:* the quality reviewer runs the project's code to check a candidate, and the code needs its
 environment to run.
@@ -322,3 +322,17 @@ and FR-13, which need the statuses on the board.
 tell the two apart. Neither the Terraform GitHub provider nor the Pulumi one built from it has
 resources for this kind of board, so a tool like Pulumi would need custom code making the same API
 calls, plus its own state to keep.
+
+## T-SEC-9. The review command
+
+**TR-25.** While the review command runs, the review diff shall be the PR's changes since its head
+branch branched off its base branch.
+
+*Why:* that's the diff GitHub shows for the PR, so the review covers the work the PR would merge.
+
+**TR-26.** While the review command runs, the quality reviewer shall have access only to what
+TR-21 lets it have in a run's first round, with the body of the issue the PR closes in place of the
+body of the run's issue, or no issue's body when the PR closes no issue or more than one.
+
+**TR-27.** When the project setup fails in the review command's review copy, the review command
+shall end without a review, and say why.

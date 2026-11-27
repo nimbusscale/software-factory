@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
-# Starts a run in a new SFE (AD-12).
+# Starts a run in a new SFE (AD-12), or a review of one PR with --review (FR-47).
 #
 #   bash tools/run-sfe.sh [--factory PATH] [--image IMAGE] <owner/name> <issue number> [--rounds N]
+#   bash tools/run-sfe.sh [--factory PATH] [--image IMAGE] --review <owner/name> <PR number>
 #
 # --factory mounts the checkout of the factory's repo at PATH at /factory, in place of the image's
 # copy, to try a change before building an image. --image picks the image, which is
-# software-factory-sfe:latest by default. --entrypoint runs another command in the SFE, such as
-# pytest. --env NAME passes the variable NAME from this command's environment into the SFE, when
-# it's set. The other arguments go to the implementation loop's command.
+# software-factory-sfe:latest by default. --review runs the review command in place of the
+# implementation loop's command. --entrypoint runs another command in the SFE, such as pytest.
+# --env NAME passes the variable NAME from this command's environment into the SFE, when it's set.
+# The other arguments go to the command the SFE runs.
 #
 # The Claude Code token comes from FACTORY_CLAUDE_CODE_OAUTH_TOKEN in the .env file at the repo's
 # root, or in the file FACTORY_ENV_FILE names. The GitHub token comes from `gh auth token`.
@@ -23,6 +25,7 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 image=software-factory-sfe:latest
 entrypoint=""
+review=""
 factory=""
 version=""
 docker_args=()
@@ -38,6 +41,12 @@ while (($# > 0)); do
     --image)
       image="$2"
       shift 2
+      ;;
+    --review)
+      review=1
+      entrypoint=/opt/sfe/venv/bin/review
+      docker_args+=(--entrypoint "$entrypoint")
+      shift
       ;;
     --entrypoint)
       entrypoint="$2"
@@ -93,12 +102,14 @@ if [[ -z "$version" ]]; then
   version="$(docker image inspect --format '{{ index .Config.Labels "software-factory.version" }}' "$image")"
 fi
 
-# The run folder's name says when the run started, and what it ran on when the arguments name a
-# repo and an issue.
+# The run folder's name says when the run started, which command the SFE ran when it isn't the
+# implementation loop's, and what it ran on when the arguments name a repo and an issue or a PR.
 read -r started_at run_name < <(date -u '+%Y-%m-%dT%H:%M:%SZ %Y%m%dT%H%M%SZ')
 if [[ -n "$entrypoint" ]]; then
   run_name+="-$(basename "$entrypoint")"
-elif [[ "${1:-}" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ && "${2:-}" =~ ^[0-9]+$ ]]; then
+fi
+if [[ (-z "$entrypoint" || -n "$review") \
+  && "${1:-}" =~ ^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$ && "${2:-}" =~ ^[0-9]+$ ]]; then
   run_name+="-${1%%/*}-${1#*/}-$2"
 fi
 run_folder="$runs_folder/$run_name"
