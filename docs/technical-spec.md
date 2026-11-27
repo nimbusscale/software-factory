@@ -94,11 +94,18 @@ standards. If a project's files could put instructions into a role's prompt, a t
 factory could tell the role how to work, not just what to build. The project's CLAUDE.md also
 keeps one use, for people working in the repo.
 
-**AD-14.** The factory's standards reach every session, a run's roles and a person's own, as a
-skill in the factory plugin.
+**AD-14.** The factory's standards reach a run's roles, and a person's own session in any repo but
+the factory's own, as a skill in the factory plugin.
 
 *Why:* a run and a person's session then follow the same standards, found the same way, on any
 machine.
+
+**AD-15.** A person's own session in the factory's own repo reads the standards from the repo's
+checkout, through the paths in its CLAUDE.md, with no factory plugin installed.
+
+*Why:* that session is where the standards are changed, so it has to read the version on its
+branch. An installed factory plugin is a separate copy, so the session could load an older version
+of a standard than the one CLAUDE.md points to.
 
 ## T-SEC-3. Code standards
 
