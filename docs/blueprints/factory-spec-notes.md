@@ -1269,3 +1269,52 @@ the issue was written.**
   asked for.
 - Decided in: the interactive session that answered #85, #86 and #87.
 - Likely home: `FR`.
+
+## The factory board
+
+**One board holds the issues of every project the factory runs on, both the ones the factory works
+and the ones the owner works by hand. A label on the issue says the factory may take it, and the
+board's views split the two kinds of work. A project the factory doesn't run on has its own board.**
+- Why: Joe wants one place to see what's being worked on in every repo, "regardless of what repo is
+  using the factory". He also wants each issue on one board, not two. Splitting the boards by the
+  label puts issues on both, since a board's auto-add only ever adds an issue and never removes
+  one, so adding the label later leaves the issue on the manual board too. On one board, adding or
+  removing the label moves the issue between views, with the same status. A board has one Status
+  field, so every project on it uses the factory's statuses. A project that needs other statuses
+  can't share the board.
+- Decided in: #8, in an interactive session that planned #8, #64, #115 and #134. The label's name
+  and whether new issues get it by default are still open. The ideation doc's `auto-develop` label
+  is the starting point.
+- Likely home: `FR` for the board, which changes the functional spec's terms Board and Project; `AD`
+  for one board across projects.
+
+**Every board setting GitHub's API can set is set by the factory's own code, from a board file in
+the software-factory repo and the statuses and labels in the factory's config. The code is safe to
+run again, and has a check mode that lists how the board differs from the file without changing
+anything. The board file includes the repos on the board.**
+- Why: Joe wants the board created and managed by code. A file is what's intended and committed,
+  and the board is what's set up, so the check can tell the two apart. Joe: "if it's going to be
+  something that's related to code, then we should have a file for it." Neither the Terraform
+  GitHub provider nor the Pulumi one built from it has resources for this kind of board, so a tool
+  like Pulumi would need custom code making the same API calls, plus its own state to keep. The
+  file lives in the software-factory repo because Joe is the factory's only user.
+- Decided in: #8, in the same session.
+- Likely home: `TD`, with the code that sets the board.
+
+**Board settings GitHub's API can't set are described in prose, in a doc an agent with the Claude
+in Chrome plugin sets them from. These are how each view is grouped, sorted and sliced, and which
+built-in workflows are on.**
+- Why: the API sets a view's name, layout, filter and visible fields, but not its grouping,
+  sorting or slices. It can delete a built-in workflow but not turn one off or on. Joe expects
+  these to change rarely: "once we set up the view and adjust the built-in workflows, it's very
+  unlikely that we'll need to make changes again".
+- Decided in: #8, in the same session. Which workflows are off is #115.
+- Likely home: the project contract, or a doc next to the board file.
+
+**A repo joins the factory board when the owner adds it to the board file and runs the board code
+again. Starting a project doesn't add it.**
+- Why: Joe is the only person who uses the factory. Adding a repo is the change most likely to
+  come up, and it won't come up often.
+- Decided in: #8, in the same session. #63, starting a project with slash commands, may change
+  this later.
+- Likely home: `FR`.
