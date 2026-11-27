@@ -48,6 +48,13 @@ Look at the change from each of these three angles, one after another, yourself.
 subagents for them. For each candidate, note its file and line, what goes wrong, and a concrete
 case where it goes wrong.
 
+A candidate is each possible problem you look into, even one you settle at once. When you run a
+command to see whether something goes wrong, such as a type check of one file or a call to one
+function, what you're testing for is a candidate, whatever the command prints. Note it before you
+run the command. When the command shows it doesn't go wrong, it's a D1 in step 4, and the command
+and what it printed are its proof. The owner reads your dropped candidates to see what you checked,
+so one that's missing looks like a check you never made.
+
 ### Angle A: line by line
 
 Read every hunk in the diff, line by line. Then read the whole function around each hunk. A bug in

@@ -68,6 +68,10 @@ def role_options[ResultT: ResultModel](
     return ClaudeAgentOptions(
         model=definition.model,
         effort=definition.effort,
+        # Opus leaves the text of each thinking block out unless it's asked for. Without
+        # it, a transcript shows what a role ran but not why, such as what a reviewer
+        # suspected before a command settled it (FR-40).
+        thinking={"type": "adaptive", "display": "summarized"},
         # The roles are coding agents, so they keep Claude Code's own guidance on
         # its tools.
         system_prompt={

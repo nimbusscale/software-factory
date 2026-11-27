@@ -194,7 +194,10 @@ checks each candidate against the code, then labels it. It changes the skill in 
   docs say is the doc reviewer's. The rubric says which facts it still reads the docs for.
 - **Its result lists every dropped candidate,** with the reason, in a field the result schema
   requires, even when the list is empty. Road-trip-agent's reviewer dropped candidates it judged
-  false without returning them, though its skill said to, so nobody could check those calls.
+  false without returning them, though its skill said to, so nobody could check those calls. A
+  possible problem the reviewer settles with a command before it writes it down is a candidate
+  too. Otherwise a reviewer that tests each worry as it comes up hands back an empty list, and
+  the checks it made look like checks it never made.
 - **It reviews the target its caller names,** on a line at the top of the prompt, in place of the
   skill's steps for reading the PR. The workflow names the changes not yet committed in the review
   copy (TD-2). Run by hand, the same prompt can review another target, such as a branch against
