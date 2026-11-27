@@ -122,7 +122,7 @@ async def run_in(
     except (SettingsError, GitHubError, ContractError) as error:
         raise RunRefusedError(str(error)) from error
     try:
-        await move_issue(services.graphql, request.repo, issue, Moment.RUN_STARTED)
+        await move_issue(services.graphql, issue, Moment.RUN_STARTED)
         record = await work_and_rounds(
             RunContext(issue, copy, settings, services.runner, services.run_folder)
         )
@@ -135,10 +135,10 @@ async def run_in(
         raise
     except RUN_ENDING_ERRORS as error:
         reason = await with_work_on_github(copy, str(error))
-        raise await end_run(request, services, issue, reason) from error
+        raise await end_run(services, issue, reason) from error
     except Exception as error:
         reason = f"The workflow failed with an error it doesn't handle: {error!r}"
-        await end_run(request, services, issue, await with_work_on_github(copy, reason))
+        await end_run(services, issue, await with_work_on_github(copy, reason))
         raise
 
 
@@ -165,14 +165,12 @@ async def with_work_on_github(copy: WorkingCopy, reason: str) -> str:
     return f"{reason}\n\nThe run's work is on the branch `{copy.run_branch}`."
 
 
-async def end_run(
-    request: RunRequest, services: Services, issue: Issue, reason: str
-) -> RunEndedError:
+async def end_run(services: Services, issue: Issue, reason: str) -> RunEndedError:
     """Moves the issue to Needs attention and posts why, and hands back the error."""
     # Meets FR-43.
     reason = f"{reason}\n\n{transcripts_line(services.run_folder)}"
     try:
-        await end_without_pr(services.graphql, request.repo, issue, reason)
+        await end_without_pr(services.graphql, issue, reason)
     except GitHubError as error:
         status = factory_config().statuses["needs_attention"].name
         return RunEndedError(

@@ -1,0 +1,30 @@
+# The factory's board: the settings GitHub's API can set, apart from the statuses and labels in
+# src/software_factory/factory.toml. `uv run set-up-board` makes the board match this file and
+# the config. The settings the API can't set are in manual-settings.md, next to this file.
+#
+# It doesn't list the repos on the board. The board's own repo links are that list, so a repo
+# joins the board without a change to this file.
+
+title = "Factory"
+
+# Each view, in the order the board shows them. `layout` is BOARD_LAYOUT, TABLE_LAYOUT or
+# ROADMAP_LAYOUT. `filter` is written as in the filter bar on GitHub. `fields` names the
+# visible fields.
+
+[[views]]
+name = "Factory"
+layout = "BOARD_LAYOUT"
+filter = "label:factory"
+fields = ["Title", "Repository", "Labels", "Linked pull requests"]
+
+[[views]]
+name = "Mine"
+layout = "BOARD_LAYOUT"
+filter = "-label:factory"
+fields = ["Title", "Repository", "Labels", "Linked pull requests"]
+
+[[views]]
+name = "All"
+layout = "TABLE_LAYOUT"
+filter = ""
+fields = ["Title", "Status", "Repository", "Labels", "Linked pull requests", "Parent issue"]
