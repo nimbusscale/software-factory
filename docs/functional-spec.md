@@ -211,6 +211,13 @@ machine shuts down, still leaves the transcripts up to where it stopped.
 agent, in order, with which agent it was, its transcript, how it ended, the turns it took and what
 it cost.
 
+**FR-46.** The list that FR-41 calls for shall give, for each time the implementation loop started
+or resumed an agent, the tokens the agent used with each model, and what each model cost.
+
+*Why:* the owner compares runs by what they used, such as what a change to the factory did to a
+run's cost, or the average cost of a PR. Those comparisons can only be made later if each run's
+token and cost detail is kept as it runs.
+
 **FR-44.** When a run starts, the implementation loop shall record in the run folder the factory
 version the run uses, what the command was called with, and when the run started.
 
