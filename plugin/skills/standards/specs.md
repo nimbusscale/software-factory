@@ -369,6 +369,21 @@ seems. A decision with no Why is one whose reason is still unknown.
   it's an `AD` or a code standard, or a requirement is missing. An `AD` can cite a requirement,
   but it doesn't have to.
 
+**An exception goes in the decision it's an exception to.** When a decision holds everywhere but
+somewhere, its line says where it holds, and its Why gives the reason for leaving the rest out. The
+exception isn't a decision of its own, and it isn't a second choice in the line. It says where the
+one choice holds. This is so even when nothing in the code carries the exception out:
+
+> **TD-4.** Every page loads the analytics script, except the checkout pages. It meets FR-20.
+>
+> *Why:* the shop sees which products customers look at. The checkout pages are left out because
+> the payment provider allows no outside script on a page that takes card details.
+
+The checkout pages show nothing of this choice, since they just don't load the script. The Why is
+what stops an agent from adding the script to them to make every page match. When the place left
+out makes a choice of its own instead, such as one service that keeps its data in a database of
+its own, that choice is a decision of its own. The first decision's line still says where it holds.
+
 A code standard is written the same way, as a one-line statement in prose. It gets a Why only under
 the rule for a requirement's Why, in "Lines under an item" above. Most code standards are common
 practice, and their reason is clear from the standard. One that an agent might drop to save effort

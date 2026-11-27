@@ -1,0 +1,14 @@
+schema_version: "1.1"
+name: items-review-exception
+expected_outcome: |
+  The change adds three backup decisions. AD-3 says every database is backed up each night. AD-4
+  says the cache isn't backed up, and its Why says why. AD-4 makes no choice of its own: it only
+  leaves the cache out of AD-3. So it's AD-3's exception, not a decision of its own. AD-3's line
+  should say which databases it holds for, and AD-3's Why should take AD-4's reason. AD-5 backs up
+  the audit log every hour to a second store in another region. That's a choice of its own, so it
+  stays a decision of its own, though AD-3's line should leave the audit log out too. The reviewer
+  edits nothing, lists AD-4 as a problem in this change with a rewrite that folds it into AD-3,
+  and doesn't say AD-5 should be folded into AD-3.
+context:
+  scaffold_script: place-files.sh
+---

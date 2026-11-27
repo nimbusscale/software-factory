@@ -53,7 +53,9 @@ Ask these questions in order, and stop at the first yes.
      exists, it goes in a blueprint.
    - **Not made yet?** It goes in no doc until it's made. A decision that needs a spike to settle
      is one. **Rejected?** It goes nowhere. Name it in a code comment only if an agent would
-     likely change the code back to it.
+     likely change the code back to it. An option chosen everywhere but somewhere isn't rejected
+     there. The decision says where it holds, and why the rest is left out, as "An exception goes
+     in the decision it's an exception to" in `specs.md` says.
    - **Is there one place in the code that every case of it goes through, now and in the future?**
      Then it's a comment in that place. If new code could follow or break it without touching that
      place, it goes in the technical spec. "Every database write runs in a transaction" is a

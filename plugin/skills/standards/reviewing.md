@@ -189,7 +189,10 @@ a broken rule, so it's always a problem. A `SIGNAL` line is only something to lo
   `project-docs.md`. Look twice at each decision with no Why. Ask whether anyone had another option. If the
   only reason anyone could give is that the rules or the domain work that way, it isn't a
   decision, and it's a problem in the spec. Its home is the code, or a blueprint until the code
-  exists, as "Is there no other option?" in question 8 says. Don't suggest a Why for it.
+  exists, as "Is there no other option?" in question 8 says. Don't suggest a Why for it. A
+  decision that only leaves something out of another decision is a problem too. It's that
+  decision's exception, as "An exception goes in the decision it's an exception to" in `specs.md`
+  says.
 - **Code comments pass their own checks.** When the change adds, changes or deletes code comments,
   or moves code that has them, do the checks in "Checking comments" in `code-comments.md`.
 - **Everything else in `changing-items.md` holds.**
