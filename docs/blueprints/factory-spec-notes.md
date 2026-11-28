@@ -1338,11 +1338,14 @@ is its default issue type Feature.**
 - Why: GitHub allows an issue only one type, so an issue can't have two kinds. The types are set
   once for the organization, not in each repo, and the board can group or slice issues by type.
   Joe chose types over kind labels once the repos moved to an organization: "Let's go with the
-  issue types." Task and Bug are separate because a bug has its own shape, which asks for what
-  happened. The check when a run starts reads the issue type to know which headings the body must
-  have. The type also lets the board show or count the bugs, which mostly come from the factory's
-  own work. Joe asked why the two are separate, then chose to keep both. The `factory` label is off
-  by default because, once a poller starts runs, an issue in Ready with the label starts a run
+  issue types." Each type has a job. Bug is apart from Task so the open bugs can be counted, and
+  used to improve the reviews, since bugs mostly come from the factory's own work. A bug also has
+  its own shape, which asks for what happened. Question is apart so work that waits on an answer
+  can be marked as blocked by it. Interactive marks the issues the owner works through in a session
+  with an agent. Task is any other work the agent is asked to do. Feature is dropped because
+  nothing needs it apart from Task, and not every piece of work is a feature. The check when a run
+  starts reads the issue type to know which headings the body must have. The `factory` label is
+  off by default because, once a poller starts runs, an issue in Ready with the label starts a run
   without anyone asking. So the label means the owner chose to hand the issue over. A run never
   takes a question or an interactive issue. `documentation` is dropped because a doc-only change is
   a task. Joe chose the name `factory` over the ideation doc's `auto-develop`.

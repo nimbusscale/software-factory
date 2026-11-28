@@ -19,14 +19,16 @@ Open each view by its tab, and change its settings from the View menu at the rig
 bar. Then save the view, from Save view in the same menu, and choose Save when GitHub asks to
 confirm. GitHub keeps a change to a view only once it's saved.
 
-| View | Column by | Group by | Sort by | Slice by |
-|---|---|---|---|---|
-| Factory | Status | none | none | none |
-| Mine | Status | none | none | none |
-| All | (a table) | none | none | Repository |
+| View | Column by | Group by | Sort by | Slice by | Field added |
+|---|---|---|---|---|---|
+| Factory | Status | none | none | none | Type |
+| Mine | Status | none | none | none | Type |
+| All | (a table) | none | none | Repository | Type |
 
 Factory and Mine show their issues as columns, one for each status. All lists every issue, with a
-list of repos beside it to pick from.
+list of repos beside it to pick from. Each view also shows each issue's type. Add the Type field
+from Fields in the View menu. GitHub's API can't see the Type field, so `board.toml` can't list it,
+and when `uv run set-up-board` changes a view's fields, Type has to be added to that view again.
 
 ## Built-in workflows
 
