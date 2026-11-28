@@ -158,3 +158,31 @@ def test_keeps_the_factory_checkouts_changes(tmp_path: Path) -> None:
     assert json.loads((folder / "run.json").read_text())["factory_version"] == (
         f"{commit}-local"
     )
+
+
+def test_review_runs_the_review_command(tmp_path: Path) -> None:
+    docker_args = run_sfe(tmp_path, "", "--review", "nimbusscale/dust-law", "5")
+
+    folder = run_folder(tmp_path / "data" / "software-factory" / "runs")
+    # FR-47.
+    entrypoint = docker_args.index("--entrypoint")
+    assert docker_args[entrypoint + 1] == "/opt/sfe/venv/bin/review"
+    assert docker_args[-2:] == ["nimbusscale/dust-law", "5"]
+    # FR-39.
+    assert re.fullmatch(r"\d{8}T\d{6}Z-review-nimbusscale-dust-law-5", folder.name)
+
+
+def test_review_with_another_entrypoint_is_refused(tmp_path: Path) -> None:
+    with pytest.raises(AssertionError, match="not both"):
+        run_sfe(
+            tmp_path,
+            "",
+            "--review",
+            "--entrypoint",
+            "pytest",
+            "nimbusscale/dust-law",
+            "5",
+        )
+
+    # Bug: --review with --entrypoint ran pytest in a run folder named for the PR.
+    assert not (tmp_path / "data" / "software-factory" / "runs").exists()

@@ -38,6 +38,10 @@ thrown away when the run ends.
   sets the number of rounds for this run. `--factory <path>` before the repo mounts a checkout of
   this repo at `/factory` in place of the image's copy, to try a change before building an image.
   A change to the Python packages still needs a new image.
+- `bash tools/run-sfe.sh --review <owner/name> <PR number>` runs one quality review of a PR made
+  outside a run, in a new SFE. It prints the findings for the PR's author to fix or decline, and
+  posts the rest of the review as a comment on the PR. Its run folder is named like
+  `20261127T143000Z-review-nimbusscale-dust-law-5`.
 - `bash tools/test-in-sfe.sh` runs the tests that call Claude in an SFE, with this checkout
   mounted at `/factory`. `tools/check-code.sh` leaves those tests out. The tests of a whole run use
   Opus, or the model `FACTORY_TEST_MODEL` names, such as `claude-haiku-5-5`.

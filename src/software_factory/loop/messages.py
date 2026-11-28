@@ -21,18 +21,17 @@ def findings_message(given: Sequence[NumberedFinding]) -> str:
 
 
 def reviewer_message(
-    issue_body: str,
+    issue_body: str | None,
     earlier: Sequence[NumberedFinding],
     declined_ids: Collection[str],
     given_ids: Collection[str],
 ) -> str:
-    """The message that starts the quality reviewer in a round (TR-21).
+    """The message that starts the quality reviewer (TR-21, TR-26).
 
-    `earlier` holds the findings from the run's earlier rounds. `given_ids` holds the
-    IDs of the ones the workflow gave the implementer, and `declined_ids` the IDs of
-    the ones it declined.
+    `issue_body` is None for work with no task issue. `earlier` holds the findings
+    from the run's earlier rounds. `given_ids` holds the IDs of the ones the workflow
+    gave the implementer, and `declined_ids` the IDs of the ones it declined.
     """
-    # Tags, not headings, since the issue's body has headings of its own.
     earlier_text = (
         "\n\n".join(
             finding_text(n, earlier_mark(n.finding_id, declined_ids, given_ids))
@@ -41,10 +40,16 @@ def reviewer_message(
         if earlier
         else "None."
     )
+    issue_text = "The change has no task issue."
+    if issue_body is not None:
+        # Tags, not headings, since the issue's body has headings of its own.
+        issue_text = (
+            "The body of the change's task issue:\n\n"
+            f"<issue>\n{issue_body.strip()}\n</issue>"
+        )
     return (
-        "The body of the run's task issue:\n\n"
-        f"<issue>\n{issue_body.strip()}\n</issue>\n\n"
-        "The findings from the run's earlier rounds:\n\n"
+        f"{issue_text}\n\n"
+        "The findings from earlier rounds:\n\n"
         f"<earlier_findings>\n{earlier_text}\n</earlier_findings>\n"
     )
 

@@ -39,6 +39,8 @@ class FakePullRequest:
     head: str
     title: str
     body: str
+    # The numbers of the issues the PR closes.
+    closes: list[int] = field(default_factory=list)
 
     @property
     def id(self) -> str:
@@ -106,6 +108,7 @@ class FakeGitHub:
             "SetItemStatus": self.set_item_status,
             "ReadRepo": self.read_repo,
             "CreatePullRequest": self.create_pull_request,
+            "ReadPullRequest": self.read_pull_request,
         }
         return {"data": handlers[operation](variables)}
 
@@ -189,6 +192,20 @@ class FakeGitHub:
             "url": url,
         }
         return {"createPullRequest": {"pullRequest": node}}
+
+    def read_pull_request(self, variables: Mapping[str, JsonValue]) -> JsonValue:
+        number = integer(variables, "number")
+        pull_request = next(p for p in self.pull_requests if p.number == number)
+        closing = [self.issue(n) for n in pull_request.closes]
+        nodes: list[JsonValue] = [{"body": issue.body} for issue in closing[:2]]
+        node: dict[str, JsonValue] = {
+            "id": pull_request.id,
+            "number": pull_request.number,
+            "url": f"https://github.com/{REPO}/pull/{pull_request.number}",
+            "baseRefName": pull_request.base,
+            "closingIssuesReferences": {"totalCount": len(closing), "nodes": nodes},
+        }
+        return {"repository": {"pullRequest": node}}
 
 
 def json_options(board: FakeBoard) -> list[JsonValue]:

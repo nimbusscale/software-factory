@@ -72,7 +72,7 @@ def test_review_copy_holds_the_review_diff_as_changes_not_yet_committed(
             second = await review_diff(copy, first)
             (copy.path / "NOTES.md").write_text("Staged\n")
             await git("add", "NOTES.md", cwd=copy.path)
-            async with review_copy(copy, second) as path:
+            async with review_copy(copy.path, second) as path:
                 # TD-2.
                 await check_review_copy(path)
             assert not path.exists()
@@ -97,7 +97,7 @@ def test_review_copy_is_removed_with_a_folder_made_read_only(
     async def run() -> None:
         async with started(remote, tmp_path) as copy:
             await committed(copy, {"TILES.md": "Tiles\n"})
-            async with review_copy(copy, await review_diff(copy, None)) as path:
+            async with review_copy(copy.path, await review_diff(copy, None)) as path:
                 locked = path / ".cache"
                 locked.mkdir()
                 (locked / "module.txt").write_text("Cached\n")
@@ -119,7 +119,7 @@ def test_review_copy_holds_files_marked_export_ignore(
             }
             await committed(copy, files)
             diff = await review_diff(copy, None)
-            async with review_copy(copy, diff) as path:
+            async with review_copy(copy.path, diff) as path:
                 # TD-2.
                 assert (path / "TILES.md").read_text() == "Tiles\n"
 
@@ -137,7 +137,7 @@ def test_review_copy_holds_tracked_files_the_project_ignores(
             first = await review_diff(copy, None)
             await committed(copy, {"example.env": "A=2\n"})
             second = await review_diff(copy, first)
-            async with review_copy(copy, second) as path:
+            async with review_copy(copy.path, second) as path:
                 changes = await git("diff", "HEAD", "--name-status", cwd=path)
                 # TD-2.
                 assert changes == "M\texample.env"
@@ -161,7 +161,7 @@ def test_base_commit_skips_the_machines_signing_and_hooks(
             for setting in ("commit.gpgsign=true", "gpg.program=false"):
                 await git("config", "--global", *setting.split("="), cwd=copy.path)
             await git("config", "--global", "core.hooksPath", str(hooks), cwd=copy.path)
-            async with review_copy(copy, diff) as path:
+            async with review_copy(copy.path, diff) as path:
                 # TD-2.
                 assert await git("log", "--format=%s", cwd=path) == "base"
 

@@ -87,17 +87,11 @@ def remove_read_only(
     remove_function(name)
 
 
-async def start_file(working_copy: WorkingCopy, name: str) -> str | None:
-    """The file at `name` where the run branch started, or None when there's none.
-
-    That's the file on the project's default branch, which the run's work starts with.
-    """
-    start = working_copy.start
-    if not await git(
-        "ls-tree", "--name-only", start, "--", name, cwd=working_copy.path
-    ):
+async def file_at(repo: Path, commit: CommitId, name: str) -> str | None:
+    """The file at `name` as it stood at `commit`, or None when there's none."""
+    if not await git("ls-tree", "--name-only", commit, "--", name, cwd=repo):
         return None
-    return await git("show", f"{start}:{name}", cwd=working_copy.path)
+    return await git("show", f"{commit}:{name}", cwd=repo)
 
 
 async def start_has_file(working_copy: WorkingCopy, name: str) -> bool:

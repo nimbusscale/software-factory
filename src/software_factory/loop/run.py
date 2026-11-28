@@ -9,7 +9,6 @@ from software_factory.git.working_copy import (
     commit,
     push,
     run_branch_name,
-    start_file,
     working_copy,
 )
 from software_factory.github.api import GitHubError
@@ -27,7 +26,11 @@ from software_factory.loop.rounds import (
     RunContext,
     work_and_rounds,
 )
-from software_factory.loop.settings import SETTINGS_FILE, SettingsError, run_settings
+from software_factory.loop.settings import (
+    SettingsError,
+    run_settings,
+    settings_file_at,
+)
 from software_factory.roles.run import RoleFailedError, RoleRunner
 
 if TYPE_CHECKING:
@@ -143,11 +146,8 @@ async def run_in(
 
 
 async def read_settings_file(copy: WorkingCopy) -> str | None:
-    try:
-        return await start_file(copy, SETTINGS_FILE)
-    except UnicodeDecodeError as error:
-        message = f"The project's {SETTINGS_FILE} isn't UTF-8 text: {error}"
-        raise SettingsError(message) from error
+    """The settings file on the project's default branch, which the run starts with."""
+    return await settings_file_at(copy.path, copy.start)
 
 
 async def with_work_on_github(copy: WorkingCopy, reason: str) -> str:

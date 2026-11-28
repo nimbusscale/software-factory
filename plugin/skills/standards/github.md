@@ -131,3 +131,23 @@ for someone skimming the project's PRs, or reading a summary of the work that wa
 
 Don't copy the issue's Do or its acceptance criteria into the description. The PR links to its
 issue, and a copy drifts from it.
+
+## A factory review of a PR made outside a run
+
+A PR made outside a run, such as in a person's session, can get the factory's review from the
+review command. The agent that made the PR starts it from a checkout of the factory's repo:
+
+```bash
+bash tools/run-sfe.sh --review <owner/name> <PR number>
+```
+
+It takes several minutes, so run it in the background. When it ends, it prints the findings for
+the PR's author to answer, and posts the rest of the review as a comment on the PR.
+
+Fix each finding it prints, or decline it with a reason, as the factory's implementer does. Push
+the fixes to the PR's branch. Then post one comment on the PR that lists each finding you
+declined, by its ID, such as `R1-F2`, with the reason. Don't put the declined findings in the PR's
+description.
+
+*Why:* the comment sits right after the review it answers, so the owner reads each review and its
+answer in order. The PR's description stays as its author wrote it.

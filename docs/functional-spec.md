@@ -12,26 +12,27 @@ The functional spec: what the app should do, in the user's terms. Requirements a
 - **Factory.** The app this spec describes, which does a project's work from its issues and docs.
 - **Factory version.** The version of the factory that a run uses, named for the commit of the
   factory's repo it's built from.
-- **Finding.** A problem that the quality reviewer reports in a round.
+- **Finding.** A problem that the quality reviewer reports in a review.
 - **Finding to check.** A finding that the quality reviewer can't mark until someone checks a fact
   from outside the project's repo, such as how an outside service answers a request.
 - **Implementation loop.** The part of the factory that makes the changes an issue asks for and
   reviews them.
 - **Implementer.** The agent that makes a run's changes and handles the findings.
-- **Important finding.** A finding about a problem, not a minor one, that the run's work adds,
+- **Important finding.** A finding about a problem, not a minor one, that the reviewed work adds,
   makes worse or exposes again.
 - **Issue.** A GitHub issue in a project's repo.
-- **Nit.** A finding about a minor problem that the run's work adds, such as code that could be
+- **Nit.** A finding about a minor problem that the reviewed work adds, such as code that could be
   cleaner, or a crash that only an unlikely input causes.
 - **Owner.** The person the factory does a project's work for.
 - **PR.** A GitHub pull request in a project's repo.
-- **Pre-existing finding.** A finding about a problem that was there before the run's work, and
-  that the work doesn't make worse or expose again.
+- **Pre-existing finding.** A finding about a problem that was there before the reviewed work,
+  and that the work doesn't make worse or expose again.
 - **Project.** A piece of software the factory builds, with its own GitHub repo.
 - **Project checks.** A project's own checks of its code, such as its tests and its linter.
 - **Project setup.** The steps that build the environment a project's code runs in, such as
   installing its packages.
-- **Quality reviewer.** The agent that reviews a run's work.
+- **Quality reviewer.** The agent that reviews a run's work, or a PR's work for the review command.
+- **Review command.** The factory's command that reviews one PR, outside a run.
 - **Round.** One review of a run's work by the quality reviewer, and any answer the implementer
   gives to its findings.
 - **Run.** One use of the implementation loop on one issue, from its start to its end.
@@ -231,3 +232,21 @@ tell later what factory the run used.
 
 **FR-43.** When a run ends without opening a PR, the comment that FR-14 calls for shall name the
 run's run folder.
+
+## F-SEC-7. Reviewing a PR outside a run
+
+**FR-47.** When the review command is called with a project's repo and a PR's number, the review
+command shall review the PR's work with each agent that reviews a run's work in a round.
+
+*Why:* work done outside the factory, such as in the owner's own session, then gets the same review
+as a run's work.
+
+**FR-48.** When the review command's review ends, the review command shall print the findings that
+FR-23 would give the implementer after a round with the same findings.
+
+*Why:* the PR's author starts the review command, and fixes or declines each of these findings, as
+FR-9 has the implementer do.
+
+**FR-49.** When the review command's review ends, the review command shall post a comment on the
+PR that lists what FR-25, FR-30 and FR-31 list for a run, from its review, with the findings it
+printed in place of the ones the implementer got.

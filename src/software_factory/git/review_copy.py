@@ -52,18 +52,19 @@ async def review_diff(
 
 
 @asynccontextmanager
-async def review_copy(
-    working_copy: WorkingCopy, diff: ReviewDiff
-) -> AsyncIterator[Path]:
-    """A new folder that holds the review copy (TD-2), removed when the block ends."""
+async def review_copy(repo: Path, diff: ReviewDiff) -> AsyncIterator[Path]:
+    """A new folder that holds the review copy (TD-2), removed when the block ends.
+
+    `repo` is a clone of the project's repo that holds both of the diff's commits.
+    """
     path = Path(await asyncio.to_thread(tempfile.mkdtemp, prefix="review-copy-"))
     try:
         await git("init", "--quiet", cwd=path)
-        await write_files(working_copy, diff.start, path)
+        await write_files(repo, diff.start, path)
         await git(*ADD_EVERY_FILE, cwd=path)
         await git(*BASE_COMMIT, cwd=path, extra_env=BASE_COMMIT_AUTHOR)
         await asyncio.to_thread(clear, path)
-        await write_files(working_copy, diff.end, path)
+        await write_files(repo, diff.end, path)
         # Staged, so `git diff HEAD` shows the files the review diff adds. Left
         # unstaged, they'd be untracked, and missing from it.
         await git(*ADD_EVERY_FILE, cwd=path)
@@ -74,16 +75,16 @@ async def review_copy(
         await asyncio.to_thread(remove, path)
 
 
-async def write_files(working_copy: WorkingCopy, commit: CommitId, path: Path) -> None:
+async def write_files(repo: Path, commit: CommitId, path: Path) -> None:
     """Writes the files as they stood at `commit` into `path`, with no git history."""
     # Not git archive, which leaves out the files a project marks export-ignore. A
     # separate index, so the working copy's own index stays as it is.
     with tempfile.TemporaryDirectory() as index_folder:
         index = {"GIT_INDEX_FILE": str(Path(index_folder) / "index")}
-        await git("read-tree", commit, cwd=working_copy.path, extra_env=index)
+        await git("read-tree", commit, cwd=repo, extra_env=index)
         await git(
             *("checkout-index", "--all", f"--prefix={path}{os.sep}"),
-            cwd=working_copy.path,
+            cwd=repo,
             extra_env=index,
         )
 
