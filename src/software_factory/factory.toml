@@ -2,8 +2,8 @@
 
 # The board every project the factory runs on shares, named by its owner and number.
 [board]
-owner = "nimbusscale"
-number = 6
+owner = "nimbusscale-org"
+number = 2
 
 # The code names each status by its key, such as in_review. The board's statuses are set
 # from these, in this order, and agents in a project read them from the board. So each
