@@ -19,6 +19,9 @@ query ReadOwnerBoards($owner: String!) {
     ... on ProjectV2Owner {
       projectsV2(first: 100) { nodes { number title closed } }
     }
+    ... on Organization {
+      issueTypes(first: 100) { nodes { id name color description isEnabled } }
+    }
   }
 }
 """
@@ -73,9 +76,23 @@ class OwnerBoards(Reply):
     nodes: list[OwnerBoard]
 
 
+class OwnerIssueType(Reply):
+    id: str
+    name: str
+    color: str
+    description: str | None
+    is_enabled: bool
+
+
+class OwnerIssueTypes(Reply):
+    nodes: list[OwnerIssueType]
+
+
 class Owner(Reply):
     id: str
     projects_v2: OwnerBoards
+    # Only an organization has issue types, so it's None for a user.
+    issue_types: OwnerIssueTypes | None = None
 
 
 class ReadOwnerBoardsReply(Reply):

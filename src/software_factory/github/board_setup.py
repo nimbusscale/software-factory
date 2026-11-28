@@ -1,4 +1,5 @@
-"""Makes the factory's board match the board file and the factory's config.
+"""Makes the factory's board, and its owner's issue types, match the board file and the
+factory's config.
 
 Run it from the repo root with `uv run set-up-board`. With `--check`, it lists how
 GitHub differs and changes nothing.
@@ -25,6 +26,7 @@ from software_factory.github.board_settings import (
     read_owner,
 )
 from software_factory.github.board_views import BoardFile, view_changes
+from software_factory.github.issue_types import issue_type_changes
 from software_factory.github.repo_labels import label_changes
 
 if TYPE_CHECKING:
@@ -100,6 +102,7 @@ async def set_up_board(
     """Hands back a line for each way GitHub differed. Changes nothing when `check`."""
     name = factory_config().board
     owner = await read_owner(graphql, name.owner)
+    type_changes = issue_type_changes(graphql, name.owner, owner)
     found = next((b for b in owner.projects_v2.nodes if b.number == name.number), None)
     lines: list[str] = []
     if found is None:
@@ -120,7 +123,7 @@ async def set_up_board(
         check_it_is_the_board(found, board_file)
     _, field = await read_board(graphql)
     settings = await read_board_settings(graphql, name.owner, name.number)
-    for change in board_changes(graphql, field, settings, board_file):
+    for change in [*type_changes, *board_changes(graphql, field, settings, board_file)]:
         if not check:
             await change.apply()
         lines.extend(change.lines)
