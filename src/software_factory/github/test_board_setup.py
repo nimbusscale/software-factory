@@ -114,10 +114,12 @@ def test_check_of_a_missing_board_says_it_gets_created() -> None:
     lines = set_up(owner, check=True)
 
     # TD-14.
-    number = factory_config().board.number
-    assert lines == [
-        f"nimbusscale has no board #{number}. A board titled 'Factory' gets created."
-    ]
+    board = factory_config().board
+    expected = (
+        f"{board.owner} has no board #{board.number}."
+        " A board titled 'Factory' gets created."
+    )
+    assert lines == [expected]
     assert owner.boards == []
 
 

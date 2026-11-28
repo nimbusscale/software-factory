@@ -2,7 +2,7 @@
   "name": "software-factory",
   "description": "The software factory's own plugin.",
   "owner": {
-    "name": "nimbusscale"
+    "name": "nimbusscale-org"
   },
   "plugins": [
     {

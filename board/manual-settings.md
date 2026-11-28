@@ -8,7 +8,7 @@ The API sets a view's name, layout, filter and visible fields, but not how it's 
 sliced. It can delete a built-in workflow, but can't turn one on or off, or choose the status it
 sets. These settings rarely change, so they're set by hand, or by an agent working in a browser.
 
-The board is at `https://github.com/users/<owner>/projects/<number>`, with the owner and number in
+The board is at `https://github.com/orgs/<owner>/projects/<number>`, with the owner and number in
 the `[board]` table of `src/software_factory/factory.toml`. Run `uv run set-up-board --check`
 first. If it lists anything, run `uv run set-up-board`, since the views below must exist before
 they can be set.
