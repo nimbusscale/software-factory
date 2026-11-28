@@ -1359,15 +1359,20 @@ the board. The Action uses a board token saved as a secret in the repo.**
 
 **A repo joins the factory by running the factory's init script in it. Init adds the factory's
 plugin to the repo's `.claude/settings.json`, adds the Action and its secret, sets the repo's labels,
-links the repo to the board, adds the repo's existing issues to the board once, and sets up what the
-project contract needs. It's safe to run again, has a check mode, and adds its files through a PR.**
+links the repo to the board, and sets up what the project contract needs. It doesn't add the repo's
+issues to the board. It's idempotent: a part of the repo that's already set up is left as it is,
+not set up again or failed on. It has a check mode, and adds its files through a PR.**
 - Why: Joe: "That would include adding the plugin so that we don't end up having this dependency
   of the plugin needs to be added, then something else needs to be done." A Claude Code plugin
   can't run anything when it's installed, so the plugin alone can't set the repo up. A hook that
   checks at the start of every session would run in every session in every repo, for a step that
-  happens once. Labels are set per repo, so a per-repo step is where they get set. Auto-add never
-  adds issues that already exist, so init adds them once. `main` is protected, so init's files go
-  in through a PR.
+  happens once. Labels are set per repo, so a per-repo step is where they get set. `main` is
+  protected, so init's files go in through a PR.
+- Why init adds no issues: init is meant for a new repo. In a repo that already has issues, nobody
+  knows what state they're in, and they may need other work before the factory can take them, such
+  as being rewritten in the shapes the GitHub standards give. Sorting them out is done in an
+  interactive session.
 - Decided in: #136, which replaces #8's "the owner adds it to the board file and runs the board
-  code again". #63, starting a project with slash commands, can call the same code.
+  code again". #63, starting a project with slash commands, can call the same code. Adding no
+  issues, and being idempotent, are from an interactive session that opened #147.
 - Likely home: `FR` for joining the factory; `TD` for the script.
