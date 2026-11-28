@@ -1,8 +1,9 @@
 # GitHub work
 
 The standards for working with a project's GitHub issues, its board and its PRs: what each kind of
-issue holds, which labels an issue has, what the board's statuses mean, who moves an issue's
-status, how an issue is updated, and how the summary in a PR's description is written.
+issue holds, what a parent issue is, how an issue's title is written, how issues are linked, which
+labels an issue has, what the board's statuses mean, who moves an issue's status, how an issue is
+updated and closed, how a branch is named, and how a PR's title and description are written.
 
 ## A task issue
 
@@ -87,6 +88,47 @@ has these two sections, in this order, each under a `##` heading of that name:
 *Why:* an interactive issue can be whatever the owner needs it to be, so its shape stays small. The
 owner is in the session, so the agent can ask about anything the issue doesn't say.
 
+## A parent issue
+
+An issue with sub-issues is a parent. A parent is always an interactive issue, with the
+`interactive` label and an interactive issue's two sections. Its Goal says what the whole piece of
+work delivers, and can hold the plan and what's left out of it. Its Acceptance criteria say when
+the whole piece is done. No label marks a parent, since GitHub shows its sub-issues.
+
+An issue becomes a sub-issue when the owner asks for it. In a session, the agent can also suggest
+one, such as a task that hands a part of the session's work to the factory. It raises the idea
+with the owner, and makes the sub-issue once the owner agrees. When the issue that would be the
+parent isn't interactive, its kind label changes to `interactive`.
+
+A sub-issue can be any kind of issue. Its body doesn't name its parent, such as with "Part of
+#123", since GitHub shows the parent.
+
+*Why:* breaking work down, and handing parts of it to the factory, are done in a session with the
+owner.
+
+## An issue's title
+
+An issue's title is a plain sentence that says what the work changes, such as "Keep each run's
+transcripts in a run folder". A question issue's title is the question, ending in "?", such as
+"Can a task issue's acceptance criteria list technical requirements?" The title doesn't name the
+issue's kind, such as with "Question:", since its label does.
+
+## Where an issue or a comment came from
+
+An issue or a comment doesn't open with a line saying where it came from, such as "From an
+interactive session on <date>".
+
+*Why:* an issue an agent opened on its own judgment has the `agent-created` label. Every other
+issue came from a person's session.
+
+## Blocked-by links
+
+Mark an issue on GitHub as blocked by another, of any kind, only when the other has to be done
+before this one can start. An order that's only preferred isn't a block. A comment can say why an
+issue waits, but the link has to be there too.
+
+*Why:* a wait written only in a comment doesn't show on the issue's page or on the board.
+
 ## Labels
 
 Every issue has exactly one kind label: `task`, `bug`, `question` or `interactive`. An issue an
@@ -126,19 +168,76 @@ It moves only from Backlog or Ready, so it never overrides a status the owner se
 
 ## Updating an issue
 
-Once work on an issue starts, change it only by moving its status on the board and by posting
-comments. Never edit its body.
+An issue with the `factory` label counts as started once it's in Ready, since a run can take it at
+any time. From then on, change it only by moving its status on the board and by posting comments.
+Never edit its title or body. Anything that comes up while the work goes on, such as why a run
+stopped, goes in a comment.
 
-*Why:* the body is the task. Anything that comes up while the work goes on, such as why a run
-stopped, goes in a comment, so the task stays as it was asked.
+If such an issue has to change, stop the work on it and start over. Move the issue back to
+Backlog, stop any run on it, edit it, and move it back to Ready.
 
-## The summary in a PR's description
+*Why:* a run reads the issue when it starts, and nothing can tell it about a change after that.
 
-The summary in a PR's description says, in a few plain sentences, what the change does. Write it
-for someone skimming the project's PRs, or reading a summary of the work that was merged.
+Any other issue can be edited at any time. In a person's session, the agent edits it when the
+owner asks.
 
-Don't copy the issue's Do or its acceptance criteria into the description. The PR links to its
-issue, and a copy drifts from it.
+## Closing an issue without a PR
+
+Most issues close when a PR with `Closes` for them merges. When an issue is closed any other way,
+pick the close reason that fits, and post one comment that says why:
+
+- **Completed:** the work got done without a PR that closes the issue, such as in a PR that does
+  only part of it. The comment links what did the work, such as "Done in #123."
+- **Not planned:** the issue won't be done as written. It was replaced, folded into another issue
+  or dropped, or it repeats another issue. The comment says why in one sentence, and links the
+  issue that holds the work now, if there is one, such as "Replaced by #123, which checks the
+  prompt against real bugs instead."
+
+Don't use GitHub's "duplicate" reason, since `gh issue close` can't set it.
+
+*Why:* without the comment, nothing says where the work went.
+
+## A branch's name
+
+In a person's session, the branch for an issue's work is named `issue-<number>-<slug>`, such as
+`issue-123-run-transcripts`. A branch for work with no issue is named with the slug alone. A run
+names its own branches.
+
+*Why:* the name shows which issue a branch or a worktree is for, in a list of them.
+
+## A PR's title and description
+
+These rules are for a PR an agent writes in a person's session. A PR the factory's code opens,
+such as a run's PR, follows the requirements for it.
+
+A PR's title is its issue's title. When the PR does only part of the issue, its title says what
+the PR does.
+
+The description's first line is `Closes #<number>`, on its own, with one such line for each issue
+the PR closes. When the PR merges, GitHub closes each of those issues, and the board moves them to
+Done. A PR that does only part of an issue puts `Part of #<number>` there instead, which closes
+nothing. A PR with no issue has no such line. A PR can close a question issue, when the PR writes
+the question's answer down.
+
+After that line comes the summary. It says, in a few plain sentences, what the change does. Write
+it for someone skimming the project's PRs, or reading a summary of the work that was merged. Don't
+copy the issue's Do or its acceptance criteria into the description. The PR links to its issue, and
+a copy drifts from it.
+
+After the summary, the description has these two sections, in this order, each under a `##`
+heading of that name. Each one is there only when it has something in it:
+
+- **Decisions on open points:** each call the work made that the issue left open. A disagreement
+  between a doc and the code that the owner chose to leave in place is one of them.
+- **Different from the issue:** each place the work departs from the issue, including each change
+  the issue didn't ask for.
+
+Nothing else goes in the description, such as what the tests cover or which spec items changed,
+since the diff shows those. Declined review findings go in a comment, as "A factory review of a PR
+made outside a run" says.
+
+*Why:* the owner remembers the session a PR came from. An agent that later has to work out what
+happened and why has only the PR, and these two sections hold what the diff can't show.
 
 ## A factory review of a PR made outside a run
 

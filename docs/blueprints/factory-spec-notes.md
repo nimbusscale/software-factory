@@ -952,8 +952,8 @@ a file of standards that CLAUDE.md points to, as the doc standards are.**
 - Likely home: `TD`.
 
 **The GitHub standards are `github.md` in the doc standards' folder. CLAUDE.md's doc map lists it,
-with a line saying to read it before writing an issue or the summary in a PR's description, or
-updating an issue. Where the board's statuses are defined is in the implementation loop
+with a line saying to read it before starting work on an issue, writing, updating or closing an
+issue, naming a branch, or writing a PR's title or description. Where the board's statuses are defined is in the implementation loop
 blueprint.**
 - Why: next to the doc standards, the GitHub standards are copied into each project along with
   them. Claude proposed this, and Joe agreed.
