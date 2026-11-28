@@ -10,6 +10,7 @@ from pathlib import Path
 import pytest
 
 from software_factory.conftest import commit_file, run_git
+from software_factory.git.command import REPO_ENV_VARS
 
 RUN_SFE = Path(__file__).parents[2] / "tools" / "run-sfe.sh"
 
@@ -39,7 +40,11 @@ def run_sfe(tmp_path: Path, env_file_text: str, *args: str) -> list[str]:
     env_file.write_text("FACTORY_CLAUDE_CODE_OAUTH_TOKEN=token\n" + env_file_text)
     docker_args = tmp_path / "docker-args"
     environment = {
-        **os.environ,
+        **{
+            name: value
+            for name, value in os.environ.items()
+            if name not in REPO_ENV_VARS
+        },
         "PATH": f"{bin_folder}:{os.environ['PATH']}",
         "FACTORY_ENV_FILE": str(env_file),
         "DOCKER_ARGS": str(docker_args),
@@ -153,6 +158,9 @@ def test_keeps_the_factory_checkouts_changes(tmp_path: Path) -> None:
     assert "+The factory, changed." in changes
     assert "+print('new')" in changes
     assert "SECRET" not in changes
+    # Bug: run from a git hook, the diff held the files of the hook's repo.
+    changed_files = re.findall(r"^diff --git a/(\S+)", changes, re.MULTILINE)
+    assert sorted(changed_files) == ["README.md", "new.py"]
     # FR-44.
     commit = run_git("rev-parse", "--short=12", "HEAD", cwd=factory)
     assert json.loads((folder / "run.json").read_text())["factory_version"] == (
