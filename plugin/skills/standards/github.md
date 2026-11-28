@@ -98,6 +98,14 @@ a new issue doesn't get it. The owner adds it.
 *Why:* once the factory starts runs on its own, an issue in Ready with the `factory` label starts a
 run without anyone asking. So the label goes on only when the owner chooses to hand the issue over.
 
+When the owner takes an issue that has the `factory` label back to work on it, such as after a run
+stops in Needs attention, the label comes off. In a person's session, the agent removes it when it
+starts work on the issue.
+
+*Why:* the board has one status, In development, for an issue someone is working on. The label is
+what says the factory is working on it. A labeled issue the owner is working on would look like a
+run is going.
+
 ## The board's statuses
 
 The statuses the factory uses are on the board, and each status's description says what
@@ -105,15 +113,15 @@ it means. Read them there, and don't list them anywhere else.
 
 ## Moving an issue's status in a person's session
 
-In a person's session, the agent moves the issue it works on to In progress when it starts work on
-it, and to In review when it opens the issue's PR. It does this without being asked. When the PR
+In a person's session, the agent moves the issue it works on to In development when it starts work
+on it, and to In review when it opens the issue's PR. It does this without being asked. When the PR
 merges and closes the issue, the board moves it to Done on its own.
 
-When it moves an issue to In progress, it also moves the issue's parent to In progress, if the
-parent is in Backlog or Ready. After that, only the owner moves the parent.
+When it moves an issue to In development, it also moves the issue's parent to In development, if
+the parent is in Backlog or Ready. After that, only the owner moves the parent.
 
 *Why:* the board is where the owner sees what's being worked on. Nothing else moves the issue to In
-review when its PR opens, or its parent to In progress. A parent left in Backlog gets lost there.
+review when its PR opens, or its parent to In development. A parent left in Backlog gets lost there.
 It moves only from Backlog or Ready, so it never overrides a status the owner set.
 
 ## Updating an issue

@@ -8,7 +8,6 @@ from pydantic import BaseModel, ConfigDict, Field, field_validator
 type StatusKey = Literal[
     "backlog",
     "ready",
-    "in_progress",
     "in_development",
     "in_review",
     "needs_attention",
