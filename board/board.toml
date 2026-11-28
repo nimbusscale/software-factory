@@ -21,7 +21,7 @@ fields = ["Title", "Repository", "Labels", "Linked pull requests"]
 name = "Mine"
 layout = "BOARD_LAYOUT"
 filter = "-label:factory"
-fields = ["Title", "Repository", "Labels", "Linked pull requests"]
+fields = ["Title", "Repository", "Labels", "Linked pull requests", "Sub-issues progress"]
 
 [[views]]
 name = "All"
