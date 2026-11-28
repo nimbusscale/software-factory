@@ -21,15 +21,10 @@ name = "Ready"
 color = "GREEN"
 description = "The issue is ready to start. The factory takes it only if it has the `factory` label."
 
-[statuses.in_progress]
-name = "In progress"
-color = "YELLOW"
-description = "The owner is working on the issue."
-
 [statuses.in_development]
 name = "In development"
 color = "ORANGE"
-description = "The factory is working on the issue."
+description = "The owner or the factory is working on the issue. The `factory` label says which."
 
 [statuses.in_review]
 name = "In review"

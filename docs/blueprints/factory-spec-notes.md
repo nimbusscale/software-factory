@@ -1288,21 +1288,24 @@ board.**
 - Likely home: `FR` for the board, which changes the functional spec's terms Board and Project; `AD`
   for one board across projects.
 
-**The board's statuses are Backlog, Ready, In progress, In development, In review, Needs attention
-and Done. In progress is the owner's own work, and In development always means a run is going.
-Ready means the issue is ready to start, and the `factory` label says whether the factory may take
-it. A new issue starts in Backlog.**
+**The board's statuses are Backlog, Ready, In development, In review, Needs attention and Done. In
+development means someone is working on the issue, the owner or the factory. The `factory` label
+says which: on an issue in In development, it means a run is going. So the label comes off an issue
+when the owner takes it back. Ready means the issue is ready to start. A new issue starts in
+Backlog.**
 - Why: Joe: "let's give this a shot and we can adjust as needed." Both kinds of work share the
-  board, so In progress and In development keep them apart. Without that, neither the owner nor a
-  poller that starts runs (#10) could tell from the board whether a run is going. "In progress" is
-  written like "In development". The label already says who takes an issue, so Ready doesn't have
-  to. A new issue starts in Backlog so the factory never starts on one the owner hasn't looked at:
-  an issue only reaches Ready when the owner moves it.
+  board, and the owner and a poller that starts runs (#10) both need to tell from the board whether
+  a run is going. The label already says that, so a second status for the owner's own work would
+  say it twice. Joe: "now we have two ways to show the factory is working on something, it has the
+  label AND the status, but it should just be the label." The label also says who takes an issue,
+  so Ready doesn't have to. A new issue starts in Backlog so the factory never starts on one the
+  owner hasn't looked at: an issue only reaches Ready when the owner moves it.
 - Left out: Triage, and Waiting to merge from the ideation doc. Joe is the only user, and Backlog
   plus the `agent-created` label cover new ideas. Waiting to merge is for a PR that passes every
   check but is held, such as when auto-merge is off. Until auto-merge exists, In review already
   means the PR waits on the owner. Either can be added when it's needed.
-- Decided in: #136. Each status's description and color are in the comment on #137.
+- Decided in: #136. Each status's description and color are in the comment on #137. In progress
+  was dropped for In development alone in an interactive session on 2026-11-27.
 - Likely home: the statuses in the factory's config (#137), with each status's description saying
   what it means.
 
@@ -1322,16 +1325,16 @@ and a new issue doesn't get it. GitHub's default labels, `documentation` among t
 - Likely home: the labels in the factory's config (#137); the kind labels' rules in
   `plugin/skills/standards/github.md`.
 
-**When an issue's first child starts, its parent moves to In progress, if the parent is in Backlog
-or Ready. In a run, the factory's code moves it. In a person's session, the agent does. After that,
-the owner moves the parent, and decides when it's done.**
+**When an issue's first child starts, its parent moves to In development, if the parent is in
+Backlog or Ready. In a run, the factory's code moves it. In a person's session, the agent does.
+After that, the owner moves the parent, and decides when it's done.**
 - Why: Joe: "I definitely don't want to leave parents in backlog, because then they just get lost
   in the backlog." He wants to choose when a parent is done himself. It moves only from Backlog or
   Ready so it never overrides a status the owner set, such as a parent parked back in Backlog. No
   built-in workflow reacts to a child's status. A GitHub Action can't either, since the event for a
   board item changing exists only for boards an organization owns, and Actions can't trigger on it.
-  So whatever moves the child moves the parent. A child the owner drags to In progress on the board
-  doesn't move its parent.
+  So whatever moves the child moves the parent. A child the owner drags to In development on the
+  board doesn't move its parent.
 - Decided in: #136.
 - Likely home: `FR` for the run; `plugin/skills/standards/github.md` for a person's session.
 
