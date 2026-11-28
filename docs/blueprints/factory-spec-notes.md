@@ -1283,6 +1283,17 @@ the issue was written.**
 
 ## The factory board
 
+**The factory's repos and its board belong to the GitHub organization `nimbusscale-org`, on the
+Free plan, not to the personal account `nimbusscale`.**
+- Why: GitHub's API lets a GitHub App or a fine-grained token reach only a board an organization
+  owns. A personal account's board takes a classic token, which reaches everything the account can.
+  On an organization, an App can give each run a token that expires within an hour and reaches only
+  the repos it's given. The factory's PRs and comments then come from the App, not from the owner,
+  so the owner can approve them. The add-to-project Action can use the App too, so no personal
+  token gets copied into each repo. Joe: "I don't see a lot of downside to moving to an org."
+- Decided in: #154, in an interactive session that worked on #151.
+- Likely home: `AD`.
+
 **One board holds the issues of every project the factory runs on, both the ones the factory works
 and the ones the owner works by hand. The `factory` label on an issue says the factory may take it,
 and the board's views split the two kinds of work. A project the factory doesn't run on has its own
@@ -1358,13 +1369,13 @@ label.**
 
 **Each repo on the board has a GitHub Action, `actions/add-to-project`, that adds its new issues to
 the board. The Action uses a board token saved as a secret in the repo.**
-- Why: nimbusscale is on GitHub Free, which allows one "Auto-add to project" workflow per board,
-  and each one adds issues from one repo. GitHub's docs: "GitHub Free: 1". So on one board across
-  repos, only one repo's issues would be added on their own. Upgrading to Pro allows 5, set by
+- Why: nimbusscale-org is on GitHub Free, which allows one "Auto-add to project" workflow per
+  board, and each one adds issues from one repo. GitHub's docs: "GitHub Free: 1". So on one board
+  across repos, only one repo's issues would be added on their own. A paid plan allows 5, set by
   hand. The Action costs nothing and is committed code, which fits the board being set up by code.
-- Still to check, when the init script is built: whether a fine-grained GitHub token can write to
-  a board a personal account owns. A classic token with the `project` scope can, since the board
-  code sets up the board with one.
+- Still to check, once the board belongs to the organization: whether the board token can be a
+  GitHub App's token. On a personal account's board, a classic token with the `project` scope
+  works, and a private repo's issues need the `repo` scope too.
 - Decided in: #136.
 - Likely home: `TD`, with the init script.
 
