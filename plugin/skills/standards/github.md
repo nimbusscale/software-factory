@@ -98,8 +98,7 @@ the whole piece is done. No label marks a parent, since GitHub shows its sub-iss
 An issue becomes a sub-issue when the owner asks for it. In a session, the agent can also suggest
 one, such as a task that hands a part of the session's work to the factory. It raises the idea
 with the owner, and makes the sub-issue once the owner agrees. When the issue that would be the
-parent isn't interactive, its kind label changes to `interactive`. Its `factory` label comes off
-too, if it has one, since only a task or a bug can have it.
+parent isn't interactive, its kind label changes to `interactive`.
 
 A sub-issue can be any kind of issue. Its body doesn't name its parent, such as with "Part of
 #123", since GitHub shows the parent.
