@@ -313,8 +313,9 @@ its own SFE image, so the factory's image doesn't carry each project's runtimes.
 
 ## T-SEC-8. The board
 
-**TD-14.** Every board setting GitHub's API can set is set by the factory's own code, from a board
-file and the statuses and labels in the factory's config. The code is safe to run again, and has a
+**TD-14.** Every board setting GitHub's API can set, and the issue types of the board's owner, are
+set by the factory's own code, from a board file and the statuses, issue types and labels in the
+factory's config. The code is safe to run again, and has a
 check mode that lists how GitHub differs without changing anything. This meets FR-11, FR-28, FR-29
 and FR-13, which need the statuses on the board.
 

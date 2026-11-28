@@ -2,12 +2,12 @@
 
 The standards for working with a project's GitHub issues, its board and its PRs: what each kind of
 issue holds, what a parent issue is, how an issue's title is written, how issues are linked, which
-labels an issue has, what the board's statuses mean, who moves an issue's status, how an issue is
+issue type and labels an issue has, what the board's statuses mean, who moves an issue's status, how an issue is
 updated and closed, how a branch is named, and how a PR's title and description are written.
 
 ## A task issue
 
-A task issue is the kind of issue the factory's implementation loop takes. It has the `task` label.
+A task issue is the kind of issue the factory's implementation loop takes. Its issue type is Task.
 Its body has these four sections, in this order, each under a `##` heading of that name:
 
 - **Why:** what the work is for, in a few sentences.
@@ -43,8 +43,8 @@ before the work starts, the two differ, and the spec wins.
 
 ## A bug issue
 
-A bug issue is a task issue for something that doesn't work as it should. It has the `bug` label
-in place of `task`. Its body has these five sections, in this order, each under a `##` heading of
+A bug issue is a task issue for something that doesn't work as it should. Its issue type is Bug,
+in place of Task. Its body has these five sections, in this order, each under a `##` heading of
 that name:
 
 - **What happened:** what was seen, with links to what shows it, such as a session, a trace or a
@@ -60,7 +60,7 @@ It has no Why section, since What happened and Expected say why the work is need
 ## A question issue
 
 A question issue holds a question that has to be settled before some work can start. It generates
-no code. It has the `question` label, so questions can be told apart from work at a glance. Its body
+no code. Its issue type is Question, so questions can be told apart from work at a glance. Its body
 has these three sections, in this order, each under a `##` heading of that name:
 
 - **Question:** the question, in a sentence or two.
@@ -77,7 +77,7 @@ picks up the waiting work may never see it, and nothing shows the owner what's w
 ## An interactive issue
 
 An interactive issue is work the owner does in a session with an agent, such as settling a set of
-questions or doing research. The factory never takes one. It has the `interactive` label. Its body
+questions or doing research. The factory never takes one. Its issue type is Interactive. Its body
 has these two sections, in this order, each under a `##` heading of that name:
 
 - **Goal:** what the session is for, in whatever form helps. It can hold links to read, or a list
@@ -91,14 +91,14 @@ owner is in the session, so the agent can ask about anything the issue doesn't s
 ## A parent issue
 
 An issue with sub-issues is a parent. A parent is always an interactive issue, with the
-`interactive` label and an interactive issue's two sections. Its Goal says what the whole piece of
+Interactive issue type and an interactive issue's two sections. Its Goal says what the whole piece of
 work delivers, and can hold the plan and what's left out of it. Its Acceptance criteria say when
 the whole piece is done. No label marks a parent, since GitHub shows its sub-issues.
 
 An issue becomes a sub-issue when the owner asks for it. In a session, the agent can also suggest
 one, such as a task that hands a part of the session's work to the factory. It raises the idea
 with the owner, and makes the sub-issue once the owner agrees. When the issue that would be the
-parent isn't interactive, its kind label changes to `interactive`.
+parent isn't interactive, its issue type changes to Interactive.
 
 A sub-issue can be any kind of issue. Its body doesn't name its parent, such as with "Part of
 #123", since GitHub shows the parent.
@@ -111,7 +111,7 @@ owner.
 An issue's title is a plain sentence that says what the work changes, such as "Keep each run's
 transcripts in a run folder". A question issue's title is the question, ending in "?", such as
 "Can a task issue's acceptance criteria list technical requirements?" The title doesn't name the
-issue's kind, such as with "Question:", since its label does.
+issue's kind, such as with "Question:", since its issue type does.
 
 ## Where an issue or a comment came from
 
@@ -129,13 +129,14 @@ issue waits, but the link has to be there too.
 
 *Why:* a wait written only in a comment doesn't show on the issue's page or on the board.
 
-## Labels
+## Issue types and labels
 
-Every issue has exactly one kind label: `task`, `bug`, `question` or `interactive`. An issue an
-agent opens on its own judgment also has `agent-created`.
+Every issue has exactly one issue type: Task, Bug, Question or Interactive. An agent sets it when
+it opens the issue, such as with `gh issue create --type Task`. An issue an agent opens on its own
+judgment also has the `agent-created` label.
 
-The `factory` label says the factory may take the issue. Only a `task` or a `bug` can have it, and
-a new issue doesn't get it. The owner adds it.
+The `factory` label says the factory may take the issue. Only a Task or a Bug can have it, and a
+new issue doesn't get it. The owner adds it.
 
 *Why:* once the factory starts runs on its own, an issue in Ready with the `factory` label starts a
 run without anyone asking. So the label goes on only when the owner chooses to hand the issue over.

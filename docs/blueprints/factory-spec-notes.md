@@ -1331,21 +1331,24 @@ Backlog.**
 - Likely home: the statuses in the factory's config (#137), with each status's description saying
   what it means.
 
-**Every issue has one kind label: `task`, `bug`, `question` or `interactive`. An issue an agent
-opens on its own also has `agent-created`. The `factory` label goes only on a `task` or a `bug`,
-and a new issue doesn't get it. GitHub's default labels, `documentation` among them, are removed.**
-- Why: nimbusscale is a personal account, so GitHub's issue types aren't available, and labels do
-  that job. `task` and `bug` are separate because a bug has its own shape, which asks for what
-  happened. The check when a run starts reads the kind label to know which headings the body must
-  have. The label also lets the board show or count the bugs, which mostly come from the factory's
+**Every issue has one issue type: Task, Bug, Question or Interactive. An issue an agent opens on
+its own also has the `agent-created` label. The `factory` label goes only on a Task or a Bug, and a
+new issue doesn't get it. GitHub's default labels, `documentation` among them, are removed, and so
+is its default issue type Feature.**
+- Why: GitHub allows an issue only one type, so an issue can't have two kinds. The types are set
+  once for the organization, not in each repo, and the board can group or slice issues by type.
+  Joe chose types over kind labels once the repos moved to an organization: "Let's go with the
+  issue types." Task and Bug are separate because a bug has its own shape, which asks for what
+  happened. The check when a run starts reads the issue type to know which headings the body must
+  have. The type also lets the board show or count the bugs, which mostly come from the factory's
   own work. Joe asked why the two are separate, then chose to keep both. The `factory` label is off
   by default because, once a poller starts runs, an issue in Ready with the label starts a run
   without anyone asking. So the label means the owner chose to hand the issue over. A run never
   takes a question or an interactive issue. `documentation` is dropped because a doc-only change is
   a task. Joe chose the name `factory` over the ideation doc's `auto-develop`.
-- Decided in: #136, from the proposal in #8.
-- Likely home: the labels in the factory's config (#137); the kind labels' rules in
-  `plugin/skills/standards/github.md`.
+- Decided in: #136, from the proposal in #8. Issue types in place of kind labels are from #154.
+- Likely home: the issue types and labels in the factory's config (#137); the rules for each issue
+  type in `plugin/skills/standards/github.md`.
 
 **When an issue's first child starts, its parent moves to In development, if the parent is in
 Backlog or Ready. In a run, the factory's code moves it. In a person's session, the agent does.

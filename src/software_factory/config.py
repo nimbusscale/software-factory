@@ -14,8 +14,8 @@ type StatusKey = Literal[
     "done",
 ]
 
-# The colors GitHub's API takes for a status on a board.
-type StatusColor = Literal[
+# The colors GitHub's API takes for a status on a board, and for an issue type.
+type GitHubColor = Literal[
     "GRAY", "BLUE", "GREEN", "YELLOW", "ORANGE", "RED", "PINK", "PURPLE"
 ]
 
@@ -31,7 +31,12 @@ class BoardName(ConfigModel):
 
 class BoardStatus(ConfigModel):
     name: str
-    color: StatusColor
+    color: GitHubColor
+    description: str
+
+
+class IssueType(ConfigModel):
+    color: GitHubColor
     description: str
 
 
@@ -64,6 +69,8 @@ class Settings(ConfigModel):
 class FactoryConfig(ConfigModel):
     board: BoardName
     statuses: dict[StatusKey, BoardStatus]
+    # Each issue type the board's owner has, by its name.
+    issue_types: dict[str, IssueType]
     # Each label by its name.
     labels: dict[str, RepoLabel]
     # The factory's default for each setting (FR-32, FR-6).

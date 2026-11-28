@@ -41,24 +41,27 @@ name = "Done"
 color = "PURPLE"
 description = "The issue is closed."
 
-# The labels set on each repo linked to the board. What each one means for an issue is
-# in the GitHub standards, plugin/skills/standards/github.md.
+# The issue types the board's owner has, each by its name. What each one means for an issue
+# is in the GitHub standards, plugin/skills/standards/github.md.
 
-[labels.task]
-color = "1d76db"
+[issue_types.Task]
+color = "BLUE"
 description = "Work to do, with Why, Design, Do and Acceptance criteria."
 
-[labels.bug]
-color = "d73a4a"
+[issue_types.Bug]
+color = "RED"
 description = "Something that doesn't work as it should."
 
-[labels.question]
-color = "d876e3"
+[issue_types.Question]
+color = "PURPLE"
 description = "A question to settle. Its answer goes in a spec or the standards, and it generates no code."
 
-[labels.interactive]
-color = "fbca04"
+[issue_types.Interactive]
+color = "YELLOW"
 description = "Work the owner does in a session with an agent."
+
+# The labels set on each repo linked to the board. What each one means for an issue is
+# in the GitHub standards, plugin/skills/standards/github.md.
 
 [labels.agent-created]
 color = "c5def5"

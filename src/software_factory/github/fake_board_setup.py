@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 from software_factory.config import factory_config
+from software_factory.github import fake_issue_types as types
 from software_factory.github.fake_github import BadRequestError, expect, integer, text
 
 if TYPE_CHECKING:
@@ -123,6 +124,10 @@ class FakeBoardOwner:
     next_number: int = field(default_factory=lambda: factory_config().board.number)
     # The name of each operation asked for, in order.
     operations: list[str] = field(default_factory=list)
+    # None for a user, which can't have issue types.
+    issue_types: list[types.FakeIssueType] | None = field(
+        default_factory=types.new_organization_issue_types
+    )
 
     async def __call__(
         self, query: str, variables: Mapping[str, JsonValue]
@@ -146,6 +151,9 @@ class FakeBoardOwner:
             "UpdateLabel": self.update_label,
             "DeleteLabel": self.delete_label,
         }
+        if operation in types.HANDLERS:
+            reply = types.HANDLERS[operation](self.owner_issue_types(), variables)
+            return {"data": reply}
         return {"data": handlers[operation](variables)}
 
     @property
@@ -174,7 +182,12 @@ class FakeBoardOwner:
             {"number": b.number, "title": b.title, "closed": b.closed}
             for b in self.boards
         ]
-        return {"repositoryOwner": {"id": "owner", "projectsV2": {"nodes": nodes}}}
+        owner: dict[str, JsonValue] = {"id": "owner", "projectsV2": {"nodes": nodes}}
+        if self.issue_types is not None:
+            owner["issueTypes"] = {
+                "nodes": [types.issue_type_json(t) for t in self.issue_types]
+            }
+        return {"repositoryOwner": owner}
 
     def read_board(self, variables: Mapping[str, JsonValue]) -> JsonValue:
         board = self.numbered(variables)
@@ -295,6 +308,10 @@ class FakeBoardOwner:
         repo, label = self.label(text(variables, "id"))
         repo.labels.remove(label)
         return {"deleteLabel": {"clientMutationId": None}}
+
+    def owner_issue_types(self) -> list[types.FakeIssueType]:
+        expect("an organization", holds=self.issue_types is not None)
+        return self.issue_types or []
 
 
 def fields_json(fields: dict[str, str]) -> list[JsonValue]:

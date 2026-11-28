@@ -19,6 +19,7 @@ from software_factory.github.fake_board_setup import (
     FakeRepo,
     FakeSetupBoard,
 )
+from software_factory.github.fake_issue_types import FakeIssueType
 
 REPO_ROOT = Path(__file__).parents[3]
 
@@ -103,9 +104,12 @@ def test_check_lists_the_differences_and_changes_nothing() -> None:
     # TD-14.
     assert "The board has no status 'Backlog'. It gets added." in lines
     assert "The view 'Factory' is missing. It gets created." in lines
-    assert "nimbusscale/dust-law has no label 'task'. It gets created." in lines
+    assert "nimbusscale/dust-law has no label 'factory'. It gets created." in lines
+    board_owner = factory_config().board.owner
+    assert f"{board_owner} has no issue type 'Question'. It gets created." in lines
     assert set(owner.operations) <= READS
     assert [o.name for o in owner.board.options] == ["Todo", "In Progress", "Done"]
+    assert [t.name for t in owner.issue_types or []] == ["Task", "Bug", "Feature"]
 
 
 def test_check_of_a_missing_board_says_it_gets_created() -> None:
@@ -180,7 +184,8 @@ def test_setting_up_deletes_the_pull_request_linked_to_issue_workflow() -> None:
 def test_linked_repos_get_the_factorys_labels_in_place_of_githubs() -> None:
     own_label = FakeLabel("priority", "000000", "")
     bug = FakeLabel("bug", "d73a4a", "Something isn't working")
-    repo = FakeRepo("nimbusscale/dust-law", labels=[bug, own_label])
+    factory = FakeLabel("factory", "000000", "")
+    repo = FakeRepo("nimbusscale/dust-law", labels=[bug, own_label, factory])
     owner = owner_with_board(repo)
 
     set_up(owner)
@@ -191,7 +196,7 @@ def test_linked_repos_get_the_factorys_labels_in_place_of_githubs() -> None:
         *((name, x.color, x.description) for name, x in wanted.items()),
         ("priority", "000000", ""),
     }
-    assert next(x for x in repo.labels if x.name == "bug").id == bug.id
+    assert next(x for x in repo.labels if x.name == "factory").id == factory.id
 
 
 def test_view_with_a_field_the_board_lacks_is_refused() -> None:
@@ -252,15 +257,55 @@ def test_command_says_when_the_board_matches(
 
 
 def test_label_whose_name_differs_only_in_case_is_renamed() -> None:
-    bug = FakeLabel("Bug", "d73a4a", "Something isn't working")
-    repo = FakeRepo("nimbusscale/dust-law", labels=[bug])
+    factory = FakeLabel("Factory", "0e8a16", "The factory may take this issue.")
+    repo = FakeRepo("nimbusscale/dust-law", labels=[factory])
     owner = owner_with_board(repo)
 
     set_up(owner)
 
-    # Bug: a label named Bug made setting up create bug, which GitHub refuses.
-    assert [x.id for x in repo.labels if x.name.casefold() == "bug"] == [bug.id]
-    assert bug.name == "bug"
+    # Bug: a label whose name differed from the factory's only in case made setting up
+    # create the factory's, which GitHub refuses.
+    assert [x.id for x in repo.labels if x.name.casefold() == "factory"] == [factory.id]
+    assert factory.name == "factory"
+
+
+def test_owner_gets_the_factorys_issue_types_in_place_of_githubs() -> None:
+    task = FakeIssueType("Task", "YELLOW", "A specific piece of work")
+    owner = owner_with_board()
+    owner.issue_types = [task, FakeIssueType("Feature", "BLUE", "")]
+
+    lines = set_up(owner)
+
+    # TD-14.
+    wanted = factory_config().issue_types
+    assert {
+        (t.name, t.color, t.description, t.is_enabled) for t in owner.issue_types
+    } == {(name, t.color, t.description, True) for name, t in wanted.items()}
+    assert next(t for t in owner.issue_types if t.name == "Task").id == task.id
+    assert any("'Feature' isn't in the factory's config" in line for line in lines)
+
+
+def test_issue_type_that_is_turned_off_gets_turned_on() -> None:
+    owner = owner_with_board()
+    set_up(owner)
+    assert owner.issue_types is not None
+    bug = next(t for t in owner.issue_types if t.name == "Bug")
+    bug.is_enabled = False
+
+    set_up(owner)
+
+    # TD-14.
+    assert bug.is_enabled
+
+
+def test_owner_that_isnt_an_organization_is_refused_before_any_change() -> None:
+    owner = FakeBoardOwner(issue_types=None)
+
+    with pytest.raises(SetUpError, match="isn't an organization"):
+        set_up(owner)
+
+    # TD-14.
+    assert owner.operations == ["ReadOwnerBoards"]
 
 
 def test_status_whose_name_differs_only_in_case_keeps_its_issues() -> None:
@@ -271,6 +316,7 @@ def test_status_whose_name_differs_only_in_case_keeps_its_issues() -> None:
 
     # Bug: a status named In Review was removed and In review added, which took the
     # status off every issue in it.
-    assert "isn't in the factory's config" not in "\n".join(lines)
+    removed = "The status 'In Review' isn't in the factory's config"
+    assert removed not in "\n".join(lines)
     renamed = next(o for o in owner.board.options if o.name == "In review")
     assert renamed.id == in_review.id
