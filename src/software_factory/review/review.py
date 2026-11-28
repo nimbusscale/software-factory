@@ -74,13 +74,23 @@ class Review:
     pull_request: PullRequestToReview
     # The findings FR-23 would give the implementer (FR-48).
     given: list[NumberedFinding]
+    # The comment the review command posts on the PR (FR-49).
+    comment: str
+    # Why the comment couldn't be posted, or None when it was.
+    comment_error: str | None = None
 
     def printed(self) -> str:
         """What the review command prints for the PR's author (FR-48)."""
         answer = findings_message(self.given) if self.given else f"{NOTHING_TO_FIX}\n"
+        if self.comment_error is None:
+            return (
+                f"{answer}\nThe rest of the review is in a comment on the PR,"
+                f" {self.pull_request.url}\n"
+            )
+        # The review took minutes, so its findings are kept even when GitHub fails.
         return (
-            f"{answer}\nThe rest of the review is in a comment on the PR,"
-            f" {self.pull_request.url}\n"
+            f"{answer}\nThe rest of the review couldn't be posted on the PR:"
+            f" {self.comment_error}\n\nHere it is instead:\n\n{self.comment}"
         )
 
 
@@ -100,23 +110,39 @@ async def review_pull_request(
             pull_request.number,
             pull_request.base_ref_name,
         ) as clone:
+            if clone.diff.start == clone.diff.end:
+                message = (
+                    "The PR has no changes since its head branched off its base"
+                    " branch, such as a PR that's already merged. So there's nothing"
+                    " to review."
+                )
+                raise ReviewEndedError(message)
             result = await review_clone(clone, pull_request, services.runner)
             head = clone.diff.end
-        # The IDs of a run's first round, so the comment and the printed findings
-        # name each finding the way a run's would (TD-12).
-        findings = numbered(1, result.findings)
-        given = findings_to_give(findings)
-        comment = (
-            f"The factory's quality reviewer reviewed this PR at `{head}`.\n\n"
-            + findings_comment(findings, {n.finding_id for n in given}, result.dropped)
-            + f"\nReviewed by factory version `{services.factory_version}`."
-            f" {transcripts_line(services.run_folder)}\n"
-        )
-        # Meets FR-49.
-        await post_comment(services.graphql, pull_request.id, comment)
     except REVIEW_ENDING_ERRORS as error:
         raise ReviewEndedError(str(error)) from error
-    return Review(pull_request=pull_request, given=given)
+    # The IDs of a run's first round, so the comment and the printed findings
+    # name each finding the way a run's would (TD-12).
+    findings = numbered(1, result.findings)
+    given = findings_to_give(findings)
+    comment = (
+        f"The factory's quality reviewer reviewed this PR at `{head}`.\n\n"
+        + findings_comment(
+            findings,
+            {n.finding_id for n in given},
+            result.dropped,
+            author="the PR's author",
+        )
+        + f"\nReviewed by factory version `{services.factory_version}`."
+        f" {transcripts_line(services.run_folder)}\n"
+    )
+    review = Review(pull_request=pull_request, given=given, comment=comment)
+    try:
+        # Meets FR-49.
+        await post_comment(services.graphql, pull_request.id, comment)
+    except GitHubError as error:
+        return replace(review, comment_error=str(error))
+    return review
 
 
 async def review_clone(

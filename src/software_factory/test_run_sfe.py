@@ -170,3 +170,19 @@ def test_review_runs_the_review_command(tmp_path: Path) -> None:
     assert docker_args[-2:] == ["nimbusscale/dust-law", "5"]
     # FR-39.
     assert re.fullmatch(r"\d{8}T\d{6}Z-review-nimbusscale-dust-law-5", folder.name)
+
+
+def test_review_with_another_entrypoint_is_refused(tmp_path: Path) -> None:
+    with pytest.raises(AssertionError, match="not both"):
+        run_sfe(
+            tmp_path,
+            "",
+            "--review",
+            "--entrypoint",
+            "pytest",
+            "nimbusscale/dust-law",
+            "5",
+        )
+
+    # Bug: --review with --entrypoint ran pytest in a run folder named for the PR.
+    assert not (tmp_path / "data" / "software-factory" / "runs").exists()

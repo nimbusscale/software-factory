@@ -224,10 +224,11 @@ def findings_comment(
     findings: Sequence[NumberedFinding],
     given: Collection[str],
     dropped: Sequence[DroppedCandidate],
+    author: str = "the implementer",
 ) -> str:
     """The lists of a comment on a PR. Says None. for a list that has nothing in it.
 
-    `given` holds the IDs of the findings the implementer got. Meets FR-25, FR-30 and
+    `given` holds the IDs of the findings that `author` got. Meets FR-25, FR-30 and
     FR-31.
     """
     not_given_lines = [
@@ -245,7 +246,7 @@ def findings_comment(
         for d in dropped
     ]
     sections = {
-        "Nits and pre-existing findings the implementer didn't get": not_given_lines,
+        f"Nits and pre-existing findings {author} didn't get": not_given_lines,
         "Findings to check": to_check_lines,
         "Dropped candidates": dropped_lines,
     }

@@ -25,6 +25,7 @@ set -euo pipefail
 repo_root="$(cd "$(dirname "$0")/.." && pwd)"
 image=software-factory-sfe:latest
 entrypoint=""
+other_entrypoint=""
 review=""
 factory=""
 version=""
@@ -50,6 +51,7 @@ while (($# > 0)); do
       ;;
     --entrypoint)
       entrypoint="$2"
+      other_entrypoint=1
       docker_args+=(--entrypoint "$2")
       shift 2
       ;;
@@ -62,6 +64,13 @@ while (($# > 0)); do
       ;;
   esac
 done
+
+# Each sets the command the SFE runs, so with both, the run folder's name and the command would
+# disagree.
+if [[ -n "$review" && -n "$other_entrypoint" ]]; then
+  echo "Give --review or --entrypoint, not both." >&2
+  exit 1
+fi
 
 # Read, not sourced, so no other line of the file runs or reaches this shell.
 env_file="${FACTORY_ENV_FILE:-$repo_root/.env}"

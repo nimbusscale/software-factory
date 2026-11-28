@@ -222,3 +222,47 @@ def test_setup_that_fails_ends_without_a_review(author: Path, remote: Path) -> N
     # TR-27.
     assert roles.turns
     assert not github.comments
+
+
+def test_comment_that_fails_to_post_is_printed(author: Path, remote: Path) -> None:
+    findings = [
+        finding("important", "The deal skips the last player."),
+        finding("pre_existing", "The shuffle isn't seeded."),
+    ]
+    roles = ScriptedQuery([reviewer_turn(findings)])
+    github = open_pull_request(author)
+    github.broken.add("AddComment")
+
+    printed = start_review(github, roles, remote).printed()
+
+    # Bug: a comment GitHub refused threw away the finished review's findings.
+    assert "### R1-F1, an important finding" in printed
+    assert "couldn't be posted on the PR" in printed
+    assert "The shuffle isn't seeded." in printed
+
+
+def test_comment_names_the_prs_author(author: Path, remote: Path) -> None:
+    roles = ScriptedQuery([reviewer_turn([])])
+    github = open_pull_request(author)
+
+    start_review(github, roles, remote)
+
+    [comment] = github.comments[PR_ID]
+    # Bug: the comment on a PR made outside a run named an implementer.
+    assert "findings the PR's author didn't get" in comment
+    assert "implementer" not in comment
+
+
+def test_pr_with_no_changes_ends_without_a_review(author: Path, remote: Path) -> None:
+    roles = ScriptedQuery([reviewer_turn([])])
+    github = open_pull_request(author)
+    # The PR's head merged into the base branch.
+    run_git("merge", "--quiet", "--no-edit", "tiles", cwd=author)
+    run_git("push", "--quiet", "origin", "main", cwd=author)
+
+    with pytest.raises(ReviewEndedError, match="nothing to review"):
+        start_review(github, roles, remote)
+
+    # Bug: a merged PR got an empty review that said there was nothing to fix.
+    assert roles.turns
+    assert not github.comments
